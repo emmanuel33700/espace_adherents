@@ -1,0 +1,5 @@
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/test/java/fr/espaceadh/test/ResourceServerIntegrationTest.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/test/java/fr/espaceadh/live/ImplicitFlowLiveTest.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/test/java/fr/espaceadh/live/PasswordFlowLiveTest.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/test/java/fr/espaceadh/test/AuthenticationClaimsIntegrationTest.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/test/java/fr/espaceadh/live/AuthorizationCodeLiveTest.java

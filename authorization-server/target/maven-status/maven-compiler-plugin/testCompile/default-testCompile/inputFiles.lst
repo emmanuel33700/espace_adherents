@@ -1,0 +1,4 @@
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/test/java/fr/espaceadh/test/OAuthMvcTest.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/test/java/fr/espaceadh/test/AuthServerIntegrationTest.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/test/java/fr/espaceadh/test/TokenRevocationLiveTest.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/test/java/fr/espaceadh/test/TokenControllerIntegrationTest.java

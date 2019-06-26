@@ -1,0 +1,13 @@
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/config/EmployeeController.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/config/WebSecurityConfig.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/config/AuthorizationServerApplication.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/config/RevokeTokenEndpoint.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/config/CustomTokenEnhancer.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/controller/TokenController.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/config/OAuth2ResourceServerConfig.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/model/Employee.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/model/Authorization.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/config/OAuth2AuthorizationServerConfigJwt.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/dao/AuthorizationDao.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/dao/AuthorizationDaoImpl.java
+/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/authorization-server/src/main/java/fr/espaceadh/config/CorsFilter.java

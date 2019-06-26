@@ -1,0 +1,11 @@
+fr/espaceadh/adherents/config/OAuth2ResourceServerConfigJwt.class
+fr/espaceadh/adherent/web/controller/AdherentApi.class
+fr/espaceadh/adherents/dto/Adherent$CiviliteEnum.class
+fr/espaceadh/adherents/config/CorsFilter.class
+fr/espaceadh/adherent/web/controller/AdherentApiController.class
+fr/espaceadh/adherents/dto/Adherent$PrivilegeEnum.class
+fr/espaceadh/adherents/config/CustomAccessTokenConverter.class
+fr/espaceadh/adherents/config/ResourceServerWebConfig.class
+fr/espaceadh/adherents/dto/Adherent.class
+ofr/espaceadh/adherents/config/MethodSecurityConfig.class
+fr/espaceadh/adherents/config/ResourceServerApplication.class
