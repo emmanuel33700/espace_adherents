@@ -1,9 +1,0 @@
-/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/main/java/fr/espaceadh/adherent/web/controller/AdherentApiController.java
-/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/main/java/fr/espaceadh/adherents/config/CustomAccessTokenConverter.java
-/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/main/java/fr/espaceadh/adherents/config/MethodSecurityConfig.java
-/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/main/java/fr/espaceadh/adherents/dto/Adherent.java
-/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/main/java/fr/espaceadh/adherents/config/OAuth2ResourceServerConfigJwt.java
-/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/main/java/fr/espaceadh/adherents/config/ResourceServerApplication.java
-/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/main/java/fr/espaceadh/adherent/web/controller/AdherentApi.java
-/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/main/java/fr/espaceadh/adherents/config/CorsFilter.java
-/home/emmanuel/programmation/sandbox/oauth2/spring-security-oauth/resource-adherents/src/main/java/fr/espaceadh/adherents/config/ResourceServerWebConfig.java
