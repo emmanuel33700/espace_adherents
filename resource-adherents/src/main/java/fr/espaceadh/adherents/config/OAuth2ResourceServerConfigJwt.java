@@ -1,9 +1,13 @@
 package fr.espaceadh.adherents.config;
 
+import java.io.IOException;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -45,15 +49,15 @@ public class OAuth2ResourceServerConfigJwt extends ResourceServerConfigurerAdapt
         final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setAccessTokenConverter(customAccessTokenConverter);
 
-        converter.setSigningKey("123");
-        // final Resource resource = new ClassPathResource("public.txt");
-        // String publicKey = null;
-        // try {
-        // publicKey = IOUtils.toString(resource.getInputStream());
-        // } catch (final IOException e) {
-        // throw new RuntimeException(e);
-        // }
-        // converter.setVerifierKey(publicKey);
+        //converter.setSigningKey("123");
+         final Resource resource = new ClassPathResource("public.txt");
+         String publicKey = null;
+         try {
+         publicKey = IOUtils.toString(resource.getInputStream());
+         } catch (final IOException e) {
+         throw new RuntimeException(e);
+         }
+         converter.setVerifierKey(publicKey);
         return converter;
     }
 

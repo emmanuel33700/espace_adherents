@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -22,6 +24,7 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 @Configuration
 @EnableAuthorizationServer
@@ -40,7 +43,6 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
 
     @Override
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception { // @formatter:off
-        logger.info("--> configure (ClientDetailsServiceConfigurer)");
         
         clients.inMemory()
                 .withClient("espaceAdh")
@@ -48,7 +50,7 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
                 .authorizedGrantTypes("password", "refresh_token")
                 .scopes("foo", "read", "write", "bar")
                 .accessTokenValiditySeconds(3600)       // 1 hour
-                .refreshTokenValiditySeconds(2592000)  // 30 days
+                .refreshTokenValiditySeconds(36000)  // 10 hour
                 .redirectUris();
                                                                                                                                                                                                                                                                                                                                                                                                 
         logger.info("<-- configure (ClientDetailsServiceConfigurer)");
@@ -84,9 +86,9 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
     public JwtAccessTokenConverter accessTokenConverter() {
         logger.info("--> JwtAccessTokenConverter ");
         final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setSigningKey("123");
-        // final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("mytest.jks"), "mypass".toCharArray());
-        // converter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest"));
+       // converter.setSigningKey("123");
+        final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("mytest.jks"), "mypass".toCharArray());
+        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest"));
         
         logger.info("<-- JwtAccessTokenConverter ");
         return converter;
