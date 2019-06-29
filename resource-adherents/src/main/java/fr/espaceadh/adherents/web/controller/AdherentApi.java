@@ -3,7 +3,7 @@
  * https://github.com/swagger-api/swagger-codegen
  * Do not edit the class manually.
  */
-package fr.espaceadh.adherent.web.controller;
+package fr.espaceadh.adherents.web.controller;
 
 
 import io.swagger.annotations.*;

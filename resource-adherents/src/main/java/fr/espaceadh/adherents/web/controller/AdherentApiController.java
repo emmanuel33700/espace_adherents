@@ -1,6 +1,7 @@
-package fr.espaceadh.adherent.web.controller;
+package fr.espaceadh.adherents.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.espaceadh.adherents.dao.AdherentsDAO;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,29 +10,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import fr.espaceadh.adherents.dto.Adherent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-20T15:15:37.676Z[GMT]")
 @Controller
 public class AdherentApiController implements AdherentApi {
 
-    private static final Logger log = LoggerFactory.getLogger(AdherentApiController.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(AdherentApiController.class);  
+    
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
+    
+    @Autowired
+    private AdherentsDAO adherentsDAO;
 
     @org.springframework.beans.factory.annotation.Autowired
     public AdherentApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -51,6 +47,8 @@ public class AdherentApiController implements AdherentApi {
 
     public ResponseEntity<Adherent> getAdherent(@ApiParam(value = "Id de l'adhérent à récupérer",required=true) @PathVariable("idAdh") Integer idAdh) {
        
+        logger.info(" --> getAdherent");
+        
         String username = "";
         
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -63,11 +61,8 @@ public class AdherentApiController implements AdherentApi {
         }
         
         String accept = request.getHeader("Accept");
-        Adherent adh = new Adherent();
-        adh.setId((long)idAdh);
-        adh.setNom("chenais");
-        adh.setPrenom("emmanuel");
-        adh.setEmail(username);
+        
+        Adherent adh = adherentsDAO.getAdherentByID((long)idAdh);
         
         return new ResponseEntity<Adherent>(adh,HttpStatus.OK);
     }
