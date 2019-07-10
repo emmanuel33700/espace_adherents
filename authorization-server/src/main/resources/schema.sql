@@ -6,7 +6,11 @@
 CREATE TABLE IF NOT EXISTS  USERS(
 	username VARCHAR(50) not null primary key,
 	password VARCHAR(200) not null,
-	enabled boolean not null
+	enabled boolean not null,
+        idAdherent character varying(50) NOT NULL,
+        dateCreation timestamp with time zone,
+        dateModif timestamp with time zone,
+        dateConnexion timestamp with time zone
 );
 
 CREATE TABLE IF NOT EXISTS  AUTHORITIES (
@@ -15,6 +19,8 @@ CREATE TABLE IF NOT EXISTS  AUTHORITIES (
 	constraint fk_authorities_users foreign key(username) references USERS(username)
 );
 
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE public.authorities TO GROUP authentification;
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE public.users TO GROUP authentification;
 
 /*
 aide sur la création des droits dans PG ADMIN

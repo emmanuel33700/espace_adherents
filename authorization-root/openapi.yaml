@@ -1,0 +1,170 @@
+openapi: 3.0.1
+info:
+  title: API gestion authentification espace adherents
+  description: Permet de gere les accès des adhérents
+  contact:
+    email: manu.chenais@gmail.com
+  license:
+    name: GNU General Public License v3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.fr.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: https://adherents.jalle-astro.fr/authorization-server
+tags:
+- name: adherent
+  description: gestion des adhérents
+  externalDocs:
+    description: Pour plus de détail
+    url: http://plusdedétail.ht
+paths:
+  /authentification:
+    put:
+      tags:
+      - authentification
+      summary: Mise à jour de l'authentification d'un adhérent
+      description: Mise à jour de l'authentification d'un adhérent
+      operationId: updateUser
+      requestBody:
+        description: Updated user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentification'
+        required: true
+      responses:
+        400:
+          description: Authentification Invalid
+          content: {}
+        404:
+          description: Utilisateur non trouvé
+          content: {}
+        403:
+          description: Droit insufisant pour modifier une authentification
+          content: {}
+    post:
+      tags:
+      - adherent
+      summary: Ajouter un adhérent
+      operationId: ajoutAdherent
+      requestBody:
+        description: Besoin de l'objet adhérent pour ajouter un adhérent
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Adherent'
+        required: true
+      responses:
+        405:
+          description: Invalid input
+          content: {}
+      security:
+      - petstore_auth:
+        - adh:write
+        - adh:read
+      - bearerAuth: []
+  /adherent/{idAdh}:
+    get:
+      tags:
+      - adherent
+      summary: rechercher adherent par id
+      operationId: getAdherent
+      parameters:
+      - name: idAdh
+        in: path
+        description: Id de l'adhérent à récupérer
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Adherent'
+        400:
+          description: ID adherent invalide
+          content: {}
+        404:
+          description: adherent non trouvé
+          content: {}
+      security:
+      - petstore_auth:
+        - adh:read
+      - bearerAuth: []
+    delete:
+      tags:
+      - adherent
+      summary: Supression de l'adherent par id
+      operationId: deleteUser
+      parameters:
+      - name: idAdh
+        in: path
+        description: Id de l'adhérent à récupérer
+        required: true
+        schema:
+          type: integer
+      responses:
+        400:
+          description: ID adherent invalide
+          content: {}
+        404:
+          description: adherent non trouvé
+          content: {}
+      security:
+      - petstore_auth:
+        - adh:del
+      - bearerAuth: []
+components:
+  schemas:
+    Authentification:
+      type: object
+      properties:
+        login:
+          maxLength: 50
+          minLength: 3
+          type: string
+        password:
+          maxLength: 15
+          minLength: 5
+          type: string
+        roles :
+          type: array
+          items:
+            type: string
+            enum:
+            - ADHERENT
+            - CONSEIL
+            - BUREAU
+            - ADMIN
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://adherents.jalle-astro.fr/token/
+          scopes:
+            adh:write: modification d'un adherents
+            adh:read: lecture d'un adhérent
+            adh:del: suppression d'un adherent
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header

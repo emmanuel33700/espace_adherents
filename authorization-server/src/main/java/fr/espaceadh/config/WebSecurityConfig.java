@@ -4,8 +4,14 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,7 +22,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     
     @Autowired
-    private DataSource dataSource;
+    private Environment env;
+    
+  //  @Autowired
+  //  private DataSource dataSource;
     
     
     @Autowired
@@ -39,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             queryAuthority.append("   WHERE username = ? ");           
             
         
-        auth.jdbcAuthentication().dataSource(dataSource)
+        auth.jdbcAuthentication().dataSource(dataSource())
             .usersByUsernameQuery(queryAuth.toString())
                 .authoritiesByUsernameQuery(queryAuthority.toString())
         .passwordEncoder(new BCryptPasswordEncoder());                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
@@ -63,13 +72,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         // @formatter:off
-		http.authorizeRequests().antMatchers("/login").permitAll()
+		http.authorizeRequests()
+                /** .antMatchers("/login").permitAll()
 		.antMatchers("/oauth/token/revokeById/**").permitAll()
 		.antMatchers("/tokens/**").permitAll()
+                .antMatchers("/authentification").permitAll()        **/
 		.anyRequest().authenticated()
 		.and().formLogin().permitAll()
 		.and().csrf().disable();
 		// @formatter:on
     }
+    
+    
+    @Bean
+    public DataSource dataSource() {
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
+        dataSource.setUrl(env.getProperty("jdbc.url"));
+        dataSource.setUsername(env.getProperty("jdbc.user"));
+        dataSource.setPassword(env.getProperty("jdbc.pass"));
+        return dataSource;
+}
 
 }

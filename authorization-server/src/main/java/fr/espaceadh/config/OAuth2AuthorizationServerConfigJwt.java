@@ -1,5 +1,6 @@
 package fr.espaceadh.config;
 
+import fr.espaceadh.dao.AuthorizationDao;
 import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -30,6 +33,7 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @EnableAuthorizationServer
 public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfigurerAdapter {
 
+    
     private static final Logger logger = LoggerFactory.getLogger(OAuth2AuthorizationServerConfigJwt.class);  
     
     @Autowired
@@ -47,11 +51,13 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
         clients.inMemory()
                 .withClient("espaceAdh")
                 .secret(passwordEncoder().encode("secret"))
-                .authorizedGrantTypes("password", "refresh_token")
-                .scopes("foo", "read", "write", "bar")
+                .authorizedGrantTypes("password", "refresh_token", "authorization_code")
+                .autoApprove(true)
+                .scopes("read", "write", "del", "update")
                 .accessTokenValiditySeconds(3600)       // 1 hour
                 .refreshTokenValiditySeconds(36000)  // 10 hour
-                .redirectUris();
+                .redirectUris("http://www.example.com","http://localhost:8089/")
+                ;
                                                                                                                                                                                                                                                                                                                                                                                                 
         logger.info("<-- configure (ClientDetailsServiceConfigurer)");
     } // @formatter:on
@@ -70,7 +76,7 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
 
     @Override
     public void configure(final AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        
+
         final TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
         tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
         endpoints.tokenStore(tokenStore()).tokenEnhancer(tokenEnhancerChain).authenticationManager(authenticationManager);
@@ -103,4 +109,5 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

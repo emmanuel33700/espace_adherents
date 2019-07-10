@@ -5,14 +5,17 @@
  */
 package fr.espaceadh.dao;
 
-import fr.espaceadh.model.Authorization;
+import fr.espaceadh.dto.Authorization;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,19 +32,21 @@ public class AuthorizationDaoImpl extends JdbcDaoSupport  implements Authorizati
     public AuthorizationDaoImpl(DataSource dataSource) {
         this.setDataSource(dataSource);
     }
+    
+
+    
 
     @Override
     public Authorization getAuthorisation(String login) {
         
        StringBuilder query = new StringBuilder();
-            query.append(" SELECT id_adherent, id_adherent_public, civilite, nom, prenom, login,    ");
-            query.append("        pass_digest, pass_salt, roles, date_derniere_con, code_activation,   ");
-            query.append("        adh_actif   ");
-            query.append("   FROM public.t_utilisateur  ");
-            query.append("   WHERE login = ?  ");
+            query.append(" SELECT username, password, enabled, idadherent, datecreation, datemodif,     ");
+            query.append("        dateconnexion   ");
+            query.append("  FROM users  ");
+            query.append("   WHERE username = ?  ");
         
         List<Authorization> query1 = this.getJdbcTemplate().query(query.toString(), new AuthorizationMapper(), login);
-        return query1.get(1);
+        return query1.get(0);
         
     }
     
@@ -53,6 +58,7 @@ public class AuthorizationDaoImpl extends JdbcDaoSupport  implements Authorizati
         public Authorization mapRow(ResultSet rs, int i) throws SQLException {
             Authorization auth = new Authorization();
             
+            auth.setIdAdherent(rs.getString("idadherent"));
             return auth;
         }
          

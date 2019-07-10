@@ -5,7 +5,7 @@
  */
 package fr.espaceadh.dao;
 
-import fr.espaceadh.model.Authorization;
+import fr.espaceadh.dto.Authorization;
 
 /**
  *
