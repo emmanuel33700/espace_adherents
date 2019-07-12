@@ -17,7 +17,7 @@
 	</parent>
 
 	<build>
-		<finalName>spring-security-oauth</finalName>
+		<finalName>espaceAdherents</finalName>
 		<pluginManagement>
 			<plugins>
 
@@ -79,8 +79,10 @@
 
 
 	<modules>
+		<module>authorization-root</module>		
 		<module>authorization-server</module>
-		<module>resource-adherents</module>
+		<module>resource-authorization</module>
+		<module>resource-adherents</module>	 	
 	</modules>
 
 	<profiles>
