@@ -1,4 +1,4 @@
-package com.baeldung.test;
+package fr.espaceadh.test;
 
 import static org.junit.Assert.assertTrue;
 import io.restassured.RestAssured;
@@ -16,7 +16,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import fr.espaceadh.config.ResourceServerApplication;
+import fr.espaceadh.authorization.config.ResourceServerApplication;
 
 //Before running this test make sure authorization server is running   
 

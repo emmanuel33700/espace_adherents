@@ -1,4 +1,4 @@
-package fr.espaceadh.adherents.config;
+package fr.espaceadh.authorization.config;
 
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @SpringBootApplication
-@ComponentScan ({"fr.espaceadh.adherents"})
+@ComponentScan ({"fr.espaceadh.authorization"})
 public class ResourceServerApplication extends SpringBootServletInitializer {
 
     @Autowired

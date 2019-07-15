@@ -1,4 +1,4 @@
-package fr.espaceadh.adherents.config;
+package fr.espaceadh.authorization.config;
 
 import java.io.IOException;
 import javax.sql.DataSource;

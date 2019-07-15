@@ -5,7 +5,7 @@
  */
 package fr.espaceadh.adherents.dao;
 
-import fr.espaceadh.adherents.dto.Adherent;
+import fr.espaceadh.adherents.model.Adherent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -40,7 +40,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("        login_site_web, pwd_site_web, fk_id_type_user, link_picture, ");
         query.append("        update_date, update_fk_id_adherents, public_contact, mail_auto, ");
         query.append("        token, civilite");
-        query.append("  FROM public.t_adherents");
+        query.append("  FROM t_adherents");
         query.append(" where e_mail =  ?");
         
         List<Adherent> query1 = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper(), login);
@@ -56,7 +56,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("        login_site_web, pwd_site_web, fk_id_type_user, link_picture, ");
         query.append("        update_date, update_fk_id_adherents, public_contact, mail_auto, ");
         query.append("        token, civilite");
-        query.append("  FROM public.t_adherents");
+        query.append("  FROM t_adherents");
         query.append(" where id_adherents =  ?");
         
         List<Adherent> query1 = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper(), idAdh);

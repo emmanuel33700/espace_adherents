@@ -5,7 +5,7 @@
  */
 package fr.espaceadh.adherents.dao;
 
-import fr.espaceadh.adherents.dto.Adherent;
+import fr.espaceadh.adherents.model.Adherent;
 
 /**
  *
