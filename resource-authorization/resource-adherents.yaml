@@ -1,207 +1,332 @@
 openapi: 3.0.1
 info:
-  title: API Adhérents
-  description: Description de l'API Adhérents
+  title: API gestion authentification espace adherents
+  description: Permet de gere les accès des personnes à l'espace adhérents
   contact:
     email: manu.chenais@gmail.com
   license:
-    name: MIT License
-    url: https://opensource.org/licenses/MIT
+    name: GNU General Public License v3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.fr.html
   version: 1.0.0
-externalDocs:
-  description: Find out more about Swagger
-  url: http://swagger.io
 servers:
-- url: https://adherents.jalle-astro.fr/v1
-- url: http://adherents.jalle-astro.fr/v1
+- url: https://adherents.jalle-astro.fr/resource-authorization
+- url: http://localhost:8080/resource-authorization
+- url: http://localhost:8083/resource-authorization
 tags:
-- name: adherent
-  description: gestion des adhérents
+- name: Authentification
+  description: Gestion des authentifications
   externalDocs:
     description: Pour plus de détail
-    url: http://plusdedétail.ht
+    url: https://github.com/emmanuel33700/espace_adherents
+- name: Roles
+  description: Gestion des roles
+  externalDocs:
+    description: Pour plus de détail
+    url: https://github.com/emmanuel33700/espace_adherents
 paths:
-  /adherent:
+  /authentification:
     put:
       tags:
-      - adherent
-      summary: Mise à jour de l'adherent
-      description: This can only be done by the logged in user.
-      operationId: updateUser
+      - Authentification
+      summary: Mise à jour du compte accès d'une personne
+      description: Mise à jour de l'authentification d'une personne
+      operationId: updateAuthentification
+      security: 
+        - oAuth: [ress-autorization-admin, ress-autorization-write]
+      requestBody:
+        description: mise à jour de l'objet authentification
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentification'
+        required: true
+      responses:
+        200:
+          description: Operation réussie
+        403:
+          description: Droit insufisant 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    post:
+      tags:
+      - Authentification
+      summary: Ajouter  compte d'accès d'une personne
+      operationId: addAuthentification
+      requestBody:
+        description: ajout de l'objet authentification
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Authentification'
+        required: true
+      responses:
+        201:
+          description: Operation réussie
+        403:
+          description: Droit insufisant 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /authentification/{login}:
+    delete:
+      tags:
+      - Authentification
+      summary: suppression du compte accès d'une personne
+      operationId: deleteAuthentification
+      security: 
+        - oAuth: [ress-autorization-admin, ress-autorization-del]
       parameters:
-      - name: username
+      - name: login
         in: path
-        description: name that need to be updated
+        description: login de la personne 
         required: true
         schema:
           type: string
-      requestBody:
-        description: Updated user object
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Adherent'
-        required: true
+          maxLength: 50
+          minLength: 3
       responses:
-        400:
-          description: Invalid user supplied
-          content: {}
+        200:
+          description: Operation réussie
         404:
-          description: User not found
-          content: {}
-    post:
-      tags:
-      - adherent
-      summary: Ajouter un adhérent
-      operationId: ajoutAdherent
-      requestBody:
-        description: Besoin de l'objet adhérent pour ajouter un adhérent
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Adherent'
-        required: true
-      responses:
+          description: login non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        403:
+          description: Droit insufisant 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
         405:
           description: Invalid input
-          content: {}
-      security:
-      - petstore_auth:
-        - adh:write
-        - adh:read
-      - bearerAuth: []
-  /adherent/{idAdh}:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
     get:
       tags:
-      - adherent
-      summary: rechercher adherent par id
-      operationId: getAdherent
+      - Authentification
+      summary: Récupérer les informations d'authentification
+      description: vérifier si un login existe dans la BD
+      operationId: getAuthentification
+      security: 
+        - oAuth: [ress-autorization-admin]
       parameters:
-      - name: idAdh
+      - name: login
         in: path
-        description: Id de l'adhérent à récupérer
+        description: login de la personne
         required: true
         schema:
-          type: integer
+          type: string
+          maxLength: 50
+          minLength: 3
       responses:
         200:
           description: Operation réussie
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Adherent'
-        400:
-          description: ID adherent invalide
-          content: {}
+                $ref: '#/components/schemas/Authentification'
         404:
-          description: adherent non trouvé
-          content: {}
-      security:
-      - petstore_auth:
-        - adh:read
-      - bearerAuth: []
-    delete:
+          description: login non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        403:
+          description: Droit insufisant 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /authentification/{login}/resetPassword:
+    get:
       tags:
-      - adherent
-      summary: Supression de l'adherent par id
-      operationId: deleteUser
+      - Authentification
+      summary: demander la réinitialisation du mot de passe
+      operationId: resetPassword
       parameters:
-      - name: idAdh
+      - name: login
         in: path
-        description: Id de l'adhérent à récupérer
+        description: login de la personne 
         required: true
         schema:
-          type: integer
+          type: string
+          maxLength: 50
+          minLength: 3
       responses:
-        400:
-          description: ID adherent invalide
-          content: {}
+        200:
+          description: Operation réussie
         404:
-          description: adherent non trouvé
-          content: {}
-      security:
-      - petstore_auth:
-        - adh:del
-      - bearerAuth: []
+          description: login non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        403:
+          description: Droit insufisant 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /authentification/{login}/validation:
+    post:
+      tags:
+      - Authentification
+      summary: validation d'enregistrement du login d'une personne
+      operationId: validationAuthentification
+      parameters:
+      - name: login
+        in: path
+        description: login de la personne 
+        required: true
+        schema:
+          type: string
+          maxLength: 50
+          minLength: 3
+      requestBody:
+        description: Clée de validation reçu par mail au moment de la création du compte
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Validation'
+        required: true
+      responses:
+        201:
+          description: Operation réussie
+        404:
+          description: login non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        403:
+          description: Droit insufisant 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /authentification/{login}/roles:
+    put:
+      tags:
+      - Roles
+      summary: Mise à jour des roles d'une personne
+      description: Mise à jour des roles d'une personne
+      operationId: updateRoles
+      security: 
+        - oAuth: [ress-autorization-admin]
+      parameters:
+      - name: login
+        in: path
+        description: login de la personne
+        required: true
+        schema:
+          type: string
+          maxLength: 50
+          minLength: 3
+      requestBody:
+        description: mise à jour de l'objet role
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Roles'
+        required: true
+      responses:
+        200:
+          description: Operation réussie
+        404:
+          description: login non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        403:
+          description: Droit insufisant 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
 components:
   schemas:
-    Adherent:
+    Authentification:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-        civilite:
-          type: string
-          description: civilite de l'adhenrent
-          enum:
-          - Monsieur
-          - Madame
-        nom:
-          maxLength: 20
-          minLength: 3
-          type: string
-        prenom:
-          maxLength: 20
-          minLength: 3
-          type: string
-        adresse1:
-          maxLength: 37
-          minLength: 3
-          type: string
-        adresse2:
-          maxLength: 37
-          minLength: 3
-          type: string
-        codePostal:
-          maxLength: 5
-          minLength: 5
-          type: string
-        telMaison:
-          maxLength: 10
-          minLength: 10
-          type: string
-        telTravail:
-          maxLength: 10
-          minLength: 10
-          type: string
-        telPortail:
-          maxLength: 10
-          minLength: 10
-          type: string
-        privilege:
-          type: string
-          description: privilege
-          enum:
-          - Adherent
-          - Conseil administration
-          - Bureau
-          - Admin
-        email:
-          maxLength: 40
-          minLength: 5
-          type: string
-        profession:
+        login:
+          description: Login de la personnes 
           maxLength: 50
+          minLength: 3
+          type: string
+        password:
+          description: Mot de passe de la personne
+          maxLength: 15
           minLength: 5
           type: string
-        dateNaissance:
+    Roles:
+      type: object
+      properties:
+        login:
+          maxLength: 50
+          minLength: 3
           type: string
-          format: date-time
-        telescope:
-          type: boolean
-        lunette:
-          type: boolean
-        jumelles:
-          type: boolean
-        modelInstrument:
+        roles :
+          description: Role de la personnes 
+          type: array
+          items:
+            type: string
+            enum:
+            - ADHERENT
+            - CONSEIL
+            - BUREAU
+            - ADMIN
+    Validation:
+      type: object
+      properties:
+        cleeValidation:
+          description: clée de validation pour activer le compte créé
+          maxLength: 50
+          minLength: 3
           type: string
-        commentaire:
-          maxLength: 100
-          minLength: 2
-          type: string
-      xml:
-        name: Order
     ApiResponse:
       type: object
       properties:
@@ -213,20 +338,26 @@ components:
         message:
           type: string
   securitySchemes:
-    petstore_auth:
+    oAuth:    
       type: oauth2
+      description: This API uses OAuth 2 with the implicit grant flow. [More info]
       flows:
-        implicit:
-          authorizationUrl: http://adherents.jalle-astro.fr/token/
+        clientCredentials:  
+          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
           scopes:
-            adh:write: modification d'un adherents
-            adh:read: lecture d'un adhérent
-            adh:del: suppression d'un adherent
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
+            ress-autorization-admin: droit administration sur les ressources autorisation
+        authorizationCode:  
+          authorizationUrl: http://127.0.0.1:8081/authorization-server/oauth/authorize
+          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
+          scopes:
+            ress-autorization-admin: droit administration sur les ressources autorisation
+            ress-autorization-read : droit de lecteur sur les ressoruces autorisation
+            ress-autorization-write : droit d'écriture sur les ressoruces autorisation
+            ress-autorization-del : droit de suppression sur les ressoruces autorisation
+        password:
+          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
+          scopes:
+            ress-autorization-admin: droit administration sur les ressources autorisation
+            ress-autorization-read : droit de lecteur sur les ressoruces autorisation
+            ress-autorization-write : droit d'écriture sur les ressoruces autorisation
+            ress-autorization-del : droit de suppression sur les ressoruces autorisation
