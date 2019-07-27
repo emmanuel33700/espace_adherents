@@ -1,7 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2019 emmanuel33700 https://github.com/emmanuel33700/espace_adherents
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.espaceadh.lib.mail;
 
@@ -17,6 +28,8 @@ import fr.espaceadh.lib.mail.dto.MailOutDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,6 +39,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class SendMailImpl implements sendMail {
 
+    @Autowired
+    private Environment env;
+    
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SendMailImpl.class);
 
     @Override
@@ -36,7 +52,7 @@ public class SendMailImpl implements sendMail {
         MailjetResponse response;
 
         // Note how we set the version to v3.1 using ClientOptions
-        MailjetClient client = new MailjetClient("9ef2460a73b008943645563d43a428f8", "336e76d521102883d69465769d8cb94a", new ClientOptions("v3.1"));
+        MailjetClient client = new MailjetClient(env.getProperty("mailjet.login"), env.getProperty("mailjet.password"), new ClientOptions("v3.1"));
 
         JSONObject message = new JSONObject();
         message.put(Emailv31.Message.FROM, new JSONObject()

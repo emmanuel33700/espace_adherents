@@ -10,6 +10,7 @@ import fr.espaceadh.lib.mail.dto.MailOutDto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,6 +23,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class})
 @ContextConfiguration(locations="classpath:config.xml")
+@PropertySource("classpath:application-dev.properties")
 public class SendMailTest {
     
     @Test
