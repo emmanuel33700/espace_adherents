@@ -27,7 +27,11 @@ node/
 
 *.log
 
-#fichier de production
+#fichier de configuration
 *prod.properties
+*dev.properties
+*int.properties
 *prod.jks
+*int.jks
 *prod.txt
+*int.txt
