@@ -10,7 +10,6 @@ import org.springframework.context.annotation.PropertySource;
 
 
 @SpringBootApplication(scanBasePackages = "fr.espaceadh")
-//@PropertySource("classpath:application-${environment}.properties")
 public class AuthorizationServerApplication extends SpringBootServletInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationServerApplication.class);  

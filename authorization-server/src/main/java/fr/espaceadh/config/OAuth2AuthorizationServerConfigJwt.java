@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,8 +30,10 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @EnableAuthorizationServer
 public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfigurerAdapter {
 
+    @Autowired
+    private Environment env;
     
-    private static final Logger logger = LoggerFactory.getLogger(OAuth2AuthorizationServerConfigJwt.class);  
+    private static final Logger LOGGER = LoggerFactory.getLogger(OAuth2AuthorizationServerConfigJwt.class);  
     
     @Autowired
     @Qualifier("authenticationManagerBean")
@@ -45,22 +48,22 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception { // @formatter:off
         
         clients.inMemory()
-                .withClient("espaceAdh")
-                .secret(passwordEncoder().encode("secret"))
+                .withClient(env.getProperty("oauth2.desktop.clientid"))
+                .secret(passwordEncoder().encode(env.getProperty("oauth2.desktop.clientsecret")))
                 .authorizedGrantTypes("password", "refresh_token", "authorization_code")
                 .autoApprove(true)
                 .scopes("ress-autorization-read", "ress-autorization-write", "ress-autorization-del")
-                .accessTokenValiditySeconds(3600)       // 1 hour
-                .refreshTokenValiditySeconds(36000)  // 10 hour
+                .accessTokenValiditySeconds(env.getProperty("oauth2.desktop.accesstoken.validity", Integer.class))       
+                .refreshTokenValiditySeconds(env.getProperty("oauth2.desktop.refreshtoken.validity", Integer.class)) 
                 .redirectUris("http://www.example.com","http://localhost:8089/")
                 
                 .and()
-                .withClient("ress-adherents")
-                .secret(passwordEncoder().encode("secret"))
+                .withClient(env.getProperty("oauth2.ress-adh.clientid"))
+                .secret(passwordEncoder().encode(env.getProperty("oauth2.ress-adh.clientsecret")))
                 .authorizedGrantTypes("client_credentials")
                 .scopes("ress-autorization-admin")
-                .accessTokenValiditySeconds(3600)       // 1 hour
-                .refreshTokenValiditySeconds(36000)  // 10 hour               
+                .accessTokenValiditySeconds(env.getProperty("oauth2.ress-adh.accesstoken.validity", Integer.class))       
+                .refreshTokenValiditySeconds(env.getProperty("oauth2.ress-adh.refreshtoken.validity", Integer.class))             
                 ;
                                                                                                                                                                                                                                                                                                                                                                                                 
     } // @formatter:on
@@ -95,8 +98,8 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
     public JwtAccessTokenConverter accessTokenConverter() {
         final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
        // converter.setSigningKey("123");
-        final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource("mytest.jks"), "mypass".toCharArray());
-        converter.setKeyPair(keyStoreKeyFactory.getKeyPair("mytest"));
+        final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource(env.getProperty("jks.keystore")), env.getProperty("jks.keypass").toCharArray());
+        converter.setKeyPair(keyStoreKeyFactory.getKeyPair(env.getProperty("jks.alias")));
         
         return converter;
     }
