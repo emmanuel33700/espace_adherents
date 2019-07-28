@@ -23,7 +23,7 @@ import fr.espaceadh.lib.mail.dto.MailOutDto;
  *
  * @author emmanuel
  */
-public interface sendMail {
+public interface SendMail {
     
     /**
      *  Envoyer un mail via la librairie mailjet

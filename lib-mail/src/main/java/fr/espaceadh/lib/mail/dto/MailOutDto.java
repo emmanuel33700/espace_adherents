@@ -21,5 +21,22 @@ package fr.espaceadh.lib.mail.dto;
  * @author emmanuel
  */
 public class MailOutDto {
+    private String statutEnvoi;
+
+    /**
+     * retourn le statut d'envoi du message
+     * @return 
+     *      success => message envoyé
+     *      error => Erreur sur le message envoyé
+     */
+    public String getStatutEnvoi() {
+        return statutEnvoi;
+    }
+
+    public void setStatutEnvoi(String statutEnvoi) {
+        this.statutEnvoi = statutEnvoi;
+    }
+    
+    
     
 }

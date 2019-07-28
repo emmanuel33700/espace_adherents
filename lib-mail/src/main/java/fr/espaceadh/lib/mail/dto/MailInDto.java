@@ -16,10 +16,34 @@
  */
 package fr.espaceadh.lib.mail.dto;
 
+import java.util.Collection;
+
 /**
  *
  * @author emmanuel
  */
 public class MailInDto {
+    
+    
+    private String messageFrom;
+    private Collection<String> messageTo;
+
+    public Collection<String> getMessageTo() {
+        return messageTo;
+    }
+
+    public void setMessageTo(Collection<String> messageTo) {
+        this.messageTo = messageTo;
+    }
+
+    public String getMessageFrom() {
+        return messageFrom;
+    }
+
+    public void setMessageFrom(String messageFrom) {
+        this.messageFrom = messageFrom;
+    }
+    
+    
     
 }

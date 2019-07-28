@@ -16,16 +16,13 @@
     </appender>-->
      
     <!--Daily rolling file appender -->
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>/tmp/logFile-test.log</File>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>logFile.%d{yyyy-MM-dd}.log</FileNamePattern>
-        </rollingPolicy>
-     
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</Pattern>
-        </layout>
-    </appender>
+    <appender name = "FILE" class = "ch.qos.logback.core.FileAppender">
+      <File>/home/emmanuel/programmation/jalle_astro/lib-mail.log</File>
+      <encoder>
+         <pattern>[%d{yyyy-MM-dd'T'HH:mm:ss.sss'Z'}] [%C] [%t] [%L] [%-5p] %m%n</pattern>
+      </encoder>
+   </appender>   
+
      
     <logger name="org.springframework.jdbc.core.JdbcTemplate">
         <level value="TRACE" />

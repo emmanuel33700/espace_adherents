@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.espaceadh.lib.mail;
+package fr.espaceadh.lib.mail.impl.mailjet;
 
 import com.mailjet.client.ClientOptions;
 import com.mailjet.client.MailjetClient;
@@ -23,6 +23,7 @@ import com.mailjet.client.MailjetResponse;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
 import com.mailjet.client.resource.Emailv31;
+import fr.espaceadh.lib.mail.SendMail;
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
 import org.json.JSONArray;
@@ -37,7 +38,7 @@ import org.springframework.stereotype.Service;
  * @author emmanuel
  */
 @Service
-public class SendMailImpl implements sendMail {
+public class SendMailImpl implements SendMail {
 
     @Autowired
     private Environment env;
@@ -50,34 +51,65 @@ public class SendMailImpl implements sendMail {
 
         MailjetRequest email;
         MailjetResponse response;
+        
 
+
+
+        String emailto = null;
+        JSONArray emailJsonArray = new JSONArray();
+        
+        /** si nous somme en dev, envoi de l'e-mail à une seule adresse configuré dans le fichier de properties **/
+        if (env.getProperty("spring.profiles.active") != null && env.getProperty("spring.profiles.active").equalsIgnoreCase("dev")) {
+                emailJsonArray.put(new JSONObject().put(Emailv31.Message.EMAIL, env.getProperty("message.to")));
+        } 
+        /** sinon, envoie au mail indique dans le dto **/
+        else {
+            if (!mailIn.getMessageTo().isEmpty()) {
+                for (String emailit : mailIn.getMessageTo()) {
+                    emailJsonArray.put(new JSONObject().put(Emailv31.Message.EMAIL, emailit));
+                }
+            } else {
+                LOGGER.error("Pas d'email destinataire");
+            }
+        }
+
+        
+        LOGGER.debug("Mail from {}", mailIn.getMessageFrom());
+        LOGGER.debug("Mail to {}", emailJsonArray.toString());
+        
         // Note how we set the version to v3.1 using ClientOptions
         MailjetClient client = new MailjetClient(env.getProperty("mailjet.login"), env.getProperty("mailjet.password"), new ClientOptions("v3.1"));
-
         JSONObject message = new JSONObject();
         message.put(Emailv31.Message.FROM, new JSONObject()
-                .put(Emailv31.Message.EMAIL, "manu.chenais@gmail.com")
+                .put(Emailv31.Message.EMAIL, mailIn.getMessageFrom())
                 .put(Emailv31.Message.NAME, "Mailjet Pilot")
         )
                 .put(Emailv31.Message.SUBJECT, "Your email flight plan!")
                 .put(Emailv31.Message.TEXTPART, "Dear passenger, welcome to Mailjet! May the delivery force be with you!")
                 .put(Emailv31.Message.HTMLPART, "<h3>Dear passenger, welcome to Mailjet</h3><br/>May the delivery force be with you!")
-                .put(Emailv31.Message.TO, new JSONArray()
-                        .put(new JSONObject()
-                                .put(Emailv31.Message.EMAIL, "manu.chenais@gmail.com")));
+                .put(Emailv31.Message.TO, emailJsonArray);
 
         email = new MailjetRequest(Emailv31.resource).property(Emailv31.MESSAGES, (new JSONArray()).put(message));
 
+        MailOutDto mailOutDto = new  MailOutDto();
         try {
             response = client.post(email);
-            LOGGER.info(response.getData().toString());
-            System.out.println(response.getData().toString());
+            LOGGER.info("Retour de mailjet {} ", response.getData().toString());
+            LOGGER.info( "statut maijet {}", response.getStatus());
+
             
+            if (response.getStatus() == 200) {
+                mailOutDto.setStatutEnvoi(response.getData().getJSONObject(0).getString("Status"));
+            }
+            else {
+                mailOutDto.setStatutEnvoi("error");
+            }
         } catch (MailjetException | MailjetSocketTimeoutException ex) {
+            mailOutDto.setStatutEnvoi("error");
             LOGGER.error(ex.getMessage());
         }
 
-        return new MailOutDto();
+        return  mailOutDto;
     }
 
 }
