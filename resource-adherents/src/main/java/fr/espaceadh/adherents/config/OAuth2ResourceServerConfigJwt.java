@@ -56,7 +56,7 @@ public class OAuth2ResourceServerConfigJwt extends ResourceServerConfigurerAdapt
         converter.setAccessTokenConverter(customAccessTokenConverter);
 
         //converter.setSigningKey("123");
-         final Resource resource = new ClassPathResource("public.txt");
+         final Resource resource = new ClassPathResource(env.getProperty("key.public"));
          String publicKey = null;
          try {
          publicKey = IOUtils.toString(resource.getInputStream());
