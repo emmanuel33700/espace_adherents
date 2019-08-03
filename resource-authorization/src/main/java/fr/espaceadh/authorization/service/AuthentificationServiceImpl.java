@@ -21,9 +21,18 @@ import fr.espaceadh.authorization.dao.userDao;
 import fr.espaceadh.authorization.dto.AuthoritiesDto;
 import fr.espaceadh.authorization.dto.RolesEnum;
 import fr.espaceadh.authorization.dto.UserDto;
+import fr.espaceadh.lib.mail.GestionMail;
+import fr.espaceadh.lib.mail.dto.MailInDto;
+import fr.espaceadh.lib.mail.dto.MailOutDto;
+import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,18 +46,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthentificationServiceImpl implements AuthentificationService {
 
     @Autowired
+    private GestionMail getionMail;
+    
+    @Autowired
     protected userDao userDao;
     
     @Autowired
     protected AuthoritiesDao authoritiesDao;
     
+    @Autowired
+    private Environment env;
+    
     @Override
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public int creerUser(UserDto usersDto) {
         
         // vérification dans la BD adhérent si l'utilsateur à été créé
         int idAdh = 39;
         
+
         
         // création du compte dans la BD d'authorisation
         UUID uuid = UUID.randomUUID();
@@ -60,13 +76,35 @@ public class AuthentificationServiceImpl implements AuthentificationService {
         
         userDao.creationUser(usersDto);
         
-        
+        // création de l'authorité BD d'authorisation
         AuthoritiesDto authoritiesDto = new AuthoritiesDto();
         authoritiesDto.setUsername(usersDto.getUsername());
         authoritiesDto.setRoles(RolesEnum.ADHERENT);
         authoritiesDao.creationAutorities(authoritiesDto);
         
-        return 0;
+        //envoie du mail de validation du compte
+        MailInDto mailIn = new MailInDto();
+
+        
+        Collection<String> messageTo = new ArrayList<>();
+        messageTo.add(usersDto.getUsername());
+        mailIn.setMessageTo(messageTo);
+        
+        
+        /* type de template */
+        mailIn.setTemplateMailEnum(TemplateMailEnum.DEMANDE_VALIDATION_MAIL);
+        
+        /* variables associées au tempalte **/
+        HashMap<String, String> templateVariables = new HashMap<>();
+        templateVariables.put("adh_prenom", "Emmanuel");
+        templateVariables.put("confirmation_link", env.getProperty("validationmail.url").concat("?token=").concat(uuid.toString()));
+        mailIn.setTemplateVariables(templateVariables);
+        
+        
+        MailOutDto mailOut = getionMail.sendMail(mailIn);
+        
+        if (mailOut.getStatutEnvoi().endsWith("success")) return 0;
+        else return 99;
     }
     
 }
