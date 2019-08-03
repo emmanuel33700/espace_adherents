@@ -14,21 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.espaceadh.lib.mail;
-
-import fr.espaceadh.lib.mail.dto.MailInDto;
-import fr.espaceadh.lib.mail.dto.MailOutDto;
+package fr.espaceadh.lib.mail.dto;
 
 /**
  *
- * @author emmanuel
+ * @author emmanuel33700 https://github.com/emmanuel33700/espace_adherents
  */
-public interface SendMail {
+public enum TemplateMailEnum {
+    SANS_TEMPLATE("SANS_TEMPLATE"),
+    DEMANDE_VALIDATION_MAIL("DEMANDE_VALIDATION_MAIL"),
+    CONFIRMATION_ADHESION("CONFIRMATION_ADHESION");
     
-    /**
-     *  Envoyer un mail via la librairie mailjet
-     * @param mailIn
-     * @return 
-     */
-    public MailOutDto sendMail(final MailInDto mailIn);
+    private String template = "";
+    
+        //Constructeur
+    TemplateMailEnum(String template) {
+        this.template = template;
+    }
+
+    public String toString() {
+        return template;
+    }
 }

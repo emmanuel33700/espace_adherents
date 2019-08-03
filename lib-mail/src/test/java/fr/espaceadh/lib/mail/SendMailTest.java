@@ -7,9 +7,15 @@ package fr.espaceadh.lib.mail;
 
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
+import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,16 +44,18 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 public class SendMailTest {
     
     @Autowired
-    private SendMail sendMail;
+    private GestionMail sendMail;
     
     @Autowired
     private Environment env;
+    
+
     
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SendMailTest.class);
 
     
     @Configuration
-    @ComponentScan("fr.espaceadh.lib.mail.impl.mailjet")
+    @ComponentScan({"fr.espaceadh.lib.mail.impl.mailjet", })
     public static class SpringConfig {
 
     }
@@ -59,13 +67,30 @@ public class SendMailTest {
         LOGGER.info("Login {}", env.getProperty("mailjet.login"));
         LOGGER.info("Password {}", env.getProperty("mailjet.password"));
         
-        mailIn.setMessageFrom(env.getProperty("message.from"));
-
+        /* adresse email de destination */
+        Collection<String> messageTo = new ArrayList<>();
+        messageTo.add("toto.toto@gmail.com");
+        mailIn.setMessageTo(messageTo);
         
+        /* type de template */
+        mailIn.setTemplateMailEnum(TemplateMailEnum.DEMANDE_VALIDATION_MAIL);
+        
+        /* variables associées au tempalte **/
+         HashMap<String, String> templateVariables = new HashMap<>();
+        templateVariables.put("adh_prenom", "Emmanuel");
+        templateVariables.put("confirmation_link", "http://jalle-astro.fr/");
+        mailIn.setTemplateVariables(templateVariables);
+        
+         
+        /* demande d'envoie du mail */
         MailOutDto mailOut = sendMail.sendMail(mailIn);
+        
+        
         
         Assert.assertEquals("success", mailOut.getStatutEnvoi());
         
     }
+
+
     
 }

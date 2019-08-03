@@ -17,6 +17,7 @@
 package fr.espaceadh.lib.mail.dto;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 /**
  *
@@ -24,9 +25,9 @@ import java.util.Collection;
  */
 public class MailInDto {
     
-    
-    private String messageFrom;
+    private TemplateMailEnum templateMailEnum;
     private Collection<String> messageTo;
+    HashMap<String, String> templateVariables;
 
     public Collection<String> getMessageTo() {
         return messageTo;
@@ -36,12 +37,20 @@ public class MailInDto {
         this.messageTo = messageTo;
     }
 
-    public String getMessageFrom() {
-        return messageFrom;
+    public TemplateMailEnum getTemplateMailEnum() {
+        return templateMailEnum;
     }
 
-    public void setMessageFrom(String messageFrom) {
-        this.messageFrom = messageFrom;
+    public void setTemplateMailEnum(TemplateMailEnum templateMailEnum) {
+        this.templateMailEnum = templateMailEnum;
+    }
+
+    public HashMap<String, String> getTemplateVariables() {
+        return templateVariables;
+    }
+
+    public void setTemplateVariables(HashMap<String, String> templateVariables) {
+        this.templateVariables = templateVariables;
     }
     
     
