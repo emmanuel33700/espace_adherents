@@ -1,28 +1,43 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2019 emmanuel33700 https://github.com/emmanuel33700/espace_adherents
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.espaceadh.adherents.dao;
 
+import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.model.Adherent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author emmanuel
  */
 @Repository
-@Transactional
 public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdherentsDAOImpl.class);  
+
     
     @Autowired
     public AdherentsDAOImpl(DataSource dataSource) {
@@ -34,33 +49,104 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         
         
         StringBuilder query = new StringBuilder();
-        query.append("SELECT id_adherents, nom, premon, adresse1, adresse2, code_postal, ville,");
-        query.append("        tel1, tel2, tel3, e_mail, date_maissance, profession, a_telescope, ");
-        query.append("        a_lunette, a_jumelles, modele_instrument, commentaire, date_enregistrement, ");
-        query.append("        login_site_web, pwd_site_web, fk_id_type_user, link_picture, ");
-        query.append("        update_date, update_fk_id_adherents, public_contact, mail_auto, ");
-        query.append("        token, civilite");
+        query.append("SELECT id_adherents, e_mail, civilite, nom, premon");
+        query.append("        , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
+        query.append("        , tel3, date_maissance, profession, link_picture, public_contact ");
+        query.append("        , accord_mail, token_acces, commentaire, date_enregistrement ");
+        query.append("        , fk_id_adherents_update, update_date ");
         query.append("  FROM t_adherents");
         query.append(" where e_mail =  ?");
         
         List<Adherent> query1 = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper(), login);
-        return query1.get(1);
+        if (!query1.isEmpty()) {
+            return query1.get(1);
+        }
+        LOGGER.warn("login {} non trouvé en BD", login);
+        return new Adherent();
     }
 
     @Override
     public Adherent getAdherentByID(long idAdh) {
         StringBuilder query = new StringBuilder();
-        query.append("SELECT id_adherents, nom, premon, adresse1, adresse2, code_postal, ville,");
-        query.append("        tel1, tel2, tel3, e_mail, date_maissance, profession, a_telescope, ");
-        query.append("        a_lunette, a_jumelles, modele_instrument, commentaire, date_enregistrement, ");
-        query.append("        login_site_web, pwd_site_web, fk_id_type_user, link_picture, ");
-        query.append("        update_date, update_fk_id_adherents, public_contact, mail_auto, ");
-        query.append("        token, civilite");
+        query.append("SELECT id_adherents, e_mail, civilite, nom, premon");
+        query.append("        , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
+        query.append("        , tel3, date_maissance, profession, link_picture, public_contact ");
+        query.append("        , accord_mail, token_acces, commentaire, date_enregistrement ");
+        query.append("        , fk_id_adherents_update, update_date ");
         query.append("  FROM t_adherents");
         query.append(" where id_adherents =  ?");
         
         List<Adherent> query1 = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper(), idAdh);
-        return query1.get(0);
+        if (!query1.isEmpty()) {
+            return query1.get(1);
+        }
+        LOGGER.warn("id adherents {} non trouvé en BD", idAdh);
+        return new Adherent();
+    }
+
+    
+    
+    @Override
+    public long creerAdherent(AdherentDto adherentDto) {
+       
+        adherentDto.setId(this.recupererIdAdherent());
+        
+        StringBuilder query = new StringBuilder();
+        query.append(" INSERT INTO t_adherents( ");
+        query.append("		id_adherents, e_mail, civilite, nom, premon, adresse1 ");
+        query.append("		, adresse2, code_postal, ville, tel1, tel2, tel3, date_maissance ");
+        query.append("		, profession, link_picture, public_contact, accord_mail, token_acces ");
+        query.append("		, commentaire, date_enregistrement, fk_id_adherents_update, update_date) ");
+        query.append("	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");        
+        
+       int nbCreation;          
+       nbCreation = this.getJdbcTemplate().update(query.toString() 
+            , adherentDto.getId()
+            , adherentDto.getEmail()
+            , adherentDto.getCivilite()
+            , adherentDto.getNom()
+            , adherentDto.getPrenom()
+            , adherentDto.getAdresse1()
+       
+            , adherentDto.getAdresse2()
+            , adherentDto.getCodePostal()
+            , adherentDto.getVille()
+            , adherentDto.getTelMaison()
+            , adherentDto.getTelTravail()
+            , adherentDto.getTelPortable()
+            , adherentDto.getDateNaissance()
+       
+            , adherentDto.getProfession()
+            , adherentDto.getLienPhotoProfil()
+            , adherentDto.getPublicContact()
+            , adherentDto.getAccordMail()
+            , adherentDto.getTokenAcces()
+               
+            , adherentDto.getCommentaire()
+            , adherentDto.getDateEnregistrement()
+            , adherentDto.getIdAdherentUpdate()
+            , adherentDto.getDateMiseAJour()
+            ) ;
+       
+        if (nbCreation ==  1) return adherentDto.getId();
+        else {
+            LOGGER.error("Erreur lors de la creation de l'utilisateur : nombre de ligne crée {} ", nbCreation );
+        }
+        return 0;
+    }
+    
+    
+    /**
+     * Récuper un idAdherent
+     * @return idAdherent
+     */
+    private long recupererIdAdherent(){
+        StringBuilder query = new StringBuilder()
+            .append(" select nextval('seq_t_adherents') ");
+        
+        final long idAdherent = this.getJdbcTemplate().queryForObject(query.toString(),  Long.class);
+        
+        return idAdherent;
     }
     
     

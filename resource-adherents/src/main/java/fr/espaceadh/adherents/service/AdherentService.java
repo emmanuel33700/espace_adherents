@@ -14,36 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.espaceadh.adherents.dao;
+package fr.espaceadh.adherents.service;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
-import fr.espaceadh.adherents.model.Adherent;
 
 /**
  *
- * @author emmanuel
+ * @author emmanuel33700 https://github.com/emmanuel33700/espace_adherents
  */
-public interface AdherentsDAO {
+public interface AdherentService {
     
     /**
-     * Récupérer l'adhérent via son login
-     * @param login
-     * @return 
-     */
-    public Adherent getAdherentByLogin(final String login);
-    
-    /**
-     * rechercher un adh avec son id
-     * @param idAdh
-     * @return 
-     */
-    public Adherent getAdherentByID(final long idAdh);
-    
-    /**
-     * Création d'un adhérent
+     * Création d'un adherent
      * @param adherentDto adherents DTO
-     * @return  id de l'adherent créé
+     * @return  0 => Création OK
+     *          1 => Creation erreur
      */
-    public long creerAdherent(AdherentDto adherentDto);
+    int creerAdherent(AdherentDto adherentDto);
+    
+    /**
+     * Recupérer un adhérent avec son username
+     * @param username email de la personne
+     * @return adherentDto
+     */
+    AdherentDto recupererAdherent (String username);
     
 }

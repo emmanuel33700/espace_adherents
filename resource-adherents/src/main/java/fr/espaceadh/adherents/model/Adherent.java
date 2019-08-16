@@ -4,7 +4,6 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
@@ -15,7 +14,7 @@ import javax.validation.constraints.*;
  * Adherent
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-20T15:15:37.676Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-08-16T13:27:11.143Z[GMT]")
 public class Adherent   {
   @JsonProperty("id")
   private Long id = null;
@@ -24,9 +23,9 @@ public class Adherent   {
    * civilite de l'adhenrent
    */
   public enum CiviliteEnum {
-    MONSIEUR("Monsieur"),
+    MR("Mr"),
     
-    MADAME("Madame");
+    MME("Mme");
 
     private String value;
 
@@ -68,51 +67,17 @@ public class Adherent   {
   @JsonProperty("codePostal")
   private String codePostal = null;
 
+  @JsonProperty("ville")
+  private String ville = null;
+
   @JsonProperty("telMaison")
   private String telMaison = null;
 
   @JsonProperty("telTravail")
   private String telTravail = null;
 
-  @JsonProperty("telPortail")
-  private String telPortail = null;
-
-  /**
-   * privilege
-   */
-  public enum PrivilegeEnum {
-    ADHERENT("Adherent"),
-    
-    CONSEIL_ADMINISTRATION("Conseil administration"),
-    
-    BUREAU("Bureau"),
-    
-    ADMIN("Admin");
-
-    private String value;
-
-    PrivilegeEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static PrivilegeEnum fromValue(String text) {
-      for (PrivilegeEnum b : PrivilegeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("privilege")
-  private PrivilegeEnum privilege = null;
+  @JsonProperty("telPortable")
+  private String telPortable = null;
 
   @JsonProperty("email")
   private String email = null;
@@ -123,20 +88,23 @@ public class Adherent   {
   @JsonProperty("dateNaissance")
   private OffsetDateTime dateNaissance = null;
 
-  @JsonProperty("telescope")
-  private Boolean telescope = null;
+  @JsonProperty("lienPhotoProfil")
+  private String lienPhotoProfil = null;
 
-  @JsonProperty("lunette")
-  private Boolean lunette = null;
+  @JsonProperty("accordMail")
+  private Boolean accordMail = null;
 
-  @JsonProperty("jumelles")
-  private Boolean jumelles = null;
-
-  @JsonProperty("modelInstrument")
-  private String modelInstrument = null;
+  @JsonProperty("publicContact")
+  private Boolean publicContact = null;
 
   @JsonProperty("commentaire")
   private String commentaire = null;
+
+  @JsonProperty("dateEnregistrement")
+  private OffsetDateTime dateEnregistrement = null;
+
+  @JsonProperty("dateMiseAJour")
+  private OffsetDateTime dateMiseAJour = null;
 
   public Adherent id(Long id) {
     this.id = id;
@@ -271,6 +239,25 @@ public class Adherent   {
     this.codePostal = codePostal;
   }
 
+  public Adherent ville(String ville) {
+    this.ville = ville;
+    return this;
+  }
+
+  /**
+   * Get ville
+   * @return ville
+  **/
+  @ApiModelProperty(value = "")
+
+@Size(min=3,max=50)   public String getVille() {
+    return ville;
+  }
+
+  public void setVille(String ville) {
+    this.ville = ville;
+  }
+
   public Adherent telMaison(String telMaison) {
     this.telMaison = telMaison;
     return this;
@@ -309,42 +296,23 @@ public class Adherent   {
     this.telTravail = telTravail;
   }
 
-  public Adherent telPortail(String telPortail) {
-    this.telPortail = telPortail;
+  public Adherent telPortable(String telPortable) {
+    this.telPortable = telPortable;
     return this;
   }
 
   /**
-   * Get telPortail
-   * @return telPortail
+   * Get telPortable
+   * @return telPortable
   **/
   @ApiModelProperty(value = "")
 
-@Size(min=10,max=10)   public String getTelPortail() {
-    return telPortail;
+@Size(min=10,max=10)   public String getTelPortable() {
+    return telPortable;
   }
 
-  public void setTelPortail(String telPortail) {
-    this.telPortail = telPortail;
-  }
-
-  public Adherent privilege(PrivilegeEnum privilege) {
-    this.privilege = privilege;
-    return this;
-  }
-
-  /**
-   * privilege
-   * @return privilege
-  **/
-  @ApiModelProperty(value = "privilege")
-
-  public PrivilegeEnum getPrivilege() {
-    return privilege;
-  }
-
-  public void setPrivilege(PrivilegeEnum privilege) {
-    this.privilege = privilege;
+  public void setTelPortable(String telPortable) {
+    this.telPortable = telPortable;
   }
 
   public Adherent email(String email) {
@@ -405,80 +373,61 @@ public class Adherent   {
     this.dateNaissance = dateNaissance;
   }
 
-  public Adherent telescope(Boolean telescope) {
-    this.telescope = telescope;
+  public Adherent lienPhotoProfil(String lienPhotoProfil) {
+    this.lienPhotoProfil = lienPhotoProfil;
     return this;
   }
 
   /**
-   * Get telescope
-   * @return telescope
+   * lien vers la photo de profile
+   * @return lienPhotoProfil
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "lien vers la photo de profile")
 
-  public Boolean isTelescope() {
-    return telescope;
+  public String getLienPhotoProfil() {
+    return lienPhotoProfil;
   }
 
-  public void setTelescope(Boolean telescope) {
-    this.telescope = telescope;
+  public void setLienPhotoProfil(String lienPhotoProfil) {
+    this.lienPhotoProfil = lienPhotoProfil;
   }
 
-  public Adherent lunette(Boolean lunette) {
-    this.lunette = lunette;
+  public Adherent accordMail(Boolean accordMail) {
+    this.accordMail = accordMail;
     return this;
   }
 
   /**
-   * Get lunette
-   * @return lunette
+   * donne son accord pour recevoiur des mails
+   * @return accordMail
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "donne son accord pour recevoiur des mails")
 
-  public Boolean isLunette() {
-    return lunette;
+  public Boolean isAccordMail() {
+    return accordMail;
   }
 
-  public void setLunette(Boolean lunette) {
-    this.lunette = lunette;
+  public void setAccordMail(Boolean accordMail) {
+    this.accordMail = accordMail;
   }
 
-  public Adherent jumelles(Boolean jumelles) {
-    this.jumelles = jumelles;
+  public Adherent publicContact(Boolean publicContact) {
+    this.publicContact = publicContact;
     return this;
   }
 
   /**
-   * Get jumelles
-   * @return jumelles
+   * donne son accord afficher ces coordonnées dans l'espace adherents
+   * @return publicContact
   **/
-  @ApiModelProperty(value = "")
+  @ApiModelProperty(value = "donne son accord afficher ces coordonnées dans l'espace adherents")
 
-  public Boolean isJumelles() {
-    return jumelles;
+  public Boolean isPublicContact() {
+    return publicContact;
   }
 
-  public void setJumelles(Boolean jumelles) {
-    this.jumelles = jumelles;
-  }
-
-  public Adherent modelInstrument(String modelInstrument) {
-    this.modelInstrument = modelInstrument;
-    return this;
-  }
-
-  /**
-   * Get modelInstrument
-   * @return modelInstrument
-  **/
-  @ApiModelProperty(value = "")
-
-  public String getModelInstrument() {
-    return modelInstrument;
-  }
-
-  public void setModelInstrument(String modelInstrument) {
-    this.modelInstrument = modelInstrument;
+  public void setPublicContact(Boolean publicContact) {
+    this.publicContact = publicContact;
   }
 
   public Adherent commentaire(String commentaire) {
@@ -500,6 +449,46 @@ public class Adherent   {
     this.commentaire = commentaire;
   }
 
+  public Adherent dateEnregistrement(OffsetDateTime dateEnregistrement) {
+    this.dateEnregistrement = dateEnregistrement;
+    return this;
+  }
+
+  /**
+   * Get dateEnregistrement
+   * @return dateEnregistrement
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+  public OffsetDateTime getDateEnregistrement() {
+    return dateEnregistrement;
+  }
+
+  public void setDateEnregistrement(OffsetDateTime dateEnregistrement) {
+    this.dateEnregistrement = dateEnregistrement;
+  }
+
+  public Adherent dateMiseAJour(OffsetDateTime dateMiseAJour) {
+    this.dateMiseAJour = dateMiseAJour;
+    return this;
+  }
+
+  /**
+   * Get dateMiseAJour
+   * @return dateMiseAJour
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+  public OffsetDateTime getDateMiseAJour() {
+    return dateMiseAJour;
+  }
+
+  public void setDateMiseAJour(OffsetDateTime dateMiseAJour) {
+    this.dateMiseAJour = dateMiseAJour;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -517,23 +506,24 @@ public class Adherent   {
         Objects.equals(this.adresse1, adherent.adresse1) &&
         Objects.equals(this.adresse2, adherent.adresse2) &&
         Objects.equals(this.codePostal, adherent.codePostal) &&
+        Objects.equals(this.ville, adherent.ville) &&
         Objects.equals(this.telMaison, adherent.telMaison) &&
         Objects.equals(this.telTravail, adherent.telTravail) &&
-        Objects.equals(this.telPortail, adherent.telPortail) &&
-        Objects.equals(this.privilege, adherent.privilege) &&
+        Objects.equals(this.telPortable, adherent.telPortable) &&
         Objects.equals(this.email, adherent.email) &&
         Objects.equals(this.profession, adherent.profession) &&
         Objects.equals(this.dateNaissance, adherent.dateNaissance) &&
-        Objects.equals(this.telescope, adherent.telescope) &&
-        Objects.equals(this.lunette, adherent.lunette) &&
-        Objects.equals(this.jumelles, adherent.jumelles) &&
-        Objects.equals(this.modelInstrument, adherent.modelInstrument) &&
-        Objects.equals(this.commentaire, adherent.commentaire);
+        Objects.equals(this.lienPhotoProfil, adherent.lienPhotoProfil) &&
+        Objects.equals(this.accordMail, adherent.accordMail) &&
+        Objects.equals(this.publicContact, adherent.publicContact) &&
+        Objects.equals(this.commentaire, adherent.commentaire) &&
+        Objects.equals(this.dateEnregistrement, adherent.dateEnregistrement) &&
+        Objects.equals(this.dateMiseAJour, adherent.dateMiseAJour);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, civilite, nom, prenom, adresse1, adresse2, codePostal, telMaison, telTravail, telPortail, privilege, email, profession, dateNaissance, telescope, lunette, jumelles, modelInstrument, commentaire);
+    return Objects.hash(id, civilite, nom, prenom, adresse1, adresse2, codePostal, ville, telMaison, telTravail, telPortable, email, profession, dateNaissance, lienPhotoProfil, accordMail, publicContact, commentaire, dateEnregistrement, dateMiseAJour);
   }
 
   @Override
@@ -548,18 +538,19 @@ public class Adherent   {
     sb.append("    adresse1: ").append(toIndentedString(adresse1)).append("\n");
     sb.append("    adresse2: ").append(toIndentedString(adresse2)).append("\n");
     sb.append("    codePostal: ").append(toIndentedString(codePostal)).append("\n");
+    sb.append("    ville: ").append(toIndentedString(ville)).append("\n");
     sb.append("    telMaison: ").append(toIndentedString(telMaison)).append("\n");
     sb.append("    telTravail: ").append(toIndentedString(telTravail)).append("\n");
-    sb.append("    telPortail: ").append(toIndentedString(telPortail)).append("\n");
-    sb.append("    privilege: ").append(toIndentedString(privilege)).append("\n");
+    sb.append("    telPortable: ").append(toIndentedString(telPortable)).append("\n");
     sb.append("    email: ").append(toIndentedString(email)).append("\n");
     sb.append("    profession: ").append(toIndentedString(profession)).append("\n");
     sb.append("    dateNaissance: ").append(toIndentedString(dateNaissance)).append("\n");
-    sb.append("    telescope: ").append(toIndentedString(telescope)).append("\n");
-    sb.append("    lunette: ").append(toIndentedString(lunette)).append("\n");
-    sb.append("    jumelles: ").append(toIndentedString(jumelles)).append("\n");
-    sb.append("    modelInstrument: ").append(toIndentedString(modelInstrument)).append("\n");
+    sb.append("    lienPhotoProfil: ").append(toIndentedString(lienPhotoProfil)).append("\n");
+    sb.append("    accordMail: ").append(toIndentedString(accordMail)).append("\n");
+    sb.append("    publicContact: ").append(toIndentedString(publicContact)).append("\n");
     sb.append("    commentaire: ").append(toIndentedString(commentaire)).append("\n");
+    sb.append("    dateEnregistrement: ").append(toIndentedString(dateEnregistrement)).append("\n");
+    sb.append("    dateMiseAJour: ").append(toIndentedString(dateMiseAJour)).append("\n");
     sb.append("}");
     return sb.toString();
   }
