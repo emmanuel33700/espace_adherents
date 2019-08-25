@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.2-beta" last-position="548,0" last-zoom="0.75" max-obj-count="14"
+	 default-schema="public" default-owner="postgres">
+<database name="espace_adh" encoding="UTF8" lc-collate="fr_FR.UTF-8" lc-ctype="fr_FR.UTF-8" is-template="false" allow-conns="true">
+	<role name="postgres"/>
+	<tablespace name="pg_default"/>
+</database>
+
+<schema name="public" layer="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<table name="i_annee_adhesion" layer="0" collapse-mode="2" max-obj-count="3">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1580" y="60"/>
+	<column name="id_annee_adhesion" not-null="true">
+		<type name="numeric" length="4" precision="0"/>
+	</column>
+	<column name="libelle_annee" not-null="true">
+		<type name="character varying" length="9"/>
+	</column>
+	<column name="annee_courante">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[indicateur de l'anne encours]]></comment>
+	</column>
+	<constraint name="pk_i_annee_adhesion" type="pk-constr" table="public.i_annee_adhesion">
+		<columns names="id_annee_adhesion" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="t_adherents" layer="0" collapse-mode="1" max-obj-count="26">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[liste des adhérents]]></comment>
+	<position x="220" y="100"/>
+	<column name="id_adherents" not-null="true">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="e_mail">
+		<type name="character varying" length="60"/>
+	</column>
+	<column name="civilite">
+		<type name="character varying" length="3"/>
+	</column>
+	<column name="nom" not-null="true">
+		<type name="character varying" length="60"/>
+	</column>
+	<column name="premon">
+		<type name="character varying" length="60"/>
+	</column>
+	<column name="adresse1">
+		<type name="character varying" length="150"/>
+	</column>
+	<column name="adresse2">
+		<type name="character varying" length="170"/>
+	</column>
+	<column name="code_postal">
+		<type name="character varying" length="6"/>
+	</column>
+	<column name="ville">
+		<type name="character varying" length="50"/>
+	</column>
+	<column name="tel1">
+		<type name="character varying" length="15"/>
+	</column>
+	<column name="tel2">
+		<type name="character varying" length="15"/>
+	</column>
+	<column name="tel3">
+		<type name="character varying" length="50"/>
+	</column>
+	<column name="date_maissance">
+		<type name="date" length="0"/>
+	</column>
+	<column name="profession">
+		<type name="character varying" length="60"/>
+	</column>
+	<column name="link_picture">
+		<type name="character varying" length="10"/>
+	</column>
+	<column name="public_contact" not-null="true" default-value="false">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[boolean indiquant si on afficher les coordonees sur l espace public]]></comment>
+	</column>
+	<column name="accord_mail" not-null="true" default-value="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[indique si l utilisateur recois tous les mails de la plateforme]]></comment>
+	</column>
+	<column name="token_acces">
+		<type name="character varying" length="12"/>
+		<comment><![CDATA[token, permetant de faire des opérations sans authentification (exemple, indiquer la participation aux evenements)]]></comment>
+	</column>
+	<column name="commentaire">
+		<type name="text" length="0"/>
+	</column>
+	<column name="date_enregistrement">
+		<type name="date" length="0"/>
+	</column>
+	<column name="fk_id_adherents_update">
+		<type name="numeric" length="9" precision="0"/>
+		<comment><![CDATA[id de la personne qui à mis à jour cette personne]]></comment>
+	</column>
+	<column name="update_date">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<constraint name="pk_t_adherents" type="pk-constr" table="public.t_adherents">
+		<columns names="id_adherents" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="t_adhesions" layer="0" collapse-mode="1" max-obj-count="12">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[table relatif aux adhesions. Une adhésions est le lien entre une personne physique adhérent et une saison]]></comment>
+	<position x="1020" y="80"/>
+	<column name="id_adhesions" not-null="true">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="fk_id_adherents" not-null="true">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="fk_id_annee_adhesions" not-null="true">
+		<type name="numeric" length="4" precision="0"/>
+	</column>
+	<column name="fk_id_type_adhesion" not-null="true">
+		<type name="numeric" length="4" precision="0"/>
+	</column>
+	<column name="compta_somme">
+		<type name="numeric" length="4" precision="0"/>
+	</column>
+	<column name="compta_banque">
+		<type name="character varying" length="35"/>
+	</column>
+	<column name="num_cheque">
+		<type name="character varying" length="35"/>
+	</column>
+	<column name="cheque">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="espece">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="a_carte_adhesions">
+		<type name="boolean" length="0"/>
+	</column>
+	<constraint name="pk_t_adhesions" type="pk-constr" table="public.t_adhesions">
+		<columns names="id_adhesions" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="i_type_adhesion" layer="0" collapse-mode="2" max-obj-count="2">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[type d'adhésion possible]]></comment>
+	<position x="1600" y="320"/>
+	<column name="id_type_adhesion" not-null="true">
+		<type name="numeric" length="4" precision="0"/>
+	</column>
+	<column name="label" not-null="true">
+		<type name="character varying" length="20"/>
+	</column>
+	<constraint name="pk_i_type_adhesion" type="pk-constr" table="public.i_type_adhesion">
+		<columns names="id_type_adhesion" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="i_type_authority" layer="0" collapse-mode="1" max-obj-count="2">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[les types d'authority. Attention, en lien avec la base d'authentification authorities]]></comment>
+	<position x="960" y="800"/>
+	<column name="id_type_authority" not-null="true">
+		<type name="numeric" length="2" precision="0"/>
+	</column>
+	<column name="authority" not-null="true">
+		<type name="character varying" length="10"/>
+	</column>
+	<constraint name="i_type_authority_pk" type="pk-constr" table="public.i_type_authority">
+		<columns names="id_type_authority" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="r_adh_evenement" layer="0" collapse-mode="1" max-obj-count="3">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[table de participation des personnes à un evenement]]></comment>
+	<position x="980" y="400"/>
+	<column name="fk_id_adherent" not-null="true">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="fk_id_evenement" not-null="true">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="date_enregistrement">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+		<comment><![CDATA[date d'enregistrement de la participation ]]></comment>
+	</column>
+	<constraint name="pk_r_adh_evenement" type="pk-constr" table="public.r_adh_evenement">
+		<columns names="fk_id_adherent,fk_id_evenement" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="r_groupe_diffusion_adherents" layer="0" collapse-mode="1" max-obj-count="3">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[relation entre un groupe de diffusion et un adhérents]]></comment>
+	<position x="200" y="580"/>
+	<column name="pk_id_groupe_diffusion" not-null="true">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="pk_id_adherent" not-null="true">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="date_enregistrement">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+		<comment><![CDATA[date d'enregistrement à un groupe de diffusion]]></comment>
+	</column>
+	<constraint name="pk_r_groupe_diffusion_adherent" type="pk-constr" table="public.r_groupe_diffusion_adherents">
+		<columns names="pk_id_groupe_diffusion,pk_id_adherent" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="seq_t_adherents" cycle="false" start="1" increment="1" min-value="1" max-value="99999" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_t_adhesion" cycle="false" start="1" increment="1" min-value="1" max-value="99999" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_t_detail_calendar" cycle="false" start="1" increment="1" min-value="1" max-value="999999" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_t_evenement" cycle="false" start="1" increment="1" min-value="1" max-value="99999" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_t_groupe_diffusion" cycle="false" start="1" increment="1" min-value="1" max-value="99999" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<sequence name="seq_t_share_docs" cycle="false" start="1" increment="1" min-value="1" max-value="9999999" cache="1">
+	<schema name="public"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="t_evenement" layer="0" collapse-mode="2" max-obj-count="8">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1560" y="500"/>
+	<column name="id_evenement" not-null="true">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="description_courte" not-null="true">
+		<type name="character varying" length="100"/>
+		<comment><![CDATA[description courte de l'evenement]]></comment>
+	</column>
+	<column name="detail_text" alias="description longue de l'evenement">
+		<type name="text" length="0"/>
+	</column>
+	<column name="lieux">
+		<type name="character varying" length="100"/>
+	</column>
+	<column name="date_debut" not-null="true">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+		<comment><![CDATA[date et heure de debut de l'evenement]]></comment>
+	</column>
+	<column name="date_fin" not-null="true">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+		<comment><![CDATA[date de fin de l'evenement]]></comment>
+	</column>
+	<column name="fk_id_type_authority">
+		<type name="numeric" length="2" precision="0"/>
+	</column>
+	<constraint name="pk_t_evenement" type="pk-constr" table="public.t_evenement">
+		<columns names="id_evenement" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="t_groupe_diffusion" layer="0" collapse-mode="2" max-obj-count="3">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[liste des groupes de diffusion ]]></comment>
+	<position x="140" y="840"/>
+	<column name="id_groupe_diffusion" not-null="true">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="description" not-null="true">
+		<type name="character varying" length="30"/>
+	</column>
+	<column name="fk_id_type_authority">
+		<type name="numeric" length="2" precision="0"/>
+	</column>
+	<constraint name="pk_t_groupe_diffusion" type="pk-constr" table="public.t_groupe_diffusion">
+		<columns names="id_groupe_diffusion" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="t_share_docs" layer="0" collapse-mode="2" max-obj-count="12">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[table des fichiers et dossier partagés]]></comment>
+	<position x="960" y="1220"/>
+	<column name="id_share_docs" not-null="true">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="fk_id_share_docs">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="label_short" not-null="true">
+		<type name="character varying" length="30"/>
+		<comment><![CDATA[description court du fichier ou dossier]]></comment>
+	</column>
+	<column name="label_long">
+		<type name="character varying" length="50"/>
+		<comment><![CDATA[description long du fichier ou dossier]]></comment>
+	</column>
+	<column name="date_save" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<column name="is_folder" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[si c'est un dossier]]></comment>
+	</column>
+	<column name="is_file" not-null="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[su c'est un fichier]]></comment>
+	</column>
+	<column name="filer">
+		<type name="character varying" length="50"/>
+		<comment><![CDATA[si c'est un dossier, pas besoins de filer]]></comment>
+	</column>
+	<column name="fk_id_user_created" not-null="true">
+		<type name="numeric" length="9" precision="0"/>
+	</column>
+	<column name="fk_id_type_authority" not-null="true">
+		<type name="numeric" length="2" precision="0"/>
+		<comment><![CDATA[type d'e profil qui peut accéder à ces documents partagés]]></comment>
+	</column>
+	<constraint name="pk_t_share_docs" type="pk-constr" table="public.t_share_docs">
+		<columns names="id_share_docs" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="index_annee_adh" table="public.i_annee_adhesion"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="id_annee_adhesion"/>
+		</idxelement>
+</index>
+
+<index name="index_2" table="public.i_type_adhesion"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="id_type_adhesion"/>
+		</idxelement>
+</index>
+
+<index name="index_4" table="public.r_adh_evenement"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="fk_id_adherent"/>
+		</idxelement>
+</index>
+
+<index name="index_5" table="public.r_adh_evenement"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="fk_id_evenement"/>
+		</idxelement>
+</index>
+
+<index name="index_id_adherents" table="public.t_adherents"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="id_adherents"/>
+		</idxelement>
+</index>
+
+<index name="index_7" table="public.t_adhesions"
+	 concurrent="false" unique="true" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="fk_id_adherents"/>
+		</idxelement>
+		<idxelement use-sorting="false">
+			<column name="fk_id_annee_adhesions"/>
+		</idxelement>
+</index>
+
+<index name="index_pk_evenement" table="public.t_evenement"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="id_evenement"/>
+		</idxelement>
+</index>
+
+<index name="index_unique_token_adherents" table="public.t_adherents"
+	 concurrent="false" unique="true" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="token_acces"/>
+		</idxelement>
+</index>
+
+<index name="index_unique_mail" table="public.t_adherents"
+	 concurrent="false" unique="true" fast-update="false" buffering="false"
+	 index-type="btree" factor="0">
+		<idxelement use-sorting="false">
+			<column name="e_mail"/>
+		</idxelement>
+</index>
+
+<constraint name="fk_t_adhesi_reference_i_annee_" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="RESTRICT" del-action="RESTRICT" ref-table="public.i_annee_adhesion" table="public.t_adhesions">
+	<columns names="fk_id_annee_adhesions" ref-type="src-columns"/>
+	<columns names="id_annee_adhesion" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_t_adhesi_reference_i_type_a" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="RESTRICT" del-action="RESTRICT" ref-table="public.i_type_adhesion" table="public.t_adhesions">
+	<columns names="fk_id_type_adhesion" ref-type="src-columns"/>
+	<columns names="id_type_adhesion" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_t_adhesi_reference_t_adhere" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="RESTRICT" del-action="RESTRICT" ref-table="public.t_adherents" table="public.t_adhesions">
+	<columns names="fk_id_adherents" ref-type="src-columns"/>
+	<columns names="id_adherents" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_r_adh_ev_reference_t_adhere" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="RESTRICT" del-action="RESTRICT" ref-table="public.t_adherents" table="public.r_adh_evenement">
+	<columns names="fk_id_adherent" ref-type="src-columns"/>
+	<columns names="id_adherents" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_r_adh_ev_reference_t_evenem" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="RESTRICT" del-action="RESTRICT" ref-table="public.t_evenement" table="public.r_adh_evenement">
+	<columns names="fk_id_evenement" ref-type="src-columns"/>
+	<columns names="id_evenement" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_r_groupe_reference_t_adhere" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="RESTRICT" del-action="RESTRICT" ref-table="public.t_adherents" table="public.r_groupe_diffusion_adherents">
+	<columns names="pk_id_adherent" ref-type="src-columns"/>
+	<columns names="id_adherents" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_r_groupe_reference_t_groupe" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="RESTRICT" del-action="RESTRICT" ref-table="public.t_groupe_diffusion" table="public.r_groupe_diffusion_adherents">
+	<columns names="pk_id_groupe_diffusion" ref-type="src-columns"/>
+	<columns names="id_groupe_diffusion" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_i_type_authority" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.i_type_authority" table="public.t_evenement">
+	<columns names="fk_id_type_authority" ref-type="src-columns"/>
+	<columns names="id_type_authority" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_i_type_authority" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.i_type_authority" table="public.t_groupe_diffusion">
+	<columns names="fk_id_type_authority" ref-type="src-columns"/>
+	<columns names="id_type_authority" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_t_share__reference_t_adhere" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="RESTRICT" del-action="RESTRICT" ref-table="public.t_adherents" table="public.t_share_docs">
+	<columns names="fk_id_user_created" ref-type="src-columns"/>
+	<columns names="id_adherents" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_t_share__reference_t_share_" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="RESTRICT" del-action="RESTRICT" ref-table="public.t_share_docs" table="public.t_share_docs">
+	<columns names="fk_id_share_docs" ref-type="src-columns"/>
+	<columns names="id_share_docs" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_i_type_authority" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.i_type_authority" table="public.t_share_docs">
+	<columns names="fk_id_type_authority" ref-type="src-columns"/>
+	<columns names="id_type_authority" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_t_adhesions_i_annee_adhesion" type="relfk" layer="0"
+	 custom-color="#c52988"
+	 src-table="public.t_adhesions"
+	 dst-table="public.i_annee_adhesion" reference-fk="fk_t_adhesi_reference_i_annee_"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_t_adhesions_i_type_adhesion" type="relfk" layer="0"
+	 custom-color="#71a52c"
+	 src-table="public.t_adhesions"
+	 dst-table="public.i_type_adhesion" reference-fk="fk_t_adhesi_reference_i_type_a"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_t_adhesions_t_adherents" type="relfk" layer="0"
+	 custom-color="#f0b8fe"
+	 src-table="public.t_adhesions"
+	 dst-table="public.t_adherents" reference-fk="fk_t_adhesi_reference_t_adhere"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_r_adh_evenement_t_adherents" type="relfk" layer="0"
+	 custom-color="#6bd78b"
+	 src-table="public.r_adh_evenement"
+	 dst-table="public.t_adherents" reference-fk="fk_r_adh_ev_reference_t_adhere"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_r_adh_evenement_t_evenement" type="relfk" layer="0"
+	 custom-color="#7cc31c"
+	 src-table="public.r_adh_evenement"
+	 dst-table="public.t_evenement" reference-fk="fk_r_adh_ev_reference_t_evenem"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_r_groupe_diffusion_adherents_t_adherents" type="relfk" layer="0"
+	 custom-color="#450b1c"
+	 src-table="public.r_groupe_diffusion_adherents"
+	 dst-table="public.t_adherents" reference-fk="fk_r_groupe_reference_t_adhere"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_r_groupe_diffusion_adherents_t_groupe_diffusion" type="relfk" layer="0"
+	 custom-color="#bda32b"
+	 src-table="public.r_groupe_diffusion_adherents"
+	 dst-table="public.t_groupe_diffusion" reference-fk="fk_r_groupe_reference_t_groupe"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_t_share_docs_t_adherents" type="relfk" layer="0"
+	 custom-color="#2d0b9d"
+	 src-table="public.t_share_docs"
+	 dst-table="public.t_adherents" reference-fk="fk_t_share__reference_t_adhere"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_t_share_docs_t_share_docs" type="relfk" layer="0"
+	 custom-color="#da0612"
+	 src-table="public.t_share_docs"
+	 dst-table="public.t_share_docs" reference-fk="fk_t_share__reference_t_share_"
+	 src-required="false" dst-required="false">
+	<line>
+		<position x="1322.96" y="1312.88"/>
+	<position x="1322.96" y="1209"/>
+	<position x="1194.64" y="1209"/>
+	</line>
+</relationship>
+
+<relationship name="rel_t_share_docs_i_type_authority" type="relfk" layer="0"
+	 src-table="public.t_share_docs"
+	 dst-table="public.i_type_authority" reference-fk="fk_i_type_authority"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_t_groupe_diffusion_i_type_authority" type="relfk" layer="0"
+	 src-table="public.t_groupe_diffusion"
+	 dst-table="public.i_type_authority" reference-fk="fk_i_type_authority"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_t_evenement_i_type_authority" type="relfk" layer="0"
+	 src-table="public.t_evenement"
+	 dst-table="public.i_type_authority" reference-fk="fk_i_type_authority"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>
