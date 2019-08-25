@@ -55,7 +55,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-  /adherent/{username}:
+  /adherent/{idadh}:
     get:
       tags:
       - adherent
@@ -64,12 +64,13 @@ paths:
       security: 
         - oAuth: [ress-adherent-read]
       parameters:
-      - name: username
+      - name: idadh
         in: path
-        description: email de la personne à modifier
+        description: id de la personne à modifier
         required: true
         schema:
-          type: string
+          type: integer
+          format: int64
       responses:
         200:
           description: Operation réussie
@@ -103,12 +104,13 @@ paths:
       security: 
         - oAuth: [ress-adherent-del]
       parameters:
-      - name: username
+      - name: idadh
         in: path
-        description: email de la personne à modifier
+        description: id de la personne à modifier
         required: true
         schema:
-          type: string
+          type: integer
+          format: int64
       responses:
         200:
           description: Operation réussie
@@ -139,12 +141,13 @@ paths:
       security: 
         - oAuth: [ress-adherent-write]
       parameters:
-      - name: username
+      - name: idadh
         in: path
-        description: email de la personne à modifier
+        description: id de la personne à modifier
         required: true
         schema:
-          type: string
+          type: integer
+          format: int64
       requestBody:
         description: mise à jour de la personne
         content:

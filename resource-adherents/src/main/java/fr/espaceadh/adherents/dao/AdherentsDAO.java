@@ -17,7 +17,6 @@
 package fr.espaceadh.adherents.dao;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
-import fr.espaceadh.adherents.model.Adherent;
 
 /**
  *
@@ -30,14 +29,14 @@ public interface AdherentsDAO {
      * @param login
      * @return 
      */
-    public Adherent getAdherentByLogin(final String login);
+    public AdherentDto getAdherentByLogin(final String login);
     
     /**
      * rechercher un adh avec son id
      * @param idAdh
      * @return 
      */
-    public Adherent getAdherentByID(final long idAdh);
+    public AdherentDto getAdherentByID(final long idAdh);
     
     /**
      * Création d'un adhérent

@@ -22,38 +22,13 @@ tags:
     url: http://plusdedétail.ht
 paths:
   /adherent:
-    put:
-      tags:
-      - adherent
-      summary: Mise à jour de l'adherent
-      description: This can only be done by the logged in user.
-      operationId: updateUser
-      parameters:
-      - name: username
-        in: path
-        description: name that need to be updated
-        required: true
-        schema:
-          type: string
-      requestBody:
-        description: Updated user object
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Adherent'
-        required: true
-      responses:
-        400:
-          description: Invalid user supplied
-          content: {}
-        404:
-          description: User not found
-          content: {}
     post:
       tags:
       - adherent
       summary: Ajouter un adhérent
       operationId: ajoutAdherent
+      security: 
+        - oAuth: [ress-adherent-admin]
       requestBody:
         description: Besoin de l'objet adhérent pour ajouter un adhérent
         content:
@@ -62,27 +37,39 @@ paths:
               $ref: '#/components/schemas/Adherent'
         required: true
       responses:
+        201:
+          description: Operation réussie
+        401:
+          description: utilisateur non authentifié
+        403:
+          description: Droit insufisant 
         405:
           description: Invalid input
-          content: {}
-      security:
-      - petstore_auth:
-        - adh:write
-        - adh:read
-      - bearerAuth: []
-  /adherent/{idAdh}:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        500:
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /adherent/{username}:
     get:
       tags:
       - adherent
       summary: rechercher adherent par id
       operationId: getAdherent
+      security: 
+        - oAuth: [ress-adherent-read]
       parameters:
-      - name: idAdh
+      - name: username
         in: path
-        description: Id de l'adhérent à récupérer
+        description: email de la personne à modifier
         required: true
         schema:
-          type: integer
+          type: string
       responses:
         200:
           description: Operation réussie
@@ -90,39 +77,102 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Adherent'
-        400:
-          description: ID adherent invalide
-          content: {}
+        401:
+          description: utilisateur non authentifié
+        403:
+          description: Droit insufisant 
         404:
-          description: adherent non trouvé
-          content: {}
-      security:
-      - petstore_auth:
-        - adh:read
-      - bearerAuth: []
+          description: username non trouvée
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        500:
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
     delete:
       tags:
       - adherent
       summary: Supression de l'adherent par id
       operationId: deleteUser
+      security: 
+        - oAuth: [ress-adherent-del]
       parameters:
-      - name: idAdh
+      - name: username
         in: path
-        description: Id de l'adhérent à récupérer
+        description: email de la personne à modifier
         required: true
         schema:
-          type: integer
+          type: string
       responses:
-        400:
-          description: ID adherent invalide
-          content: {}
+        200:
+          description: Operation réussie
+        401:
+          description: utilisateur non authentifié
+        403:
+          description: Droit insufisant 
         404:
-          description: adherent non trouvé
-          content: {}
-      security:
-      - petstore_auth:
-        - adh:del
-      - bearerAuth: []
+          description: username non trouvée
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        500:
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      tags:
+      - adherent
+      summary: Mise à jour de l'adherent
+      description: Mise à jour de l'adherent
+      operationId: updateUser
+      security: 
+        - oAuth: [ress-adherent-write]
+      parameters:
+      - name: username
+        in: path
+        description: email de la personne à modifier
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: mise à jour de la personne
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Adherent'
+        required: true
+      responses:
+        200:
+          description: Operation réussie
+        401:
+          description: utilisateur non authentifié
+        403:
+          description: Droit insufisant 
+        404:
+          description: username non trouvée
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        500:
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
 components:
   schemas:
     Adherent:
@@ -135,8 +185,8 @@ components:
           type: string
           description: civilite de l'adhenrent
           enum:
-          - Monsieur
-          - Madame
+          - Mr
+          - Mme
         nom:
           maxLength: 20
           minLength: 3
@@ -157,6 +207,10 @@ components:
           maxLength: 5
           minLength: 5
           type: string
+        ville:
+          maxLength: 50
+          minLength: 3
+          type: string
         telMaison:
           maxLength: 10
           minLength: 10
@@ -165,18 +219,10 @@ components:
           maxLength: 10
           minLength: 10
           type: string
-        telPortail:
+        telPortable:
           maxLength: 10
           minLength: 10
           type: string
-        privilege:
-          type: string
-          description: privilege
-          enum:
-          - Adherent
-          - Conseil administration
-          - Bureau
-          - Admin
         email:
           maxLength: 40
           minLength: 5
@@ -188,18 +234,25 @@ components:
         dateNaissance:
           type: string
           format: date-time
-        telescope:
-          type: boolean
-        lunette:
-          type: boolean
-        jumelles:
-          type: boolean
-        modelInstrument:
+        lienPhotoProfil:
           type: string
+          description: lien vers la photo de profile
+        accordMail:
+          type: boolean
+          description: donne son accord pour recevoiur des mails
+        publicContact:
+          type: boolean
+          description: donne son accord afficher ces coordonnées dans l'espace adherents
         commentaire:
           maxLength: 100
           minLength: 2
           type: string
+        dateEnregistrement:
+          type: string
+          format: date-time
+        dateMiseAJour:
+          type: string
+          format: date-time
       xml:
         name: Order
     ApiResponse:
@@ -213,20 +266,26 @@ components:
         message:
           type: string
   securitySchemes:
-    petstore_auth:
+    oAuth:    
       type: oauth2
+      description: This API uses OAuth 2 with the implicit grant flow. [More info]
       flows:
-        implicit:
-          authorizationUrl: http://adherents.jalle-astro.fr/token/
+        clientCredentials:  
+          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
           scopes:
-            adh:write: modification d'un adherents
-            adh:read: lecture d'un adhérent
-            adh:del: suppression d'un adherent
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
+            ress-adherent-admin: droit administration sur les ressources autorisation
+        authorizationCode:  
+          authorizationUrl: http://127.0.0.1:8081/authorization-server/oauth/authorize
+          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
+          scopes:
+            ress-adherent-admin: droit administration sur les ressources adherent
+            ress-adherent-read : droit de lecteur sur les ressoruces adherent
+            ress-adherent-write : droit d'écriture sur les ressoruces adherent
+            ress-adherent-del : droit de suppression sur les ressoruces adherent
+        password:
+          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
+          scopes:
+            ress-adherent-admin: droit administration sur les ressources adherent
+            ress-adherent-read : droit de lecteur sur les ressoruces adherent
+            ress-adherent-write : droit d'écriture sur les ressoruces adherent
+            ress-adherent-del : droit de suppression sur les adherent autorisation

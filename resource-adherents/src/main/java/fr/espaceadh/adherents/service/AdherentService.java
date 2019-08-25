@@ -34,9 +34,9 @@ public interface AdherentService {
     
     /**
      * Recupérer un adhérent avec son username
-     * @param username email de la personne
+     * @param idAdh id  de la personne
      * @return adherentDto
      */
-    AdherentDto recupererAdherent (String username);
+    AdherentDto recupererAdherent (Long idAdh);
     
 }

@@ -17,6 +17,7 @@
 package fr.espaceadh.adherents.dao;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.adherents.dto.CiviliteEnum;
 import fr.espaceadh.adherents.model.Adherent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,7 +46,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
     }
 
     @Override
-    public Adherent getAdherentByLogin(String login) {
+    public AdherentDto getAdherentByLogin(String login) {
         
         
         StringBuilder query = new StringBuilder();
@@ -57,16 +58,16 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("  FROM t_adherents");
         query.append(" where e_mail =  ?");
         
-        List<Adherent> query1 = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper(), login);
+        List<AdherentDto> query1 = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper(), login);
         if (!query1.isEmpty()) {
             return query1.get(1);
         }
         LOGGER.warn("login {} non trouvé en BD", login);
-        return new Adherent();
+        return new AdherentDto();
     }
 
     @Override
-    public Adherent getAdherentByID(long idAdh) {
+    public AdherentDto getAdherentByID(long idAdh) {
         StringBuilder query = new StringBuilder();
         query.append("SELECT id_adherents, e_mail, civilite, nom, premon");
         query.append("        , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
@@ -76,12 +77,12 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("  FROM t_adherents");
         query.append(" where id_adherents =  ?");
         
-        List<Adherent> query1 = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper(), idAdh);
+        List<AdherentDto> query1 = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper(), idAdh);
         if (!query1.isEmpty()) {
             return query1.get(1);
         }
         LOGGER.warn("id adherents {} non trouvé en BD", idAdh);
-        return new Adherent();
+        return new AdherentDto();
     }
 
     
@@ -103,7 +104,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
        nbCreation = this.getJdbcTemplate().update(query.toString() 
             , adherentDto.getId()
             , adherentDto.getEmail()
-            , adherentDto.getCivilite()
+            , adherentDto.getCivilite().toString()
             , adherentDto.getNom()
             , adherentDto.getPrenom()
             , adherentDto.getAdresse1()
@@ -118,8 +119,8 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
        
             , adherentDto.getProfession()
             , adherentDto.getLienPhotoProfil()
-            , adherentDto.getPublicContact()
-            , adherentDto.getAccordMail()
+            , adherentDto.isPublicContact()
+            , adherentDto.isAccordMail()
             , adherentDto.getTokenAcces()
                
             , adherentDto.getCommentaire()
@@ -150,14 +151,21 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
     }
     
     
-    
-    public static final class AdherentsMapper implements RowMapper<Adherent> {
+    public static final class AdherentsMapper implements RowMapper<AdherentDto> {
 
         @Override
-        public Adherent mapRow(ResultSet rs, int i) throws SQLException {
-            Adherent adh = new Adherent();
+        public AdherentDto mapRow(ResultSet rs, int i) throws SQLException {
+            AdherentDto adh = new AdherentDto();
             adh.setId(rs.getLong("id_adherents"));
+            adh.setEmail(rs.getString("e_mail"));
+            if (rs.getString("civilite") == null ? CiviliteEnum.MADAME.toString() == null : rs.getString("civilite").equals(CiviliteEnum.MADAME.toString()))
+                adh.setCivilite(CiviliteEnum.MADAME);
+            else adh.setCivilite(CiviliteEnum.MONSIEUR);
             adh.setNom(rs.getString("nom"));
+            adh.setPrenom(rs.getString("premon"));
+            adh.setAdresse1(rs.getString("adresse1"));
+            
+            //TODO a compléter le mapping
             
             return adh;
         }

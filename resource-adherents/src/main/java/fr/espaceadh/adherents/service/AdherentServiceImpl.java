@@ -49,8 +49,8 @@ public class AdherentServiceImpl implements AdherentService{
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public AdherentDto recupererAdherent(String username) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public AdherentDto recupererAdherent(Long idAdh) {
+        return adherentsDAO.getAdherentByID(idAdh);
     }
     
     

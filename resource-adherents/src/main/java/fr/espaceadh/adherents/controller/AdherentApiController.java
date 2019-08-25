@@ -68,17 +68,24 @@ public class AdherentApiController implements AdherentApi {
     }
     
 
-    public ResponseEntity<Void> deleteUser(@ApiParam(value = "email de la personne à modifier",required=true) @PathVariable("username") String username) {
+    public ResponseEntity<Void> deleteUser(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Adherent> getAdherent(@ApiParam(value = "email de la personne à modifier",required=true) @PathVariable("username") String username) {
-        return new ResponseEntity<Adherent>(HttpStatus.NOT_IMPLEMENTED);
+    public ResponseEntity<Adherent> getAdherent(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {       
+        
+        AdherentDto dto = this.adherentService.recupererAdherent(idadh);
+        
+        if (dto == null){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        Adherent adh = this.translateDto(dto);
+        
+        return new ResponseEntity<>(adh,HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> updateUser(@ApiParam(value = "mise à jour de la personne" ,required=true )  @Valid @RequestBody Adherent body,@ApiParam(value = "email de la personne à modifier",required=true) @PathVariable("username") String username) {
-        String accept = request.getHeader("Accept");
+    public ResponseEntity<Void> updateUser(@ApiParam(value = "mise à jour de la personne" ,required=true )  @Valid @RequestBody Adherent body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {        String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
     
@@ -89,7 +96,11 @@ public class AdherentApiController implements AdherentApi {
         AdherentDto adh = new AdherentDto();
         
         adh.setId(model.getId());
-        adh.setCivilite(CiviliteEnum.MONSIEUR); //TODO a replacer l'enum
+        if (model.getCivilite() == model.getCivilite().MME){
+           adh.setCivilite(CiviliteEnum.MADAME);  
+        } else {
+            adh.setCivilite(CiviliteEnum.MONSIEUR);  
+        }
         adh.setNom(model.getNom());
         adh.setPrenom(model.getPrenom());
         adh.setAdresse1(model.getAdresse1());
@@ -100,9 +111,11 @@ public class AdherentApiController implements AdherentApi {
         adh.setTelTravail(model.getTelTravail());
         adh.setEmail(model.getEmail());
         adh.setProfession(model.getProfession());
-        long epochMilli = model.getDateNaissance().toInstant().toEpochMilli();
-        Date dateNaissance = new Date(epochMilli);
-        adh.setDateNaissance(dateNaissance);
+        if (model.getDateNaissance() != null) {
+            long epochMilli = model.getDateNaissance().toInstant().toEpochMilli();
+            Date dateNaissance = new Date(epochMilli);
+            adh.setDateNaissance(dateNaissance);
+        }
         adh.setAccordMail(model.isAccordMail());
         adh.setPublicContact(model.isPublicContact());
         adh.setCommentaire(model.getCommentaire());
@@ -111,6 +124,47 @@ public class AdherentApiController implements AdherentApi {
 
         
         return adh;
+    }
+    
+    
+    
+    /**
+     * Transformer un DTO en model
+     * @param adherent
+     * @return 
+     */
+     private Adherent translateDto(AdherentDto adherent){
+        Adherent model = new Adherent();
+        
+        model.setId(model.getId());
+        if (adherent.getCivilite() == adherent.getCivilite().MADAME){
+           model.setCivilite(model.getCivilite().MME);  
+        } else {
+            model.setCivilite(model.getCivilite().MR);  
+        }
+        model.setNom(adherent.getNom());
+        model.setPrenom(adherent.getPrenom());
+        model.setAdresse1(adherent.getAdresse1());
+        model.setAdresse2(adherent.getAdresse2());
+        model.setVille(adherent.getVille());
+        model.setTelMaison(adherent.getTelMaison());
+        model.setTelPortable(adherent.getTelPortable());
+        model.setTelTravail(adherent.getTelTravail());
+        model.setEmail(adherent.getEmail());
+        model.setProfession(adherent.getProfession());
+        if (adherent.getDateNaissance() != null) {
+            long epochMilli = adherent.getDateNaissance().toInstant().toEpochMilli();
+            Date dateNaissance = new Date(epochMilli);
+            //model.setDateNaissance(dateNaissance);
+        }
+        model.setAccordMail(adherent.isAccordMail());
+        model.setPublicContact(adherent.isPublicContact());
+        model.setCommentaire(adherent.getCommentaire());
+        //model.setDateEnregistrement(adherent.getDateEnregistrement());
+        //model.setDateMiseAJour(adherent.getDateMiseAJour());
+        //TODO date à revoir
+        
+        return model;
     }
 
 }

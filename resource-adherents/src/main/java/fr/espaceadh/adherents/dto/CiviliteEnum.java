@@ -21,8 +21,8 @@ package fr.espaceadh.adherents.dto;
  * @author emmanuel33700 https://github.com/emmanuel33700/espace_adherents
  */
 public enum CiviliteEnum {
-    MONSIEUR("ADHERENT"),
-    MADAME("CONSEIL");
+    MONSIEUR("Mr"),
+    MADAME("Mme");
 
     private String civilite = "";
 

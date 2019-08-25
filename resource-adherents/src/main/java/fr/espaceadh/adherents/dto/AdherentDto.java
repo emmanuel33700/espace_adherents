@@ -39,8 +39,8 @@ public class AdherentDto {
   private String profession ;
   private Date dateNaissance;
   private String lienPhotoProfil ;
-  private Boolean accordMail ;
-  private Boolean publicContact;
+  private boolean accordMail ;
+  private boolean publicContact;
   private String commentaire ;
   private Date dateEnregistrement ;
   private Date dateMiseAJour; 
@@ -158,23 +158,6 @@ public class AdherentDto {
     public void setLienPhotoProfil(String lienPhotoProfil) {
         this.lienPhotoProfil = lienPhotoProfil;
     }
-
-    public Boolean getAccordMail() {
-        return accordMail;
-    }
-
-    public void setAccordMail(Boolean accordMail) {
-        this.accordMail = accordMail;
-    }
-
-    public Boolean getPublicContact() {
-        return publicContact;
-    }
-
-    public void setPublicContact(Boolean publicContact) {
-        this.publicContact = publicContact;
-    }
-
     public String getCommentaire() {
         return commentaire;
     }
@@ -221,6 +204,22 @@ public class AdherentDto {
 
     public void setVille(String ville) {
         this.ville = ville;
+    }
+
+    public boolean isAccordMail() {
+        return accordMail;
+    }
+
+    public void setAccordMail(boolean accordMail) {
+        this.accordMail = accordMail;
+    }
+
+    public boolean isPublicContact() {
+        return publicContact;
+    }
+
+    public void setPublicContact(boolean publicContact) {
+        this.publicContact = publicContact;
     }
   
   

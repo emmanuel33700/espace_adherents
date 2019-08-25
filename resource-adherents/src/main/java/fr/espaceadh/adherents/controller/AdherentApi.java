@@ -42,7 +42,7 @@ public interface AdherentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ADMIN')")   
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and isDansGroupe('BUREAU')")  
     ResponseEntity<Void> ajoutAdherent(@ApiParam(value = "Besoin de l'objet adhérent pour ajouter un adhérent" ,required=true )  @Valid @RequestBody Adherent body);
 
 
@@ -54,12 +54,11 @@ public interface AdherentApi {
         @ApiResponse(code = 404, message = "username non trouvée"),
         @ApiResponse(code = 405, message = "Invalid input", response = ModelApiResponse.class),
         @ApiResponse(code = 500, message = "Erreur serveur", response = ModelApiResponse.class) })
-    @RequestMapping(value = "/adherent/{username}",
+    @RequestMapping(value = "/adherent/{idadh}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('ADMIN')") 
-    ResponseEntity<Void> deleteUser(@ApiParam(value = "email de la personne à modifier",required=true) @PathVariable("username") String username);
-
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-del') and isDansGroupe('BUREAU')") 
+    ResponseEntity<Void> deleteUser(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh);
 
     @ApiOperation(value = "rechercher adherent par id", nickname = "getAdherent", notes = "", response = Adherent.class, tags={ "adherent", })
     @ApiResponses(value = { 
@@ -69,11 +68,12 @@ public interface AdherentApi {
         @ApiResponse(code = 404, message = "username non trouvée"),
         @ApiResponse(code = 405, message = "Invalid input", response = ModelApiResponse.class),
         @ApiResponse(code = 500, message = "Erreur serveur", response = ModelApiResponse.class) })
-    @RequestMapping(value = "/adherent/{username}",
+    @RequestMapping(value = "/adherent/{idadh}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ADMIN') or (#oauth2.hasScope('ress-adherent-read') and #username == authentication.principal.username)")   
-    ResponseEntity<Adherent> getAdherent(@ApiParam(value = "email de la personne à modifier",required=true) @PathVariable("username") String username);
+   // @PreAuthorize("hasAuthority('ADMIN') or (#oauth2.hasScope('ress-adherent-read') and isMember(#idadh))")   
+           @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('BUREAU') or isProprietraireDonnee(#idadh) )")   
+   ResponseEntity<Adherent> getAdherent(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh);
 
 
     @ApiOperation(value = "Mise à jour de l'adherent", nickname = "updateUser", notes = "Mise à jour de l'adherent", tags={ "adherent", })
@@ -84,11 +84,9 @@ public interface AdherentApi {
         @ApiResponse(code = 404, message = "username non trouvée"),
         @ApiResponse(code = 405, message = "Invalid input", response = ModelApiResponse.class),
         @ApiResponse(code = 500, message = "Erreur serveur", response = ModelApiResponse.class) })
-    @RequestMapping(value = "/adherent/{username}",
+    @RequestMapping(value = "/adherent/{idadh}",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('ADMIN') or (#oauth2.hasScope('ress-adherent-write') and #username == authentication.principal.username)")   
-    ResponseEntity<Void> updateUser(@ApiParam(value = "mise à jour de la personne" ,required=true )  @Valid @RequestBody Adherent body,@ApiParam(value = "email de la personne à modifier",required=true) @PathVariable("username") String username);
-
-}
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('BUREAU') or isProprietraireDonnee(#idadh) )") 
+    ResponseEntity<Void> updateUser(@ApiParam(value = "mise à jour de la personne" ,required=true )  @Valid @RequestBody Adherent body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh);}
