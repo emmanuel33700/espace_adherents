@@ -72,7 +72,7 @@ public interface AdherentApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
    // @PreAuthorize("hasAuthority('ADMIN') or (#oauth2.hasScope('ress-adherent-read') and isMember(#idadh))")   
-           @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('BUREAU') or isProprietraireDonnee(#idadh) )")   
+           @PreAuthorize("#oauth2.hasScope('ress-adherent-read-client-credentials') or  (#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('BUREAU') or isProprietraireDonnee(#idadh) ))")   
    ResponseEntity<Adherent> getAdherent(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh);
 
 

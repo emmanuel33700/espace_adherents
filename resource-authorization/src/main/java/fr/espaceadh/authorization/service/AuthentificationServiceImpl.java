@@ -25,14 +25,27 @@ import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
 import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +58,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class AuthentificationServiceImpl implements AuthentificationService {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuthentificationServiceImpl.class);
+    
     @Autowired
     private GestionMail getionMail;
     
@@ -61,7 +76,14 @@ public class AuthentificationServiceImpl implements AuthentificationService {
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public int creerUser(UserDto usersDto) {
         
-        // vérification dans la BD adhérent si l'utilsateur à été créé
+
+        if (this.verifierIdAdherent(usersDto)){
+            LOGGER.error("ERREUR");
+        }
+        
+        
+        
+        
         int idAdh = 39;
         
 
@@ -106,5 +128,91 @@ public class AuthentificationServiceImpl implements AuthentificationService {
         if (mailOut.getStatutEnvoi().endsWith("success")) return 0;
         else return 99;
     }
+
+    /**
+     * Récupérer token d'accès oauth2
+     * @return 
+     */
+    private OAuth2AccessToken recupererToken() {
+        ClientCredentialsResourceDetails resourceDetails = new ClientCredentialsResourceDetails();
+        resourceDetails.setClientSecret(env.getProperty("oauth2.ress-adh.clientsecret"));
+        resourceDetails.setClientId(env.getProperty("oauth2.ress-adh.clientid"));
+        resourceDetails.setAccessTokenUri(env.getProperty("oauth2.url"));
+       // resourceDetails.setScope("ress-autorization-admin");
+
+        OAuth2RestTemplate oAuthRestTemplate = new OAuth2RestTemplate(resourceDetails);
+
+        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+        headers.setContentType( MediaType.APPLICATION_JSON );
+
+        return  oAuthRestTemplate.getAccessToken();
+    }
+
+    /**
+     * 
+     * @param usersDto
+     * @return 
+     */
+    private boolean verifierIdAdherent(UserDto usersDto) {
+        try {
+            // vérification dans la BD adhérent si l'utilsateur à été créé
+            OAuth2AccessToken token = this.recupererToken();
+            
+            LOGGER.info("TOKEN {}",token);
+            
+            //https://www.baeldung.com/java-http-request
+            
+            
+            StringBuilder bearer = new StringBuilder();
+            bearer.append("Bearer ");
+            bearer.append(token.toString());
+            
+            
+            
+            StringBuilder urlstring = new StringBuilder();
+            urlstring.append("http://127.0.0.1:8082/resource-adherents/adherent/");
+            urlstring.append(usersDto.getIdAdherent());
+            
+            
+            
+            URL url = new URL(urlstring.toString());
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("charset", "utf-8");
+            con.setRequestProperty("Authorization", bearer.toString());
+            int status = con.getResponseCode();
+            
+            LOGGER.info("code Statut {}",status);
+            
+            
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            
+            LOGGER.info("Reponse {}", content.toString());
+            
+            con.disconnect();
+
+            
+            
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(AuthentificationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AuthentificationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return true;
+        
+    }
+
+
     
 }

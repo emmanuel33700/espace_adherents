@@ -43,11 +43,12 @@
             <artifactId>spring-security-core</artifactId>
         </dependency>
         <!-- oauth -->
-        <dependency>
+       <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
             <version>${oauth.version}</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.springframework.security</groupId>

@@ -112,6 +112,7 @@ public class AuthentificationApiController implements AuthentificationApi {
      */
     private UserDto convertDto(Authentification body) {
         UserDto dto = new UserDto();
+        dto.setIdAdherent(1); //TODO A revoir l'idADH
         dto.setUsername(body.getLogin());
         dto.setPasswordEncode(passwordEncoder().encode(body.getPassword()));
         
