@@ -62,7 +62,7 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
                 .withClient(env.getProperty("oauth2.ress-adh.clientid"))
                 .secret(passwordEncoder().encode(env.getProperty("oauth2.ress-adh.clientsecret")))
                 .authorizedGrantTypes("client_credentials")
-                .scopes("ress-autorization-admin")
+                .scopes("ress-autorization-admin", "ress-adherent-read-client-credentials")
                 .accessTokenValiditySeconds(env.getProperty("oauth2.ress-adh.accesstoken.validity", Integer.class))       
                 .refreshTokenValiditySeconds(env.getProperty("oauth2.ress-adh.refreshtoken.validity", Integer.class))             
                 ;

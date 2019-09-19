@@ -40,14 +40,16 @@ public class CustomTokenEnhancer implements TokenEnhancer {
         }
         
         /** récupération des authorities **/
-        Collection<GrantedAuthority> authorities =  authentication.getAuthorities();
-        StringBuilder stringAuthorities = new StringBuilder();
-        authorities.forEach((authoritie) -> {
-            stringAuthorities.append(authoritie.getAuthority());
-            stringAuthorities.append(" ");
-        });
+        if (authentication.getAuthorities() != null & authentication.getAuthorities().size() > 0) {
+            Collection<GrantedAuthority> authorities =  authentication.getAuthorities();
+            StringBuilder stringAuthorities = new StringBuilder(); 
+            authorities.forEach((authoritie) -> {
+                stringAuthorities.append(authoritie.getAuthority());
+                stringAuthorities.append(" ");
+            });
+            additionalInfo.put("authorities", stringAuthorities.toString());
+        }
         
-        additionalInfo.put("authorities", stringAuthorities.toString());
         additionalInfo.put("organization", "JALLE ASTRO");
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
         return accessToken;
