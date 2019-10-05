@@ -17,9 +17,12 @@
 package fr.espaceadh.authorization.controller;
 
 import fr.espaceadh.authorization.model.Authentification;
+import fr.espaceadh.authorization.model.Login;
+import fr.espaceadh.authorization.model.ReinitAuthentification;
 import fr.espaceadh.authorization.model.Roles;
 import fr.espaceadh.authorization.model.Validation;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.espaceadh.authorization.clientapi.adherents.JSON;
 import fr.espaceadh.authorization.dto.UserDto;
 import fr.espaceadh.authorization.service.AuthentificationService;
 import io.swagger.annotations.*;
@@ -30,20 +33,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-07-17T15:25:36.817Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-09-28T08:29:33.965Z[GMT]")
 @Controller
 public class AuthentificationApiController implements AuthentificationApi {
 
@@ -51,10 +48,12 @@ public class AuthentificationApiController implements AuthentificationApi {
 
     @Autowired
     protected AuthentificationService authentificationService;
-    
+
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
+
+    
 
     @org.springframework.beans.factory.annotation.Autowired
     public AuthentificationApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -62,7 +61,6 @@ public class AuthentificationApiController implements AuthentificationApi {
         this.request = request;
     }
 
-    @Override
     public ResponseEntity<Void> addAuthentification(@ApiParam(value = "ajout de l'objet authentification" ,required=true )  @Valid @RequestBody Authentification body) {
         String accept = request.getHeader("Accept");
         
@@ -74,17 +72,26 @@ public class AuthentificationApiController implements AuthentificationApi {
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Void> deleteAuthentification(@Size(min=3,max=50) @ApiParam(value = "login de la personne",required=true) @PathVariable("login") String login) {
+    public ResponseEntity<Void> deleteAuthentification(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Authentification> getAuthentification(@Size(min=3,max=50) @ApiParam(value = "login de la personne",required=true) @PathVariable("login") String login) {
+    public ResponseEntity<Authentification> getAuthentification(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                return new ResponseEntity<Authentification>(objectMapper.readValue("{\n  \"password\" : \"password\",\n  \"idAdh\" : 0,\n  \"login\" : \"login\"\n}", Authentification.class), HttpStatus.NOT_IMPLEMENTED);
+            } catch (IOException e) {
+                LOGGER.error("Couldn't serialize response for content type application/json", e);
+                return new ResponseEntity<Authentification>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
         return new ResponseEntity<Authentification>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> resetPassword(@Size(min=3,max=50) @ApiParam(value = "login de la personne",required=true) @PathVariable("login") String login) {
+    public ResponseEntity<Void> resetPassword(@ApiParam(value = "demander la réinitialisation du mot de passe"  )  @Valid @RequestBody Login body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
@@ -99,28 +106,34 @@ public class AuthentificationApiController implements AuthentificationApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> validationAuthentification(@ApiParam(value = "Clée de validation reçu par mail au moment de la création du compte" ,required=true )  @Valid @RequestBody Validation body,@Size(min=3,max=50) @ApiParam(value = "login de la personne",required=true) @PathVariable("login") String login) {
+    public ResponseEntity<Void> validationAuthentification(@ApiParam(value = "Clée de validation reçu par mail au moment de la création du compte" ,required=true )  @Valid @RequestBody Validation body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    public ResponseEntity<Void> valideResetPassword(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh,@ApiParam(value = "demander la validation de la réinitialisation du mot de passe"  )  @Valid @RequestBody ReinitAuthentification body) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
     
-    /**
+    
+    
+    
+        /**
      * Transforme Authentification model eb UsersDTO
      * @param Authentification
      * @return UserDTO
      */
     private UserDto convertDto(Authentification body) {
         UserDto dto = new UserDto();
-        dto.setIdAdherent(1); //TODO A revoir l'idADH
+        dto.setIdAdherent(body.getIdAdh().intValue()); 
         dto.setUsername(body.getLogin());
         dto.setPasswordEncode(passwordEncoder().encode(body.getPassword()));
         
         return dto;
     }
     
-    
-    public BCryptPasswordEncoder passwordEncoder() {
+        public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 

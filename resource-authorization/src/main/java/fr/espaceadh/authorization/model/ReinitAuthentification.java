@@ -7,24 +7,27 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.*;
 
 /**
- * Validation
+ * ReinitAuthentification
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-09-28T08:29:33.965Z[GMT]")
-public class Validation   {
+public class ReinitAuthentification   {
   @JsonProperty("cleeValidation")
   private String cleeValidation = null;
 
-  public Validation cleeValidation(String cleeValidation) {
+  @JsonProperty("password")
+  private String password = null;
+
+  public ReinitAuthentification cleeValidation(String cleeValidation) {
     this.cleeValidation = cleeValidation;
     return this;
   }
 
   /**
-   * clée de validation pour activer le compte créé
+   * clée de validation pour réinitialiser le compte créé
    * @return cleeValidation
   **/
-  @ApiModelProperty(value = "clée de validation pour activer le compte créé")
+  @ApiModelProperty(value = "clée de validation pour réinitialiser le compte créé")
 
 @Size(min=3,max=50)   public String getCleeValidation() {
     return cleeValidation;
@@ -32,6 +35,25 @@ public class Validation   {
 
   public void setCleeValidation(String cleeValidation) {
     this.cleeValidation = cleeValidation;
+  }
+
+  public ReinitAuthentification password(String password) {
+    this.password = password;
+    return this;
+  }
+
+  /**
+   * Mot de passe de la personne
+   * @return password
+  **/
+  @ApiModelProperty(value = "Mot de passe de la personne")
+
+@Size(min=5,max=15)   public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
 
@@ -43,21 +65,23 @@ public class Validation   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Validation validation = (Validation) o;
-    return Objects.equals(this.cleeValidation, validation.cleeValidation);
+    ReinitAuthentification reinitAuthentification = (ReinitAuthentification) o;
+    return Objects.equals(this.cleeValidation, reinitAuthentification.cleeValidation) &&
+        Objects.equals(this.password, reinitAuthentification.password);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(cleeValidation);
+    return Objects.hash(cleeValidation, password);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Validation {\n");
+    sb.append("class ReinitAuthentification {\n");
     
     sb.append("    cleeValidation: ").append(toIndentedString(cleeValidation)).append("\n");
+    sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("}");
     return sb.toString();
   }

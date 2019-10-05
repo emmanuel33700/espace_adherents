@@ -7,31 +7,31 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.*;
 
 /**
- * Validation
+ * Login
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-09-28T08:29:33.965Z[GMT]")
-public class Validation   {
-  @JsonProperty("cleeValidation")
-  private String cleeValidation = null;
+public class Login   {
+  @JsonProperty("login")
+  private String login = null;
 
-  public Validation cleeValidation(String cleeValidation) {
-    this.cleeValidation = cleeValidation;
+  public Login login(String login) {
+    this.login = login;
     return this;
   }
 
   /**
-   * clée de validation pour activer le compte créé
-   * @return cleeValidation
+   * Login de la personnes
+   * @return login
   **/
-  @ApiModelProperty(value = "clée de validation pour activer le compte créé")
+  @ApiModelProperty(value = "Login de la personnes")
 
-@Size(min=3,max=50)   public String getCleeValidation() {
-    return cleeValidation;
+@Size(min=3,max=50)   public String getLogin() {
+    return login;
   }
 
-  public void setCleeValidation(String cleeValidation) {
-    this.cleeValidation = cleeValidation;
+  public void setLogin(String login) {
+    this.login = login;
   }
 
 
@@ -43,21 +43,21 @@ public class Validation   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Validation validation = (Validation) o;
-    return Objects.equals(this.cleeValidation, validation.cleeValidation);
+    Login login = (Login) o;
+    return Objects.equals(this.login, login.login);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(cleeValidation);
+    return Objects.hash(login);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Validation {\n");
+    sb.append("class Login {\n");
     
-    sb.append("    cleeValidation: ").append(toIndentedString(cleeValidation)).append("\n");
+    sb.append("    login: ").append(toIndentedString(login)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -2,24 +2,43 @@ package fr.espaceadh.authorization.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * Authentification
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-07-05T20:02:22.596Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-09-28T08:29:33.965Z[GMT]")
 public class Authentification   {
+  @JsonProperty("idAdh")
+  private Long idAdh = null;
+
   @JsonProperty("login")
   private String login = null;
 
   @JsonProperty("password")
   private String password = null;
+
+  public Authentification idAdh(Long idAdh) {
+    this.idAdh = idAdh;
+    return this;
+  }
+
+  /**
+   * id de la personne
+   * @return idAdh
+  **/
+  @ApiModelProperty(value = "id de la personne")
+
+  public Long getIdAdh() {
+    return idAdh;
+  }
+
+  public void setIdAdh(Long idAdh) {
+    this.idAdh = idAdh;
+  }
 
   public Authentification login(String login) {
     this.login = login;
@@ -69,13 +88,14 @@ public class Authentification   {
       return false;
     }
     Authentification authentification = (Authentification) o;
-    return Objects.equals(this.login, authentification.login) &&
+    return Objects.equals(this.idAdh, authentification.idAdh) &&
+        Objects.equals(this.login, authentification.login) &&
         Objects.equals(this.password, authentification.password);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(login, password);
+    return Objects.hash(idAdh, login, password);
   }
 
   @Override
@@ -83,6 +103,7 @@ public class Authentification   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Authentification {\n");
     
+    sb.append("    idAdh: ").append(toIndentedString(idAdh)).append("\n");
     sb.append("    login: ").append(toIndentedString(login)).append("\n");
     sb.append("    password: ").append(toIndentedString(password)).append("\n");
     sb.append("}");

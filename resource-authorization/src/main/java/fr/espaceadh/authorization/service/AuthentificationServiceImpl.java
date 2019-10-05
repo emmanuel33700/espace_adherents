@@ -16,11 +16,13 @@
  */
 package fr.espaceadh.authorization.service;
 
+import fr.espaceadh.authorization.clientapi.adherents.JSON;
 import fr.espaceadh.authorization.dao.AuthoritiesDao;
 import fr.espaceadh.authorization.dao.userDao;
 import fr.espaceadh.authorization.dto.AuthoritiesDto;
 import fr.espaceadh.authorization.dto.RolesEnum;
 import fr.espaceadh.authorization.dto.UserDto;
+import fr.espaceadh.authorization.model.Adherent;
 import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
@@ -72,29 +74,28 @@ public class AuthentificationServiceImpl implements AuthentificationService {
     @Autowired
     private Environment env;
     
+    
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public int creerUser(UserDto usersDto) {
         
-
-        if (this.verifierIdAdherent(usersDto)){
-            LOGGER.error("ERREUR");
+        Adherent adh = this.verifierIdAdherent(usersDto);
+        
+        if (adh == null) {
+            LOGGER.error("erreur technique sur appel du WS ressource-adherent");
+            return 99;
         }
-        
-        
-        
-        
-        int idAdh = 39;
-        
-
-        
+        else if ( ! adh.getEmail().equalsIgnoreCase(usersDto.getUsername())){
+            LOGGER.error("tentative de fraude sur la création de compte l'id {} ne corespond pas au login ", usersDto.getIdAdherent(), usersDto.getUsername());
+            return 2;
+        }
+                
         // création du compte dans la BD d'authorisation
         UUID uuid = UUID.randomUUID();
         usersDto.setCleeModification(uuid.toString());
         usersDto.setDateModifcationClee(new Date());
         usersDto.setDateCreation(new Date());
         usersDto.setEnabled(false);
-        usersDto.setIdAdherent(idAdh);
         
         userDao.creationUser(usersDto);
         
@@ -153,7 +154,9 @@ public class AuthentificationServiceImpl implements AuthentificationService {
      * @param usersDto
      * @return 
      */
-    private boolean verifierIdAdherent(UserDto usersDto) {
+    private Adherent  verifierIdAdherent(UserDto usersDto) {
+        
+        Adherent adh = null;
         try {
             // vérification dans la BD adhérent si l'utilsateur à été créé
             OAuth2AccessToken token = this.recupererToken();
@@ -170,7 +173,7 @@ public class AuthentificationServiceImpl implements AuthentificationService {
             
             
             StringBuilder urlstring = new StringBuilder();
-            urlstring.append("http://127.0.0.1:8082/resource-adherents/adherent/");
+            urlstring.append(env.getProperty("api.ress.adherents.url"));
             urlstring.append(usersDto.getIdAdherent());
             
             
@@ -200,16 +203,19 @@ public class AuthentificationServiceImpl implements AuthentificationService {
             LOGGER.info("Reponse {}", content.toString());
             
             con.disconnect();
+            
+            JSON json = new JSON();
+            adh = json.deserialize(content.toString(), Adherent.class);
 
             
             
         } catch (MalformedURLException ex) {
-            Logger.getLogger(AuthentificationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("MalformedURLException {}", ex.getMessage());
         } catch (IOException ex) {
-            Logger.getLogger(AuthentificationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error("MalformedURLException {}", ex.getMessage());
         }
         
-        return true;
+        return adh;
         
     }
 

@@ -82,7 +82,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-  /authentification/{login}:
+  /authentification/{idadh}:
     delete:
       tags:
       - Authentification
@@ -91,14 +91,13 @@ paths:
       security: 
         - oAuth: [ress-autorization-admin, ress-autorization-del]
       parameters:
-      - name: login
+      - name: idadh
         in: path
-        description: login de la personne 
+        description: id de la personne à modifier
         required: true
         schema:
-          type: string
-          maxLength: 50
-          minLength: 3
+          type: integer
+          format: int64
       responses:
         200:
           description: Operation réussie
@@ -129,14 +128,13 @@ paths:
       security: 
         - oAuth: [ress-autorization-admin]
       parameters:
-      - name: login
+      - name: idadh
         in: path
-        description: login de la personne
+        description: id de la personne à modifier
         required: true
         schema:
-          type: string
-          maxLength: 50
-          minLength: 3
+          type: integer
+          format: int64
       responses:
         200:
           description: Operation réussie
@@ -162,21 +160,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-  /authentification/{login}/resetPassword:
-    get:
+  /authentification/resetPassword:
+    post:
       tags:
       - Authentification
       summary: demander la réinitialisation du mot de passe
       operationId: resetPassword
-      parameters:
-      - name: login
-        in: path
-        description: login de la personne 
-        required: true
-        schema:
-          type: string
-          maxLength: 50
-          minLength: 3
+      requestBody:
+        description: demander la réinitialisation du mot de passe
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
       responses:
         200:
           description: Operation réussie
@@ -198,21 +193,62 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-  /authentification/{login}/validation:
+  /authentification/{idadh}/validerResetPassword:
+    post:
+      tags:
+      - Authentification
+      summary: demander la validation de la réinitialisation du mot de passe
+      operationId: valideResetPassword
+      parameters:
+      - name: idadh
+        in: path
+        description: id de la personne à modifier
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: demander la validation de la réinitialisation du mot de passe
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReinitAuthentification'
+      responses:
+        200:
+          description: Operation réussie
+        404:
+          description: login non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        403:
+          description: Droit insufisant 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+  /authentification/{idadh}/validation:
     post:
       tags:
       - Authentification
       summary: validation d'enregistrement du login d'une personne
       operationId: validationAuthentification
       parameters:
-      - name: login
+      - name: idadh
         in: path
-        description: login de la personne 
+        description: id de la personne à modifier
         required: true
         schema:
-          type: string
-          maxLength: 50
-          minLength: 3
+          type: integer
+          format: int64
       requestBody:
         description: Clée de validation reçu par mail au moment de la création du compte
         content:
@@ -289,11 +325,36 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
 components:
   schemas:
-    Authentification:
+    Login:
       type: object
       properties:
         login:
           description: Login de la personnes 
+          maxLength: 50
+          minLength: 3
+          type: string
+    Authentification:
+      type: object
+      properties:
+        idAdh:
+          description: id de la personne 
+          type: integer
+          format: int64
+        login:
+          description: Login de la personnes 
+          maxLength: 50
+          minLength: 3
+          type: string
+        password:
+          description: Mot de passe de la personne
+          maxLength: 15
+          minLength: 5
+          type: string
+    ReinitAuthentification:
+      type: object
+      properties:
+        cleeValidation:
+          description: clée de validation pour réinitialiser le compte créé
           maxLength: 50
           minLength: 3
           type: string
