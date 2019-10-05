@@ -60,7 +60,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         
         List<AdherentDto> query1 = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper(), login);
         if (!query1.isEmpty()) {
-            return query1.get(1);
+            return query1.get(0);
         }
         LOGGER.warn("login {} non trouvé en BD", login);
         return new AdherentDto();
@@ -79,7 +79,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         
         List<AdherentDto> query1 = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper(), idAdh);
         if (!query1.isEmpty()) {
-            return query1.get(1);
+            return query1.get(0);
         }
         LOGGER.warn("id adherents {} non trouvé en BD", idAdh);
         return new AdherentDto();

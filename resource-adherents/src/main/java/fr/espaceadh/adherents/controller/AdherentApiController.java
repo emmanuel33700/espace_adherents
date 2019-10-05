@@ -136,7 +136,7 @@ public class AdherentApiController implements AdherentApi {
      private Adherent translateDto(AdherentDto adherent){
         Adherent model = new Adherent();
         
-        model.setId(model.getId());
+        model.setId(adherent.getId());
         if (adherent.getCivilite() == adherent.getCivilite().MADAME){
            model.setCivilite(model.getCivilite().MME);  
         } else {
