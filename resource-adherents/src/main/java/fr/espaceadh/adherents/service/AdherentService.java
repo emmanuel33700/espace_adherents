@@ -29,6 +29,7 @@ public interface AdherentService {
      * @param adherentDto adherents DTO
      * @return  0 => Création OK
      *          1 => Creation erreur
+     *          10 => Adherent existant déjà
      */
     int creerAdherent(AdherentDto adherentDto);
     

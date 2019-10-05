@@ -63,7 +63,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
             return query1.get(0);
         }
         LOGGER.warn("login {} non trouvé en BD", login);
-        return new AdherentDto();
+        return null;
     }
 
     @Override

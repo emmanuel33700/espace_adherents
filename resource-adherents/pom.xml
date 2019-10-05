@@ -68,6 +68,12 @@
             <version>${commons-io.version}</version>
         </dependency>
                 
+        <!--mail -->
+        <dependency>
+            <groupId>fr.espaceadh</groupId>
+            <artifactId>lib-mail</artifactId>
+            <version>${project.version}</version>
+        </dependency>
                 
         <!--SpringFox dependencies -->
         <dependency>

@@ -17,7 +17,17 @@
 package fr.espaceadh.adherents.service;
 
 import fr.espaceadh.adherents.dao.AdherentsDAO;
+import fr.espaceadh.adherents.dao.AdherentsDAOImpl;
 import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.lib.mail.GestionMail;
+import fr.espaceadh.lib.mail.dto.MailInDto;
+import fr.espaceadh.lib.mail.dto.MailOutDto;
+import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -38,13 +48,49 @@ public class AdherentServiceImpl implements AdherentService{
     @Autowired
     protected AdherentsDAO adherentsDAO;
     
+        
+    @Autowired
+    private GestionMail getionMail;
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdherentServiceImpl.class);  
+    
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public int creerAdherent(AdherentDto adherentDto) {
+        
+        if (adherentsDAO.getAdherentByLogin(adherentDto.getEmail() ) != null){
+            LOGGER.info("Adhérent qui souhaite etre créé {} existe déjà en BD ", adherentDto.getEmail());
+            return 10;
+        }
+        
         long idAdherent = adherentsDAO.creerAdherent(adherentDto);
         
-        if (idAdherent != 0) return 0;
-        else return 1;
+        //envoie du mail de validation du compte
+        MailInDto mailIn = new MailInDto();
+
+        
+        Collection<String> messageTo = new ArrayList<>();
+        messageTo.add(adherentDto.getEmail());
+        mailIn.setMessageTo(messageTo);
+        
+        
+        /* type de template */
+        mailIn.setTemplateMailEnum(TemplateMailEnum.INFORMATION_PRE_INSCRIPTION);
+        
+        /* variables associées au tempalte **/
+        HashMap<String, String> templateVariables = new HashMap<>();
+        templateVariables.put("adh_prenom", adherentDto.getPrenom());
+        templateVariables.put("confirmation_link", 
+                env.getProperty("validationmail.url")
+                        .concat("?mail=").concat(adherentDto.getEmail())
+                        .concat("?id=").concat(Long.toString(idAdherent))
+        );
+        mailIn.setTemplateVariables(templateVariables);
+        
+        
+        MailOutDto mailOut = getionMail.sendMail(mailIn);
+        
+        return 0;
     }
 
     @Override

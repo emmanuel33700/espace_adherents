@@ -179,9 +179,18 @@ public class GestionMailImpl implements GestionMail {
      * @return 
      */
     private int recupererCodeTemplateMailJet(TemplateMailEnum templateMailEnum) {
-        if (templateMailEnum == TemplateMailEnum.CONFIRMATION_ADHESION) return  env.getProperty("message.template.code.confirmationadhesion", Integer.class);
-        if (templateMailEnum == TemplateMailEnum.DEMANDE_VALIDATION_MAIL) return  env.getProperty("message.template.code.validationmail", Integer.class);
+        if (null != templateMailEnum) switch (templateMailEnum) {
+            case CONFIRMATION_ADHESION:
+                return  env.getProperty("message.template.code.confirmationadhesion", Integer.class);
+            case DEMANDE_VALIDATION_MAIL:
+                return  env.getProperty("message.template.code.validationmail", Integer.class);
+            case INFORMATION_PRE_INSCRIPTION:
+                return  env.getProperty("message.template.code.preinscription", Integer.class);
+            default:
+                break;
+        }
 
+        
         LOGGER.error("Aucun template mail correspondant à  {}" ,templateMailEnum.toString() );
         return 0;
     }

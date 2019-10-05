@@ -62,9 +62,10 @@ public class AdherentApiController implements AdherentApi {
         int result = adherentService.creerAdherent(dto);
         
         if(result == 0) return  new ResponseEntity<Void>(HttpStatus.CREATED);
-        else {
-            return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-        }
+        else if (result == 10) new ResponseEntity<Void>(HttpStatus.BAD_REQUEST); //TODO revoir pour les invilides imputes
+
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+
     }
     
 
