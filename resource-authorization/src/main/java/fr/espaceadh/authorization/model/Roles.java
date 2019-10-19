@@ -1,9 +1,26 @@
+/*
+ * Copyright (C) 2019 emmanuel33700 https://github.com/emmanuel33700/espace_adherents
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package fr.espaceadh.authorization.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +32,8 @@ import javax.validation.constraints.*;
  * Roles
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-09-28T08:29:33.965Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-10-19T08:19:59.368Z[GMT]")
 public class Roles   {
-  @JsonProperty("login")
-  private String login = null;
-
   /**
    * Gets or Sets roles
    */
@@ -58,25 +72,6 @@ public class Roles   {
   @Valid
   private List<RolesEnum> roles = null;
 
-  public Roles login(String login) {
-    this.login = login;
-    return this;
-  }
-
-  /**
-   * Get login
-   * @return login
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=3,max=50)   public String getLogin() {
-    return login;
-  }
-
-  public void setLogin(String login) {
-    this.login = login;
-  }
-
   public Roles roles(List<RolesEnum> roles) {
     this.roles = roles;
     return this;
@@ -95,8 +90,8 @@ public class Roles   {
    * @return roles
   **/
   @ApiModelProperty(value = "Role de la personnes")
-
-  public List<RolesEnum> getRoles() {
+  
+    public List<RolesEnum> getRoles() {
     return roles;
   }
 
@@ -114,13 +109,12 @@ public class Roles   {
       return false;
     }
     Roles roles = (Roles) o;
-    return Objects.equals(this.login, roles.login) &&
-        Objects.equals(this.roles, roles.roles);
+    return Objects.equals(this.roles, roles.roles);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(login, roles);
+    return Objects.hash(roles);
   }
 
   @Override
@@ -128,7 +122,6 @@ public class Roles   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Roles {\n");
     
-    sb.append("    login: ").append(toIndentedString(login)).append("\n");
     sb.append("    roles: ").append(toIndentedString(roles)).append("\n");
     sb.append("}");
     return sb.toString();

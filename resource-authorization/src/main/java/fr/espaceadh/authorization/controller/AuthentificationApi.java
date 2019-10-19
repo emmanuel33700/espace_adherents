@@ -105,12 +105,11 @@ public interface AuthentificationApi {
         @ApiResponse(code = 403, message = "Droit insufisant", response = ModelApiResponse.class),
         @ApiResponse(code = 404, message = "login non trouvée", response = ModelApiResponse.class),
         @ApiResponse(code = 405, message = "Invalid input", response = ModelApiResponse.class) })
-    @RequestMapping(value = "/authentification/{login}/roles",
+    @RequestMapping(value = "/authentification/{idadh}/roles",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateRoles(@ApiParam(value = "mise à jour de l'objet role" ,required=true )  @Valid @RequestBody Roles body,@Size(min=3,max=50) @ApiParam(value = "login de la personne",required=true) @PathVariable("login") String login);
-
+    ResponseEntity<Void> updateRoles(@ApiParam(value = "mise à jour de l'objet role" ,required=true )  @Valid @RequestBody Roles body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh);
 
     @ApiOperation(value = "validation d'enregistrement du login d'une personne", nickname = "validationAuthentification", notes = "", tags={ "Authentification", })
     @ApiResponses(value = { 
