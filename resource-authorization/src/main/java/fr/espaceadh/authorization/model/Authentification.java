@@ -29,7 +29,7 @@ import javax.validation.constraints.*;
  * Authentification
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-10-19T08:19:59.368Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-10-19T08:45:44.449Z[GMT]")
 public class Authentification   {
   @JsonProperty("idAdh")
   private Long idAdh = null;
@@ -70,7 +70,7 @@ public class Authentification   {
   **/
   @ApiModelProperty(value = "Login de la personnes")
   
-  @Pattern(regexp="^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\\\\.[a-zA-Z]{2,4}$") @Size(min=3,max=50)   public String getLogin() {
+    public String getLogin() {
     return login;
   }
 
