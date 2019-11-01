@@ -23,4 +23,13 @@ public interface AuthentificationService {
      */
     int creerUser(UserDto usersDto);
     
+    /**
+     * Validation du compte d'un utilisateur
+     * @param idUser id de la personne
+     * @param cleeValidation clée de validation
+     * @return true: compte validé
+     *          false : compte non validé
+     */
+    boolean validationCreationUser(int idUser, String cleeValidation);
+    
 }

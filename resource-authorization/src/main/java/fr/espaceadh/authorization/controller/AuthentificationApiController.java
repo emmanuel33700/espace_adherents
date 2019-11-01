@@ -22,8 +22,8 @@ import fr.espaceadh.authorization.model.ReinitAuthentification;
 import fr.espaceadh.authorization.model.Roles;
 import fr.espaceadh.authorization.model.Validation;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fr.espaceadh.authorization.clientapi.adherents.JSON;
 import fr.espaceadh.authorization.dto.UserDto;
+import fr.espaceadh.authorization.model.ModelApiResponse;
 import fr.espaceadh.authorization.service.AuthentificationService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -34,7 +34,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -61,6 +60,11 @@ public class AuthentificationApiController implements AuthentificationApi {
         this.request = request;
     }
 
+    /**
+     * Ajout d'un utilisateur
+     * @param body
+     * @return 
+     */
     public ResponseEntity<Void> addAuthentification(@ApiParam(value = "ajout de l'objet authentification" ,required=true )  @Valid @RequestBody Authentification body) {
         String accept = request.getHeader("Accept");
         
@@ -96,6 +100,7 @@ public class AuthentificationApiController implements AuthentificationApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    
     public ResponseEntity<Void> updateAuthentification(@ApiParam(value = "mise à jour de l'objet authentification" ,required=true )  @Valid @RequestBody Authentification body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
@@ -106,9 +111,25 @@ public class AuthentificationApiController implements AuthentificationApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    /**
+     * Validation de la création d'un compte utilisateur
+     * @param body
+     * @param idadh
+     * @return 
+     */
     public ResponseEntity<Void> validationAuthentification(@ApiParam(value = "Clée de validation reçu par mail au moment de la création du compte" ,required=true )  @Valid @RequestBody Validation body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+
+        boolean result = authentificationService.validationCreationUser(idadh.intValue(), body.getCleeValidation());
+        
+        if (result) {
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        else {
+            ModelApiResponse apiResponse =  new ModelApiResponse();
+            apiResponse.setMessage("Validation non effectué, id de l'utilisateur  ou clee de validation incorrecte");
+            return new ResponseEntity<Void>(HttpStatus.NOT_MODIFIED );
+        }
+            
     }
 
     public ResponseEntity<Void> valideResetPassword(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh,@ApiParam(value = "demander la validation de la réinitialisation du mot de passe"  )  @Valid @RequestBody ReinitAuthentification body) {

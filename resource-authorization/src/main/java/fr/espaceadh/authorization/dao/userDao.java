@@ -48,4 +48,12 @@ public interface userDao {
      */
     UserDto lectureUtilisateur(String login);
     
+    /**
+     * Validation de la création d'un utilisateur via sa clée de validation
+     * @param idUser id de l'utilisateur
+     * @param cleeValidation clée de validation
+     * @return true si validation OK
+     */
+    boolean validationUtilisateur (int idUser, String cleeValidation);
+    
 }

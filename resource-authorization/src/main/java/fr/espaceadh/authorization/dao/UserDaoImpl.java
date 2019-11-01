@@ -66,6 +66,26 @@ public class UserDaoImpl extends JdbcDaoSupport implements userDao{
     }
 
     @Override
+    public boolean validationUtilisateur(int idUser, String cleeValidation) {
+        StringBuilder query = new StringBuilder();
+                 query.append(" UPDATE users ");
+                 query.append("     SET datemodif= now(), enabled = TRUE  ");
+                 query.append("    WHERE idadherent= ? ");
+                 query.append("    and cleemodification = ? ");
+        
+        int nbMaj;          
+        nbMaj = this.getJdbcTemplate().update(query.toString(),
+                idUser,
+                cleeValidation
+        );
+        if (nbMaj ==  1) return true;
+        else {
+            LOGGER.error("Erreur lors de la validation d'un compte utilisateur. Nb de ligne mis à jour ", nbMaj );
+        }
+        return false;
+    }
+    
+    @Override
     public boolean majUser(UserDto userDto) {
         boolean indicVirgul = false;
         List<Object> values = new ArrayList<Object>();
@@ -147,6 +167,8 @@ public class UserDaoImpl extends JdbcDaoSupport implements userDao{
     private boolean isNotNull(Object string) {
         return string != null;
     }
+
+
     
     
 }

@@ -130,6 +130,12 @@ public class AuthentificationServiceImpl implements AuthentificationService {
         else return 99;
     }
 
+    
+    @Override
+    public boolean validationCreationUser(int idUser, String cleeValidation) {
+        return userDao.validationUtilisateur(idUser, cleeValidation);
+    }
+
     /**
      * Récupérer token d'accès oauth2
      * @return 
@@ -218,6 +224,7 @@ public class AuthentificationServiceImpl implements AuthentificationService {
         return adh;
         
     }
+
 
 
     
