@@ -8,8 +8,9 @@ interface TreeNode<T> {
 }
 
 interface FSEntry {
-  name: string;
-  size: string;
+  nom: string;
+  auteur: string;
+  description: string;
   kind: string;
   items?: number;
 }
@@ -20,8 +21,8 @@ interface FSEntry {
   styleUrls: ['./liste.component.scss'],
 })
 export class ListeComponent {
-  customColumn = 'name';
-  defaultColumns = [ 'size', 'kind', 'items' ];
+  customColumn = 'nom';
+  defaultColumns = [ 'auteur', 'description', 'items' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
@@ -47,26 +48,35 @@ export class ListeComponent {
 
   private data: TreeNode<FSEntry>[] = [
     {
-      data: { name: 'Projects', size: '1.8 MB', items: 5, kind: 'dir' },
+      data: { nom: 'Projects', auteur: 'Dupond jean', items: 5, description: 'Administration de lasso', kind: 'dir' },
       children: [
-        { data: { name: 'project-1.doc', kind: 'doc', size: '240 KB' } },
-        { data: { name: 'project-2.doc', kind: 'doc', size: '290 KB' } },
-        { data: { name: 'project-3', kind: 'txt', size: '466 KB' } },
-        { data: { name: 'project-4.docx', kind: 'docx', size: '900 KB' } },
+        {
+          data: {nom: 'Année 2018', auteur: 'Dupond jean', items: 5, description: 'Admin de lasso', kind: 'dir' },
+          children: [
+            {data: {nom: 'doc1.pdf', auteur: 'Dupond jean', description: 'Administration de lasso', kind: 'doc'}},
+            {data: {nom: 'doc2.pdf', auteur: 'Dupond jean', description: 'Administration de lasso', kind: 'doc'}},
+            {data: {nom: 'doc3.pdf', auteur: 'Dupond jean', description: 'Administration de lasso', kind: 'doc'}},
+            {data: {nom: 'doc4.pdf', auteur: 'Dupond jean', description: 'Administration de lasso', kind: 'doc'}},
+          ],
+        },
+        {
+          data: {nom: 'Année 2019', auteur: 'Dupond jean', items: 5, description: 'Admin de lasso', kind: 'dir' },
+          children: [
+            {data: {nom: 'doc1.pdf', auteur: 'Dupond jean', description: 'Administration de lasso', kind: 'doc'}},
+            {data: {nom: 'doc2.pdf', auteur: 'Dupond jean', description: 'Administration de lasso', kind: 'doc'}},
+            {data: {nom: 'doc3.pdf', auteur: 'Dupond jean', description: 'Administration de lasso', kind: 'doc'}},
+            {data: {nom: 'doc4.pdf', auteur: 'Dupond jean', description: 'Administration de lasso', kind: 'doc'}},
+          ],
+        },
       ],
     },
     {
-      data: { name: 'Reports', kind: 'dir', size: '400 KB', items: 2 },
+      data: { nom: 'Ateliers', auteur: 'Dupond jean', items: 5, description: 'Atelier cadran  solaire', kind: 'dir' },
       children: [
-        { data: { name: 'Report 1', kind: 'doc', size: '100 KB' } },
-        { data: { name: 'Report 2', kind: 'doc', size: '300 KB' } },
-      ],
-    },
-    {
-      data: { name: 'Other', kind: 'dir', size: '109 MB', items: 2 },
-      children: [
-        { data: { name: 'backup.bkp', kind: 'bkp', size: '107 MB' } },
-        { data: { name: 'secret-note.txt', kind: 'txt', size: '2 MB' } },
+        { data: { nom: 'doc5.pdf', auteur: 'Dupond jean', description: 'Atelier cadran  solaire', kind: 'doc' } },
+        { data: { nom: 'doc6.pdf', auteur: 'Dupond jean',  description: 'Atelier cadran  solaire', kind: 'doc'  } },
+        { data: { nom: 'doc7.pdf', auteur: 'Dupond jean',  description: 'Atelier cadran  solaire', kind: 'doc' } },
+        { data: { nom: 'doc8.pdf', auteur: 'Dupond jean',  description: 'Atelier cadran  solaire', kind: 'doc' } },
       ],
     },
   ];

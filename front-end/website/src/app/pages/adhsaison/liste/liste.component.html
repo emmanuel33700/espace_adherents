@@ -4,8 +4,10 @@
       <nb-card-header>Adhérents de la saison</nb-card-header>
       <nb-list>
         <nb-list-item *ngFor="let user of users">
-          <nb-user [picture]="user.picture"  [name]="user.name" [title]="user.title">
-          </nb-user>
+
+            <nb-user [picture]="user.picture"  [name]="user.name" [title]="user.title"  (click)="afficherAlert(user.name)" routerLink="../tabs" >
+            </nb-user>
+
         </nb-list-item>
       </nb-list>
     </nb-card>
