@@ -18,11 +18,7 @@ const routes: Routes = [{
       loadChildren: () => import('./documents/documents.module')
         .then(m => m.DocumentsModule),
     },
-    {
-      path: 'agendas',
-      loadChildren: () => import('./agendas/agendas.module')
-        .then(m => m.AgendasModule),
-    },
+
     {
       path: 'gpdiffusions',
       loadChildren: () => import('./gpdiffusions/gpdiffusions.module')
@@ -44,9 +40,9 @@ const routes: Routes = [{
         .then(m => m.AdhsaisonModule),
     },
     {
-      path: 'adhenregistres',
-      loadChildren: () => import('./adhenregistres/adhenregistres.module')
-        .then(m => m.AdhenregistresModule),
+      path: 'agendas',
+      loadChildren: () => import('./agendas/agendas.module')
+        .then(m => m.AgendasModule),
     },
     {
       path: 'profile',

@@ -1,23 +1,27 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AdhenregistresComponent } from './adhenregistres.component';
-import { ListeComponent } from './liste/liste.component';
+import { TabsComponent} from './tabs.component';
+import { ListeComponent} from './liste/liste.component';
+import { EditeurComponent} from './editeur/editeur.component';
 
 const routes: Routes = [{
   path: '',
-  component: AdhenregistresComponent,
+  component: TabsComponent,
   children: [
     {
       path: 'liste',
       component: ListeComponent,
     },
+    {
+      path: 'editeur',
+      component: EditeurComponent,
+    },
   ],
 }];
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AdhenregistresRoutingModule {
+export class TabsRoutingModule {
 }

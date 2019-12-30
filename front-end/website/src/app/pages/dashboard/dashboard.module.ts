@@ -17,6 +17,8 @@ import { DashboardComponent } from './dashboard.component';
 
 import { FormsModule } from '@angular/forms';
 
+import { BrowserModule } from '@angular/platform-browser';
+
 @NgModule({
   imports: [
     FormsModule,
@@ -32,6 +34,7 @@ import { FormsModule } from '@angular/forms';
     NbIconModule,
     NbButtonModule,
     NgxEchartsModule,
+    BrowserModule,
   ],
   declarations: [
     DashboardComponent,

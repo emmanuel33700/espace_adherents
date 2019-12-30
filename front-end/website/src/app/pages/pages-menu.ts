@@ -8,14 +8,9 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/documents/liste',
   },
   {
-    title: 'Agendas',
-    icon: 'calendar-outline',
-    link: '/pages/agendas/liste',
-  },
-  {
     title: 'Groupes de diffusions',
     icon: 'email-outline',
-    link: '/pages/gpdiffusions/liste',
+    link: '/pages/gpdiffusions/tabs',
   },
   {
     title: 'Trombinoscope',
@@ -26,21 +21,20 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'ADMINISTRATION ADHESIONS',
     group: true,
   },
-
   {
-    title: 'Les saisons',
+    title: 'Saisons',
     icon: 'clock',
     link: '/pages/saisons/liste',
   },
   {
-    title: 'Adhérent de la saison',
+    title: 'Adhérents',
     icon: 'person',
     link: '/pages/adhsaison/liste',
   },
   {
-    title: 'Adhérent enregistrés',
-    icon: 'people',
-    link: '/pages/adhenregistres/liste',
+    title: 'Agendas',
+    icon: 'calendar-outline',
+    link: '/pages/agendas/liste',
   },
 
 ];
