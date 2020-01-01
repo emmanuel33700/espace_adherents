@@ -1,1 +1,21 @@
+<nb-card>
+  <nb-card-body>
 
+    <full-calendar
+      #calendar
+      defaultView="dayGridMonth"
+      [header]="{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+          }"
+      [plugins]="calendarPlugins"
+      [weekends]="calendarWeekends"
+      [events]="calendarEvents"
+      (dateClick)="handleDateClick($event)"
+      [locales]="locales"
+      locale="fr"
+    ></full-calendar>
+
+  </nb-card-body>
+</nb-card>

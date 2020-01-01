@@ -75,7 +75,12 @@
     "tslib": "^1.10.0",
     "typeface-exo": "0.0.22",
     "web-animations-js": "github:angular/web-animations-js#release_pr208",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.9.1",
+    "@fullcalendar/angular": "^4.1.0",
+    "@fullcalendar/core": "^4.1.0",
+    "@fullcalendar/daygrid": "^4.1.0",
+    "@fullcalendar/interaction": "^4.1.0",
+    "@fullcalendar/timegrid": "^4.1.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.800.6",
