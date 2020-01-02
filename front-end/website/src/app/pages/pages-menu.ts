@@ -23,7 +23,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/trombinoscope/liste',
   },
   {
-    title: 'ADMINISTRATION ADHESIONS',
+    title: 'ADMINISTRATION',
     group: true,
   },
   {

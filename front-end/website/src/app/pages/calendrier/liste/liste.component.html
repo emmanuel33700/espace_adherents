@@ -1,27 +1,21 @@
+<nb-card>
+  <nb-card-body>
 
-<div class="row">
-  <div class="col-md-6">
-    <nb-card>
-      <nb-card-header>Les saisons</nb-card-header>
-      <nb-card-body>
-        <form>
+    <full-calendar
+      #calendar
+      defaultView="dayGridMonth"
+      [header]="{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+          }"
+      [plugins]="calendarPlugins"
+      [weekends]="calendarWeekends"
+      [events]="calendarEvents"
+      (dateClick)="handleDateClick($event)"
+      [locales]="locales"
+      locale="fr"
+    ></full-calendar>
 
-          <div class="form-group row">
-            <label class="col-sm-3 label">Saision</label>
-            <div class="col-sm-9">
-              <nb-radio-group>
-                <nb-radio>2019/2020</nb-radio>
-                <nb-radio>2020/2021</nb-radio>
-                <nb-radio >2021/2022</nb-radio>
-              </nb-radio-group>
-            </div>
-          </div>
-
-          <button type="submit" nbButton>Valider</button>
-
-        </form>
-      </nb-card-body>
-    </nb-card>
-
-
-  </div>
+  </nb-card-body>
+</nb-card>

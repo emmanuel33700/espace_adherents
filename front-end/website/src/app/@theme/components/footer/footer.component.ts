@@ -4,10 +4,9 @@ import { Component } from '@angular/core';
   selector: 'ngx-footer',
   styleUrls: ['./footer.component.scss'],
   template: `
-    <span class="created-by">Créé pour Jalle astronomie. Version de démonstration</span>
+    <span class="created-by">Version de démonstration - Projet opensource sous <a href="https://github.com/emmanuel33700/espace_adherents">Github</a></span>
     <div class="socials">
-      <a href="#" target="_blank" class="ion ion-social-github"></a>
-      <a href="#" target="_blank" class="ion ion-social-facebook"></a>
+      <a href="https://github.com/emmanuel33700/espace_adherents" target="_blank" class="ion ion-social-github"></a>
     </div>
   `,
 })

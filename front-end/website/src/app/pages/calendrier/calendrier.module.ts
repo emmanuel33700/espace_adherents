@@ -16,6 +16,7 @@ import { CalendrierRoutingModule } from './calendrier-routing.module';
 import { CalendrierComponent } from './calendrier.component';
 import { ListeComponent } from './liste/liste.component';
 import { FormsModule as ngFormsModule } from '@angular/forms';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { FormsModule as ngFormsModule } from '@angular/forms';
     NbSelectModule,
     NbIconModule,
     ngFormsModule,
+    FullCalendarModule,
   ],
   declarations: [
     CalendrierComponent,
