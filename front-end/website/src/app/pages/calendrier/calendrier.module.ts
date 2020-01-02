@@ -11,14 +11,11 @@ import {
   NbUserModule,
 } from '@nebular/theme';
 
-
 import { ThemeModule } from '../../@theme/theme.module';
-import { DashboardComponent } from './dashboard.component';
-
-import {FormsModule as ngFormsModule} from '@angular/forms';
-
-
-
+import { CalendrierRoutingModule } from './calendrier-routing.module';
+import { CalendrierComponent } from './calendrier.component';
+import { ListeComponent } from './liste/liste.component';
+import { FormsModule as ngFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -31,12 +28,14 @@ import {FormsModule as ngFormsModule} from '@angular/forms';
     NbCheckboxModule,
     NbRadioModule,
     NbDatepickerModule,
+    CalendrierRoutingModule,
     NbSelectModule,
     NbIconModule,
     ngFormsModule,
   ],
   declarations: [
-    DashboardComponent,
+    CalendrierComponent,
+    ListeComponent,
   ],
 })
-export class DashboardModule { }
+export class CalendrierModule { }

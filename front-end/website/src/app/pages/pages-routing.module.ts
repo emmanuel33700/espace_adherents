@@ -14,6 +14,11 @@ const routes: Routes = [{
       component: DashboardComponent,
     },
     {
+      path: 'calendrier',
+      loadChildren: () => import('./calendrier/calendrier.module')
+        .then(m => m.CalendrierModule),
+    },
+    {
       path: 'documents',
       loadChildren: () => import('./documents/documents.module')
         .then(m => m.DocumentsModule),
@@ -38,11 +43,6 @@ const routes: Routes = [{
       path: 'adhsaison',
       loadChildren: () => import('./adhsaison/adhsaison.module')
         .then(m => m.AdhsaisonModule),
-    },
-    {
-      path: 'agendas',
-      loadChildren: () => import('./agendas/agendas.module')
-        .then(m => m.AgendasModule),
     },
     {
       path: 'profile',

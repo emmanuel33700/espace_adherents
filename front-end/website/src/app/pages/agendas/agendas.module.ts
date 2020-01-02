@@ -1,61 +1,47 @@
 import { NgModule } from '@angular/core';
 import {
   NbActionsModule,
-  NbAlertModule,
   NbButtonModule,
-  NbCalendarKitModule,
-  NbCalendarModule,
-  NbCalendarRangeModule,
   NbCardModule,
-  NbChatModule,
-  NbIconModule,
-  NbProgressBarModule,
-  NbSelectModule,
-  NbSpinnerModule,
   NbTabsetModule,
+  NbUserModule,
+  NbRadioModule,
+  NbSelectModule,
+  NbListModule,
+  NbIconModule,
 } from '@nebular/theme';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 import { ThemeModule } from '../../@theme/theme.module';
-import { AgendasRoutingModule } from './agendas-routing.module';
-
-// components
+import { LireComponent } from './lire/lire.component';
 import { AgendasComponent } from './agendas.component';
 
-
-import { ListeComponent } from './liste/liste.component';
-import { DayCellComponent } from './liste/day-cell/day-cell.component';
-
-
-const COMPONENTS = [
-  AgendasComponent,
-  ListeComponent,
-  DayCellComponent,
-];
-
-const MODULES = [
-  NbAlertModule,
-  NbActionsModule,
-  NbButtonModule,
-  NbCalendarModule,
-  NbCalendarKitModule,
-  NbCalendarRangeModule,
-  NbCardModule,
-  NbChatModule,
-  NbIconModule,
-  NbProgressBarModule,
-  NbSelectModule,
-  NbSpinnerModule,
-  NbTabsetModule,
-  ThemeModule,
-  AgendasRoutingModule,
-];
+import { FormsModule } from '@angular/forms';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
-    ...MODULES,
+    FormsModule,
+    ThemeModule,
+    NbCardModule,
+    NbUserModule,
+    NbButtonModule,
+    NbTabsetModule,
+    NbActionsModule,
+    NbRadioModule,
+    NbSelectModule,
+    NbListModule,
+    NbIconModule,
+    NbButtonModule,
+    NgxEchartsModule,
+    FullCalendarModule,
+    RouterModule,
   ],
   declarations: [
-    ...COMPONENTS,
+    LireComponent,
+    AgendasComponent,
   ],
 })
+
 export class AgendasModule { }

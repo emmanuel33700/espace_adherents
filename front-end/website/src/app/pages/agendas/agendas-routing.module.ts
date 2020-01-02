@@ -2,15 +2,15 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AgendasComponent } from './agendas.component';
-import { ListeComponent } from './liste/liste.component';
+import { LireComponent } from './lire/lire.component';
 
 const routes: Routes = [{
   path: '',
   component: AgendasComponent,
   children: [
     {
-      path: 'liste',
-      component: ListeComponent,
+      path: 'lire',
+      component: LireComponent,
     },
   ],
 }];

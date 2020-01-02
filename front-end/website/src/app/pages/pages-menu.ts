@@ -3,6 +3,11 @@ import {NbMenuItem} from '@nebular/theme';
 export const MENU_ITEMS: NbMenuItem[] = [
 
   {
+    title: 'Agendas',
+    icon: 'calendar-outline',
+    link: '/pages/calendrier/liste',
+  },
+  {
     title: 'Documentation',
     icon: 'folder-outline',
     link: '/pages/documents/liste',
@@ -31,10 +36,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'person',
     link: '/pages/adhsaison/liste',
   },
-  {
-    title: 'Agendas',
-    icon: 'calendar-outline',
-    link: '/pages/agendas/liste',
-  },
+
 
 ];

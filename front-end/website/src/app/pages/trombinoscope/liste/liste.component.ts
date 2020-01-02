@@ -9,11 +9,11 @@ import { fruits } from './fruits-list';
 export class ListeComponent {
   fruits = fruits;
 
-  users: { name: string, title: string }[] = [
-    { name: 'CHENAIS Emmanuel', title: 'Adhérents' },
-    { name: 'ROBERT Didier', title: 'Jeune' },
-    { name: 'SULIVAN Janitor', title: 'Adhérents' },
-    { name: 'COX Perry', title: 'Resp famille' },
-    { name: 'SULIVAN Ben', title: 'Adhérents' },
+  users: {picture: string, name: string, title: string }[] = [
+    { picture: 'assets/images/nick.png', name: 'CHENAIS Emmanuel', title: 'manu@gmail.com' },
+    { picture: 'assets/images/jack.png', name: 'ROBERT Didier', title: 'didier@gmail.com' },
+    { picture: 'assets/images/kate.png', name: 'SULIVAN Janitor', title: 'didier@gmail.com' },
+    { picture: 'assets/images/eva.png', name: 'COX Perry', title: 'didier@gmail.com' },
+    { picture: 'assets/images/lee.png', name: 'SULIVAN Ben', title: 'didier@gmail.com' },
   ];
 }

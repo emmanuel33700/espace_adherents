@@ -1,21 +1,19 @@
-<nb-card>
-  <nb-card-body>
+<div class="row">
+  <div class="col-md-6">
+    <nb-card>
+      <nb-card-header>Mes participations aux manifestations</nb-card-header>
+      <nb-card-body>
+            <b>Vendredi 10 Janvier 2020</b> : Assemblé générale
+      </nb-card-body>
+    </nb-card>
 
-    <full-calendar
-      #calendar
-      defaultView="dayGridMonth"
-      [header]="{
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-          }"
-      [plugins]="calendarPlugins"
-      [weekends]="calendarWeekends"
-      [events]="calendarEvents"
-      (dateClick)="handleDateClick($event)"
-      [locales]="locales"
-      locale="fr"
-    ></full-calendar>
+    <nb-card>
+      <nb-card-header>Manifestation en attente de ma réponse</nb-card-header>
+      <nb-card-body>
+        <div class="buttons-row">
+          <b>Vendredi 10 Janvier 2020</b> : Assemblé générale  <button status='success' type="submit" nbButton>Je participe</button> <button status='warning' type="submit" nbButton>Je ne participe pas</button>
+        </div>
+      </nb-card-body>
+    </nb-card>
 
-  </nb-card-body>
-</nb-card>
+  </div>

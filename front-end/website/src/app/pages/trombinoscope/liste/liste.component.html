@@ -1,10 +1,10 @@
 <div class="lists row">
 <div class="col-md-auto col-lg-12 col-xxxl-12">
-    <nb-card class="list-card" size="small">
-      <nb-card-header>Adhérents de la saison</nb-card-header>
+    <nb-card class="list-card">
+      <nb-card-header>Trombinoscope</nb-card-header>
       <nb-list>
         <nb-list-item *ngFor="let user of users">
-          <nb-user [name]="user.name" [title]="user.title">
+          <nb-user [picture]="user.picture" [name]="user.name" [title]="user.title">
           </nb-user>
         </nb-list-item>
       </nb-list>
