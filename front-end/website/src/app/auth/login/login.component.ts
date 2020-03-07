@@ -62,9 +62,12 @@ export class LoginComponent {
       this.token = result.getToken();
       if (result.isSuccess()) {
         this.messages = result.getMessages();
+        localStorage.setItem('Role', 'ADMIN');
       } else {
         this.errors = result.getErrors();
       }
+
+      console.info(this.token.getValue());
 
       const redirect = result.getRedirect();
       if (redirect) {

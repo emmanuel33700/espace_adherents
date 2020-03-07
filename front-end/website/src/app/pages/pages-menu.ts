@@ -1,6 +1,6 @@
 import {NbMenuItem} from '@nebular/theme';
 
-export const MENU_ITEMS: NbMenuItem[] = [
+export const MENU_ITEMS_ADMIN: NbMenuItem[] = [
 
   {
     title: 'Agendas',
@@ -38,4 +38,13 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
 
 
+];
+
+export const MENU_ITEMS_ADH: NbMenuItem[] = [
+
+  {
+    title: 'Agendas',
+    icon: 'calendar-outline',
+    link: '/pages/calendrier/liste',
+  },
 ];

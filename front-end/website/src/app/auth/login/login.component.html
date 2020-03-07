@@ -1,12 +1,12 @@
 <nb-layout>
   <nb-layout-column>
     <nb-card *ngIf="token">
-      <nb-card-body><h1 class="title">Vous etes authentifié</h1>
+      <nb-card-body><h1 class="title">Redirection vers la page d'accueil...</h1>
         <p></p>
         <p>Current User Access Token: {{ token.getValue() | json }}</p>
         <p>Current User Access Token Payload : {{getClaims(token.getValue()) | json}}</p>
         <p>Current User Refresh Token: {{ token.getRefreshToken() | json }}</p>
-        <button nbButton status="warning" *ngIf="token" (click)="logout()">Sign Out</button>
+        <button nbButton status="warning" *ngIf="token" (click)="logout()">Se déconnecter</button>
       </nb-card-body>
       <nb-card-body *ngIf="! token"><p>No User Authenticated</p></nb-card-body>
     </nb-card>
