@@ -181,7 +181,7 @@ export class NbAuthJWTToken extends NbAuthSimpleToken {
    */
   protected parsePayload(): void {
     if (!this.token) {
-      throw new NbAuthTokenNotFoundError('Token not found. ')
+      throw new NbAuthTokenNotFoundError('Token not found. ');
     }
     this.payload = decodeJwtPayload(this.token);
   }
@@ -263,7 +263,7 @@ export class NbAuthOAuth2Token extends NbAuthSimpleToken {
    */
   protected parsePayload(): void {
     if (!this.token) {
-      throw new NbAuthTokenNotFoundError('Token not found.')
+      throw new NbAuthTokenNotFoundError('Token not found.');
     } else {
       if (!Object.keys(this.token).length) {
         throw new NbAuthEmptyTokenError('Cannot extract payload from an empty token.');
@@ -325,7 +325,7 @@ export class NbAuthOAuth2JWTToken extends NbAuthOAuth2Token {
   protected parseAccessTokenPayload(): any {
     const accessToken = this.getValue();
     if (!accessToken) {
-      throw new NbAuthTokenNotFoundError('access_token key not found.')
+      throw new NbAuthTokenNotFoundError('access_token key not found.');
     }
     this.accessTokenPayload = decodeJwtPayload(accessToken);
   }

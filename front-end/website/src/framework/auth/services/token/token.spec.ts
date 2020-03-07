@@ -61,7 +61,7 @@ describe('auth token', () => {
 
     it('getCreatedAt success : exp for validJWTToken', () => {
       const date = new Date();
-      date.setTime(1532350800000)
+      date.setTime(1532350800000);
       expect(validJWTToken.getCreatedAt()).toEqual(date);
     });
 
@@ -77,7 +77,7 @@ describe('auth token', () => {
 
     it('getCreatedAt success : exp for validJWTToken', () => {
       const date = new Date();
-      date.setTime(1532350800000)
+      date.setTime(1532350800000);
       expect(validJWTToken.getCreatedAt()).toEqual(date);
     });
 

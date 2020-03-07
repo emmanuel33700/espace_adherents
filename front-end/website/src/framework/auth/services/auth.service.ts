@@ -61,7 +61,7 @@ export class NbAuthService {
                   return observableOf(false);
                 }
               }),
-            )
+            );
         } else {
           return observableOf(token.isValid());
         }

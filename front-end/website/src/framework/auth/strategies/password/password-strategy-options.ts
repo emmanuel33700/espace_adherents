@@ -27,18 +27,18 @@ export interface NbPasswordStrategyReset extends NbPasswordStrategyModule {
 }
 
 export interface NbPasswordStrategyToken {
-  class?: NbAuthTokenClass,
-  key?: string,
-  getter?: Function,
+  class?: NbAuthTokenClass;
+  key?: string;
+  getter?: Function;
 }
 
 export interface NbPasswordStrategyMessage {
-  key?: string,
-  getter?: Function,
+  key?: string;
+  getter?: Function;
 }
 
 export class NbPasswordAuthStrategyOptions extends NbAuthStrategyOptions {
-  baseEndpoint? = '/api/auth/';
+  baseEndpoint ? = '/api/auth/';
   login?: boolean | NbPasswordStrategyModule = {
     alwaysFail: false,
     endpoint: 'login',

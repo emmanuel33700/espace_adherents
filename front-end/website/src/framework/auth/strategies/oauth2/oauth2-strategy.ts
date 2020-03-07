@@ -108,7 +108,7 @@ export class NbOAuth2AuthStrategy extends NbAuthStrategy {
       return observableOf(this.route.snapshot.queryParams).pipe(
         switchMap((params: any) => {
           if (params.code) {
-            return this.requestToken(params.code)
+            return this.requestToken(params.code);
           }
 
           return observableOf(
@@ -148,7 +148,7 @@ export class NbOAuth2AuthStrategy extends NbAuthStrategy {
         catchError(err => {
           const errors = [];
           if (err instanceof NbAuthIllegalTokenError) {
-            errors.push(err.message)
+            errors.push(err.message);
           } else {
             errors.push('Something went wrong.');
           }
@@ -189,7 +189,7 @@ export class NbOAuth2AuthStrategy extends NbAuthStrategy {
   authenticate(data?: any): Observable<NbAuthResult> {
 
     if (this.getOption('token.grantType') === NbOAuth2GrantType.PASSWORD) {
-      return this.passwordToken(data.email, data.password)
+      return this.passwordToken(data.email, data.password);
     } else {
       return this.isRedirectResult()
         .pipe(
@@ -349,9 +349,9 @@ export class NbOAuth2AuthStrategy extends NbAuthStrategy {
           ... params,
           client_id: this.getOption('clientId'),
           client_secret: this.getOption('clientSecret'),
-        }
+        };
       } else {
-        throw Error('For request body client authentication method, please provide both clientId & clientSecret.')
+        throw Error('For request body client authentication method, please provide both clientId & clientSecret.');
       }
     }
     return params;
@@ -367,10 +367,10 @@ export class NbOAuth2AuthStrategy extends NbAuthStrategy {
         errors = this.getOption('defaultErrors');
       }
     }  else if (res instanceof NbAuthIllegalTokenError ) {
-      errors.push(res.message)
+      errors.push(res.message);
     } else {
-        errors.push('Something went wrong.')
-    };
+        errors.push('Something went wrong.');
+    }
 
     return observableOf(
       new NbAuthResult(

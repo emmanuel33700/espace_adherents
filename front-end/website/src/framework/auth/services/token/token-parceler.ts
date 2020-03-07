@@ -4,10 +4,10 @@ import { nbAuthCreateToken, NbAuthToken, NbAuthTokenClass } from './token';
 import { NB_AUTH_TOKENS } from '../../auth.options';
 
 export interface NbTokenPack {
-  name: string,
-  ownerStrategyName: string,
-  createdAt: Number,
-  value: string,
+  name: string;
+  ownerStrategyName: string;
+  createdAt: Number;
+  value: string;
 }
 
 export const NB_AUTH_FALLBACK_TOKEN = new InjectionToken<NbAuthTokenClass>('Nebular Auth Options');

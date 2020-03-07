@@ -13,7 +13,7 @@ import { NbAuthResult } from '../../services/auth-result';
 
 
 @Component({
-  selector: 'nb-register',
+  selector: 'ngx-register',
   styleUrls: ['./register.component.scss'],
   templateUrl: './register.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

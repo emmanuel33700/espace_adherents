@@ -337,7 +337,7 @@ export class NbPasswordAuthStrategy extends NbAuthStrategy {
     if (res instanceof HttpErrorResponse) {
       errors = this.getOption('errors.getter')(module, res, this.options);
     } else if (res instanceof NbAuthIllegalTokenError) {
-      errors.push(res.message)
+      errors.push(res.message);
     } else {
       errors.push('Something went wrong.');
     }

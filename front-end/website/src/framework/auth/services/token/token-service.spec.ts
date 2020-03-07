@@ -71,7 +71,7 @@ describe('token-service', () => {
         expect(spy).toHaveBeenCalled();
         expect(token.getValue()).toEqual('');
         expect(token.isValid()).toBe(false);
-      })
+      });
   });
 
   it('should return correct value', () => {
@@ -128,5 +128,5 @@ describe('token-service', () => {
         expect(token.getValue()).toEqual('');
         done();
       });
-  })
+  });
 });
