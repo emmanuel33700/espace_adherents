@@ -145,7 +145,7 @@ describe('auth-service', () => {
   );
 
   it('isAuthenticatedOrRefresh, token valid, strategy refreshToken not called, returns true', (done) => {
-      const spy = spyOn(dummyAuthStrategy, 'refreshToken')
+      const spy = spyOn(dummyAuthStrategy, 'refreshToken');
 
       spyOn(tokenService, 'get')
         .and
@@ -257,7 +257,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toBe(null);
         expect(authRes.getResponse()).toEqual(resp401);
         done();
-      })
+      });
     },
   );
 
@@ -287,7 +287,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toEqual(testToken);
         expect(authRes.getResponse()).toEqual(resp200);
         done();
-      })
+      });
     },
   );
 
@@ -309,7 +309,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toBe(null);
         expect(authRes.getResponse()).toEqual(resp401);
         done();
-      })
+      });
     },
   );
 
@@ -337,7 +337,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toEqual(testToken);
         expect(authRes.getResponse()).toEqual(resp200);
         done();
-      })
+      });
     },
   );
 
@@ -360,7 +360,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toBe(null);
         expect(authRes.getResponse()).toEqual(resp401);
         done();
-      })
+      });
     },
   );
 
@@ -385,7 +385,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toBe(null);
         expect(authRes.getResponse()).toEqual(resp200);
         done();
-      })
+      });
     },
   );
 
@@ -408,7 +408,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toBe(null);
         expect(authRes.getResponse()).toEqual(resp401);
         done();
-      })
+      });
     },
   );
 
@@ -431,7 +431,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toBe(null);
         expect(authRes.getResponse()).toEqual(resp200);
         done();
-      })
+      });
     },
   );
 
@@ -454,7 +454,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toBe(null);
         expect(authRes.getResponse()).toEqual(resp401);
         done();
-      })
+      });
     },
   );
 
@@ -477,7 +477,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toBe(null);
         expect(authRes.getResponse()).toEqual(resp200);
         done();
-      })
+      });
     },
   );
 
@@ -499,7 +499,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toBe(null);
         expect(authRes.getResponse()).toEqual(resp401);
         done();
-      })
+      });
     },
   );
 
@@ -527,7 +527,7 @@ describe('auth-service', () => {
         expect(authRes.getToken()).toEqual(testToken);
         expect(authRes.getResponse()).toEqual(resp200);
         done();
-      })
+      });
     },
   );
 });
