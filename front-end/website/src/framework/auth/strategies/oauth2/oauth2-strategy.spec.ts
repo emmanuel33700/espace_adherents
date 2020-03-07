@@ -49,21 +49,21 @@ describe('oauth2-auth-strategy', () => {
     access_token: '8uoloUIg765fHGF9jknjksdn9',
     expires_in: 3600,
     example_parameter: 'example_refresh_value',
-  }
+  };
 
   const refreshedTokenPayload =  {
     access_token: '8uoloUIg765fHGF9jknjksdn9',
     expires_in: 3600,
     refresh_token: 'tGzv3JOkF0XG5Qx2TlKWIA',
     example_parameter: 'example_refresh_value',
-  }
+  };
 
   const refreshedTokenResponse =  {
     access_token: '8uoloUIg765fHGF9jknjksdn9',
     expires_in: 3600,
     refresh_token: 'dfsjkgkdh989JHJHJDSHJns',
     example_parameter: 'example_refresh_value',
-  }
+  };
 
   const tokenErrorResponse = {
     error: 'unauthorized_client',
@@ -112,7 +112,7 @@ describe('oauth2-auth-strategy', () => {
       name: 'strategy',
       baseEndpoint: 'http://example.com/',
       clientId: 'clientId',
-    }
+    };
 
     beforeEach(() => {
       strategy.setOptions(basicOptions);
@@ -154,7 +154,7 @@ describe('oauth2-auth-strategy', () => {
             && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.AUTHORIZATION_CODE
             && decodeURIComponent(params['code']) === 'code'
             && decodeURIComponent(params['client_id']) === 'clientId'
-            && !params['redirect_uri'])
+            && !params['redirect_uri']);
         },
       )
       .flush(tokenSuccessResponse);
@@ -198,7 +198,7 @@ describe('oauth2-auth-strategy', () => {
           req => {
             return (req.url === 'http://example.com/token'
               && req.headers.get('Content-Type') === 'application/x-www-form-urlencoded'
-            )
+            );
           },
         )
         .flush(tokenErrorResponse, { status: 400, statusText: 'Bad Request' });
@@ -231,7 +231,7 @@ describe('oauth2-auth-strategy', () => {
             && req.headers.get('Content-Type') === 'application/x-www-form-urlencoded'
             && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.REFRESH_TOKEN
             && decodeURIComponent(params['refresh_token']) === successToken.getRefreshToken()
-            && !params['scope'])
+            && !params['scope']);
         },
       )
       .flush(tokenSuccessResponse);
@@ -265,7 +265,7 @@ describe('oauth2-auth-strategy', () => {
             && decodeURIComponent(params['refresh_token']) === successToken.getRefreshToken()
             && decodeURIComponent(params['client_id']) === strategy.getOption('clientId')
             && decodeURIComponent(params['client_secret']) === strategy.getOption('clientSecret')
-            && !params['scope'])
+            && !params['scope']);
         },
       )
       .flush(tokenSuccessResponse);
@@ -293,7 +293,7 @@ describe('oauth2-auth-strategy', () => {
             && req.headers.get('Content-Type') === 'application/x-www-form-urlencoded'
             && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.REFRESH_TOKEN
             && decodeURIComponent(params['refresh_token']) === successToken.getRefreshToken()
-            && !params['scope'])
+            && !params['scope']);
         },
       )
       .flush(tokenSuccessResponse);
@@ -321,7 +321,7 @@ describe('oauth2-auth-strategy', () => {
             && req.headers.get('Content-Type') === 'application/x-www-form-urlencoded'
             && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.REFRESH_TOKEN
             && decodeURIComponent(params['refresh_token']) === successToken.getRefreshToken()
-            && !params['scope'])
+            && !params['scope']);
         },
       )
       .flush(tokenWithoutRefreshTokenResponse);
@@ -350,7 +350,7 @@ describe('oauth2-auth-strategy', () => {
             && req.headers.get('Content-Type') === 'application/x-www-form-urlencoded'
             && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.REFRESH_TOKEN
             && decodeURIComponent(params['refresh_token']) === successToken.getRefreshToken()
-            && !params['scope'])
+            && !params['scope']);
         },
       )
       .flush(refreshedTokenResponse);
@@ -375,7 +375,7 @@ describe('oauth2-auth-strategy', () => {
           req => {
             return (req.url === 'http://example.com/token'
               && req.headers.get('Content-Type') === 'application/x-www-form-urlencoded'
-            )
+            );
           },
         )
         .flush(tokenErrorResponse, { status: 400, statusText: 'Bad Request' });
@@ -391,7 +391,7 @@ describe('oauth2-auth-strategy', () => {
       authorize: {
         responseType: NbOAuth2ResponseType.TOKEN,
       },
-    }
+    };
 
     beforeEach(() => {
       strategy.setOptions(basicOptions);
@@ -473,7 +473,7 @@ describe('oauth2-auth-strategy', () => {
         endpoint: 'custom',
         scope: 'read',
       },
-    }
+    };
 
     beforeEach(() => {
       strategy.setOptions(basicOptions);
@@ -519,7 +519,7 @@ describe('oauth2-auth-strategy', () => {
             && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.AUTHORIZATION_CODE
             && decodeURIComponent(params['code']) === 'code'
             && decodeURIComponent(params['client_id']) === 'clientId'
-            && decodeURIComponent(params['redirect_uri']) === 'http://localhost:4200/callback')
+            && decodeURIComponent(params['redirect_uri']) === 'http://localhost:4200/callback');
         },
       )
       .flush(tokenSuccessResponse);
@@ -531,7 +531,7 @@ describe('oauth2-auth-strategy', () => {
         ... basicOptions,
         clientSecret: 'clientSecret',
         clientAuthMethod: NbOAuth2ClientAuthMethod.BASIC,
-      })
+      });
 
       strategy.authenticate()
         .subscribe((result: NbAuthResult) => {
@@ -555,7 +555,7 @@ describe('oauth2-auth-strategy', () => {
             && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.AUTHORIZATION_CODE
             && decodeURIComponent(params['code']) === 'code'
             && decodeURIComponent(params['client_id']) === 'clientId'
-            && decodeURIComponent(params['redirect_uri']) === 'http://localhost:4200/callback')
+            && decodeURIComponent(params['redirect_uri']) === 'http://localhost:4200/callback');
         },
       )
       .flush(tokenSuccessResponse);
@@ -567,7 +567,7 @@ describe('oauth2-auth-strategy', () => {
         ... basicOptions,
         clientSecret: 'clientSecret',
         clientAuthMethod: NbOAuth2ClientAuthMethod.REQUEST_BODY,
-      })
+      });
 
       strategy.authenticate()
         .subscribe((result: NbAuthResult) => {
@@ -591,7 +591,7 @@ describe('oauth2-auth-strategy', () => {
             && decodeURIComponent(params['code']) === 'code'
             && decodeURIComponent(params['client_id']) === strategy.getOption('clientId')
             && decodeURIComponent(params['client_secret']) === strategy.getOption('clientSecret')
-            && decodeURIComponent(params['redirect_uri']) === 'http://localhost:4200/callback')
+            && decodeURIComponent(params['redirect_uri']) === 'http://localhost:4200/callback');
         },
       )
       .flush(tokenSuccessResponse);
@@ -636,7 +636,7 @@ describe('oauth2-auth-strategy', () => {
             && req.headers.get('Content-Type') === 'application/x-www-form-urlencoded'
             && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.REFRESH_TOKEN
             && decodeURIComponent(params['refresh_token']) === successToken.getRefreshToken()
-            && decodeURIComponent(params['scope']) === 'read')
+            && decodeURIComponent(params['scope']) === 'read');
         },
       )
       .flush(tokenSuccessResponse);
@@ -670,7 +670,7 @@ describe('oauth2-auth-strategy', () => {
             && req.headers.get('Content-Type') === 'application/x-www-form-urlencoded'
             && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.REFRESH_TOKEN
             && decodeURIComponent(params['refresh_token']) === successToken.getRefreshToken()
-            && decodeURIComponent(params['scope']) === 'read')
+            && decodeURIComponent(params['scope']) === 'read');
         },
       )
       .flush(tokenSuccessResponse);
@@ -705,7 +705,7 @@ describe('oauth2-auth-strategy', () => {
             && decodeURIComponent(params['refresh_token']) === successToken.getRefreshToken()
             && decodeURIComponent(params['client_id']) === strategy.getOption('clientId')
             && decodeURIComponent(params['client_secret']) === strategy.getOption('clientSecret')
-            && decodeURIComponent(params['scope']) === 'read')
+            && decodeURIComponent(params['scope']) === 'read');
         },
       )
       .flush(tokenSuccessResponse);
@@ -732,7 +732,7 @@ describe('oauth2-auth-strategy', () => {
           req => {
             return (req.url === 'http://example.com/custom'
               && req.headers.get('Content-Type') === 'application/x-www-form-urlencoded'
-            )
+            );
           },
         )
         .flush(tokenErrorResponse, { status: 400, statusText: 'Bad Request' });
@@ -780,7 +780,7 @@ describe('oauth2-auth-strategy', () => {
             && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.PASSWORD
             && decodeURIComponent(params['username']) === credentials.email
             && decodeURIComponent(params['password']) === credentials.password
-            && decodeURIComponent(params['scope']) === scope)
+            && decodeURIComponent(params['scope']) === scope);
         },
       )
         .flush(tokenSuccessResponse);
@@ -792,7 +792,7 @@ describe('oauth2-auth-strategy', () => {
         ... basicOptions,
         clientSecret: 'clientSecret',
         clientAuthMethod: NbOAuth2ClientAuthMethod.BASIC,
-      })
+      });
 
       strategy.authenticate(credentials)
         .subscribe((result: NbAuthResult) => {
@@ -816,7 +816,7 @@ describe('oauth2-auth-strategy', () => {
             && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.PASSWORD
             && decodeURIComponent(params['username']) === credentials.email
             && decodeURIComponent(params['password']) === credentials.password
-            && decodeURIComponent(params['scope']) === scope)
+            && decodeURIComponent(params['scope']) === scope);
         },
       ).flush(tokenSuccessResponse);
     });
@@ -827,7 +827,7 @@ describe('oauth2-auth-strategy', () => {
         ... basicOptions,
         clientSecret: 'clientSecret',
         clientAuthMethod: NbOAuth2ClientAuthMethod.REQUEST_BODY,
-      })
+      });
 
       strategy.authenticate(credentials)
         .subscribe((result: NbAuthResult) => {
@@ -852,7 +852,7 @@ describe('oauth2-auth-strategy', () => {
           && decodeURIComponent(params['password']) === credentials.password
           && decodeURIComponent(params['scope']) === scope
           && decodeURIComponent(params['client_id']) === strategy.getOption('clientId')
-          && decodeURIComponent(params['client_secret']) === strategy.getOption('clientSecret'))
+          && decodeURIComponent(params['client_secret']) === strategy.getOption('clientSecret'));
         },
       ).flush(tokenSuccessResponse);
     });
@@ -882,7 +882,7 @@ describe('oauth2-auth-strategy', () => {
              && decodeURIComponent(params['grant_type']) === NbOAuth2GrantType.PASSWORD
              && decodeURIComponent(params['username']) === credentials.email
              && decodeURIComponent(params['password']) === credentials.password
-             && decodeURIComponent(params['scope']) === scope)
+             && decodeURIComponent(params['scope']) === scope);
          },
        ).flush(tokenErrorResponse, {status: 401, statusText: 'unauthorized'});
     });
