@@ -10,6 +10,7 @@ import {
   LayoutService,
   PlayerService,
   StateService,
+  LoggerService,
 } from './utils';
 import { UserData } from './data/users';
 import { ElectricityData } from './data/electricity';
@@ -141,6 +142,7 @@ export const NB_CORE_PROVIDERS = [
   LayoutService,
   PlayerService,
   StateService,
+  LoggerService,
 ];
 
 @NgModule({

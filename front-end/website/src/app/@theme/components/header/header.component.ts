@@ -1,10 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 
-import { UserData } from '../../../@core/data/users';
+import {UserData} from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
-import { map, takeUntil } from 'rxjs/operators';
+import {map, switchMap, takeUntil} from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import {Router} from '@angular/router';
+import {AdherentService} from '../../../../api/generated/services/adherent.service';
+import {Adherent} from '../../../../api/generated/models/adherent';
+import {NbAuthService, NbAuthToken} from '@nebular/auth';
 
 @Component({
   selector: 'ngx-header',
@@ -15,9 +19,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
-  user: any;
+
+  public adherent: Adherent;
+  public idAdherents: number = 0;
 
 
+  user = { name: 'xxx', picture: 'assets/images/nick.png' };
 
   currentTheme = 'default';
 
@@ -28,15 +35,42 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private themeService: NbThemeService,
               private userService: UserData,
               private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService) {
+              private breakpointService: NbMediaBreakpointsService,
+              private adherentService: AdherentService,
+              private authService: NbAuthService) {
   }
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
 
-    this.userService.getUsers()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((users: any) => this.user = users.manu);
+
+    this.authService.getToken()
+      .subscribe((token: NbAuthToken) => {
+        if (token && token.getValue()) {
+          this.idAdherents = Number(this.getClaims(token.getValue()));
+        }
+      });
+
+
+    // recuperation des informations de l'adhérents
+    this.adherentService.getAdherent({
+      idadh: this.idAdherents,
+    }).subscribe(
+      (data) => {
+        this.adherent = data;
+      },
+      (error) => {
+        console.info(error);
+      },
+      () => {
+        localStorage.setItem('adherent', JSON.stringify(this.adherent));
+        this.user.name = this.adherent.nom + ' ' + this.adherent.prenom;
+
+        // TODO a revoir
+        this.user.picture = 'assets/images/kate.png';
+      });
+
+
 
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
@@ -73,5 +107,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+
+  getClaims(rawToken: string): string {
+
+    console.info(rawToken);
+    const obj = JSON.parse(rawToken);
+    return obj.idAdherent ;
   }
 }

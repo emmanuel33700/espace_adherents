@@ -15,7 +15,9 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { ProfileRoutingModule } from './profile-routing.module';
 import { ProfileComponent } from './profile.component';
 import { ModifierComponent } from './modifier/modifier.component';
-import { FormsModule as ngFormsModule } from '@angular/forms';
+import {FormsModule as ngFormsModule, ReactiveFormsModule} from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   imports: [
@@ -32,6 +34,10 @@ import { FormsModule as ngFormsModule } from '@angular/forms';
     NbSelectModule,
     NbIconModule,
     ngFormsModule,
+    CommonModule,
+    ngFormsModule,
+    HttpClientModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     ProfileComponent,

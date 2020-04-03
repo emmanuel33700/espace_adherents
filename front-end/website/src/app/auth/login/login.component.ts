@@ -16,6 +16,8 @@ import {
   NbAuthToken, NbAuthOAuth2Token,
 } from '@nebular/auth';
 import { getDeepFromObject } from '../../../framework/auth/helpers';
+import {Adherent} from '../../../api/generated/models/adherent';
+import {AdherentService} from '../../../api/generated/services/adherent.service';
 
 @Component({
   selector: 'ngx-playground-auth',
@@ -36,6 +38,7 @@ export class LoginComponent {
   messages: string[] = [];
   user: any = {};
   submitted: boolean = false;
+
 
   constructor(private authService: NbAuthService, @Inject(NB_AUTH_OPTIONS) protected options = {},
               protected router: Router) {
@@ -62,12 +65,22 @@ export class LoginComponent {
       this.token = result.getToken();
       if (result.isSuccess()) {
         this.messages = result.getMessages();
-        localStorage.setItem('Role', 'ADMIN');
+
+        const obj = this.getClaims(this.token.getValue());
+       // console.info(obj.authorities.replace(/ /g, ''));
+       // console.info(obj.idAdherent);
+
+
+        console.info(this.getClaims(this.token.getValue()));
+        console.info(result);
+        console.info(this.token.getValue());
+       // localStorage.setItem('Role', obj.authorities.replace(/ /g, ''));
+       // localStorage.setItem('idAdh', obj.idAdherent);
       } else {
         this.errors = result.getErrors();
       }
 
-      console.info(this.token.getValue());
+
 
       const redirect = result.getRedirect();
       if (redirect) {
@@ -81,7 +94,7 @@ export class LoginComponent {
 
   logout() {
     this.authService.logout('password')
-      .subscribe((authResult: NbAuthResult) => {
+      .subscribe(() => {
         this.token = null;
       });
   }

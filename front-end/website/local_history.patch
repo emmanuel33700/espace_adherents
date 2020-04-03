@@ -1,0 +1,65 @@
+Index: src/app/@core/utils/token.interceptor.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/app/@core/utils/token.interceptor.ts	(date 1584990393349)
++++ src/app/@core/utils/token.interceptor.ts	(date 1584990393349)
+@@ -1,4 +1,4 @@
+-import { Injectable } from '@angular/core';
++import {Inject, Injectable, Injector} from '@angular/core';
+ import {
+   HttpRequest,
+   HttpHandler,
+@@ -8,23 +8,39 @@
+ 
+ import { Observable } from 'rxjs/Observable';
+ import { NbTokenService } from '../../../framework/auth/services/token/token.service';
+-import {NbAuthToken} from '../../../framework/auth/services/token/token';
++import {NbAuthJWTToken, NbAuthToken} from '../../../framework/auth/services/token/token';
++import {NbAuthService} from '../../../framework/auth/services/auth.service';
++import {NB_AUTH_INTERCEPTOR_HEADER} from '../../../framework/auth/auth.options';
++import {switchMap} from 'rxjs/operators';
+ 
+ @Injectable()
+ export class TokenInterceptor implements HttpInterceptor {
+ 
+ 
+-  constructor(protected tokenService: NbTokenService) {}
++  constructor(private injector: Injector,
++              @Inject(NB_AUTH_INTERCEPTOR_HEADER) protected headerName: string = 'Authorization') {
++  }
+ 
+-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
++  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+ 
+-    NbAuthToken = this.tokenService.get();
+-    console.info('on passe dans interceptor');
+-  request = request.clone({
+-    setHeaders: {
+-      Authorization: `Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX25hbWUiOiJ0ZXN0NUBnbWFpbC5jb20iLCJpZEFkaGVyZW50IjoiNiIsInNjb3BlIjpbInJlc3MtYXV0b3JpemF0aW9uLXJlYWQiLCJyZXNzLWF1dG9yaXphdGlvbi13cml0ZSIsInJlc3MtYXV0b3JpemF0aW9uLWRlbCIsInJlc3MtYWRoZXJlbnQtYWRtaW4iLCJyZXNzLWFkaGVyZW50LXJlYWQiLCJyZXNzLWFkaGVyZW50LXdyaXRlIiwicmVzcy1hZGhlcmVudC1kZWwiXSwib3JnYW5pemF0aW9uIjoiSkFMTEUgQVNUUk8iLCJleHAiOjE1ODQ4MDE0ODcsImF1dGhvcml0aWVzIjoiQURIRVJFTlQgIiwianRpIjoiMjdmZDIyYjktNDRkOS00NzQxLWJlY2UtMjY3OTE3MjIwMzZlIiwiY2xpZW50X2lkIjoiZXNwYWNlQWRoIn0.P7WwbyJrDk8bOQ6OCqP9MpUVE8V_JXeizTGEpVGd5HjAjNbcJRcs7XRyrJ1c54EtMU89bZp4WQ7rkOCHhfjl3yn5WS3EDK_QZ8f0Klv1D0y8l4qQQelJTGKUZpAezgvp2HL-hn7Zq0Kd2n0vpGLfqSPdblWgdJTW7MOHXEhmnnRW9IJKYu-3kRZmhptiGIfAiWvuTYQHFcGVcQ99JpT2OSw90s12YcpBPp5BfjjM3RDnkPGAPMQ0da2a0gXqgqxnGssZksRM1i1jWhyvnficn1LH9Hj3o2lRIHZjJ5euQWqKoYUKSHf8v6gALDy5eTmU0H0YOpkA55JIDSq_UAOdVQ`,
+-    },
+-  });
+-  return next.handle(request);
+-}
++    console.info('on passe de l interceptor');
++    return this.authService.getToken()
++      .pipe(
++        switchMap((token: NbAuthJWTToken) => {
++          if (token && token.getValue()) {
++            req = req.clone({
++              setHeaders: {
++                [this.headerName]: token.getValue(),
++              },
++            });
++          }
++          return next.handle(req);
++        }),
++      );
++  }
++
++  protected get authService(): NbAuthService {
++    return this.injector.get(NbAuthService);
++  }
++
+ }
