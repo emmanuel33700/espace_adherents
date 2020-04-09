@@ -25,7 +25,7 @@ export class PagesComponent  implements OnInit {
   constructor(private authService: NbAuthService) {}
 
   ngOnInit() {
-    this.role = this.readLocalStorageValue('Role');
+
 
     this.authService.getToken()
       .subscribe((token: NbAuthToken) => {
@@ -34,8 +34,16 @@ export class PagesComponent  implements OnInit {
         }
       });
 
+
+    if (this.role.includes('ADMIN')) {
+      this.role = 'ADMIN';
+    } else {
+      this.role = 'ADHERENT';
+    }
+
     console.info(this.role);
-    this.role = 'ADMIN';
+    localStorage.setItem('ROLE', this.role);
+
   }
 
   readLocalStorageValue(key: string): string {

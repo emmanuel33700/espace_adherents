@@ -16,8 +16,6 @@ import {
   NbAuthToken, NbAuthOAuth2Token,
 } from '@nebular/auth';
 import { getDeepFromObject } from '../../../framework/auth/helpers';
-import {Adherent} from '../../../api/generated/models/adherent';
-import {AdherentService} from '../../../api/generated/services/adherent.service';
 
 @Component({
   selector: 'ngx-playground-auth',
@@ -65,17 +63,6 @@ export class LoginComponent {
       this.token = result.getToken();
       if (result.isSuccess()) {
         this.messages = result.getMessages();
-
-        const obj = this.getClaims(this.token.getValue());
-       // console.info(obj.authorities.replace(/ /g, ''));
-       // console.info(obj.idAdherent);
-
-
-        console.info(this.getClaims(this.token.getValue()));
-        console.info(result);
-        console.info(this.token.getValue());
-       // localStorage.setItem('Role', obj.authorities.replace(/ /g, ''));
-       // localStorage.setItem('idAdh', obj.idAdherent);
       } else {
         this.errors = result.getErrors();
       }

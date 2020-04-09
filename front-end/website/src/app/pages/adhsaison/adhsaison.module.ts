@@ -3,9 +3,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   NbAccordionModule, NbActionsModule,
   NbButtonModule,
-  NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule,
+  NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule,
   NbListModule, NbRadioModule,
-  NbRouteTabsetModule,
+  NbRouteTabsetModule, NbSelectModule,
   NbStepperModule,
   NbTabsetModule, NbToggleModule, NbUserModule,
 } from '@nebular/theme';
@@ -24,16 +24,18 @@ import { ConnexionComponent } from './tabs/connexion/connexion.component';
 import { AjouterComponent } from './ajouter/ajouter.component';
 import {NbSecurityModule} from '@nebular/security';
 import { FormsModule as ngFormsModule } from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   imports: [
     FormsModule,
     ReactiveFormsModule,
     ThemeModule,
+    NbCardModule,
     NbTabsetModule,
     NbRouteTabsetModule,
     NbStepperModule,
-    NbCardModule,
     NbButtonModule,
     NbListModule,
     NbAccordionModule,
@@ -47,6 +49,10 @@ import { FormsModule as ngFormsModule } from '@angular/forms';
     NbToggleModule,
     ngFormsModule,
     NbDatepickerModule,
+    NbSelectModule,
+    CommonModule,
+    HttpClientModule,
+    NbInputModule,
   ],
   declarations: [
     AdhsaisonComponent,
