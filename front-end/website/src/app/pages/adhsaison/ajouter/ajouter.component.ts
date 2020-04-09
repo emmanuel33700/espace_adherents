@@ -37,7 +37,7 @@ export class AjouterComponent implements OnInit {
     this.adherent = this.form.getRawValue();
     this.adherent.accordMail = true;
     this.adherent.publicContact = true;
-	this.adherent.dateNaissance = null;
+    this.adherent.dateNaissance = null;
     this.adherentService.ajoutAdherent({body: this.adherent})
       .subscribe(
         (data) => {
