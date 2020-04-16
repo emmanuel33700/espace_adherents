@@ -1,9 +1,11 @@
 /* tslint:disable */
-import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
+import {NgModule, ModuleWithProviders, SkipSelf, Optional} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {ApiConfiguration, ApiConfigurationParams} from './api-configuration';
 
-import { AdherentService } from './services/adherent.service';
+import {AdherentService} from './services/adherent.service';
+import {AuthentificationService} from './services/authentification.service';
+import {RolesService} from './services/roles.service';
 
 /**
  * Module that provides all services and configuration.
@@ -14,7 +16,9 @@ import { AdherentService } from './services/adherent.service';
   declarations: [],
   providers: [
     AdherentService,
-    ApiConfiguration
+    AuthentificationService,
+    RolesService,
+    ApiConfiguration,
   ],
 })
 export class ApiModule {
@@ -39,7 +43,7 @@ export class ApiModule {
     }
     if (!http) {
       throw new Error('You need to import the HttpClientModule in your AppModule! \n' +
-      'See also https://github.com/angular/angular/issues/20575');
+        'See also https://github.com/angular/angular/issues/20575');
     }
   }
 }

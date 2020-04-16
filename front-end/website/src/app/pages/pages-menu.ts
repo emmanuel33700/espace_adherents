@@ -47,4 +47,19 @@ export const MENU_ITEMS_ADH: NbMenuItem[] = [
     icon: 'calendar-outline',
     link: '/pages/calendrier/liste',
   },
+  {
+    title: 'Documentation',
+    icon: 'folder-outline',
+    link: '/pages/documents/liste',
+  },
+  {
+    title: 'Groupes de diffusions',
+    icon: 'email-outline',
+    link: '/pages/gpdiffusions/tabs',
+  },
+  {
+    title: 'Trombinoscope',
+    icon: 'book-open',
+    link: '/pages/trombinoscope/liste',
+  },
 ];

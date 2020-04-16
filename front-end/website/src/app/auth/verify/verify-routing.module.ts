@@ -6,12 +6,12 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Route} from '@angular/router';
-import { RegisterComponent } from './register.component';
+import { VerifyComponent } from './verify.component';
 
 const routes: Route[] = [
   {
     path: '',
-    component: RegisterComponent,
+    component: VerifyComponent,
   },
 ];
 
@@ -19,4 +19,4 @@ const routes: Route[] = [
   imports: [ RouterModule.forChild(routes) ],
   exports: [ RouterModule ],
 })
-export class RegisterRoutingModule {}
+export class VerifyRoutingModule {}

@@ -27,7 +27,8 @@
     "docs:serve": "compodoc -p src/tsconfig.app.json -d docs -s",
     "prepush": "npm run lint:ci",
     "release:changelog": "npm run conventional-changelog -- -p angular -i CHANGELOG.md -s",
-    "generate-api": "swagger-angular-generator -s src/api/swagger/ressource-adherents.json -d src/api/generated"
+    "generate.api1": "ng-openapi-gen --input src/api/swagger/resource-adherents.yaml  --output src/api/tmp/ressource-adherents",
+    "generate.api1": "ng-openapi-gen --input  src/api/swagger/resource-authorization.yaml --output src/api/tmp/resource-authorization"
   },
   "dependencies": {
     "@agm/core": "^1.1.0",

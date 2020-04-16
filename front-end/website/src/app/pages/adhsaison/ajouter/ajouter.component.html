@@ -12,7 +12,10 @@
           <div class="form-group row">
             <label for="civilite" class="label col-sm-3 col-form-label">Civilité</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="civilite"  formControlName="civilite"  placeholder="Civilité">
+		    <nb-select placeholder="Civilité" [(selected)]="selectedItem"nbInput fullWidth id="civilite"  formControlName="civilite" >
+		      <nb-option value="Mr">Monsieur</nb-option>
+		      <nb-option value="Mme">Madame</nb-option>
+		    </nb-select>
             </div>
           </div>
 

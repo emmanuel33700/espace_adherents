@@ -39,7 +39,7 @@
                      name="email"
                      id="input-email"
                      pattern=".+@.+..+"
-                     placeholder="Email address"
+                     placeholder="Adresse email"
                      autofocus
                      [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : ''"
                      [required]="getConfigValue('forms.validation.email.required')"
@@ -63,7 +63,7 @@
                      name="password"
                      type="password"
                      id="input-password"
-                     placeholder="Password"
+                     placeholder="Mot de passe"
                      [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : ''"
                      [required]="getConfigValue('forms.validation.password.required')"
                      [minlength]="getConfigValue('forms.validation.password.minLength')"

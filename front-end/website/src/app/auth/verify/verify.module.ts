@@ -9,16 +9,13 @@ import {
 } from '@nebular/theme';
 import {FormsModule as ngFormsModule} from '@angular/forms';
 
-import { RegisterComponent } from './register.component';
+import { VerifyComponent } from './verify.component';
 import {NgModule} from '@angular/core';
-import { RegisterRoutingModule } from './register-routing.module';
+import { VerifyRoutingModule } from './verify-routing.module';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import {
-  NbAuthModule,
-} from '@nebular/auth';
 import {ApiModule} from '../../../api/generated/api.module';
 
 
@@ -29,19 +26,7 @@ import {ApiModule} from '../../../api/generated/api.module';
     FormsModule,
     HttpClientModule,
 
-    NbAuthModule.forRoot({
-      forms: {
-        register: {
-          redirectDelay: 500,
-          strategy: 'email',
-          showMessages: {
-            success: true,
-            error: true,
-          },
-          terms: true,
-        },
-      },
-    }),
+
     ApiModule.forRoot({ rootUrl: 'https://api.jalle-astro.fr/resource-authorization' }),
 
     ThemeModule,
@@ -57,11 +42,11 @@ import {ApiModule} from '../../../api/generated/api.module';
     NbDatepickerModule,
     NbSelectModule,
     NbIconModule,
-    ngFormsModule, RegisterRoutingModule, NbAlertModule,
+    ngFormsModule, VerifyRoutingModule, NbAlertModule,
   ],
   declarations: [
-    RegisterComponent,
+    VerifyComponent,
   ],
 })
-export class RegisterModule {
+export class VerifyModule {
 }
