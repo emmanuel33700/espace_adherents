@@ -117,7 +117,7 @@ public class GestionMailImpl implements GestionMail {
                                 .put(Emailv31.Message.TO, emailto)
                                 .put(Emailv31.Message.TEMPLATEID, codeTemplateMailjet)
                                 .put(Emailv31.Message.TEMPLATELANGUAGE, true)
-                                .put(Emailv31.Message.SUBJECT, "mon premier test")
+                                .put(Emailv31.Message.SUBJECT, mailIn.getSujetMail())
                                 .put(Emailv31.Message.VARIABLES,variables)
                         ));
         return request;

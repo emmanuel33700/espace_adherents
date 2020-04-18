@@ -28,6 +28,7 @@ public class MailInDto {
     private TemplateMailEnum templateMailEnum;
     private Collection<String> messageTo;
     HashMap<String, String> templateVariables;
+    private String sujetMail;
 
     public Collection<String> getMessageTo() {
         return messageTo;
@@ -51,6 +52,14 @@ public class MailInDto {
 
     public void setTemplateVariables(HashMap<String, String> templateVariables) {
         this.templateVariables = templateVariables;
+    }
+
+    public String getSujetMail() {
+        return sujetMail;
+    }
+
+    public void setSujetMail(String sujetMail) {
+        this.sujetMail = sujetMail;
     }
     
     
