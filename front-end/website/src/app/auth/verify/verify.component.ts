@@ -19,6 +19,10 @@ export class VerifyComponent implements OnInit {
   private validation: Validation = {};
   private token: string = '';
   private idAdherent: number = 0;
+  errors: string[] = [];
+  messages: string[] = [];
+  submitted = false;
+
 
   constructor( protected router: Router,
               private route: ActivatedRoute,
@@ -36,6 +40,7 @@ export class VerifyComponent implements OnInit {
       console.info('id adherent' + this.idAdherent);
     } else {
       this.idAdherent = -1;
+      this.errors = ['Erreur sur l url'];
       console.error('Erreur de récupération de id adherent ');
     }
 
@@ -47,13 +52,18 @@ export class VerifyComponent implements OnInit {
           console.info(data);
         },
         (error) => {
-          console.info(error);
+          this.errors = ['Erreur sur la validation du compte. Contacter un administrateur'];
+          console.error(error);
         },
         () => {
+          this.messages = ['Votre compte est maintenant actif'];
           console.info('fini');
-          return this.router.navigateByUrl('/auth/login');
         },
       );
 
+  }
+
+  goLogin() {
+    return this.router.navigateByUrl('/auth/login');
   }
 }

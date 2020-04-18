@@ -52,18 +52,18 @@ export class ModifierComponent implements OnInit {
   submit() {
     console.info(this.form.getRawValue());
     this.adherent = this.form.getRawValue();
-    this.adherentService.ajoutAdherent({body: this.adherent})
-      .subscribe(
-        (data) => {
-          console.info(data);
-        },
-        (error) => {
-          console.info(error);
-        },
-        () => {
-          console.info('fini');
-          localStorage.setItem('adherent', JSON.stringify(this.adherent));
-        },
-      );
+ //   this.adherentService.ajoutAdherent({body: this.adherent})
+ //     .subscribe(
+ //       (data) => {
+ //         console.info(data);
+ //       },
+ //       (error) => {
+ //         console.info(error);
+ //       },
+ //       () => {
+ //         console.info('fini');
+ //         localStorage.setItem('adherent', JSON.stringify(this.adherent));
+ //       },
+ //     );
   }
 }

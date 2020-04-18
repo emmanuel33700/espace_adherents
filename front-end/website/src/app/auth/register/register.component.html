@@ -3,7 +3,9 @@
 
     <nb-card>
       <nb-card-body>
-        <h1 id="title" class="title">Enregistrement de votre accès</h1>
+        <h1 id="title" class="title">JALLE ASTRONOMIE</h1>
+        <p class="sub-title">Enregistrement de votre compte : {{mail}}</p>
+
         <nb-alert *ngIf="showMessages.error && errors?.length && !submitted" outline="danger" role="alert">
           <p class="alert-title"><b>Erreur</b></p>
           <ul class="alert-message-list">
@@ -20,20 +22,6 @@
         </nb-alert>
 
         <form (ngSubmit)="register()" #form="ngForm" aria-labelledby="title" >
-
-          <div class="form-control-group">
-            <label class="label" for="input-email">Votre adresse email:</label>
-            <input nbInput
-                   [disabled]="true"
-                   [(ngModel)]="user.email"
-                   #email="ngModel"
-                   id="input-email"
-                   name="email"
-                   fullWidth
-                   fieldSize="large"
-                   placeholder="Adresse email">
-          </div>
-
 
           <div class="form-control-group">
             <label class="label" for="input-password">Votre mot de passe:</label>
@@ -100,7 +88,7 @@
                   size="large"
                   [disabled]="submitted || !form.valid"
                   [class.btn-pulse]="submitted">
-            Register
+            Enregistrer
           </button>
         </form>
 
