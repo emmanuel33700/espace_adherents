@@ -83,10 +83,12 @@ public class AdherentServiceImpl implements AdherentService{
         templateVariables.put("confirmation_link", 
                 env.getProperty("validationmail.url")
                         .concat("?mail=").concat(adherentDto.getEmail())
-                        .concat("?id=").concat(Long.toString(idAdherent))
+                        .concat("&id=").concat(Long.toString(idAdherent))
         );
         mailIn.setTemplateVariables(templateVariables);
         
+        /** Sujet du mail **/
+        mailIn.setSujetMail("Votre préinscription");
         
         MailOutDto mailOut = getionMail.sendMail(mailIn);
         

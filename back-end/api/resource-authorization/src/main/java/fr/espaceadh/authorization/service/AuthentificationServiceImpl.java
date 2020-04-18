@@ -120,9 +120,13 @@ public class AuthentificationServiceImpl implements AuthentificationService {
         /* variables associées au tempalte **/
         HashMap<String, String> templateVariables = new HashMap<>();
         templateVariables.put("adh_prenom", "Emmanuel");
-        templateVariables.put("confirmation_link", env.getProperty("validationmail.url").concat("?token=").concat(uuid.toString()));
+        templateVariables.put("confirmation_link", env.getProperty("validationmail.url")
+                .concat("?token=").concat(uuid.toString()
+                .concat("&id=").concat(Long.toString(adh.getId()))));
         mailIn.setTemplateVariables(templateVariables);
         
+                /** Sujet du mail **/
+        mailIn.setSujetMail("Finalisation de votre inscription");
         
         MailOutDto mailOut = getionMail.sendMail(mailIn);
         
