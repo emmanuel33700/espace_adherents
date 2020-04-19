@@ -158,7 +158,8 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("        , tel3, date_maissance, profession, link_picture, public_contact ");
         query.append("        , accord_mail, token_acces, commentaire, date_enregistrement ");
         query.append("        , fk_id_adherents_update, update_date ");
-        query.append("  FROM t_adherents");
+        query.append("  FROM t_adherents ");
+        query.append("  ORDER BY nom, premon");
         
         List<AdherentDto> lstAdherents = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper());
 
@@ -175,6 +176,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("        , accord_mail, token_acces, commentaire, date_enregistrement ");
         query.append("        , fk_id_adherents_update, update_date ");
         query.append("  FROM t_adherents");
+        query.append("  ORDER BY nom, premon");
         //TODO a compélter avec la jointure sur la saison courante
         
         List<AdherentDto> lstAdherents = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper());
