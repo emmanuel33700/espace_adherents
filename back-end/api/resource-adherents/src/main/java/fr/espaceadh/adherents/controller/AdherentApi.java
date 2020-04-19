@@ -17,6 +17,7 @@
 package fr.espaceadh.adherents.controller;
 
 import fr.espaceadh.adherents.model.Adherent;
+import fr.espaceadh.adherents.model.ListeAdherents;
 import fr.espaceadh.adherents.model.ModelApiResponse;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -89,4 +90,36 @@ public interface AdherentApi {
         consumes = { "application/json" },
         method = RequestMethod.PUT)
     @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('BUREAU') or isProprietraireDonnee(#idadh) )") 
-    ResponseEntity<Void> updateUser(@ApiParam(value = "mise à jour de la personne" ,required=true )  @Valid @RequestBody Adherent body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh);}
+    ResponseEntity<Void> updateUser(@ApiParam(value = "mise à jour de la personne" ,required=true )  @Valid @RequestBody Adherent body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh);
+
+
+    @ApiOperation(value = "Récupérer l'ensemble des adhérents", nickname = "getListeAdherents", notes = "", response = ListeAdherents.class, tags={ "listing adherent", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Operation réussie", response = ListeAdherents.class),
+        @ApiResponse(code = 401, message = "utilisateur non authentifié"),
+        @ApiResponse(code = 403, message = "Droit insufisant"),
+        @ApiResponse(code = 404, message = "username non trouvée"),
+        @ApiResponse(code = 405, message = "Invalid input", response = ModelApiResponse.class),
+        @ApiResponse(code = 500, message = "Erreur serveur", response = ModelApiResponse.class) })
+    @RequestMapping(value = "/adherent/liste",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and isDansGroupe('BUREAU')")  
+    ResponseEntity<ListeAdherents> getListeAdherents();
+
+
+    @ApiOperation(value = "Récupérer l'ensemble des adhérents de la saison", nickname = "getListeAdherentsSaison", notes = "", response = ListeAdherents.class, tags={ "listing adherent", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Operation réussie", response = ListeAdherents.class),
+        @ApiResponse(code = 401, message = "utilisateur non authentifié"),
+        @ApiResponse(code = 403, message = "Droit insufisant"),
+        @ApiResponse(code = 404, message = "username non trouvée"),
+        @ApiResponse(code = 405, message = "Invalid input", response = ModelApiResponse.class),
+        @ApiResponse(code = 500, message = "Erreur serveur", response = ModelApiResponse.class) })
+    @RequestMapping(value = "/adherent/listeSaison",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read')")  
+    ResponseEntity<ListeAdherents> getListeAdherentsSaison();
+
+}

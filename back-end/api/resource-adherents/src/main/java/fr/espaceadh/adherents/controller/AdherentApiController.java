@@ -21,9 +21,13 @@ import fr.espaceadh.adherents.model.Adherent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
+import fr.espaceadh.adherents.model.ListeAdherents;
 import fr.espaceadh.adherents.service.AdherentService;
 import io.swagger.annotations.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -168,4 +172,35 @@ public class AdherentApiController implements AdherentApi {
         return model;
     }
 
+     
+     
+    public ResponseEntity<ListeAdherents> getListeAdherents() {
+        String accept = request.getHeader("Accept");
+        ListeAdherents lstAdh =  new ListeAdherents();
+        
+        
+        Collection<AdherentDto> lstAdherentDto =  this.adherentService.recupererListeCompletAdherent();
+        
+        for (AdherentDto adhDto : lstAdherentDto){
+            lstAdh.add(this.translateDto(adhDto));
+        }
+        
+        return new ResponseEntity<>(lstAdh,HttpStatus.OK);
+
+    }
+
+    public ResponseEntity<ListeAdherents> getListeAdherentsSaison() {
+        String accept = request.getHeader("Accept");
+        ListeAdherents lstAdh =  new ListeAdherents();
+        
+        
+        Collection<AdherentDto> lstAdherentDto =  this.adherentService.recupererListeAdherentSaison();
+        
+        for (AdherentDto adhDto : lstAdherentDto){
+            lstAdh.add(this.translateDto(adhDto));
+        }
+        
+        return new ResponseEntity<>(lstAdh,HttpStatus.OK);
+    }
+     
 }

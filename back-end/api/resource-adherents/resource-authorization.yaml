@@ -6,29 +6,35 @@ info:
     email: manu.chenais@gmail.com
   license:
     name: MIT License
-    url: https://opensource.org/licenses/MIT
+    url: 'https://opensource.org/licenses/MIT'
   version: 1.0.0
 externalDocs:
   description: Find out more about Swagger
-  url: http://swagger.io
+  url: 'http://swagger.io'
 servers:
-- url: https://adherents.jalle-astro.fr/v1
-- url: http://adherents.jalle-astro.fr/v1
+  - url: 'https://api.jalle-astro.fr/'
+  - url: 'http://api.jalle-astro.fr/v1'
 tags:
-- name: adherent
-  description: gestion des adhérents
-  externalDocs:
-    description: Pour plus de détail
-    url: http://plusdedétail.ht
+  - name: adherent
+    description: gestion des adhérents
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'
+  - name: listing adherent
+    description: listing des adhérents
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'
 paths:
   /adherent:
     post:
       tags:
-      - adherent
+        - adherent
       summary: Ajouter un adhérent
       operationId: ajoutAdherent
-      security: 
-        - oAuth: [ress-adherent-admin]
+      security:
+        - oAuth:
+            - ress-adherent-admin
       requestBody:
         description: Besoin de l'objet adhérent pour ajouter un adhérent
         content:
@@ -37,59 +43,61 @@ paths:
               $ref: '#/components/schemas/Adherent'
         required: true
       responses:
-        201:
+        '201':
           description: Operation réussie
-        401:
+        '401':
           description: utilisateur non authentifié
-        403:
-          description: Droit insufisant 
-        405:
+        '403':
+          description: Droit insufisant
+        '405':
           description: Invalid input
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-        500:
+        '500':
           description: Erreur serveur
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-  /adherent/{username}:
+  '/adherent/{idadh}':
     get:
       tags:
-      - adherent
+        - adherent
       summary: rechercher adherent par id
       operationId: getAdherent
-      security: 
-        - oAuth: [ress-adherent-read]
+      security:
+        - oAuth:
+            - ress-adherent-read
       parameters:
-      - name: username
-        in: path
-        description: email de la personne à modifier
-        required: true
-        schema:
-          type: string
+        - name: idadh
+          in: path
+          description: id de la personne à modifier
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
-        200:
+        '200':
           description: Operation réussie
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Adherent'
-        401:
+        '401':
           description: utilisateur non authentifié
-        403:
-          description: Droit insufisant 
-        404:
+        '403':
+          description: Droit insufisant
+        '404':
           description: username non trouvée
-        405:
+        '405':
           description: Invalid input
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-        500:
+        '500':
           description: Erreur serveur
           content:
             application/json:
@@ -97,34 +105,36 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
     delete:
       tags:
-      - adherent
+        - adherent
       summary: Supression de l'adherent par id
       operationId: deleteUser
-      security: 
-        - oAuth: [ress-adherent-del]
+      security:
+        - oAuth:
+            - ress-adherent-del
       parameters:
-      - name: username
-        in: path
-        description: email de la personne à modifier
-        required: true
-        schema:
-          type: string
+        - name: idadh
+          in: path
+          description: id de la personne à modifier
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
-        200:
+        '200':
           description: Operation réussie
-        401:
+        '401':
           description: utilisateur non authentifié
-        403:
-          description: Droit insufisant 
-        404:
+        '403':
+          description: Droit insufisant
+        '404':
           description: username non trouvée
-        405:
+        '405':
           description: Invalid input
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-        500:
+        '500':
           description: Erreur serveur
           content:
             application/json:
@@ -132,19 +142,21 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
     put:
       tags:
-      - adherent
+        - adherent
       summary: Mise à jour de l'adherent
       description: Mise à jour de l'adherent
       operationId: updateUser
-      security: 
-        - oAuth: [ress-adherent-write]
+      security:
+        - oAuth:
+            - ress-adherent-write
       parameters:
-      - name: username
-        in: path
-        description: email de la personne à modifier
-        required: true
-        schema:
-          type: string
+        - name: idadh
+          in: path
+          description: id de la personne à modifier
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         description: mise à jour de la personne
         content:
@@ -153,21 +165,89 @@ paths:
               $ref: '#/components/schemas/Adherent'
         required: true
       responses:
-        200:
+        '200':
           description: Operation réussie
-        401:
+        '401':
           description: utilisateur non authentifié
-        403:
-          description: Droit insufisant 
-        404:
+        '403':
+          description: Droit insufisant
+        '404':
           description: username non trouvée
-        405:
+        '405':
           description: Invalid input
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-        500:
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/adherent/liste':
+    get:
+      tags:
+        - listing adherent
+      summary: Récupérer l'ensemble des adhérents
+      operationId: getListeAdherents
+      security:
+        - oAuth:
+            - ress-adherent-read
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeAdherents'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/adherent/listeSaison':
+    get:
+      tags:
+        - listing adherent
+      summary: Récupérer l'ensemble des adhérents de la saison
+      operationId: getListeAdherentsSaison
+      security:
+        - oAuth:
+            - ress-adherent-read
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeAdherents'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
           description: Erreur serveur
           content:
             application/json:
@@ -175,6 +255,10 @@ paths:
                 $ref: '#/components/schemas/ApiResponse'
 components:
   schemas:
+    listeAdherents:
+      type: array
+      items:
+        $ref: '#/components/schemas/Adherent'
     Adherent:
       type: object
       properties:
@@ -185,8 +269,8 @@ components:
           type: string
           description: civilite de l'adhenrent
           enum:
-          - Mr
-          - Mme
+            - Mr
+            - Mme
         nom:
           maxLength: 20
           minLength: 3
@@ -266,26 +350,26 @@ components:
         message:
           type: string
   securitySchemes:
-    oAuth:    
+    oAuth:
       type: oauth2
-      description: This API uses OAuth 2 with the implicit grant flow. [More info]
+      description: 'This API uses OAuth 2 with the implicit grant flow. [More info]'
       flows:
-        clientCredentials:  
-          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
+        clientCredentials:
+          tokenUrl: 'http://127.0.0.1:8081/authorization-server/oauth/token'
           scopes:
             ress-adherent-admin: droit administration sur les ressources autorisation
-        authorizationCode:  
-          authorizationUrl: http://127.0.0.1:8081/authorization-server/oauth/authorize
-          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
+        authorizationCode:
+          authorizationUrl: 'http://127.0.0.1:8081/authorization-server/oauth/authorize'
+          tokenUrl: 'http://127.0.0.1:8081/authorization-server/oauth/token'
           scopes:
             ress-adherent-admin: droit administration sur les ressources adherent
-            ress-adherent-read : droit de lecteur sur les ressoruces adherent
-            ress-adherent-write : droit d'écriture sur les ressoruces adherent
-            ress-adherent-del : droit de suppression sur les ressoruces adherent
+            ress-adherent-read: droit de lecteur sur les ressoruces adherent
+            ress-adherent-write: droit d'écriture sur les ressoruces adherent
+            ress-adherent-del: droit de suppression sur les ressoruces adherent
         password:
-          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
+          tokenUrl: 'http://127.0.0.1:8081/authorization-server/oauth/token'
           scopes:
             ress-adherent-admin: droit administration sur les ressources adherent
-            ress-adherent-read : droit de lecteur sur les ressoruces adherent
-            ress-adherent-write : droit d'écriture sur les ressoruces adherent
-            ress-adherent-del : droit de suppression sur les adherent autorisation
+            ress-adherent-read: droit de lecteur sur les ressoruces adherent
+            ress-adherent-write: droit d'écriture sur les ressoruces adherent
+            ress-adherent-del: droit de suppression sur les adherent autorisation

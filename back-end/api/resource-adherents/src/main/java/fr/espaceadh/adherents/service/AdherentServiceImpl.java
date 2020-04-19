@@ -17,7 +17,6 @@
 package fr.espaceadh.adherents.service;
 
 import fr.espaceadh.adherents.dao.AdherentsDAO;
-import fr.espaceadh.adherents.dao.AdherentsDAOImpl;
 import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.lib.mail.dto.MailInDto;
@@ -99,6 +98,18 @@ public class AdherentServiceImpl implements AdherentService{
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public AdherentDto recupererAdherent(Long idAdh) {
         return adherentsDAO.getAdherentByID(idAdh);
+    }
+
+    
+    @Override
+    public Collection<AdherentDto> recupererListeCompletAdherent() {
+        return adherentsDAO.recupererListeCompletAdherent();
+    }
+
+    
+    @Override
+    public Collection<AdherentDto> recupererListeAdherentSaison() {
+        return adherentsDAO.recupererListeAdherentSaison();
     }
     
     

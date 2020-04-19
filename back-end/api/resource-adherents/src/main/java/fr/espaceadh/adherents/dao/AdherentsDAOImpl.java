@@ -18,9 +18,9 @@ package fr.espaceadh.adherents.dao;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
-import fr.espaceadh.adherents.model.Adherent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
@@ -149,6 +149,39 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         
         return idAdherent;
     }
+
+    @Override
+    public Collection<AdherentDto> recupererListeCompletAdherent() {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT id_adherents, e_mail, civilite, nom, premon");
+        query.append("        , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
+        query.append("        , tel3, date_maissance, profession, link_picture, public_contact ");
+        query.append("        , accord_mail, token_acces, commentaire, date_enregistrement ");
+        query.append("        , fk_id_adherents_update, update_date ");
+        query.append("  FROM t_adherents");
+        
+        List<AdherentDto> lstAdherents = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper());
+
+        LOGGER.debug("Nombre d'adherents récupéré (ensemble de la list des adhérents {} ", lstAdherents.size());
+        return  lstAdherents;
+    }
+
+    @Override
+    public Collection<AdherentDto> recupererListeAdherentSaison() {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT id_adherents, e_mail, civilite, nom, premon");
+        query.append("        , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
+        query.append("        , tel3, date_maissance, profession, link_picture, public_contact ");
+        query.append("        , accord_mail, token_acces, commentaire, date_enregistrement ");
+        query.append("        , fk_id_adherents_update, update_date ");
+        query.append("  FROM t_adherents");
+        //TODO a compélter avec la jointure sur la saison courante
+        
+        List<AdherentDto> lstAdherents = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper());
+
+        LOGGER.debug("Nombre d'adherents récupéré (ensemble de la list des adhérents {} ", lstAdherents.size());
+        return  lstAdherents;
+    }
     
     
     public static final class AdherentsMapper implements RowMapper<AdherentDto> {
@@ -164,8 +197,22 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
             adh.setNom(rs.getString("nom"));
             adh.setPrenom(rs.getString("premon"));
             adh.setAdresse1(rs.getString("adresse1"));
-            
-            //TODO a compléter le mapping
+            adh.setAdresse2(rs.getString("adresse2"));
+            adh.setCodePostal(rs.getString("code_postal"));
+            adh.setVille(rs.getString("ville"));
+            adh.setTelMaison(rs.getString("tel1"));
+            adh.setTelPortable(rs.getString("tel2"));
+            adh.setTelTravail(rs.getString("tel3"));
+            adh.setDateNaissance(rs.getDate("date_maissance"));
+            adh.setProfession(rs.getString("profession"));
+            adh.setLienPhotoProfil(rs.getString("link_picture"));
+            adh.setPublicContact(rs.getBoolean("public_contact"));
+            adh.setAccordMail(rs.getBoolean("accord_mail"));
+            adh.setTokenAcces(rs.getString("token_acces"));
+            adh.setCommentaire(rs.getString("commentaire"));
+            adh.setDateEnregistrement(rs.getDate("date_enregistrement"));
+            adh.setIdAdherentUpdate(rs.getLong("fk_id_adherents_update"));
+            adh.setDateMiseAJour(rs.getDate("update_date"));
             
             return adh;
         }

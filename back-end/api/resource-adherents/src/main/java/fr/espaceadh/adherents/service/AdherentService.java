@@ -17,6 +17,7 @@
 package fr.espaceadh.adherents.service;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
+import java.util.Collection;
 
 /**
  *
@@ -39,5 +40,18 @@ public interface AdherentService {
      * @return adherentDto
      */
     AdherentDto recupererAdherent (Long idAdh);
+    
+    /**
+     * récupérer la liste complete des adhérents
+     * @return 
+     */
+    Collection<AdherentDto> recupererListeCompletAdherent ();
+    
+    
+    /**
+     * Récupérer la liste des adhérents de la saison
+     * @return 
+     */
+    Collection<AdherentDto> recupererListeAdherentSaison ();
     
 }

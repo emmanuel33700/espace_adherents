@@ -17,6 +17,7 @@
 package fr.espaceadh.adherents.dao;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
+import java.util.Collection;
 
 /**
  *
@@ -44,5 +45,18 @@ public interface AdherentsDAO {
      * @return  id de l'adherent créé
      */
     public long creerAdherent(AdherentDto adherentDto);
+    
+    
+    /**
+     * Recupérer la liste de l'ensemble des adhérents de la BD
+     * @return collection d'AdherentDto
+     */
+    public Collection<AdherentDto> recupererListeCompletAdherent();
+    
+    /**
+     * Recupérer la liste des adhérents de la saison
+     * @return collection d'AdherentDto
+     */
+    public Collection<AdherentDto> recupererListeAdherentSaison();
     
 }
