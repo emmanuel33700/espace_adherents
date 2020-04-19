@@ -119,7 +119,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/listeSaison",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize("#oauth2.hasScope('ress-adherent-read')")  
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and isDansGroupe('BUREAU')")  
     ResponseEntity<ListeAdherents> getListeAdherentsSaison();
 
 }
