@@ -5,4 +5,5 @@ export { Authentification } from './models/authentification';
 export { ReinitAuthentification } from './models/reinit-authentification';
 export { Roles } from './models/roles';
 export { Validation } from './models/validation';
+export { ListeAdherents } from './models/liste-adherents';
 

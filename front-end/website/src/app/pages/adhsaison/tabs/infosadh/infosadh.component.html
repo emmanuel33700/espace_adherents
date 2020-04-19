@@ -1,84 +1,104 @@
-<form>
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-header>Modifier mon profile</nb-card-header>
+      <nb-card-body>
+        <form
+          *ngIf="adherent"
+          [formGroup]="form"
+          (ngSubmit)="submit()"
+        >
 
           <div class="form-group row">
-            <label for="inputCivilite" class="label col-sm-3 col-form-label">Civilité</label>
+            <label for="civilite" class="label col-sm-3 col-form-label">Civilité</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="inputCivilite" placeholder="Civilité">
+              <input type="text" nbInput fullWidth id="civilite"  formControlName="civilite"  placeholder="Civilité">
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="inputNom" class="label col-sm-3 col-form-label">Nom</label>
+            <label for="nom" class="label col-sm-3 col-form-label">Nom</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="inputNom" placeholder="Nom">
+              <input type="text" nbInput fullWidth id="nom"  formControlName="nom"  placeholder="Nom">
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="inputPrenom" class="label col-sm-3 col-form-label">Prénom</label>
+            <label for="prenom" class="label col-sm-3 col-form-label">Prénom</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="inputPrenom" placeholder="Prénom">
+              <input type="text" nbInput fullWidth id="prenom" formControlName="prenom" placeholder="Prénom">
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="inputMail" class="label col-sm-3 col-form-label">Adresse mail</label>
+            <label for="email" class="label col-sm-3 col-form-label">Adresse mail</label>
             <div class="col-sm-9">
-              <input type="mail" nbInput fullWidth id="inputMail" placeholder="nom.prenom@fai.fr">
+              <input type="mail" nbInput fullWidth id="email" formControlName="email"  placeholder="nom.prenom@fai.fr">
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="inputAdresse1" class="label col-sm-3 col-form-label">Adresse 1</label>
+            <label for="adresse1" class="label col-sm-3 col-form-label">Adresse 1</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="inputAdresse1" placeholder="Adresse 1">
+              <input type="text" nbInput fullWidth id="adresse1" formControlName="adresse1" placeholder="Adresse 1">
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="inputAdresse2" class="label col-sm-3 col-form-label">Adresse 2</label>
+            <label for="adresse2" class="label col-sm-3 col-form-label">Adresse 2</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="inputAdresse2" placeholder="Résidence des étoiles">
+              <input type="text" nbInput fullWidth id="adresse2"  formControlName="adresse2" placeholder="Résidence des étoiles">
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="inputVille" class="label col-sm-3 col-form-label">Ville</label>
+            <label for="ville" class="label col-sm-3 col-form-label">Ville</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="inputVille" placeholder="Martignas">
+              <input type="text" nbInput fullWidth id="ville" formControlName="ville" placeholder="Martignas">
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="inputTelephonePortable" class="label col-sm-3 col-form-label">Téléphone Postable</label>
+            <label for="telPortable" class="label col-sm-3 col-form-label">Téléphone Postable</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="inputTelephonePortable" placeholder="06 81 81 81 81">
+              <input type="text" nbInput fullWidth id="telPortable" formControlName="telPortable" placeholder="06 81 81 81 81">
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="inputTelephoneFixe" class="label col-sm-3 col-form-label">Téléphone Fixe</label>
+            <label for="telMaison" class="label col-sm-3 col-form-label">Téléphone Fixe</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="inputTelephoneFixe" placeholder="06 81 81 81 81">
+              <input type="text" nbInput fullWidth id="telMaison" formControlName="telMaison" placeholder="06 81 81 81 81">
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="inputDateNaissance" class="label col-sm-3 col-form-label">Date de naissance</label>
+            <label for="dateNaissance" class="label col-sm-3 col-form-label">Date de naissance</label>
             <div class="col-sm-9">
-              <input nbInput placeholder="01/01/2011" [nbDatepicker]="formpicker" id="inputDateNaissance" >
+              <input nbInput placeholder="01/01/2011" [nbDatepicker]="formpicker" id="dateNaissance" formControlName="dateNaissance" >
               <nb-datepicker #formpicker></nb-datepicker>
             </div>
           </div>
 
 
           <div class="form-group row">
-            <label for="inputMessage" class="label col-sm-3 col-form-label">Commentaire</label>
+            <label for="commentaire" class="label col-sm-3 col-form-label">Commentaire</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="inputMessage" placeholder="Un commentaire...">
+              <input type="text" nbInput fullWidth id="commentaire" formControlName="commentaire" placeholder="Un commentaire...">
             </div>
           </div>
 
-        <button type="submit" nbButton>Valider</button>
-</form>
+          <button type="submit" nbButton>Valider</button>
 
+        </form>
+
+        <ng-template #loading>
+          Loading User...
+        </ng-template>
+
+      </nb-card-body>
+    </nb-card>
+
+
+  </div>
+</div>

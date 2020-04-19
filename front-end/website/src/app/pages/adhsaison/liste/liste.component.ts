@@ -1,10 +1,10 @@
-import {Component, NgModule} from '@angular/core';
-import { fruits } from './fruits-list';
-import { Routes, RouterModule } from '@angular/router';
-
+import {Component, NgModule, OnInit} from '@angular/core';
+import { Routes, Router, RouterModule } from '@angular/router';
+import {ListingAdherentService} from '../../../../api/generated/services/listing-adherent.service';
 
 
 import {  TabsComponent } from '../tabs/tabs.component';
+import {Adherent} from '../../../../api/generated/models';
 
 const routes: Routes = [{
   path: 'tabs',
@@ -21,19 +21,37 @@ const routes: Routes = [{
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ListeComponent {
-  fruits = fruits;
-
-  users: {picture: string, name: string, title: string }[] = [
-    { picture: 'assets/images/nick.png', name: 'CHENAIS Emmanuel', title: 'Adhérents' },
-    { picture: 'assets/images/jack.png', name: 'ROBERT Didier', title: 'Jeune' },
-    { picture: 'assets/images/kate.png', name: 'SULIVAN Janitor', title: 'Adhérents' },
-    { picture: 'assets/images/eva.png', name: 'COX Perry', title: 'Resp famille' },
-    { picture: 'assets/images/lee.png', name: 'SULIVAN Ben', title: 'Adhérents' },
-  ];
+export class ListeComponent implements OnInit {
 
 
-  afficherAlert(name: string) {
-    console.info('la fiche de' + name);
+
+  adherents: Adherent[] = [];
+
+  constructor(
+    private listingAdherentService: ListingAdherentService,
+    private router: Router,
+  ) {}
+
+
+
+  ngOnInit(): void {
+    this.listingAdherentService.getListeAdherents( {})
+      .subscribe(
+        (data) => {
+          this.adherents = data;
+          console.info(data);
+        },
+        (error) => {
+          console.error(error);
+        },
+        () => {
+          console.info('fini');
+        });
+  }
+
+
+  sectionAdherents(id: number) {
+    localStorage.setItem('id_adh_selected', String(id));
+    return this.router.navigateByUrl('pages/adhsaison/tabs/infosadh');
   }
 }

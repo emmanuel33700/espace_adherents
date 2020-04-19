@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, NgForm} from '@angular/forms';
 import {Adherent} from '../../../../api/generated/models/adherent';
 import {AdherentService} from '../../../../api/generated/services/adherent.service';
 
@@ -27,8 +27,15 @@ export class AjouterComponent implements OnInit {
   }
 
   submit(form: NgForm) {
-    this.submitted = true;
 
+    // Initialisation des variables
+    this.submitted = true;
+    this.errors = [];
+    this.messages = [];
+    this.adherent.accordMail = false;
+    this.adherent.publicContact = false;
+
+    // Valorisation du model pour appel de l'api
     this.adherent.civilite = this.user.civilite;
     this.adherent.nom = this.user.nom;
     this.adherent.prenom = this.user.prenom;
@@ -40,8 +47,13 @@ export class AjouterComponent implements OnInit {
     this.adherent.telMaison = this.user.telFixe;
     this.adherent.dateNaissance = null; // TODO a revoir la date de naisance
     this.adherent.commentaire = this.user.commentaire;
-    this.adherent.accordMail = this.user.accordmail;
-    this.adherent.publicContact = this.user.publicContact;
+    if (this.user.accordmail) {
+      this.adherent.accordMail = true;
+    }
+    if (this.user.publicContact) {
+      this.adherent.publicContact = true;
+    }
+
 
 
     this.adherentService.ajoutAdherent({body: this.adherent})

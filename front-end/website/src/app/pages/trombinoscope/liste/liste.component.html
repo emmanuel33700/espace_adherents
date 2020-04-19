@@ -3,9 +3,11 @@
     <nb-card class="list-card">
       <nb-card-header>Trombinoscope</nb-card-header>
       <nb-list>
-        <nb-list-item *ngFor="let user of users">
-          <nb-user [picture]="user.picture" [name]="user.name" [title]="user.title">
+        <nb-list-item *ngFor="let adherent of adherents">
+
+          <nb-user picture="assets/images/nick.png"  [name]="adherent.nom + ' ' +adherent.prenom" [title]="adherent.email"  >
           </nb-user>
+
         </nb-list-item>
       </nb-list>
     </nb-card>

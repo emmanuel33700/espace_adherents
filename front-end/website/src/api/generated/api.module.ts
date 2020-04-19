@@ -6,7 +6,7 @@ import {ApiConfiguration, ApiConfigurationParams} from './api-configuration';
 import {AdherentService} from './services/adherent.service';
 import {AuthentificationService} from './services/authentification.service';
 import {RolesService} from './services/roles.service';
-
+import {ListingAdherentService} from './services/listing-adherent.service';
 /**
  * Module that provides all services and configuration.
  */
@@ -19,6 +19,7 @@ import {RolesService} from './services/roles.service';
     AuthentificationService,
     RolesService,
     ApiConfiguration,
+    ListingAdherentService,
   ],
 })
 export class ApiModule {

@@ -1,19 +1,37 @@
-import { Component } from '@angular/core';
-import { fruits } from './fruits-list';
+import {Component, OnInit} from '@angular/core';
+import {Adherent} from '../../../../api/generated/models/adherent';
+import {ListingAdherentService} from '../../../../api/generated/services/listing-adherent.service';
 
 @Component({
   selector: 'ngx-list',
   templateUrl: 'liste.component.html',
   styleUrls: ['liste.component.scss'],
 })
-export class ListeComponent {
-  fruits = fruits;
+export class ListeComponent implements OnInit {
 
-  users: {picture: string, name: string, title: string }[] = [
-    { picture: 'assets/images/nick.png', name: 'CHENAIS Emmanuel', title: 'manu@gmail.com' },
-    { picture: 'assets/images/jack.png', name: 'ROBERT Didier', title: 'didier@gmail.com' },
-    { picture: 'assets/images/kate.png', name: 'SULIVAN Janitor', title: 'didier@gmail.com' },
-    { picture: 'assets/images/eva.png', name: 'COX Perry', title: 'didier@gmail.com' },
-    { picture: 'assets/images/lee.png', name: 'SULIVAN Ben', title: 'didier@gmail.com' },
-  ];
+  adherents: Adherent[] = [];
+
+  constructor(
+    private listingAdherentService: ListingAdherentService,
+  ) {}
+
+
+
+  ngOnInit(): void {
+    // TODO Attention, appel de service à charger
+    this.listingAdherentService.getListeAdherentsSaison( {})
+      .subscribe(
+        (data) => {
+          this.adherents = data;
+          console.info(data);
+        },
+        (error) => {
+          console.error(error);
+        },
+        () => {
+          console.info('fini');
+        });
+  }
+
+
 }
