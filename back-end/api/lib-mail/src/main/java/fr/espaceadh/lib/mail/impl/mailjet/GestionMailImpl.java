@@ -157,8 +157,9 @@ public class GestionMailImpl implements GestionMail {
     private JSONArray getEmailJsonTo(MailInDto mailIn) {
         JSONArray emailJsonTo = new JSONArray();
         /** si nous somme en dev, envoi de l'e-mail à une seule adresse configuré dans le fichier de properties **/
-        if (env.getProperty("message.dev") != null && env.getProperty("message.dev").equalsIgnoreCase("dev")) {
-                emailJsonTo.put(new JSONObject().put(Emailv31.Message.EMAIL, env.getProperty("message.to.mail")));
+        if (env.getProperty("message.dev") != null && env.getProperty("message.dev", Boolean.class)) {
+            LOGGER.info("Envoye de mail en mode dev");
+            emailJsonTo.put(new JSONObject().put(Emailv31.Message.EMAIL, env.getProperty("message.to.mail")));
         } 
         /** sinon, envoie au mail indique dans le dto **/
         else {
