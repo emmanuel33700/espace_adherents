@@ -11,6 +11,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+
             "preserveSymlinks": true,
             "rebaseRootRelativeCssUrls": true,
             "outputPath": "dist",
@@ -36,13 +37,9 @@
               "node_modules/@fortawesome/fontawesome-free/css/all.css",
               "node_modules/socicon/css/socicon.css",
               "node_modules/nebular-icons/scss/nebular-icons.scss",
-              "node_modules/angular-tree-component/dist/angular-tree-component.css",
               "node_modules/pace-js/templates/pace-theme-flash.tmpl.css",
               "node_modules/leaflet/dist/leaflet.css",
-              "src/app/@theme/styles/styles.scss",
-              "node_modules/@fullcalendar/core/main.css",
-              "node_modules/@fullcalendar/daygrid/main.css",
-              "node_modules/@fullcalendar/timegrid/main.css"
+              "src/app/@theme/styles/styles.scss"
             ],
             "scripts": [
               "node_modules/pace-js/pace.min.js",
@@ -53,14 +50,17 @@
               "node_modules/tinymce/plugins/table/plugin.min.js",
               "node_modules/echarts/dist/echarts.min.js",
               "node_modules/echarts/dist/extension/bmap.min.js",
-              "node_modules/chart.js/dist/Chart.min.js",
-              "node_modules/@fullcalendar/core/main.js",
-              "node_modules/@fullcalendar/daygrid/main.js",
-              "node_modules/@fullcalendar/timegrid/main.js"
+              "node_modules/chart.js/dist/Chart.min.js"
             ]
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -178,10 +178,13 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "ngx",
-      "styleext": "scss"
+      "style": "scss"
     },
     "@schematics/angular:directive": {
       "prefix": "ngx"
     }
+  },
+  "cli": {
+    "analytics": "991275f7-b185-49bc-b18b-0f034400e6ed"
   }
 }

@@ -6,14 +6,14 @@ import {ListingAdherentService} from '../../../../api/generated/services/listing
 import {  TabsComponent } from '../tabs/tabs.component';
 import {Adherent} from '../../../../api/generated/models';
 
-const routes: Routes = [{
+export const routes: Routes = [{
   path: 'tabs',
   component: TabsComponent,
 }];
 
 
 @Component({
-  selector: 'ngx-list',
+  selector: 'ngx-components',
   templateUrl: 'liste.component.html',
   styleUrls: ['liste.component.scss'],
 })

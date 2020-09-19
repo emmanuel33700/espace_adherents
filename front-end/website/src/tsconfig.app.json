@@ -1,16 +1,9 @@
+
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "../out-tsc/app",
-    "baseUrl": "./",
-    "paths": {
-      "@angular/*": [
-        "../node_modules/@angular/*"
-      ],
-      "@nebular/*": [
-        "../node_modules/@nebular/*"
-      ]
-    }
+    "baseUrl": "./"
   },
   "exclude": [
     "test.ts",

@@ -29,9 +29,6 @@ import {TokenInterceptor} from './@core/utils/token.interceptor';
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-
-    ThemeModule.forRoot(),
-
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbDatepickerModule.forRoot(),
@@ -42,6 +39,7 @@ import {TokenInterceptor} from './@core/utils/token.interceptor';
       messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
     }),
     CoreModule.forRoot(),
+    ThemeModule.forRoot(),
   ],
   bootstrap: [AppComponent],
   providers: [

@@ -16,7 +16,14 @@ import { CalendrierRoutingModule } from './calendrier-routing.module';
 import { CalendrierComponent } from './calendrier.component';
 import { ListeComponent } from './liste/liste.component';
 import { FormsModule as ngFormsModule } from '@angular/forms';
-import { FullCalendarModule } from '@fullcalendar/angular';
+import { FullCalendarModule } from '@fullcalendar/angular'; // the main connector. must go first
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
+import interactionPlugin from '@fullcalendar/interaction'; // a plugin
+
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+  dayGridPlugin,
+  interactionPlugin,
+]);
 
 @NgModule({
   imports: [
@@ -33,7 +40,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     NbSelectModule,
     NbIconModule,
     ngFormsModule,
-    FullCalendarModule,
+    FullCalendarModule, // register FullCalendar with you app
   ],
   declarations: [
     CalendrierComponent,
