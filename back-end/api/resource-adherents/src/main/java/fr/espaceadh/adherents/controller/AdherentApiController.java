@@ -57,6 +57,11 @@ public class AdherentApiController implements AdherentApi {
         this.request = request;
     }
 
+    /**
+     * Ajouter un adhérents
+     * @param body
+     * @return 
+     */
     public ResponseEntity<Void> ajoutAdherent(@ApiParam(value = "Besoin de l'objet adhérent pour ajouter un adhérent" ,required=true )  @Valid @RequestBody Adherent body) {
         
         AdherentDto dto = this.translateModel(body);
@@ -73,6 +78,11 @@ public class AdherentApiController implements AdherentApi {
     }
     
 
+    /**
+     * Supprimer un adhérent
+     * @param idadh
+     * @return 
+     */
     public ResponseEntity<Void> deleteUser(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
@@ -90,8 +100,29 @@ public class AdherentApiController implements AdherentApi {
         return new ResponseEntity<>(adh,HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> updateUser(@ApiParam(value = "mise à jour de la personne" ,required=true )  @Valid @RequestBody Adherent body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    /**
+     * Mise à jour d'un adhérents
+     * @param body
+     * @param idadh
+     * @return 
+     */
+    public ResponseEntity<Void> updateUser(@ApiParam(value = "mise à jour de la personne" ,required=true )  @Valid @RequestBody Adherent body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {        
+
+        //récupérationd e l'adh avant modification
+        AdherentDto adhold = this.adherentService.recupererAdherent(idadh);
+        
+        AdherentDto adhnew = this.translateModel(body);
+        adhnew.setId(adhold.getId());
+        adhnew.setCommentaire(adhold.getCommentaire());
+        
+        //TODO ajouter l'id de l'utilisateur qui a créé l'adhérent
+        adhnew.setIdAdherentUpdate(adhold.getIdAdherentUpdate());
+        
+        boolean updateok = this.adherentService.updateAdherents(adhnew);
+        if (updateok)return new ResponseEntity<>(HttpStatus.OK);
+        
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
     }
     
     /**

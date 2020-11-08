@@ -59,4 +59,13 @@ public interface AdherentsDAO {
      */
     public Collection<AdherentDto> recupererListeAdherentSaison();
     
+    
+    /**
+     * Mise à jour d'un adhérent
+     * @param adherentDto
+     * @return 
+     */
+    public boolean updateAdherents(AdherentDto adherentDto);
+    
+    
 }

@@ -184,6 +184,63 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         LOGGER.debug("Nombre d'adherents récupéré (ensemble de la list des adhérents {} ", lstAdherents.size());
         return  lstAdherents;
     }
+
+    
+    @Override
+    public boolean updateAdherents(AdherentDto adherentDto) {
+        StringBuilder query = new StringBuilder();
+        query.append(" UPDATE public.t_adherents ");
+        query.append("	SET ");
+        query.append("	civilite=?, ");
+        query.append("	nom=?, ");
+        query.append("	premon=?, ");
+        query.append("	adresse1=?, ");
+        query.append("	adresse2=?, ");
+        query.append("	code_postal=?, ");
+        query.append("	ville=?, ");
+        query.append("	tel1=?, ");
+        query.append("	tel2=?, ");
+        query.append("	tel3=?, ");
+        query.append("	date_maissance=?, ");
+        query.append("	profession=?, ");
+        query.append("	link_picture=?, ");
+        query.append("	public_contact=?, ");
+        query.append("	accord_mail=?, ");
+        query.append("	commentaire=?, ");
+        query.append("	fk_id_adherents_update=?,");
+        query.append("	update_date= ? ");
+        query.append("	WHERE id_adherents=? ");
+        
+        
+        int nbCreation = this.getJdbcTemplate().update(query.toString() 
+            , adherentDto.getCivilite().toString()
+            , adherentDto.getNom()
+            , adherentDto.getPrenom()
+            , adherentDto.getAdresse1()
+            , adherentDto.getAdresse2()
+            , adherentDto.getCodePostal()
+            , adherentDto.getVille()
+            , adherentDto.getTelMaison()
+            , adherentDto.getTelTravail()
+            , adherentDto.getTelPortable()
+            , adherentDto.getDateNaissance()
+            , adherentDto.getProfession()
+            , adherentDto.getLienPhotoProfil()
+            , adherentDto.isPublicContact()
+            , adherentDto.isAccordMail()
+            , adherentDto.getCommentaire()
+            , adherentDto.getIdAdherentUpdate()
+            , adherentDto.getDateMiseAJour()
+                
+            , adherentDto.getId()
+            ) ;
+        
+        if (nbCreation == 1) return true;
+        else {
+            LOGGER.error("Erreur lors de la mj de l'utilisateur {} : nombre de ligne crée {} ",adherentDto.getId(), nbCreation );
+            return false;
+        }
+    }
     
     
     public static final class AdherentsMapper implements RowMapper<AdherentDto> {

@@ -32,26 +32,34 @@ public interface AdherentService {
      *          1 => Creation erreur
      *          10 => Adherent existant déjà
      */
-    int creerAdherent(AdherentDto adherentDto);
+    public int creerAdherent(AdherentDto adherentDto);
     
     /**
      * Recupérer un adhérent avec son username
      * @param idAdh id  de la personne
      * @return adherentDto
      */
-    AdherentDto recupererAdherent (Long idAdh);
+    public AdherentDto recupererAdherent (Long idAdh);
     
     /**
      * récupérer la liste complete des adhérents
      * @return 
      */
-    Collection<AdherentDto> recupererListeCompletAdherent ();
+    public Collection<AdherentDto> recupererListeCompletAdherent ();
     
     
     /**
      * Récupérer la liste des adhérents de la saison
      * @return 
      */
-    Collection<AdherentDto> recupererListeAdherentSaison ();
+    public Collection<AdherentDto> recupererListeAdherentSaison ();
     
+    
+
+    /**
+     * Mise à jour d'un adhérents
+     * @param adherentDto
+     * @return 
+     */
+    public boolean updateAdherents (AdherentDto adherentDto);
 }

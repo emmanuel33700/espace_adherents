@@ -111,6 +111,11 @@ public class AdherentServiceImpl implements AdherentService{
     public Collection<AdherentDto> recupererListeAdherentSaison() {
         return adherentsDAO.recupererListeAdherentSaison();
     }
+
+    @Override
+    public boolean updateAdherents(AdherentDto adherentDto) {
+        return this.adherentsDAO.updateAdherents(adherentDto);
+    }
     
     
 }
