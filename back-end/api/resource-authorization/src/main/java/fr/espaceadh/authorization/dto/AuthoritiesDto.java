@@ -16,22 +16,24 @@
  */
 package fr.espaceadh.authorization.dto;
 
+import java.util.List;
+
 /**
  *
  * @author emmanuel33700 https://github.com/emmanuel33700/espace_adherents
  */
 public class AuthoritiesDto {
     
-    private RolesEnum roles;
-    private String username;
+    private List<RolesEnum> roles;
 
-    public RolesEnum getRoles() {
+    public List<RolesEnum> getRoles() {
         return roles;
     }
 
-    public void setRoles(RolesEnum roles) {
+    public void setRoles(List<RolesEnum> roles) {
         this.roles = roles;
     }
+    private String username;
 
     public String getUsername() {
         return username;

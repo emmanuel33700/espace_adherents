@@ -17,12 +17,16 @@
 package fr.espaceadh.authorization.dao;
 
 import fr.espaceadh.authorization.dto.UserDto;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
@@ -150,6 +154,11 @@ public class UserDaoImpl extends JdbcDaoSupport implements userDao{
         return false;
     }
 
+    /**
+     * récupérer un utilisateur via son login
+     * @param login
+     * @return 
+     */
     @Override
     public UserDto lectureUtilisateur(String login) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -166,6 +175,55 @@ public class UserDaoImpl extends JdbcDaoSupport implements userDao{
 
     private boolean isNotNull(Object string) {
         return string != null;
+    }
+
+    /**
+     * récupérer un utilisateur via son id
+     * @param idUser
+     * @return 
+     */
+    @Override
+    public UserDto lectureUtilisateur(int idUser) {
+        StringBuilder query = new StringBuilder();
+        query.append(" SELECT username, password, enabled, idadherent, datecreation, datemodif,  ");
+        query.append(" dateconnexion, cleemodification, datemodificationclee ");
+        query.append(" 	FROM users ");
+        query.append(" 	where idadherent = ? ");
+        
+
+        List<UserDto> userDto = this.getJdbcTemplate().query(query.toString(), new UtilisateurMapper(), idUser);
+        
+        if (!userDto.isEmpty()) {
+            return userDto.get(0);
+        }
+        LOGGER.warn("id {} non trouvé en BD", idUser);
+        return null;
+    }
+
+    
+    /**
+     * 
+     */
+    public static final class UtilisateurMapper implements  RowMapper<UserDto> {
+
+        @Override
+        public UserDto mapRow(ResultSet rs, int i) throws SQLException {
+            UserDto dto = new UserDto();
+            
+            dto.setUsername(rs.getString("username"));
+            dto.setPasswordEncode(rs.getString("password"));
+            dto.setEnabled(rs.getBoolean("enabled"));
+            dto.setIdAdherent(rs.getInt("idadherent"));
+            dto.setDateCreation(rs.getDate("datecreation"));
+            dto.setDateModif(rs.getDate("datemodif"));
+            dto.setDateConnexion(rs.getDate("dateconnexion"));
+            dto.setCleeModification(rs.getString("cleemodification"));
+            dto.setDateModifcationClee(rs.getDate("datemodificationclee"));
+            
+            return dto;
+        }
+
+
     }
 
 

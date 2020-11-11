@@ -22,6 +22,8 @@ import fr.espaceadh.authorization.model.ReinitAuthentification;
 import fr.espaceadh.authorization.model.Roles;
 import fr.espaceadh.authorization.model.Validation;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.espaceadh.authorization.dto.AuthoritiesDto;
+import fr.espaceadh.authorization.dto.RolesEnum;
 import fr.espaceadh.authorization.dto.UserDto;
 import fr.espaceadh.authorization.model.ModelApiResponse;
 import fr.espaceadh.authorization.service.AuthentificationService;
@@ -37,6 +39,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-09-28T08:29:33.965Z[GMT]")
@@ -154,8 +158,97 @@ public class AuthentificationApiController implements AuthentificationApi {
         return dto;
     }
     
-        public BCryptPasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    
+    /**
+     * concert DTO AuthoritiesDto to Roles model
+     * @param authoritiesDto
+     * @return 
+     */
+    private Roles concertModel(AuthoritiesDto authoritiesDto){
+        Roles role = new Roles();
+        
+
+        for (RolesEnum roleEnumDto : authoritiesDto.getRoles()){
+            
+            switch (roleEnumDto) {
+                case ADMIN:
+                    role.addRolesItem(Roles.RolesEnum.ADMIN);
+                    break;
+                case CONSEIL:
+                    role.addRolesItem(Roles.RolesEnum.CONSEIL);
+                    break;
+                case BUREAU:
+                    role.addRolesItem(Roles.RolesEnum.BUREAU);
+                    break;
+                default:
+                    role.addRolesItem(Roles.RolesEnum.ADHERENT);
+                    break;
+            }
+
+        }
+        
+        return role;
+        
+    }
+
+    /**
+     * Concerte RoleEnum Model to DTO
+     * @param rolesEnumModel
+     * @return 
+     */
+    private  List<RolesEnum> convertDto(List<Roles.RolesEnum> rolesEnumModel){
+        List<RolesEnum> roleEnumDto = new ArrayList<>();
+        for (Roles.RolesEnum roleEnumModel : rolesEnumModel){
+            switch (roleEnumModel) {
+                case ADMIN:
+                    roleEnumDto.add(RolesEnum.ADMIN);
+                    break;
+                case CONSEIL:
+                    roleEnumDto.add(RolesEnum.CONSEIL);
+                    break;
+                case BUREAU:
+                    roleEnumDto.add(RolesEnum.BUREAU);
+                    break;
+                default:
+                    roleEnumDto.add(RolesEnum.ADHERENT);
+                    break;
+            }            
+        }
+        return roleEnumDto;
+    }
+    
+        
+    /**
+     * Récupérer les roles d'une personnes
+     * @param idadh
+     * @return 
+     */
+    @Override
+    public ResponseEntity<Roles> getRoles(Long idadh) {
+        String accept = request.getHeader("Accept");
+        AuthoritiesDto authoritiesDto = this.authentificationService.recupererAuthorities(idadh.intValue());
+        
+        return new ResponseEntity<>(this.concertModel(authoritiesDto),HttpStatus.OK);
+    }
+
+    /**
+     * Mise à jour du role
+     * @param idadh
+     * @param body
+     * @return 
+     */
+    @Override
+    public ResponseEntity<Void> updateRoles(Long idadh, Roles body) {
+         String accept = request.getHeader("Accept");
+        
+         this.authentificationService.modifierRolesUtilisateur(idadh.intValue(), this.convertDto(body.getRoles()));
+        
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+
 
 }

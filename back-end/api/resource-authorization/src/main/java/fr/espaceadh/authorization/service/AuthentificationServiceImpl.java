@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -102,7 +103,9 @@ public class AuthentificationServiceImpl implements AuthentificationService {
         // création de l'authorité BD d'authorisation
         AuthoritiesDto authoritiesDto = new AuthoritiesDto();
         authoritiesDto.setUsername(usersDto.getUsername());
-        authoritiesDto.setRoles(RolesEnum.ADHERENT);
+        List<RolesEnum> roles = new ArrayList<>();
+        roles.add(RolesEnum.ADHERENT); // Par defaut création du role adhérent
+        authoritiesDto.setRoles(roles);
         authoritiesDao.creationAutorities(authoritiesDto);
         
         //envoie du mail de validation du compte
@@ -227,6 +230,43 @@ public class AuthentificationServiceImpl implements AuthentificationService {
         
         return adh;
         
+    }
+
+    /**
+     * Modifier les roles d'un utilisateur
+     * @param idUser
+     * @param rolesEnum
+     * @return 
+     */
+    @Override
+    public boolean modifierRolesUtilisateur(int idUser, List<RolesEnum> rolesEnum ) {
+        
+        /** on recherche l'utilisateur rematif à l'id **/
+        UserDto  user = this.userDao.lectureUtilisateur(idUser);
+        
+        /** suppression des autorities **/
+        authoritiesDao.suppressionAutorities(user.getUsername());
+        
+        AuthoritiesDto authoritiesDto = new AuthoritiesDto();
+        authoritiesDto.setUsername(user.getUsername());
+        authoritiesDto.setRoles(rolesEnum);
+        
+        authoritiesDao.creationAutorities(authoritiesDto);
+        
+        return true;
+    }
+
+    /**
+     * Recuperer les authorities
+     * @param idUser
+     * @return 
+     */
+    @Override
+    public AuthoritiesDto recupererAuthorities(int idUser) {
+        /** on recherche l'utilisateur rematif à l'id **/
+        UserDto  user = this.userDao.lectureUtilisateur(idUser);
+
+        return this.authoritiesDao.recupererAutorities(user.getUsername());
     }
 
 

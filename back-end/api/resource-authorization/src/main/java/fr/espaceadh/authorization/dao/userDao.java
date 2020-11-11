@@ -42,11 +42,18 @@ public interface userDao {
     boolean majUser(UserDto userDto);
     
     /**
-     * Lecture d'un utilsateur dans la base des authorisations
+     * Lecture d'un utilsateur via son logn
      * @param login login de l'utilisateur 
      * @return UserDto
      */
     UserDto lectureUtilisateur(String login);
+    
+    /**
+     * Lecture d'un utilsateur via son id
+     * @param idUser
+     * @return 
+     */
+    UserDto lectureUtilisateur(int idUser);
     
     /**
      * Validation de la création d'un utilisateur via sa clée de validation

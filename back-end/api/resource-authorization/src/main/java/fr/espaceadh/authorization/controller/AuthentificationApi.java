@@ -99,6 +99,18 @@ public interface AuthentificationApi {
     ResponseEntity<Void> updateAuthentification(@ApiParam(value = "mise à jour de l'objet authentification" ,required=true )  @Valid @RequestBody Authentification body);
 
 
+    @ApiOperation(value = "Récupérer les informations de role", nickname = "getRoles", notes = "récupérer le role d'une personne", response = Roles.class, tags={ "Roles", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "Operation réussie", response = Roles.class),
+        @ApiResponse(code = 403, message = "Droit insufisant", response = ModelApiResponse.class),
+        @ApiResponse(code = 404, message = "login non trouvée", response = ModelApiResponse.class),
+        @ApiResponse(code = 405, message = "Invalid input", response = ModelApiResponse.class) })    
+    @RequestMapping(value = "/authentification/{idadh}/roles",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<Roles> getRoles(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh);
+    
+    
     @ApiOperation(value = "Mise à jour des roles d'une personne", nickname = "updateRoles", notes = "Mise à jour des roles d'une personne",  tags={ "Roles", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "Operation réussie"),
@@ -107,9 +119,11 @@ public interface AuthentificationApi {
         @ApiResponse(code = 405, message = "Invalid input", response = ModelApiResponse.class) })
     @RequestMapping(value = "/authentification/{idadh}/roles",
         produces = { "application/json" }, 
-        consumes = { "application/json" },
+        consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateRoles(@ApiParam(value = "mise à jour de l'objet role" ,required=true )  @Valid @RequestBody Roles body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh);
+    ResponseEntity<Void> updateRoles(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh, @Valid @RequestBody Roles body);
+    
+    
 
     @ApiOperation(value = "validation d'enregistrement du login d'une personne", nickname = "validationAuthentification", notes = "", tags={ "Authentification", })
     @ApiResponses(value = { 

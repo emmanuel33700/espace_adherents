@@ -17,10 +17,14 @@
 package fr.espaceadh.authorization.dao;
 
 import fr.espaceadh.authorization.dto.AuthoritiesDto;
+import fr.espaceadh.authorization.dto.RolesEnum;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
@@ -46,15 +50,79 @@ public class AuthoritiesDaoImpl extends JdbcDaoSupport implements AuthoritiesDao
                  query.append("            username, authority)");
                  query.append("     VALUES (?, ?) ");
         
-        int nbCreation;          
-        nbCreation = this.getJdbcTemplate().update(query.toString(),
+        int nbCreation = 0;       
+        for (RolesEnum role : authoritiesDto.getRoles()){
+            nbCreation =  nbCreation + this.getJdbcTemplate().update(query.toString(),
                 authoritiesDto.getUsername(),
-                authoritiesDto.getRoles().toString()
+                role.toString()
         );
-        if (nbCreation ==  1) return true;
+        }
+
+        if (nbCreation >=  1) return true;
         else {
             LOGGER.error("Erreur lors de la creation de l'autorité : nombre de ligne crée {} ", nbCreation );
         }
-        return false;         }
+        return false;         
+    }
+
+
+    /**
+     * Suppression des autorities
+     * @param username
+     * @return 
+     */
+    @Override
+    public boolean suppressionAutorities(String username) {
+        StringBuilder query = new StringBuilder();
+        query.append(" DELETE FROM authorities	WHERE username = ? ");
+        
+        int nbDelete = 0;    
+        nbDelete =  this.getJdbcTemplate().update(query.toString(),username);
+        if (nbDelete >=  1) return true;
+        else return false;
+        
+    }
+
+    /**
+     * Recuperer les Autorities d'un utilisateur
+     * @param string
+     * @return 
+     */
+    @Override
+    public AuthoritiesDto recupererAutorities(String login) {
+        StringBuilder query = new StringBuilder();
+        query.append(" SELECT username, authority ");    
+        query.append(" 	FROM authorities ");   
+        query.append(" 	where username = ? ");   
+    
+        AuthoritiesDto dto = new AuthoritiesDto();
+        
+        dto.setRoles(this.getJdbcTemplate().query(query.toString(), new  AutoritiesMapper(), login));
+        dto.setUsername(login);
+        
+        return dto;
+        
+    }
+    
+    
+     public static final class AutoritiesMapper implements  RowMapper<RolesEnum> {
+
+        @Override
+        public RolesEnum mapRow(ResultSet rs, int i) throws SQLException {
+
+            
+            switch (rs.getString("authority")) {
+                case "ADMIN":
+                    return RolesEnum.ADMIN;
+                case "CONSEIL":
+                    return RolesEnum.CONSEIL;
+                case "BUREAU":
+                    return RolesEnum.BUREAU;
+                default:
+                    return RolesEnum.ADHERENT;
+            }  
+        }
+         
+     }
     
 }

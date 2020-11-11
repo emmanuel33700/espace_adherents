@@ -31,5 +31,21 @@ public interface AuthoritiesDao {
      *          false : autorites non créée
      */
     boolean creationAutorities(AuthoritiesDto authoritiesDto);
+
+    
+    /**
+     * Suppression des autorities
+     * @param username
+     * @return 
+     */
+    boolean suppressionAutorities(String username);
+    
+    
+    /**
+     * Recuperer les autorities d'un utilisateur
+     * @param username
+     * @return 
+     */
+    AuthoritiesDto recupererAutorities (String username);
     
 }

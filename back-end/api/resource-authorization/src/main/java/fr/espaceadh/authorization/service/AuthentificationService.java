@@ -5,7 +5,10 @@
  */
 package fr.espaceadh.authorization.service;
 
+import fr.espaceadh.authorization.dto.AuthoritiesDto;
+import fr.espaceadh.authorization.dto.RolesEnum;
 import fr.espaceadh.authorization.dto.UserDto;
+import java.util.List;
 
 /**
  *
@@ -31,5 +34,16 @@ public interface AuthentificationService {
      *          false : compte non validé
      */
     boolean validationCreationUser(int idUser, String cleeValidation);
+    
+    /**
+     * Modifier les roles d'un utilisateur 
+     * @param idUser
+     * @param roles
+     * @return 
+     */
+    boolean modifierRolesUtilisateur (int idUser, List<RolesEnum> rolesEnum );
+    
+    
+    AuthoritiesDto recupererAuthorities (int idUser);
     
 }
