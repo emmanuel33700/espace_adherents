@@ -28,7 +28,8 @@
     "prepush": "npm run lint:ci",
     "release:changelog": "npm run conventional-changelog -- -p angular -i CHANGELOG.md -s",
     "postinstall": "ngcc --properties es2015 es5 browser module main --first-only --create-ivy-entry-points",
-    "generate.api1": "ng-openapi-gen --input  src/api/swagger/resource-authorization.yaml --output src/api/tmp/resource-authorization"
+    "geneapiauth": "ng-openapi-gen --input  src/api/swagger/resource-authorization.yaml --output src/api/generated/authorization/",
+    "geneapiadh": "ng-openapi-gen --input  src/api/swagger/resource-adherents.yaml --output src/api/generated/adherents/"
   },
   "dependencies": {
     "@akveo/ng2-completer": "^9.0.1",

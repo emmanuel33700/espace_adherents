@@ -5,8 +5,8 @@
  */
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AuthentificationService} from '../../../api/generated/services/authentification.service';
-import {Validation} from '../../../api/generated/models/validation';
+import {AuthentificationService} from '../../../api/generated/authorization/services/authentification.service';
+import {Validation} from '../../../api/generated/authorization/models/validation';
 
 
 @Component({

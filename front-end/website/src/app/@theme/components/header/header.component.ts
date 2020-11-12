@@ -6,8 +6,8 @@ import { LayoutService } from '../../../@core/utils';
 import {map, switchMap, takeUntil} from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import {Router} from '@angular/router';
-import {AdherentService} from '../../../../api/generated/services/adherent.service';
-import {Adherent} from '../../../../api/generated/models/adherent';
+import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
+import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 import {NbAuthService, NbAuthToken} from '@nebular/auth';
 
 @Component({

@@ -277,7 +277,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-  /authentification/{login}/roles:
+  /authentification/{idadh}/roles:
     put:
       tags:
       - Roles
@@ -287,14 +287,13 @@ paths:
       security: 
         - oAuth: [ress-autorization-admin]
       parameters:
-      - name: login
+      - name: idadh
         in: path
-        description: login de la personne
+        description: id de la personne à modifier
         required: true
         schema:
-          type: string
-          maxLength: 50
-          minLength: 3
+          type: integer
+          format: int64
       requestBody:
         description: mise à jour de l'objet role
         content:
@@ -305,6 +304,47 @@ paths:
       responses:
         200:
           description: Operation réussie
+        404:
+          description: login non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        403:
+          description: Droit insufisant 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    get:
+      tags:
+      - Roles
+      summary: Recuperer les roles d'une personne
+      description: Recuperer les roles d'une personne
+      operationId: getRoles
+      security: 
+        - oAuth: [ress-autorization-admin]
+      parameters:
+      - name: idadh
+        in: path
+        description: id de la personne à modifier
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Roles'
         404:
           description: login non trouvée
           content:

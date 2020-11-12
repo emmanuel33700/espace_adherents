@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {Adherent} from '../../../../api/generated/models/adherent';
-import {ListingAdherentService} from '../../../../api/generated/services/listing-adherent.service';
+import {Adherent} from '../../../../api/generated/adherents/models/adherent';
+import {ListingAdherentService} from '../../../../api/generated/adherents/services/listing-adherent.service';
 
 @Component({
   selector: 'ngx-list',

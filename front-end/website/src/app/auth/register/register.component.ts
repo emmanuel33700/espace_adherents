@@ -9,8 +9,8 @@ import { getDeepFromObject } from '../../../framework/auth/helpers';
 import {
   NB_AUTH_OPTIONS,
 } from '@nebular/auth';
-import {AuthentificationService} from '../../../api/generated/services/authentification.service';
-import {Authentification} from '../../../api/generated/models/authentification';
+import {AuthentificationService} from '../../../api/generated/authorization/services/authentification.service';
+import {Authentification} from '../../../api/generated/authorization/models/authentification';
 
 
 @Component({

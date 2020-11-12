@@ -16,7 +16,6 @@ import { VerifyRoutingModule } from './verify-routing.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import {ApiModule} from '../../../api/generated/api.module';
 
 
 
@@ -25,10 +24,6 @@ import {ApiModule} from '../../../api/generated/api.module';
     CommonModule,
     FormsModule,
     HttpClientModule,
-
-
-    ApiModule.forRoot({ rootUrl: 'https://api.jalle-astro.fr/resource-authorization' }),
-
     ThemeModule,
     NbMenuModule,
     NbLayoutModule,

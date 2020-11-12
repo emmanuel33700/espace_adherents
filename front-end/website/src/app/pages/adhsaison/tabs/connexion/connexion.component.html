@@ -1,25 +1,93 @@
-<form>
+
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-header>Modifier information adhérent</nb-card-header>
+      <nb-card-body>
+
+        <nb-alert *ngIf="errors?.length" outline="danger" role="alert">
+          <p class="alert-title"><b>Erreur</b></p>
+          <ul class="alert-message-list">
+            <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
+            showMessages
+          </ul>
+        </nb-alert>
+
+        <nb-alert *ngIf="messages?.length" outline="success" role="alert">
+          <p class="alert-title"><b>Hooray!</b></p>
+          <ul class="alert-message-list">
+            <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
+          </ul>
+        </nb-alert>
+
+
+        <form
+          (ngSubmit)="submit(form)"
+          #form="ngForm"
+        >
+
 
           <div class="form-group row">
-            <label for="inputLogin" class="label col-sm-3 col-form-label">Login</label>
+            <label for="input-email" class="label col-sm-3 col-form-label">Adresse mail</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="inputLogin" placeholder="nom.prenom@gmail.com">
+              <input nbInput
+                     [(ngModel)]="user.email"
+                     #email="ngModel"
+                     id="input-email"
+                     name="email"
+                     pattern=".+@.+..+"
+                     placeholder="nom.prenom@fai.com"
+                     fullWidth
+                     [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="true"
+                     [minlength]="5"
+                     [maxlength]="40"
+                     [attr.aria-invalid]="email.invalid && email.touched ? true : null">
+              <ng-container *ngIf="email.invalid && email.touched">
+                <p class="caption status-danger" *ngIf="email.errors?.required">
+                  Email est nécésaire
+                </p>
+                <p class="caption status-danger" *ngIf="email.errors?.pattern">
+                  Erreur dans le format
+                </p>
+                <p class="caption status-danger" *ngIf="email.errors?.minlength || email.errors?.maxlength">
+                  Le mail doit entre compris entre 5 et 40 caracteres
+                </p>
+              </ng-container>
             </div>
           </div>
 
-
-        <div class="form-group row">
-          <label class="col-sm-3 label">Droits</label>
-          <div class="col-sm-9">
-            <nb-radio-group>
-              <nb-radio>Adhérent</nb-radio>
-              <nb-radio>Conseil administration</nb-radio>
-              <nb-radio >Administrateur</nb-radio>
-            </nb-radio-group>
+          <div class="form-group row">
+            <label for="input-civilite" class="label col-sm-3 col-form-label">Civilité</label>
+            <div class="col-sm-9">
+              <nb-radio-group
+                [(ngModel)]="user.role"
+                id="input-role"
+                name="role"
+                fullWidth
+              >
+                <nb-radio value="ADHERENT">Adhérent</nb-radio>
+                <nb-radio value="CONSEIL">Conseil administration</nb-radio>
+                <nb-radio value="BUREAU">Bureau</nb-radio>
+                <nb-radio value="ADMIN">Administrateur</nb-radio>
+              </nb-radio-group>
+            </div>
           </div>
-        </div>
+
+          <button nbButton
+                  fullWidth
+                  status="success"
+                  [disabled]="submitted || !form.valid"
+                  [class.btn-pulse]="submitted">
+            Valider
+          </button>
+
+        </form>
 
 
-        <button type="submit" nbButton>Valider</button>
-</form>
+      </nb-card-body>
+    </nb-card>
 
+
+  </div>
+</div>

@@ -2,100 +2,269 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card>
-      <nb-card-header>Modifier mon profile</nb-card-header>
+      <nb-card-header>Modifier mon profil</nb-card-header>
       <nb-card-body>
+
+        <nb-alert *ngIf="errors?.length" outline="danger" role="alert">
+          <p class="alert-title"><b>Erreur</b></p>
+          <ul class="alert-message-list">
+            <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
+            showMessages
+          </ul>
+        </nb-alert>
+
+        <nb-alert *ngIf="messages?.length" outline="success" role="alert">
+          <p class="alert-title"><b>Hooray!</b></p>
+          <ul class="alert-message-list">
+            <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
+          </ul>
+        </nb-alert>
+
+
         <form
-          *ngIf="adherent"
-          [formGroup]="form"
-          (ngSubmit)="submit()"
+          (ngSubmit)="submit(form)"
+          #form="ngForm"
         >
 
           <div class="form-group row">
-            <label for="civilite" class="label col-sm-3 col-form-label">Civilité</label>
+            <label for="input-civilite" class="label col-sm-3 col-form-label">Civilité</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="civilite"  formControlName="civilite"  placeholder="Civilité">
+              <nb-select
+                [(ngModel)]="user.civilite"
+                id="input-civilite"
+                name="civilite"
+                fullWidth
+                placeholder="Civilité">
+                <nb-option value="Mr">Monsieur</nb-option>
+                <nb-option value="Mme">Madame</nb-option>
+              </nb-select>
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="nom" class="label col-sm-3 col-form-label">Nom</label>
+            <label for="input-nom" class="label col-sm-3 col-form-label">Nom</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="nom"  formControlName="nom"  placeholder="Nom">
+              <input nbInput
+                     [(ngModel)]="user.nom"
+                     #nom="ngModel"
+                     id="input-nom"
+                     name="nom"
+                     placeholder="Votre nom"
+                     autofocus
+                     fullWidth
+                     [status]="nom.dirty ? (nom.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="true"
+                     [minlength]="3"
+                     [maxlength]="20"
+                     [attr.aria-invalid]="nom.invalid && nom.touched ? true : null">
+              <ng-container *ngIf="nom.invalid && nom.touched">
+                <p class="caption status-danger" *ngIf="nom.errors?.required">
+                  Le nom est nécésaire
+                </p>
+                <p class="caption status-danger" *ngIf="nom.errors?.minlength || nom.errors?.maxlength">
+                  Le nom doit entre compris entre 3 et 20 caracteres
+                </p>
+              </ng-container>
             </div>
           </div>
 
           <div class="form-group row">
-            <label for="prenom" class="label col-sm-3 col-form-label">Prénom</label>
+            <label for="input-prenom" class="label col-sm-3 col-form-label">Prénom</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="prenom" formControlName="prenom" placeholder="Prénom">
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label for="email" class="label col-sm-3 col-form-label">Adresse mail</label>
-            <div class="col-sm-9">
-              <input type="mail" nbInput fullWidth id="email" formControlName="email"  placeholder="nom.prenom@fai.fr">
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label for="adresse1" class="label col-sm-3 col-form-label">Adresse 1</label>
-            <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="adresse1" formControlName="adresse1" placeholder="Adresse 1">
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label for="adresse2" class="label col-sm-3 col-form-label">Adresse 2</label>
-            <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="adresse2"  formControlName="adresse2" placeholder="Résidence des étoiles">
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label for="ville" class="label col-sm-3 col-form-label">Ville</label>
-            <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="ville" formControlName="ville" placeholder="Martignas">
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label for="telPortable" class="label col-sm-3 col-form-label">Téléphone Postable</label>
-            <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="telPortable" formControlName="telPortable" placeholder="06 81 81 81 81">
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label for="telMaison" class="label col-sm-3 col-form-label">Téléphone Fixe</label>
-            <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="telMaison" formControlName="telMaison" placeholder="06 81 81 81 81">
-            </div>
-          </div>
-
-          <div class="form-group row">
-            <label for="dateNaissance" class="label col-sm-3 col-form-label">Date de naissance</label>
-            <div class="col-sm-9">
-              <input nbInput placeholder="01/01/2011" [nbDatepicker]="formpicker" id="dateNaissance" formControlName="dateNaissance" >
-              <nb-datepicker #formpicker></nb-datepicker>
+              <input nbInput
+                     [(ngModel)]="user.prenom"
+                     #prenom="ngModel"
+                     id="input-prenom"
+                     name="prenom"
+                     placeholder="Le prénom"
+                     fullWidth
+                     [status]="prenom.dirty ? (prenom.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="true"
+                     [minlength]="3"
+                     [maxlength]="20"
+                     [attr.aria-invalid]="prenom.invalid && prenom.touched ? true : null">
+              <ng-container *ngIf="prenom.invalid && prenom.touched">
+                <p class="caption status-danger" *ngIf="prenom.errors?.required">
+                  Le prenom est nécésaire
+                </p>
+                <p class="caption status-danger" *ngIf="prenom.errors?.minlength || prenom.errors?.maxlength">
+                  Le prenom doit entre compris entre 3 et 20 caracteres
+                </p>
+              </ng-container>
             </div>
           </div>
 
 
           <div class="form-group row">
-            <label for="commentaire" class="label col-sm-3 col-form-label">Commentaire</label>
+            <label for="input-adresse1" class="label col-sm-3 col-form-label">Adresse 1</label>
             <div class="col-sm-9">
-              <input type="text" nbInput fullWidth id="commentaire" formControlName="commentaire" placeholder="Un commentaire...">
+              <input nbInput
+                     [(ngModel)]="user.adresse1"
+                     #adresse1="ngModel"
+                     id="input-adresse1"
+                     name="adresse1"
+                     placeholder="6 allée des grives"
+                     fullWidth
+                     [status]="adresse1.dirty ? (adresse1.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="true"
+                     [minlength]="3"
+                     [maxlength]="37"
+                     [attr.aria-invalid]="adresse1.invalid && adresse1.touched ? true : null">
+              <ng-container *ngIf="adresse1.invalid && adresse1.touched">
+                <p class="caption status-danger" *ngIf="adresse1.errors?.required">
+                  Adresse necesaire
+                </p>
+                <p class="caption status-danger" *ngIf="adresse1.errors?.minlength || adresse1.errors?.maxlength">
+                  Adresse doit entre comprise entre 3 et 37 caracteres
+                </p>
+              </ng-container>
             </div>
           </div>
 
-          <button type="submit" nbButton>Valider</button>
+          <div class="form-group row">
+            <label for="input-adresse2" class="label col-sm-3 col-form-label">Adresse 2</label>
+            <div class="col-sm-9">
+              <input nbInput
+                     [(ngModel)]="user.adresse2"
+                     #adresse2="ngModel"
+                     id="input-adresse2"
+                     name="adresse2"
+                     placeholder="Complèment d'adresse"
+                     fullWidth
+                     [status]="adresse2.dirty ? (adresse2.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="false"
+                     [minlength]="3"
+                     [maxlength]="37"
+                     [attr.aria-invalid]="adresse2.invalid && adresse2.touched ? true : null">
+              <ng-container *ngIf="adresse2.invalid && adresse2.touched">
+                <p class="caption status-danger" *ngIf="adresse2.errors?.minlength || adresse2.errors?.maxlength">
+                  Adresse doit entre comprise entre 3 et 37 caracteres
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="input-ville" class="label col-sm-3 col-form-label">Ville</label>
+            <div class="col-sm-9">
+              <input nbInput
+                     [(ngModel)]="user.ville"
+                     #ville="ngModel"
+                     id="input-ville"
+                     name="ville"
+                     placeholder="Martignas"
+                     fullWidth
+                     [status]="ville.dirty ? (ville.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="true"
+                     [minlength]="3"
+                     [maxlength]="50"
+                     [attr.aria-invalid]="ville.invalid && ville.touched ? true : null">
+              <ng-container *ngIf="ville.invalid && ville.touched">
+                <p class="caption status-danger" *ngIf="ville.errors?.required">
+                  Ville necesaire
+                </p>
+                <p class="caption status-danger" *ngIf="ville.errors?.minlength || ville.errors?.maxlength">
+                  Ville doit entre comprise entre 3 et 50 caracteres
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="input-telPortable" class="label col-sm-3 col-form-label">Téléphone Portable</label>
+            <div class="col-sm-9">
+              <input nbInput
+                     [(ngModel)]="user.telPortable"
+                     #telPortable="ngModel"
+                     id="input-telPortable"
+                     name="telPortable"
+                     placeholder="0606060606"
+                     fullWidth
+                     [status]="telPortable.dirty ? (telPortable.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="false"
+                     [minlength]="10"
+                     [maxlength]="10"
+                     [attr.aria-invalid]="telPortable.invalid && telPortable.touched ? true : null">
+              <ng-container *ngIf="telPortable.invalid && telPortable.touched">
+                <p class="caption status-danger" *ngIf="ville.errors?.minlength || ville.errors?.maxlength">
+                  Le tel doit avoir 10 caracteres
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="input-telFixe" class="label col-sm-3 col-form-label">Téléphone Fixe</label>
+            <div class="col-sm-9">
+              <input nbInput
+                     [(ngModel)]="user.telFixe"
+                     #telFixe="ngModel"
+                     id="input-telFixe"
+                     name="telFixe"
+                     placeholder="0506060606"
+                     fullWidth
+                     [status]="telFixe.dirty ? (telFixe.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="false"
+                     [minlength]="10"
+                     [maxlength]="10"
+                     [attr.aria-invalid]="telFixe.invalid && telFixe.touched ? true : null">
+              <ng-container *ngIf="telFixe.invalid && telFixe.touched">
+                <p class="caption status-danger" *ngIf="ville.errors?.minlength || ville.errors?.maxlength">
+                  Le tel doit avoir 10 caracteres
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="input-dateNaissance" class="label col-sm-3 col-form-label">Date de naissance</label>
+            <div class="col-sm-9">
+              <input nbInput
+                     [(ngModel)]="user.dateNaissance"
+                     #dateNaissance="ngModel"
+                     id="input-dateNaissance"
+                     name="dateNaissance"
+                     placeholder="17/02/2000"
+                     fullWidth
+                     [status]="dateNaissance.dirty ? (dateNaissance.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="false"
+                     [minlength]="10"
+                     [maxlength]="10"
+                     [attr.aria-invalid]="dateNaissance.invalid && dateNaissance.touched ? true : null">
+              <ng-container *ngIf="dateNaissance.invalid && dateNaissance.touched">
+                <p class="caption status-danger" *ngIf="dateNaissance.errors?.minlength || dateNaissance.errors?.maxlength">
+                  Le date doit avoir 10 caracteres
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+
+
+          <div class="form-group row">
+            <label for="input-accordmail" class="label col-sm-3 col-form-label">Donne accord pour envoyer des emails</label>
+            <nb-checkbox name="accordmail" id="input-accordmail" [(ngModel)]="user.accordmail" [required]="false">
+              Accord
+            </nb-checkbox>
+          </div>
+
+          <div class="form-group row">
+            <label for="input-publicContact" class="label col-sm-3 col-form-label">Donne accord pour apparaitre pour apparaitre sur le site</label>
+            <nb-checkbox name="publicContact" id="input-publicContact" [(ngModel)]="user.publicContact" [required]="false">
+              Accord
+            </nb-checkbox>
+          </div>
+
+          <button nbButton
+                  fullWidth
+                  status="success"
+                  [disabled]="submitted || !form.valid"
+                  [class.btn-pulse]="submitted">
+            Valider
+          </button>
 
         </form>
 
-        <ng-template #loading>
-          Loading User...
-        </ng-template>
 
       </nb-card-body>
     </nb-card>

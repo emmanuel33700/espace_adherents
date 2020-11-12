@@ -19,8 +19,6 @@ import { HttpClientModule } from '@angular/common/http';
 import {
   NbAuthModule,
 } from '@nebular/auth';
-import {ApiModule} from '../../../api/generated/api.module';
-
 
 
 @NgModule({
@@ -42,7 +40,6 @@ import {ApiModule} from '../../../api/generated/api.module';
         },
       },
     }),
-    ApiModule.forRoot({ rootUrl: 'https://api.jalle-astro.fr/resource-authorization' }),
 
     ThemeModule,
     NbMenuModule,

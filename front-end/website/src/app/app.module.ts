@@ -21,6 +21,8 @@ import {
   NbWindowModule,
 } from '@nebular/theme';
 import {TokenInterceptor} from './@core/utils/token.interceptor';
+import {ApiModule as ApiModuleAdherents} from '../api/generated/adherents/api.module';
+import {ApiModule as ApiModuleAuthorization} from '../api/generated/authorization/api.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -40,6 +42,8 @@ import {TokenInterceptor} from './@core/utils/token.interceptor';
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
+    ApiModuleAdherents.forRoot({ rootUrl: 'https://api.jalle-astro.fr/resource-adherents' }),
+    ApiModuleAuthorization.forRoot({ rootUrl: 'https://api.jalle-astro.fr/resource-authorization' }),
   ],
   bootstrap: [AppComponent],
   providers: [

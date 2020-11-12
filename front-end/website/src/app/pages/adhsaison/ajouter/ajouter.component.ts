@@ -1,7 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostBinding, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, NgForm} from '@angular/forms';
-import {Adherent} from '../../../../api/generated/models/adherent';
-import {AdherentService} from '../../../../api/generated/services/adherent.service';
+import {Adherent} from '../../../../api/generated/adherents/models/adherent';
+import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
+import { NbToastrService } from '@nebular/theme';
+import {LoggerService} from '../../../@core/utils/logger.service';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -18,9 +20,17 @@ export class AjouterComponent implements OnInit {
 
   user: any = {};
 
+  // Toaster
+  private index: number = 0;
+  @HostBinding('class')
+  classes = 'example-items-rows';
+  // fin toaster
+
   constructor(
     private formBuilder: FormBuilder,
     private adherentService: AdherentService,
+    private toastrService: NbToastrService,
+    private loggerService: LoggerService,
     ) {}
 
   ngOnInit(): void {
@@ -59,15 +69,20 @@ export class AjouterComponent implements OnInit {
     this.adherentService.ajoutAdherent({body: this.adherent})
       .subscribe(
         (data) => {
-          console.info(data);
+          this.loggerService.info(JSON.stringify(data));
         },
         (error) => {
-          console.error(error);
-          this.errors = ['Error lors de enregistrement'];
+          this.loggerService.error(JSON.stringify(error));
+          this.toastrService.danger(
+            'Erreur technique lors de enregistrement',
+            'Erreur ');
           this.submitted = false;
         },
         () => {
-          this.messages = ['Enregistrement fini'];
+          this.loggerService.info('Enregistrement fini');
+          this.toastrService.success(
+            'Mise à jour finalisée',
+            'Opértation réussit');
           form.resetForm();
           this.submitted = false;
         },

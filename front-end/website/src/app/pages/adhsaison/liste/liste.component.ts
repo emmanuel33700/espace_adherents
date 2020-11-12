@@ -1,10 +1,10 @@
 import {Component, NgModule, OnInit} from '@angular/core';
 import { Routes, Router, RouterModule } from '@angular/router';
-import {ListingAdherentService} from '../../../../api/generated/services/listing-adherent.service';
-
+import {ListingAdherentService} from '../../../../api/generated/adherents/services/listing-adherent.service';
+import {LoggerService} from '../../../@core/utils/logger.service';
 
 import {  TabsComponent } from '../tabs/tabs.component';
-import {Adherent} from '../../../../api/generated/models';
+import {Adherent} from '../../../../api/generated/adherents/models';
 
 export const routes: Routes = [{
   path: 'tabs',
@@ -30,6 +30,7 @@ export class ListeComponent implements OnInit {
   constructor(
     private listingAdherentService: ListingAdherentService,
     private router: Router,
+    private loggerService: LoggerService,
   ) {}
 
 
@@ -39,13 +40,13 @@ export class ListeComponent implements OnInit {
       .subscribe(
         (data) => {
           this.adherents = data;
-          console.info(data);
+          this.loggerService.info(JSON.stringify(data));
         },
         (error) => {
-          console.error(error);
+          this.loggerService.error(error);
         },
         () => {
-          console.info('fini');
+          this.loggerService.debug('fini');
         });
   }
 
