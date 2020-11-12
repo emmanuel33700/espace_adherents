@@ -1,0 +1,52 @@
+import { __decorate } from "tslib";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Ng2CompleterModule } from '@akveo/ng2-completer';
+import { CellComponent } from './cell.component';
+import { CustomEditComponent } from './cell-edit-mode/custom-edit.component';
+import { DefaultEditComponent } from './cell-edit-mode/default-edit.component';
+import { EditCellComponent } from './cell-edit-mode/edit-cell.component';
+import { CheckboxEditorComponent } from './cell-editors/checkbox-editor.component';
+import { CompleterEditorComponent } from './cell-editors/completer-editor.component';
+import { InputEditorComponent } from './cell-editors/input-editor.component';
+import { SelectEditorComponent } from './cell-editors/select-editor.component';
+import { TextareaEditorComponent } from './cell-editors/textarea-editor.component';
+import { CustomViewComponent } from './cell-view-mode/custom-view.component';
+import { ViewCellComponent } from './cell-view-mode/view-cell.component';
+import { EditCellDefault } from './cell-edit-mode/edit-cell-default';
+import { DefaultEditor } from './cell-editors/default-editor';
+const CELL_COMPONENTS = [
+    CellComponent,
+    EditCellDefault,
+    DefaultEditor,
+    CustomEditComponent,
+    DefaultEditComponent,
+    EditCellComponent,
+    CheckboxEditorComponent,
+    CompleterEditorComponent,
+    InputEditorComponent,
+    SelectEditorComponent,
+    TextareaEditorComponent,
+    CustomViewComponent,
+    ViewCellComponent,
+];
+let CellModule = class CellModule {
+};
+CellModule = __decorate([
+    NgModule({
+        imports: [
+            CommonModule,
+            FormsModule,
+            Ng2CompleterModule,
+        ],
+        declarations: [
+            ...CELL_COMPONENTS,
+        ],
+        exports: [
+            ...CELL_COMPONENTS,
+        ],
+    })
+], CellModule);
+export { CellModule };
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY2VsbC5tb2R1bGUuanMiLCJzb3VyY2VSb290Ijoibmc6Ly9uZzItc21hcnQtdGFibGUvIiwic291cmNlcyI6WyJsaWIvY29tcG9uZW50cy9jZWxsL2NlbGwubW9kdWxlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7QUFBQSxPQUFPLEVBQUUsUUFBUSxFQUFFLE1BQU0sZUFBZSxDQUFDO0FBQ3pDLE9BQU8sRUFBRSxZQUFZLEVBQUUsTUFBTSxpQkFBaUIsQ0FBQztBQUMvQyxPQUFPLEVBQUUsV0FBVyxFQUFFLE1BQU0sZ0JBQWdCLENBQUM7QUFDN0MsT0FBTyxFQUFFLGtCQUFrQixFQUFFLE1BQU0sc0JBQXNCLENBQUM7QUFFMUQsT0FBTyxFQUFFLGFBQWEsRUFBRSxNQUFNLGtCQUFrQixDQUFDO0FBQ2pELE9BQU8sRUFBRSxtQkFBbUIsRUFBRSxNQUFNLHdDQUF3QyxDQUFDO0FBQzdFLE9BQU8sRUFBRSxvQkFBb0IsRUFBRSxNQUFNLHlDQUF5QyxDQUFDO0FBQy9FLE9BQU8sRUFBRSxpQkFBaUIsRUFBRSxNQUFNLHNDQUFzQyxDQUFDO0FBQ3pFLE9BQU8sRUFBRSx1QkFBdUIsRUFBRSxNQUFNLDBDQUEwQyxDQUFDO0FBQ25GLE9BQU8sRUFBRSx3QkFBd0IsRUFBRSxNQUFNLDJDQUEyQyxDQUFDO0FBQ3JGLE9BQU8sRUFBRSxvQkFBb0IsRUFBRSxNQUFNLHVDQUF1QyxDQUFDO0FBQzdFLE9BQU8sRUFBRSxxQkFBcUIsRUFBRSxNQUFNLHdDQUF3QyxDQUFDO0FBQy9FLE9BQU8sRUFBRSx1QkFBdUIsRUFBRSxNQUFNLDBDQUEwQyxDQUFDO0FBQ25GLE9BQU8sRUFBRSxtQkFBbUIsRUFBRSxNQUFNLHdDQUF3QyxDQUFDO0FBQzdFLE9BQU8sRUFBRSxpQkFBaUIsRUFBRSxNQUFNLHNDQUFzQyxDQUFDO0FBQ3pFLE9BQU8sRUFBRSxlQUFlLEVBQUUsTUFBTSxvQ0FBb0MsQ0FBQztBQUNyRSxPQUFPLEVBQUUsYUFBYSxFQUFFLE1BQU0sK0JBQStCLENBQUM7QUFFOUQsTUFBTSxlQUFlLEdBQUc7SUFDdEIsYUFBYTtJQUNiLGVBQWU7SUFDZixhQUFhO0lBQ2IsbUJBQW1CO0lBQ25CLG9CQUFvQjtJQUNwQixpQkFBaUI7SUFDakIsdUJBQXVCO0lBQ3ZCLHdCQUF3QjtJQUN4QixvQkFBb0I7SUFDcEIscUJBQXFCO0lBQ3JCLHVCQUF1QjtJQUN2QixtQkFBbUI7SUFDbkIsaUJBQWlCO0NBQ2xCLENBQUM7QUFlRixJQUFhLFVBQVUsR0FBdkIsTUFBYSxVQUFVO0NBQUksQ0FBQTtBQUFkLFVBQVU7SUFidEIsUUFBUSxDQUFDO1FBQ1IsT0FBTyxFQUFFO1lBQ1AsWUFBWTtZQUNaLFdBQVc7WUFDWCxrQkFBa0I7U0FDbkI7UUFDRCxZQUFZLEVBQUU7WUFDWixHQUFHLGVBQWU7U0FDbkI7UUFDRCxPQUFPLEVBQUU7WUFDUCxHQUFHLGVBQWU7U0FDbkI7S0FDRixDQUFDO0dBQ1csVUFBVSxDQUFJO1NBQWQsVUFBVSIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IE5nTW9kdWxlIH0gZnJvbSAnQGFuZ3VsYXIvY29yZSc7XG5pbXBvcnQgeyBDb21tb25Nb2R1bGUgfSBmcm9tICdAYW5ndWxhci9jb21tb24nO1xuaW1wb3J0IHsgRm9ybXNNb2R1bGUgfSBmcm9tICdAYW5ndWxhci9mb3Jtcyc7XG5pbXBvcnQgeyBOZzJDb21wbGV0ZXJNb2R1bGUgfSBmcm9tICdAYWt2ZW8vbmcyLWNvbXBsZXRlcic7XG5cbmltcG9ydCB7IENlbGxDb21wb25lbnQgfSBmcm9tICcuL2NlbGwuY29tcG9uZW50JztcbmltcG9ydCB7IEN1c3RvbUVkaXRDb21wb25lbnQgfSBmcm9tICcuL2NlbGwtZWRpdC1tb2RlL2N1c3RvbS1lZGl0LmNvbXBvbmVudCc7XG5pbXBvcnQgeyBEZWZhdWx0RWRpdENvbXBvbmVudCB9IGZyb20gJy4vY2VsbC1lZGl0LW1vZGUvZGVmYXVsdC1lZGl0LmNvbXBvbmVudCc7XG5pbXBvcnQgeyBFZGl0Q2VsbENvbXBvbmVudCB9IGZyb20gJy4vY2VsbC1lZGl0LW1vZGUvZWRpdC1jZWxsLmNvbXBvbmVudCc7XG5pbXBvcnQgeyBDaGVja2JveEVkaXRvckNvbXBvbmVudCB9IGZyb20gJy4vY2VsbC1lZGl0b3JzL2NoZWNrYm94LWVkaXRvci5jb21wb25lbnQnO1xuaW1wb3J0IHsgQ29tcGxldGVyRWRpdG9yQ29tcG9uZW50IH0gZnJvbSAnLi9jZWxsLWVkaXRvcnMvY29tcGxldGVyLWVkaXRvci5jb21wb25lbnQnO1xuaW1wb3J0IHsgSW5wdXRFZGl0b3JDb21wb25lbnQgfSBmcm9tICcuL2NlbGwtZWRpdG9ycy9pbnB1dC1lZGl0b3IuY29tcG9uZW50JztcbmltcG9ydCB7IFNlbGVjdEVkaXRvckNvbXBvbmVudCB9IGZyb20gJy4vY2VsbC1lZGl0b3JzL3NlbGVjdC1lZGl0b3IuY29tcG9uZW50JztcbmltcG9ydCB7IFRleHRhcmVhRWRpdG9yQ29tcG9uZW50IH0gZnJvbSAnLi9jZWxsLWVkaXRvcnMvdGV4dGFyZWEtZWRpdG9yLmNvbXBvbmVudCc7XG5pbXBvcnQgeyBDdXN0b21WaWV3Q29tcG9uZW50IH0gZnJvbSAnLi9jZWxsLXZpZXctbW9kZS9jdXN0b20tdmlldy5jb21wb25lbnQnO1xuaW1wb3J0IHsgVmlld0NlbGxDb21wb25lbnQgfSBmcm9tICcuL2NlbGwtdmlldy1tb2RlL3ZpZXctY2VsbC5jb21wb25lbnQnO1xuaW1wb3J0IHsgRWRpdENlbGxEZWZhdWx0IH0gZnJvbSAnLi9jZWxsLWVkaXQtbW9kZS9lZGl0LWNlbGwtZGVmYXVsdCc7XG5pbXBvcnQgeyBEZWZhdWx0RWRpdG9yIH0gZnJvbSAnLi9jZWxsLWVkaXRvcnMvZGVmYXVsdC1lZGl0b3InO1xuXG5jb25zdCBDRUxMX0NPTVBPTkVOVFMgPSBbXG4gIENlbGxDb21wb25lbnQsXG4gIEVkaXRDZWxsRGVmYXVsdCxcbiAgRGVmYXVsdEVkaXRvcixcbiAgQ3VzdG9tRWRpdENvbXBvbmVudCxcbiAgRGVmYXVsdEVkaXRDb21wb25lbnQsXG4gIEVkaXRDZWxsQ29tcG9uZW50LFxuICBDaGVja2JveEVkaXRvckNvbXBvbmVudCxcbiAgQ29tcGxldGVyRWRpdG9yQ29tcG9uZW50LFxuICBJbnB1dEVkaXRvckNvbXBvbmVudCxcbiAgU2VsZWN0RWRpdG9yQ29tcG9uZW50LFxuICBUZXh0YXJlYUVkaXRvckNvbXBvbmVudCxcbiAgQ3VzdG9tVmlld0NvbXBvbmVudCxcbiAgVmlld0NlbGxDb21wb25lbnQsXG5dO1xuXG5ATmdNb2R1bGUoe1xuICBpbXBvcnRzOiBbXG4gICAgQ29tbW9uTW9kdWxlLFxuICAgIEZvcm1zTW9kdWxlLFxuICAgIE5nMkNvbXBsZXRlck1vZHVsZSxcbiAgXSxcbiAgZGVjbGFyYXRpb25zOiBbXG4gICAgLi4uQ0VMTF9DT01QT05FTlRTLFxuICBdLFxuICBleHBvcnRzOiBbXG4gICAgLi4uQ0VMTF9DT01QT05FTlRTLFxuICBdLFxufSlcbmV4cG9ydCBjbGFzcyBDZWxsTW9kdWxlIHsgfVxuIl19
