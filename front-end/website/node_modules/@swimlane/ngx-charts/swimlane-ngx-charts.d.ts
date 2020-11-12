@@ -1,8 +1,0 @@
-/**
- * Generated bundle index. Do not edit.
- */
-export * from './public-api';
-export { InjectionRegisteryService as ɵa } from './lib/common/tooltip/injection-registery.service';
-export { InjectionService as ɵb } from './lib/common/tooltip/injection.service';
-
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic3dpbWxhbmUtbmd4LWNoYXJ0cy5kLnRzIiwic291cmNlcyI6WyJzd2ltbGFuZS1uZ3gtY2hhcnRzLmQudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIEdlbmVyYXRlZCBidW5kbGUgaW5kZXguIERvIG5vdCBlZGl0LlxuICovXG5leHBvcnQgKiBmcm9tICcuL3B1YmxpYy1hcGknO1xuZXhwb3J0IHsgSW5qZWN0aW9uUmVnaXN0ZXJ5U2VydmljZSBhcyDJtWEgfSBmcm9tICcuL2xpYi9jb21tb24vdG9vbHRpcC9pbmplY3Rpb24tcmVnaXN0ZXJ5LnNlcnZpY2UnO1xuZXhwb3J0IHsgSW5qZWN0aW9uU2VydmljZSBhcyDJtWIgfSBmcm9tICcuL2xpYi9jb21tb24vdG9vbHRpcC9pbmplY3Rpb24uc2VydmljZSc7XG4iXX0=
