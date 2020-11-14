@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * ListeAdherents
+ * ListeAdhesions
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
 
 
-public class ListeAdherents extends ArrayList<Adherent>  {
+public class ListeAdhesions extends ArrayList<Adhesion>  {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -32,7 +32,7 @@ public class ListeAdherents extends ArrayList<Adherent>  {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class ListeAdherents {\n");
+    sb.append("class ListeAdhesions {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();

@@ -1,44 +1,36 @@
-/*
- * Copyright (C) 2019 emmanuel33700 https://github.com/emmanuel33700/espace_adherents
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package fr.espaceadh.adherents.controller;
 
 import fr.espaceadh.adherents.model.Adherent;
+import fr.espaceadh.adherents.model.Adhesion;
+import fr.espaceadh.adherents.model.ListeAdherents;
+import fr.espaceadh.adherents.model.ListeAdhesions;
+import fr.espaceadh.adherents.model.ListeManifestations;
+import fr.espaceadh.adherents.model.ListeParticipationCommunication;
+import fr.espaceadh.adherents.model.ParticipationManifestation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
-import fr.espaceadh.adherents.model.ListeAdherents;
 import fr.espaceadh.adherents.service.AdherentService;
-import io.swagger.annotations.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
+import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-08-16T13:27:11.143Z[GMT]")
+import org.springframework.stereotype.Controller;
+
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
 @Controller
 public class AdherentApiController implements AdherentApi {
 
@@ -76,7 +68,26 @@ public class AdherentApiController implements AdherentApi {
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
 
     }
-    
+
+    public ResponseEntity<Void> ajoutAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "Objet adhesion", required=true, schema=@Schema()) @Valid @RequestBody Adhesion body) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    public ResponseEntity<Void> ajoutManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id l'adherent à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    public ResponseEntity<Void> deleteAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à supprimer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    public ResponseEntity<Void> deleteManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de la manifestation à supprimer", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
 
     /**
      * Supprimer un adhérent
@@ -88,6 +99,11 @@ public class AdherentApiController implements AdherentApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    /**
+     * recuperer un adherent
+     * @param idadh
+     * @return 
+     */
     public ResponseEntity<Adherent> getAdherent(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {       
         
         AdherentDto dto = this.adherentService.recupererAdherent(idadh);
@@ -100,14 +116,116 @@ public class AdherentApiController implements AdherentApi {
         return new ResponseEntity<>(adh,HttpStatus.OK);
     }
 
+    public ResponseEntity<Adhesion> getAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à recuperer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                return new ResponseEntity<Adhesion>(objectMapper.readValue("{\n  \"comptaSomme\" : 45,\n  \"espace\" : false,\n  \"idAdherent\" : 1,\n  \"idTypeAdhesion\" : 0,\n  \"comptaNumCheque\" : \"15gg778\",\n  \"cheque\" : true,\n  \"idAnneeAdhesion\" : 1,\n  \"id\" : 1,\n  \"comptaBanque\" : \"Credit agricole\"\n}", Adhesion.class), HttpStatus.NOT_IMPLEMENTED);
+            } catch (IOException e) {
+                log.error("Couldn't serialize response for content type application/json", e);
+                return new ResponseEntity<Adhesion>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        return new ResponseEntity<Adhesion>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
     /**
-     * Mise à jour d'un adhérents
-     * @param body
-     * @param idadh
+     * Recuperer l'ensemble des adherents
      * @return 
      */
-    public ResponseEntity<Void> updateUser(@ApiParam(value = "mise à jour de la personne" ,required=true )  @Valid @RequestBody Adherent body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {        
+    public ResponseEntity<ListeAdherents> getListeAdherents() {
+        String accept = request.getHeader("Accept");
+        ListeAdherents lstAdh =  new ListeAdherents();
+        
+        
+        Collection<AdherentDto> lstAdherentDto =  this.adherentService.recupererListeCompletAdherent();
+        
+        for (AdherentDto adhDto : lstAdherentDto){
+            lstAdh.add(this.translateDto(adhDto));
+        }
+        
+        return new ResponseEntity<>(lstAdh,HttpStatus.OK);
 
+    }
+
+    /**
+     * recuperer les adherents de la saison
+     * @return 
+     */
+    public ResponseEntity<ListeAdherents> getListeAdherentsSaison() {
+        String accept = request.getHeader("Accept");
+        ListeAdherents lstAdh =  new ListeAdherents();
+        
+        
+        Collection<AdherentDto> lstAdherentDto =  this.adherentService.recupererListeAdherentSaison();
+        
+        for (AdherentDto adhDto : lstAdherentDto){
+            lstAdh.add(this.translateDto(adhDto));
+        }
+        
+        return new ResponseEntity<>(lstAdh,HttpStatus.OK);
+    }
+
+    public ResponseEntity<ListeAdhesions> getListeAdhesionsAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                return new ResponseEntity<ListeAdhesions>(objectMapper.readValue("[ {\n  \"comptaSomme\" : 45,\n  \"espace\" : false,\n  \"idAdherent\" : 1,\n  \"idTypeAdhesion\" : 0,\n  \"comptaNumCheque\" : \"15gg778\",\n  \"cheque\" : true,\n  \"idAnneeAdhesion\" : 1,\n  \"id\" : 1,\n  \"comptaBanque\" : \"Credit agricole\"\n}, {\n  \"comptaSomme\" : 45,\n  \"espace\" : false,\n  \"idAdherent\" : 1,\n  \"idTypeAdhesion\" : 0,\n  \"comptaNumCheque\" : \"15gg778\",\n  \"cheque\" : true,\n  \"idAnneeAdhesion\" : 1,\n  \"id\" : 1,\n  \"comptaBanque\" : \"Credit agricole\"\n} ]", ListeAdhesions.class), HttpStatus.NOT_IMPLEMENTED);
+            } catch (IOException e) {
+                log.error("Couldn't serialize response for content type application/json", e);
+                return new ResponseEntity<ListeAdhesions>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        return new ResponseEntity<ListeAdhesions>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    public ResponseEntity<ListeParticipationCommunication> getListeCommunicationAdhrent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                return new ResponseEntity<ListeParticipationCommunication>(objectMapper.readValue("[ {\n  \"dateEnvoi\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"messageID\" : \"20130812164300.28108.52546@samples.mailgun.org\",\n  \"messageTo\" : \"user@example.comg\",\n  \"messageFrom\" : \"me@samples.mailgun.org\",\n  \"evenement\" : \"opened\",\n  \"messageSujet\" : \"Hello\"\n}, {\n  \"dateEnvoi\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"messageID\" : \"20130812164300.28108.52546@samples.mailgun.org\",\n  \"messageTo\" : \"user@example.comg\",\n  \"messageFrom\" : \"me@samples.mailgun.org\",\n  \"evenement\" : \"opened\",\n  \"messageSujet\" : \"Hello\"\n} ]", ListeParticipationCommunication.class), HttpStatus.NOT_IMPLEMENTED);
+            } catch (IOException e) {
+                log.error("Couldn't serialize response for content type application/json", e);
+                return new ResponseEntity<ListeParticipationCommunication>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        return new ResponseEntity<ListeParticipationCommunication>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    public ResponseEntity<ListeManifestations> getListeManifestationsAdhrent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            try {
+                return new ResponseEntity<ListeManifestations>(objectMapper.readValue("[ {\n  \"descriptionLongue\" : \"Manifestation à la conférence sur le soleil qui sera présenté par Mr dupond\",\n  \"dateDebut\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"idAdherent\" : 1,\n  \"descriptionCourte\" : \"Manifestation à la conférence\",\n  \"lieux\" : \"Martignas\",\n  \"id\" : 1,\n  \"dateFin\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"statutParticipation\" : 1\n}, {\n  \"descriptionLongue\" : \"Manifestation à la conférence sur le soleil qui sera présenté par Mr dupond\",\n  \"dateDebut\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"idAdherent\" : 1,\n  \"descriptionCourte\" : \"Manifestation à la conférence\",\n  \"lieux\" : \"Martignas\",\n  \"id\" : 1,\n  \"dateFin\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"statutParticipation\" : 1\n} ]", ListeManifestations.class), HttpStatus.NOT_IMPLEMENTED);
+            } catch (IOException e) {
+                log.error("Couldn't serialize response for content type application/json", e);
+                return new ResponseEntity<ListeManifestations>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        return new ResponseEntity<ListeManifestations>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    public ResponseEntity<Void> updateAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion de modifier", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion,@Parameter(in = ParameterIn.DEFAULT, description = "mise à jour d'une adhesion", required=true, schema=@Schema()) @Valid @RequestBody Adhesion body) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    public ResponseEntity<Void> updateManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de la manifestation à modifier", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation,@Parameter(in = ParameterIn.DEFAULT, description = "mise à jour d'une adhesion", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Mise à jour de l'adherent
+     * @param idadh
+     * @param body
+     * @return 
+     */
+    public ResponseEntity<Void> updateUser(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Adherent body) {
         //récupérationd e l'adh avant modification
         AdherentDto adhold = this.adherentService.recupererAdherent(idadh);
         
@@ -122,8 +240,8 @@ public class AdherentApiController implements AdherentApi {
         if (updateok)return new ResponseEntity<>(HttpStatus.OK);
         
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
     }
+
     
     /**
      * transformer le model adherent en dto adherent
@@ -203,35 +321,5 @@ public class AdherentApiController implements AdherentApi {
         return model;
     }
 
-     
-     
-    public ResponseEntity<ListeAdherents> getListeAdherents() {
-        String accept = request.getHeader("Accept");
-        ListeAdherents lstAdh =  new ListeAdherents();
-        
-        
-        Collection<AdherentDto> lstAdherentDto =  this.adherentService.recupererListeCompletAdherent();
-        
-        for (AdherentDto adhDto : lstAdherentDto){
-            lstAdh.add(this.translateDto(adhDto));
-        }
-        
-        return new ResponseEntity<>(lstAdh,HttpStatus.OK);
 
-    }
-
-    public ResponseEntity<ListeAdherents> getListeAdherentsSaison() {
-        String accept = request.getHeader("Accept");
-        ListeAdherents lstAdh =  new ListeAdherents();
-        
-        
-        Collection<AdherentDto> lstAdherentDto =  this.adherentService.recupererListeAdherentSaison();
-        
-        for (AdherentDto adhDto : lstAdherentDto){
-            lstAdh.add(this.translateDto(adhDto));
-        }
-        
-        return new ResponseEntity<>(lstAdh,HttpStatus.OK);
-    }
-     
 }

@@ -1,0 +1,283 @@
+package fr.espaceadh.adherents.model;
+
+import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.threeten.bp.OffsetDateTime;
+import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
+
+/**
+ * Manifestation
+ */
+@Validated
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
+
+
+public class Manifestation   {
+  @JsonProperty("id")
+  private Long id = null;
+
+  @JsonProperty("idAdherent")
+  private Long idAdherent = null;
+
+  @JsonProperty("descriptionCourte")
+  private String descriptionCourte = null;
+
+  @JsonProperty("descriptionLongue")
+  private String descriptionLongue = null;
+
+  @JsonProperty("lieux")
+  private String lieux = null;
+
+  @JsonProperty("dateDebut")
+  private OffsetDateTime dateDebut = null;
+
+  @JsonProperty("dateFin")
+  private OffsetDateTime dateFin = null;
+
+  /**
+   * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS                
+   */
+  public enum StatutParticipationEnum {
+    NUMBER_1(1l),
+    
+    NUMBER_2(2l),
+    
+    NUMBER_3(3l);
+
+    private Long value;
+
+    StatutParticipationEnum(Long value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static StatutParticipationEnum fromValue(String text) {
+      for (StatutParticipationEnum b : StatutParticipationEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
+  @JsonProperty("statutParticipation")
+  private StatutParticipationEnum statutParticipation = null;
+
+  public Manifestation id(Long id) {
+    this.id = id;
+    return this;
+  }
+
+  /**
+   * Id de la manifestation
+   * @return id
+   **/
+  @Schema(example = "1", description = "Id de la manifestation")
+  
+    public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public Manifestation idAdherent(Long idAdherent) {
+    this.idAdherent = idAdherent;
+    return this;
+  }
+
+  /**
+   * Id de l'adherent
+   * @return idAdherent
+   **/
+  @Schema(example = "1", description = "Id de l'adherent")
+  
+    public Long getIdAdherent() {
+    return idAdherent;
+  }
+
+  public void setIdAdherent(Long idAdherent) {
+    this.idAdherent = idAdherent;
+  }
+
+  public Manifestation descriptionCourte(String descriptionCourte) {
+    this.descriptionCourte = descriptionCourte;
+    return this;
+  }
+
+  /**
+   * Description courte de l'évènement
+   * @return descriptionCourte
+   **/
+  @Schema(example = "Manifestation à la conférence", description = "Description courte de l'évènement")
+  
+  @Size(min=2,max=100)   public String getDescriptionCourte() {
+    return descriptionCourte;
+  }
+
+  public void setDescriptionCourte(String descriptionCourte) {
+    this.descriptionCourte = descriptionCourte;
+  }
+
+  public Manifestation descriptionLongue(String descriptionLongue) {
+    this.descriptionLongue = descriptionLongue;
+    return this;
+  }
+
+  /**
+   * Description longue de l'évènement
+   * @return descriptionLongue
+   **/
+  @Schema(example = "Manifestation à la conférence sur le soleil qui sera présenté par Mr dupond", description = "Description longue de l'évènement")
+  
+  @Size(min=2,max=500)   public String getDescriptionLongue() {
+    return descriptionLongue;
+  }
+
+  public void setDescriptionLongue(String descriptionLongue) {
+    this.descriptionLongue = descriptionLongue;
+  }
+
+  public Manifestation lieux(String lieux) {
+    this.lieux = lieux;
+    return this;
+  }
+
+  /**
+   * Description du lieux de l'évènement
+   * @return lieux
+   **/
+  @Schema(example = "Martignas", description = "Description du lieux de l'évènement")
+  
+  @Size(min=2,max=100)   public String getLieux() {
+    return lieux;
+  }
+
+  public void setLieux(String lieux) {
+    this.lieux = lieux;
+  }
+
+  public Manifestation dateDebut(OffsetDateTime dateDebut) {
+    this.dateDebut = dateDebut;
+    return this;
+  }
+
+  /**
+   * Date de début de l'évènement
+   * @return dateDebut
+   **/
+  @Schema(description = "Date de début de l'évènement")
+  
+    @Valid
+    public OffsetDateTime getDateDebut() {
+    return dateDebut;
+  }
+
+  public void setDateDebut(OffsetDateTime dateDebut) {
+    this.dateDebut = dateDebut;
+  }
+
+  public Manifestation dateFin(OffsetDateTime dateFin) {
+    this.dateFin = dateFin;
+    return this;
+  }
+
+  /**
+   * Date de fin de l'évènement
+   * @return dateFin
+   **/
+  @Schema(description = "Date de fin de l'évènement")
+  
+    @Valid
+    public OffsetDateTime getDateFin() {
+    return dateFin;
+  }
+
+  public void setDateFin(OffsetDateTime dateFin) {
+    this.dateFin = dateFin;
+  }
+
+  public Manifestation statutParticipation(StatutParticipationEnum statutParticipation) {
+    this.statutParticipation = statutParticipation;
+    return this;
+  }
+
+  /**
+   * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS                
+   * @return statutParticipation
+   **/
+  @Schema(example = "1", description = "Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS                ")
+  
+    public StatutParticipationEnum getStatutParticipation() {
+    return statutParticipation;
+  }
+
+  public void setStatutParticipation(StatutParticipationEnum statutParticipation) {
+    this.statutParticipation = statutParticipation;
+  }
+
+
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Manifestation manifestation = (Manifestation) o;
+    return Objects.equals(this.id, manifestation.id) &&
+        Objects.equals(this.idAdherent, manifestation.idAdherent) &&
+        Objects.equals(this.descriptionCourte, manifestation.descriptionCourte) &&
+        Objects.equals(this.descriptionLongue, manifestation.descriptionLongue) &&
+        Objects.equals(this.lieux, manifestation.lieux) &&
+        Objects.equals(this.dateDebut, manifestation.dateDebut) &&
+        Objects.equals(this.dateFin, manifestation.dateFin) &&
+        Objects.equals(this.statutParticipation, manifestation.statutParticipation);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, idAdherent, descriptionCourte, descriptionLongue, lieux, dateDebut, dateFin, statutParticipation);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class Manifestation {\n");
+    
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    idAdherent: ").append(toIndentedString(idAdherent)).append("\n");
+    sb.append("    descriptionCourte: ").append(toIndentedString(descriptionCourte)).append("\n");
+    sb.append("    descriptionLongue: ").append(toIndentedString(descriptionLongue)).append("\n");
+    sb.append("    lieux: ").append(toIndentedString(lieux)).append("\n");
+    sb.append("    dateDebut: ").append(toIndentedString(dateDebut)).append("\n");
+    sb.append("    dateFin: ").append(toIndentedString(dateFin)).append("\n");
+    sb.append("    statutParticipation: ").append(toIndentedString(statutParticipation)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
+}

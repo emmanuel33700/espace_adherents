@@ -4,7 +4,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
@@ -14,7 +14,9 @@ import javax.validation.constraints.*;
  * Adherent
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-08-16T13:27:11.143Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
+
+
 public class Adherent   {
   @JsonProperty("id")
   private Long id = null;
@@ -114,10 +116,10 @@ public class Adherent   {
   /**
    * Get id
    * @return id
-  **/
-  @ApiModelProperty(value = "")
-
-  public Long getId() {
+   **/
+  @Schema(example = "1", description = "")
+  
+    public Long getId() {
     return id;
   }
 
@@ -133,10 +135,10 @@ public class Adherent   {
   /**
    * civilite de l'adhenrent
    * @return civilite
-  **/
-  @ApiModelProperty(value = "civilite de l'adhenrent")
-
-  public CiviliteEnum getCivilite() {
+   **/
+  @Schema(description = "civilite de l'adhenrent")
+  
+    public CiviliteEnum getCivilite() {
     return civilite;
   }
 
@@ -152,10 +154,10 @@ public class Adherent   {
   /**
    * Get nom
    * @return nom
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=3,max=20)   public String getNom() {
+   **/
+  @Schema(example = "Dupont", description = "")
+  
+  @Size(min=3,max=20)   public String getNom() {
     return nom;
   }
 
@@ -171,10 +173,10 @@ public class Adherent   {
   /**
    * Get prenom
    * @return prenom
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=3,max=20)   public String getPrenom() {
+   **/
+  @Schema(example = "Jean", description = "")
+  
+  @Size(min=3,max=20)   public String getPrenom() {
     return prenom;
   }
 
@@ -190,10 +192,10 @@ public class Adherent   {
   /**
    * Get adresse1
    * @return adresse1
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=3,max=37)   public String getAdresse1() {
+   **/
+  @Schema(example = "6 rue des adresse", description = "")
+  
+  @Size(min=3,max=37)   public String getAdresse1() {
     return adresse1;
   }
 
@@ -209,10 +211,10 @@ public class Adherent   {
   /**
    * Get adresse2
    * @return adresse2
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=3,max=37)   public String getAdresse2() {
+   **/
+  @Schema(example = "domaine des adresse", description = "")
+  
+  @Size(min=3,max=37)   public String getAdresse2() {
     return adresse2;
   }
 
@@ -228,10 +230,10 @@ public class Adherent   {
   /**
    * Get codePostal
    * @return codePostal
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=5,max=5)   public String getCodePostal() {
+   **/
+  @Schema(example = "33127", description = "")
+  
+  @Size(min=5,max=5)   public String getCodePostal() {
     return codePostal;
   }
 
@@ -247,10 +249,10 @@ public class Adherent   {
   /**
    * Get ville
    * @return ville
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=3,max=50)   public String getVille() {
+   **/
+  @Schema(example = "Martignas", description = "")
+  
+  @Size(min=3,max=50)   public String getVille() {
     return ville;
   }
 
@@ -266,10 +268,10 @@ public class Adherent   {
   /**
    * Get telMaison
    * @return telMaison
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=10,max=10)   public String getTelMaison() {
+   **/
+  @Schema(example = "95869805", description = "")
+  
+  @Size(min=10,max=10)   public String getTelMaison() {
     return telMaison;
   }
 
@@ -285,10 +287,10 @@ public class Adherent   {
   /**
    * Get telTravail
    * @return telTravail
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=10,max=10)   public String getTelTravail() {
+   **/
+  @Schema(example = "95869805", description = "")
+  
+  @Size(min=10,max=10)   public String getTelTravail() {
     return telTravail;
   }
 
@@ -304,10 +306,10 @@ public class Adherent   {
   /**
    * Get telPortable
    * @return telPortable
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=10,max=10)   public String getTelPortable() {
+   **/
+  @Schema(example = "112647021", description = "")
+  
+  @Size(min=10,max=10)   public String getTelPortable() {
     return telPortable;
   }
 
@@ -323,10 +325,10 @@ public class Adherent   {
   /**
    * Get email
    * @return email
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=5,max=40)   public String getEmail() {
+   **/
+  @Schema(example = "test.test@gmail.com", description = "")
+  
+  @Size(min=5,max=40)   public String getEmail() {
     return email;
   }
 
@@ -342,10 +344,10 @@ public class Adherent   {
   /**
    * Get profession
    * @return profession
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=5,max=50)   public String getProfession() {
+   **/
+  @Schema(example = "Astronome", description = "")
+  
+  @Size(min=5,max=50)   public String getProfession() {
     return profession;
   }
 
@@ -361,11 +363,11 @@ public class Adherent   {
   /**
    * Get dateNaissance
    * @return dateNaissance
-  **/
-  @ApiModelProperty(value = "")
-
-  @Valid
-  public OffsetDateTime getDateNaissance() {
+   **/
+  @Schema(description = "")
+  
+    @Valid
+    public OffsetDateTime getDateNaissance() {
     return dateNaissance;
   }
 
@@ -381,10 +383,10 @@ public class Adherent   {
   /**
    * lien vers la photo de profile
    * @return lienPhotoProfil
-  **/
-  @ApiModelProperty(value = "lien vers la photo de profile")
-
-  public String getLienPhotoProfil() {
+   **/
+  @Schema(example = "photo.jpg", description = "lien vers la photo de profile")
+  
+    public String getLienPhotoProfil() {
     return lienPhotoProfil;
   }
 
@@ -400,10 +402,10 @@ public class Adherent   {
   /**
    * donne son accord pour recevoiur des mails
    * @return accordMail
-  **/
-  @ApiModelProperty(value = "donne son accord pour recevoiur des mails")
-
-  public Boolean isAccordMail() {
+   **/
+  @Schema(example = "true", description = "donne son accord pour recevoiur des mails")
+  
+    public Boolean isAccordMail() {
     return accordMail;
   }
 
@@ -419,10 +421,10 @@ public class Adherent   {
   /**
    * donne son accord afficher ces coordonnées dans l'espace adherents
    * @return publicContact
-  **/
-  @ApiModelProperty(value = "donne son accord afficher ces coordonnées dans l'espace adherents")
-
-  public Boolean isPublicContact() {
+   **/
+  @Schema(example = "false", description = "donne son accord afficher ces coordonnées dans l'espace adherents")
+  
+    public Boolean isPublicContact() {
     return publicContact;
   }
 
@@ -438,10 +440,10 @@ public class Adherent   {
   /**
    * Get commentaire
    * @return commentaire
-  **/
-  @ApiModelProperty(value = "")
-
-@Size(min=2,max=100)   public String getCommentaire() {
+   **/
+  @Schema(example = "voici un commentaire", description = "")
+  
+  @Size(min=2,max=100)   public String getCommentaire() {
     return commentaire;
   }
 
@@ -457,11 +459,11 @@ public class Adherent   {
   /**
    * Get dateEnregistrement
    * @return dateEnregistrement
-  **/
-  @ApiModelProperty(value = "")
-
-  @Valid
-  public OffsetDateTime getDateEnregistrement() {
+   **/
+  @Schema(description = "")
+  
+    @Valid
+    public OffsetDateTime getDateEnregistrement() {
     return dateEnregistrement;
   }
 
@@ -477,11 +479,11 @@ public class Adherent   {
   /**
    * Get dateMiseAJour
    * @return dateMiseAJour
-  **/
-  @ApiModelProperty(value = "")
-
-  @Valid
-  public OffsetDateTime getDateMiseAJour() {
+   **/
+  @Schema(description = "")
+  
+    @Valid
+    public OffsetDateTime getDateMiseAJour() {
     return dateMiseAJour;
   }
 
