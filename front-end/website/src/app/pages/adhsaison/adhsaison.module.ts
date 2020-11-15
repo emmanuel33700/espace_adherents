@@ -12,6 +12,7 @@ import {
 
 import { ThemeModule } from '../../@theme/theme.module';
 import { AdhsaisonRoutingModule } from './adhsaison-routing.module';
+import { ListeRoutingModule } from './liste/liste-routing.module';
 import { AdhsaisonComponent } from './adhsaison.component';
 import { ListeComponent } from './liste/liste.component';
 import { AdhsaisonService } from './adhsaison.service';
@@ -41,6 +42,7 @@ import {HttpClientModule} from '@angular/common/http';
         NbAccordionModule,
         NbUserModule,
         AdhsaisonRoutingModule,
+        ListeRoutingModule,
         NbActionsModule,
         NbSecurityModule,
         NbCheckboxModule,

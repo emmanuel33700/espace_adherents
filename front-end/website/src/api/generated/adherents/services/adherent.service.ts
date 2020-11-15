@@ -39,7 +39,7 @@ export class AdherentService extends BaseService {
   ajoutAdherent$Response(params: {
   
     /**
-     * Besoin de l'objet adhérent pour ajouter un adhérent
+     * Objet adhérent
      */
     body: Adherent
   }): Observable<StrictHttpResponse<void>> {
@@ -70,7 +70,7 @@ export class AdherentService extends BaseService {
   ajoutAdherent(params: {
   
     /**
-     * Besoin de l'objet adhérent pour ajouter un adhérent
+     * Objet adhérent
      */
     body: Adherent
   }): Observable<void> {
@@ -94,7 +94,7 @@ export class AdherentService extends BaseService {
   getAdherent$Response(params: {
 
     /**
-     * id de la personne à modifier
+     * id de l&#x27;adherent
      */
     idadh: number;
 
@@ -126,7 +126,7 @@ export class AdherentService extends BaseService {
   getAdherent(params: {
 
     /**
-     * id de la personne à modifier
+     * id de l&#x27;adherent
      */
     idadh: number;
 
@@ -153,12 +153,12 @@ export class AdherentService extends BaseService {
   updateUser$Response(params: {
 
     /**
-     * id de la personne à modifier
+     * id de l&#x27;adherent
      */
     idadh: number;
   
     /**
-     * mise à jour de la personne
+     * Objet adherent
      */
     body: Adherent
   }): Observable<StrictHttpResponse<void>> {
@@ -192,12 +192,12 @@ export class AdherentService extends BaseService {
   updateUser(params: {
 
     /**
-     * id de la personne à modifier
+     * id de l&#x27;adherent
      */
     idadh: number;
   
     /**
-     * mise à jour de la personne
+     * Objet adherent
      */
     body: Adherent
   }): Observable<void> {
@@ -221,7 +221,7 @@ export class AdherentService extends BaseService {
   deleteUser$Response(params: {
 
     /**
-     * id de la personne à modifier
+     * id de l&#x27;adherent
      */
     idadh: number;
 
@@ -253,7 +253,7 @@ export class AdherentService extends BaseService {
   deleteUser(params: {
 
     /**
-     * id de la personne à modifier
+     * id de l&#x27;adherent
      */
     idadh: number;
 

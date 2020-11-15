@@ -6,21 +6,15 @@ import {LoggerService} from '../../../@core/utils/logger.service';
 import {  TabsComponent } from '../tabs/tabs.component';
 import {Adherent} from '../../../../api/generated/adherents/models';
 
-export const routes: Routes = [{
-  path: 'tabs',
-  component: TabsComponent,
-}];
 
 
 @Component({
-  selector: 'ngx-components',
-  templateUrl: 'liste.component.html',
-  styleUrls: ['liste.component.scss'],
+  selector: 'ngx-form-layouts',
+  styleUrls: ['./liste.component.scss'],
+  templateUrl: './liste.component.html',
 })
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
+
+
 export class ListeComponent implements OnInit {
 
 

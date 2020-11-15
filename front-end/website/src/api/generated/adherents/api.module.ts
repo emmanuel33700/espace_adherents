@@ -4,7 +4,10 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { AdherentService } from './services/adherent.service';
+import { AdhesionService } from './services/adhesion.service';
 import { ListingAdherentService } from './services/listing-adherent.service';
+import { ManifestationService } from './services/manifestation.service';
+import { CommunicationService } from './services/communication.service';
 
 /**
  * Module that provides all services and configuration.
@@ -15,7 +18,10 @@ import { ListingAdherentService } from './services/listing-adherent.service';
   declarations: [],
   providers: [
     AdherentService,
+    AdhesionService,
     ListingAdherentService,
+    ManifestationService,
+    CommunicationService,
     ApiConfiguration
   ],
 })

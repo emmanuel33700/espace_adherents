@@ -5,6 +5,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGrigPlugin from '@fullcalendar/timegrid';
 import frLocale from '@fullcalendar/core/locales/fr';
 import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
+import { CalendarOptions } from '@fullcalendar/angular';
 
 @Component({
   selector: 'ngx-calendar',
@@ -13,6 +14,17 @@ import interactionPlugin from '@fullcalendar/interaction'; // for dateClick
 })
 export class LireComponent {
 
+
+  // https://fullcalendar.io/docs/angular
+
+  calendarOptions: CalendarOptions = {
+    initialView: 'dayGridMonth',
+    weekends: false, // initial value
+    events: [
+      { title: 'event 1', date: '2019-04-01' },
+      { title: 'event 2', date: '2019-04-02' },
+    ],
+};
 
   // @ts-ignore
   @ViewChild('calendar') calendarComponent: FullCalendarComponent; // the #calendar in the template

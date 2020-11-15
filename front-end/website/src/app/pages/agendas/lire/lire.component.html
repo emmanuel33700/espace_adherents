@@ -1,7 +1,7 @@
 <nb-card>
   <nb-card-body>
-
-    <full-calendar
+    <full-calendar deepChangeDetection="true" [options]="calendarOptions"></full-calendar>
+  <!--  <full-calendar
       #calendar
       defaultView="dayGridMonth"
       [header]="{
@@ -16,6 +16,6 @@
       [locales]="locales"
       locale="fr"
     ></full-calendar>
-
+-->
   </nb-card-body>
 </nb-card>
