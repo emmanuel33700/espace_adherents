@@ -36,6 +36,7 @@ import java.util.Collection;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.threeten.bp.DateTimeUtils;
 import org.threeten.bp.OffsetDateTime;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
@@ -217,9 +218,9 @@ public class AdherentApiController implements AdherentApi {
            ArrayList<Manifestation> lstManifestationModel = new ArrayList();
            for(MessageResultDto msgDto : lstMessage.getLstMessageResulteDto()){
                 Communication communicationModel = new Communication();
-               
-                //TODO Ajouter date
-              //  this.convertDate(communicationModel)
+                
+               OffsetDateTime odt = DateTimeUtils.toInstant(msgDto.getDateArrive()).atOffset(org.threeten.bp.ZoneOffset.UTC);
+               communicationModel.setDateArrive(odt);
                communicationModel.setDestinataire(msgDto.getMailDestinataire());
                communicationModel.setID(msgDto.getId());
                communicationModel.setRegleSpam(msgDto.getRegleSpam());
@@ -227,7 +228,7 @@ public class AdherentApiController implements AdherentApi {
                communicationModel.setStatut(this.convertStatutEnum(msgDto.getStatut()));
                 
                communicationModel.setSujet(msgDto.getSujetMail());
-               
+               communicationModel.setUUID(msgDto.getUUID());
                listeCommunications.add(communicationModel);
            }   
         }
