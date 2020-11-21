@@ -220,12 +220,13 @@ public class AdherentApiController implements AdherentApi {
                
                 //TODO Ajouter date
               //  this.convertDate(communicationModel)
-               communicationModel.setDestinataire(communicationModel.getDestinataire());
-               communicationModel.setID(communicationModel.getID());
-               communicationModel.setRegleSpam(communicationModel.getRegleSpam());
-               communicationModel.setScoreSpam(communicationModel.getScoreSpam());
-               communicationModel.setStatut(communicationModel.getStatut());
-               communicationModel.setSujet(communicationModel.getSujet());
+               communicationModel.setDestinataire(msgDto.getMailDestinataire());
+               communicationModel.setID(msgDto.getId());
+               communicationModel.setRegleSpam(msgDto.getRegleSpam());
+               communicationModel.setScoreSpam(msgDto.getScoreSpam());
+               communicationModel.setStatut(this.convertStatutEnum(msgDto.getStatut()));
+                
+               communicationModel.setSujet(msgDto.getSujetMail());
                
                listeCommunications.add(communicationModel);
            }   
@@ -362,6 +363,37 @@ public class AdherentApiController implements AdherentApi {
         //TODO date à revoir
         
         return model;
+    }
+
+     /**
+      * 
+      * @param statut
+      * @return 
+      */
+    private Communication.StatutEnum convertStatutEnum(String statut) {
+        if(String.valueOf(Communication.StatutEnum.BLOCKED).equals(statut)){
+            return Communication.StatutEnum.BLOCKED;
+        } else if(String.valueOf(Communication.StatutEnum.BOUNCE).equals(statut)){
+            return Communication.StatutEnum.BOUNCE;
+        } else if(String.valueOf(Communication.StatutEnum.CLICKED).equals(statut)){
+            return Communication.StatutEnum.CLICKED;
+        } else if(String.valueOf(Communication.StatutEnum.DEFERRED).equals(statut)){
+            return Communication.StatutEnum.DEFERRED;
+        } else if(String.valueOf(Communication.StatutEnum.HARDBOUNCED).equals(statut)){
+            return Communication.StatutEnum.HARDBOUNCED;
+        } else if(String.valueOf(Communication.StatutEnum.OPENED).equals(statut)){
+            return Communication.StatutEnum.OPENED;
+        } else if(String.valueOf(Communication.StatutEnum.QUEUED).equals(statut)){
+            return Communication.StatutEnum.QUEUED;
+        } else if(String.valueOf(Communication.StatutEnum.SOFTBOUNCED).equals(statut)){
+            return Communication.StatutEnum.SOFTBOUNCED;
+        } else if(String.valueOf(Communication.StatutEnum.SPAM).equals(statut)){
+            return Communication.StatutEnum.SPAM;
+        } else if(String.valueOf(Communication.StatutEnum.UNSUB).equals(statut)){
+            return Communication.StatutEnum.UNSUB;
+        } 
+        
+        return Communication.StatutEnum.UNKNOWN;
     }
 
 
