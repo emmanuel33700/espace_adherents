@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 emmanuel33700 https://github.com/emmanuel33700/espace_adherents
+ * Copyright (C) 2020 emmanuel
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,29 +14,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.espaceadh.lib.mail;
+package fr.espaceadh.lib.mail.dto;
 
-import fr.espaceadh.lib.mail.dto.ListeMessagesResulteDto;
-import fr.espaceadh.lib.mail.dto.MailInDto;
-import fr.espaceadh.lib.mail.dto.MailOutDto;
+import java.util.Collection;
 
 /**
  *
  * @author emmanuel
  */
-public interface GestionMail {
+public class ListeMessagesResulteDto {
+
+    private int nbMessages;
+    private Collection<MessageResultDto> lstMessageResulteDto;
+
+    public int getNbMessages() {
+        return nbMessages;
+    }
+
+    public void setNbMessages(int nbMessages) {
+        this.nbMessages = nbMessages;
+    }
+
+    public Collection<MessageResultDto> getLstMessageResulteDto() {
+        return lstMessageResulteDto;
+    }
+
+    public void setLstMessageResulteDto(Collection<MessageResultDto> lstMessageResulteDto) {
+        this.lstMessageResulteDto = lstMessageResulteDto;
+    }
     
-    /**
-     *  Envoyer un mail via la librairie mailjet
-     * @param mailIn
-     * @return 
-     */
-    public MailOutDto sendMail(final MailInDto mailIn);
     
-    /**
-     * Recuperer l'historique des messages envoyé à une personne
-     * @param mail de la personne ou lon souhaite récupérer l'hostorique
-     * @return 
-     */
-    public ListeMessagesResulteDto recupeHistoriqueMessage(String mail);
 }

@@ -5,6 +5,7 @@
  */
 package fr.espaceadh.lib.mail;
 
+import fr.espaceadh.lib.mail.dto.ListeMessagesResulteDto;
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
 import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
@@ -60,7 +61,6 @@ public class SendMailTest {
 
     }
     
-    @Test
     public void testEnvoyerMail(){
         MailInDto mailIn = new MailInDto();
 
@@ -91,6 +91,10 @@ public class SendMailTest {
         
     }
 
-
+    @Test
+    public void testStatisticMail(){
+        ListeMessagesResulteDto mailOut = sendMail.recupeHistoriqueMessage("manu.chenais@gmail.com");
+        System.out.println(mailOut);
+    }
     
 }

@@ -16,6 +16,7 @@
  */
 package fr.espaceadh.lib.mail.impl.mailjet;
 
+import fr.espaceadh.lib.mail.utilitaires.JSON;
 import com.mailjet.client.ClientOptions;
 import com.mailjet.client.MailjetClient;
 import com.mailjet.client.MailjetRequest;
@@ -23,6 +24,7 @@ import com.mailjet.client.MailjetResponse;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
 import com.mailjet.client.resource.Emailv31;
+import com.mailjet.client.resource.Emailv31.Message;
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
 import org.json.JSONArray;
@@ -32,8 +34,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import fr.espaceadh.lib.mail.GestionMail;
+import fr.espaceadh.lib.mail.dto.ListeMessagesResulteDto;
+import fr.espaceadh.lib.mail.dto.MessageResultDto;
 import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
+import fr.espaceadh.lib.mail.model.mailjet.ListeMessages;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -209,6 +227,103 @@ public class GestionMailImpl implements GestionMail {
         }
         
         return variableJSONObject;
+    }
+
+
+
+    /**
+     * Recupérer l'historique des message envouyé à une personne (via son mail)
+     * @param mail
+     * @return 
+     */
+    @Override
+    public ListeMessagesResulteDto recupeHistoriqueMessage(String mail) {
+        ListeMessages lstMessages = null;
+        try {
+           StringBuilder urlString = new StringBuilder("https://api.mailjet.com/v3/REST/message?ContactAlt=");
+           urlString.append(mail);
+           urlString.append("&ShowSubject=true");
+           
+           /** encodage basic authentitication **/
+           StringBuilder authBasic = new StringBuilder( env.getProperty("mailjet.login"));
+           authBasic.append(":");
+           authBasic.append(env.getProperty("mailjet.password"));
+           
+           StringBuilder authBasicB64 = new StringBuilder("Basic ");
+           authBasicB64.append(Base64.getEncoder().encodeToString(authBasic.toString().getBytes()));
+            /** fin encodage basic authentitication **/
+           
+           URL url = new URL(urlString.toString());
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("charset", "utf-8");
+            con.setRequestProperty("Authorization", authBasicB64.toString());
+            int status = con.getResponseCode();
+            
+            LOGGER.info("code Statut api {}",status);
+            
+            
+            
+            BufferedReader in = new BufferedReader(
+            new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer content = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            
+            LOGGER.info("Reponse {}", content.toString());
+
+            con.disconnect();
+            
+            JSON json = new JSON();
+            lstMessages = json.deserialize(content.toString(), ListeMessages.class);
+            
+            LOGGER.debug(lstMessages.toString());
+            
+        } catch (MalformedURLException ex) {
+            LOGGER.error("MalformedURLException" + ex.getMessage());
+        } catch (IOException ex) {
+            LOGGER.error("IOException" + ex.getMessage());
+        }
+
+       return this.convertDto(lstMessages);
+    }
+
+    /**
+     * Transforme LstMessages Model en ListeMessagesResulteDto
+     * @param lstMessages
+     * @return 
+     */
+    private ListeMessagesResulteDto convertDto(ListeMessages lstMessages) {
+        ListeMessagesResulteDto listeDto = new ListeMessagesResulteDto();
+        Collection<MessageResultDto> lstMessageResultDto = new ArrayList<>();
+        
+        for (fr.espaceadh.lib.mail.model.mailjet.Message msg : lstMessages.getData()){
+            MessageResultDto msgDto = new MessageResultDto();
+            msgDto.setId(msg.getID());
+            msgDto.setMailDestinataire(msg.getContactAlt());
+            msgDto.setRegleSpam(msg.getSpamassRules());
+            msgDto.setScoreSpam(msg.getSpamassassinScore());
+            msgDto.setStatut(msg.getStatus().getValue());
+            msgDto.setSujetMail(msg.getSubject());
+            if (msg.getStateID() != null) msgDto.setTypeErreur(msg.getStateID());
+            msgDto.setUUID(msg.getUUID());
+            
+            if (msg.getArrivedAt() != null) {
+                long epochMilli = msg.getArrivedAt().toInstant().toEpochMilli();
+                Date date = new Date(epochMilli); 
+                msgDto.setDateArrive(date);
+            }
+
+            lstMessageResultDto.add(msgDto);
+        }
+        listeDto.setLstMessageResulteDto(lstMessageResultDto);
+        return listeDto;
     }
 
 }
