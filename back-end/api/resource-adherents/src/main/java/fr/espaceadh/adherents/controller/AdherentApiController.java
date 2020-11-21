@@ -215,7 +215,7 @@ public class AdherentApiController implements AdherentApi {
         ListeCommunications listeCommunications = new ListeCommunications();
         
         if (lstMessage.getLstMessageResulteDto() != null && !lstMessage.getLstMessageResulteDto().isEmpty()){
-           ArrayList<Manifestation> lstManifestationModel = new ArrayList();
+
            for(MessageResultDto msgDto : lstMessage.getLstMessageResulteDto()){
                 Communication communicationModel = new Communication();
                 
