@@ -53,7 +53,8 @@ public class OAuth2AuthorizationServerConfigJwt extends AuthorizationServerConfi
                 .authorizedGrantTypes("password", "refresh_token", "authorization_code")
                 .autoApprove(true)
                 .scopes("ress-autorization-read", "ress-autorization-write", "ress-autorization-del",
-                        "ress-adherent-admin", "ress-adherent-read", "ress-adherent-write", "ress-adherent-del")
+                        "ress-adherent-admin", "ress-adherent-read", "ress-adherent-write", "ress-adherent-del",
+                        "ress-communication-read")
                 .accessTokenValiditySeconds(env.getProperty("oauth2.desktop.accesstoken.validity", Integer.class))       
                 .refreshTokenValiditySeconds(env.getProperty("oauth2.desktop.refreshtoken.validity", Integer.class)) 
                 .redirectUris("http://www.example.com","http://localhost:8089/")
