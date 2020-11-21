@@ -10,7 +10,7 @@ import fr.espaceadh.adherents.model.Adhesion;
 import fr.espaceadh.adherents.model.ListeAdherents;
 import fr.espaceadh.adherents.model.ListeAdhesions;
 import fr.espaceadh.adherents.model.ListeManifestations;
-import fr.espaceadh.adherents.model.ListeParticipationCommunication;
+import fr.espaceadh.adherents.model.ListeCommunications;
 import fr.espaceadh.adherents.model.ModelApiResponse;
 import fr.espaceadh.adherents.model.ParticipationManifestation;
 import io.swagger.annotations.Api;
@@ -272,7 +272,7 @@ public interface AdherentApi {
         @SecurityRequirement(name = "oAuth", scopes = {
             ""        })    }, tags={ "Communication" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(schema = @Schema(implementation = ListeParticipationCommunication.class))),
+        @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(schema = @Schema(implementation = ListeCommunications.class))),
         
         @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
         
@@ -286,7 +286,8 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/communications",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<ListeParticipationCommunication> getListeCommunicationAdhrent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
+    @PreAuthorize("#oauth2.hasScope('ress-communication-read') and isDansGroupe('BUREAU')")     
+    ResponseEntity<ListeCommunications> getListeCommunicationAdhrent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
 
 
     @Operation(summary = "rechercher la liste des manifestations auxquels participe un adherent", description = "", security = {

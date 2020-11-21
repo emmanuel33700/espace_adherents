@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
 
 
-public class ListeParticipationCommunication extends ArrayList<Communication>  {
+public class ListeCommunications extends ArrayList<Communication>  {
 
   @Override
   public boolean equals(java.lang.Object o) {

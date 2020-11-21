@@ -18,52 +18,49 @@ import javax.validation.constraints.*;
 
 
 public class Communication   {
-  @JsonProperty("messageID")
-  private String messageID = null;
+  @JsonProperty("ID")
+  private Long ID = null;
 
-  @JsonProperty("dateEnvoi")
-  private OffsetDateTime dateEnvoi = null;
+  @JsonProperty("dateArrive")
+  private OffsetDateTime dateArrive = null;
 
-  @JsonProperty("messageTo")
-  private String messageTo = null;
+  @JsonProperty("destinataire")
+  private String destinataire = null;
 
-  @JsonProperty("messageFrom")
-  private String messageFrom = null;
-
-  @JsonProperty("messageSujet")
-  private String messageSujet = null;
+  @JsonProperty("sujet")
+  private String sujet = null;
 
   /**
-   * Types d'envement. Valeurs possibles : * accepted : Provider accepted the request to send/forward the email and the message has been placed in queue. * rejected : Provider rejected the request to send/forward the email. * delivered : Provider sent the email and it was accepted by the recipient email server. * failed : Provider could not deliver the email to the recipient email server. * opened : The email recipient opened the email and enabled image viewing. Open tracking must be enabled in the Mailgun control panel, and the CNAME record must be pointing to Provider * clicked : The email recipient clicked on a link in the email. Click tracking must be enabled in the Provider control panel, and the CNAME record must be pointing to Provider  * unsubscribed : The email recipient clicked on the unsubscribe link. Unsubscribe tracking must be enabled in the Provider  control panel. * complained : The email recipient clicked on the spam complaint button within their email client. Feedback loops enable the notification to be received by Provider  * stored : Provider has stored an incoming message * list_member_uploaded : This event occurs after successfully adding a member to a mailing list. * list_member_upload_error : This event occurs if an error occurs adding a member to a mailing list. * list_uploaded : This event occurs after successfully uploading a large list of members to a mailing list. 
+   * statut du mail
    */
-  public enum EvenementEnum {
-    ACCEPTED("accepted"),
+  public enum StatutEnum {
+    UNKNOWN("unknown"),
     
-    REJECTED("rejected"),
+    QUEUED("queued"),
     
-    DELIVERED("delivered"),
-    
-    FAILED("failed"),
+    SENT("sent"),
     
     OPENED("opened"),
     
     CLICKED("clicked"),
     
-    UNSUBSCRIBED("unsubscribed"),
+    BOUNCE("bounce"),
     
-    COMPLAINED("complained"),
+    SPAM("spam"),
     
-    STORED("stored"),
+    UNSUB("unsub"),
     
-    LIST_MEMBER_UPLOADED("list_member_uploaded"),
+    BLOCKED("blocked"),
     
-    LIST_MEMBER_UPLOAD_ERROR("list_member_upload_error"),
+    HARDBOUNCED("hardbounced"),
     
-    LIST_UPLOADED("list_uploaded");
+    SOFTBOUNCED("softbounced"),
+    
+    DEFERRED("deferred");
 
     private String value;
 
-    EvenementEnum(String value) {
+    StatutEnum(String value) {
       this.value = value;
     }
 
@@ -74,8 +71,8 @@ public class Communication   {
     }
 
     @JsonCreator
-    public static EvenementEnum fromValue(String text) {
-      for (EvenementEnum b : EvenementEnum.values()) {
+    public static StatutEnum fromValue(String text) {
+      for (StatutEnum b : StatutEnum.values()) {
         if (String.valueOf(b.value).equals(text)) {
           return b;
         }
@@ -83,122 +80,191 @@ public class Communication   {
       return null;
     }
   }
-  @JsonProperty("evenement")
-  private EvenementEnum evenement = null;
+  @JsonProperty("statut")
+  private StatutEnum statut = null;
 
-  public Communication messageID(String messageID) {
-    this.messageID = messageID;
+  @JsonProperty("typeErreur")
+  private Integer typeErreur = null;
+
+  @JsonProperty("scoreSpam")
+  private Integer scoreSpam = null;
+
+  @JsonProperty("regleSpam")
+  private String regleSpam = null;
+
+  @JsonProperty("UUID")
+  private String UUID = null;
+
+  public Communication ID(Long ID) {
+    this.ID = ID;
     return this;
   }
 
   /**
-   * id du message
-   * @return messageID
+   * Id du message envoyé
+   * @return ID
    **/
-  @Schema(example = "20130812164300.28108.52546@samples.mailgun.org", description = "id du message")
+  @Schema(example = "1152921509764664300", description = "Id du message envoyé")
   
-  @Size(min=2,max=100)   public String getMessageID() {
-    return messageID;
+    public Long getID() {
+    return ID;
   }
 
-  public void setMessageID(String messageID) {
-    this.messageID = messageID;
+  public void setID(Long ID) {
+    this.ID = ID;
   }
 
-  public Communication dateEnvoi(OffsetDateTime dateEnvoi) {
-    this.dateEnvoi = dateEnvoi;
+  public Communication dateArrive(OffsetDateTime dateArrive) {
+    this.dateArrive = dateArrive;
     return this;
   }
 
   /**
-   * Date d'envoi
-   * @return dateEnvoi
+   * date d'arrive du message
+   * @return dateArrive
    **/
-  @Schema(description = "Date d'envoi")
+  @Schema(description = "date d'arrive du message")
   
     @Valid
-    public OffsetDateTime getDateEnvoi() {
-    return dateEnvoi;
+    public OffsetDateTime getDateArrive() {
+    return dateArrive;
   }
 
-  public void setDateEnvoi(OffsetDateTime dateEnvoi) {
-    this.dateEnvoi = dateEnvoi;
+  public void setDateArrive(OffsetDateTime dateArrive) {
+    this.dateArrive = dateArrive;
   }
 
-  public Communication messageTo(String messageTo) {
-    this.messageTo = messageTo;
+  public Communication destinataire(String destinataire) {
+    this.destinataire = destinataire;
     return this;
   }
 
   /**
    * mail de l'adherent qui recoit le message
-   * @return messageTo
+   * @return destinataire
    **/
   @Schema(example = "user@example.comg", description = "mail de l'adherent qui recoit le message")
   
-  @Size(min=2,max=100)   public String getMessageTo() {
-    return messageTo;
+  @Size(min=2,max=100)   public String getDestinataire() {
+    return destinataire;
   }
 
-  public void setMessageTo(String messageTo) {
-    this.messageTo = messageTo;
+  public void setDestinataire(String destinataire) {
+    this.destinataire = destinataire;
   }
 
-  public Communication messageFrom(String messageFrom) {
-    this.messageFrom = messageFrom;
+  public Communication sujet(String sujet) {
+    this.sujet = sujet;
     return this;
   }
 
   /**
-   * mail de l'adherent qui recoit le message
-   * @return messageFrom
+   * sujet du message envoyé
+   * @return sujet
    **/
-  @Schema(example = "me@samples.mailgun.org", description = "mail de l'adherent qui recoit le message")
+  @Schema(example = "Hello", description = "sujet du message envoyé")
   
-  @Size(min=2,max=100)   public String getMessageFrom() {
-    return messageFrom;
+  @Size(min=2,max=100)   public String getSujet() {
+    return sujet;
   }
 
-  public void setMessageFrom(String messageFrom) {
-    this.messageFrom = messageFrom;
+  public void setSujet(String sujet) {
+    this.sujet = sujet;
   }
 
-  public Communication messageSujet(String messageSujet) {
-    this.messageSujet = messageSujet;
+  public Communication statut(StatutEnum statut) {
+    this.statut = statut;
     return this;
   }
 
   /**
-   * sujet du message
-   * @return messageSujet
+   * statut du mail
+   * @return statut
    **/
-  @Schema(example = "Hello", description = "sujet du message")
+  @Schema(example = "clicked", description = "statut du mail")
   
-  @Size(min=2,max=100)   public String getMessageSujet() {
-    return messageSujet;
+  @Size(min=3,max=50)   public StatutEnum getStatut() {
+    return statut;
   }
 
-  public void setMessageSujet(String messageSujet) {
-    this.messageSujet = messageSujet;
+  public void setStatut(StatutEnum statut) {
+    this.statut = statut;
   }
 
-  public Communication evenement(EvenementEnum evenement) {
-    this.evenement = evenement;
+  public Communication typeErreur(Integer typeErreur) {
+    this.typeErreur = typeErreur;
     return this;
   }
 
   /**
-   * Types d'envement. Valeurs possibles : * accepted : Provider accepted the request to send/forward the email and the message has been placed in queue. * rejected : Provider rejected the request to send/forward the email. * delivered : Provider sent the email and it was accepted by the recipient email server. * failed : Provider could not deliver the email to the recipient email server. * opened : The email recipient opened the email and enabled image viewing. Open tracking must be enabled in the Mailgun control panel, and the CNAME record must be pointing to Provider * clicked : The email recipient clicked on a link in the email. Click tracking must be enabled in the Provider control panel, and the CNAME record must be pointing to Provider  * unsubscribed : The email recipient clicked on the unsubscribe link. Unsubscribe tracking must be enabled in the Provider  control panel. * complained : The email recipient clicked on the spam complaint button within their email client. Feedback loops enable the notification to be received by Provider  * stored : Provider has stored an incoming message * list_member_uploaded : This event occurs after successfully adding a member to a mailing list. * list_member_upload_error : This event occurs if an error occurs adding a member to a mailing list. * list_uploaded : This event occurs after successfully uploading a large list of members to a mailing list. 
-   * @return evenement
+   * ID numérique unique expliquant pourquoi le message n'a pas été remis avec succès au destinataire. Uniquement renvoyé si le message n'a pas été remis avec succès. Valeur possible : * 1 : user unknown (recipient) * 2 : mailbox inactive (recipient) * 3 : quota exceeded (recipient) * 4 : invalid domain (domain) * 5 : no mail host (domain) * 6 : relay/access denied (domain) * 7 : sender blocked (spam) * 8 : content blocked (spam) * 9 : policy issue (spam) * 10 : system issue (system) * 11 : protocol issue (system) * 12 : connection issue (system) * 13 : greylisted (domain) * 14 : preblocked (provider) * 15 : duplicate in campaign (provider) * 16 : spam preblocked (provider) * 17 : bad or empty template (content) * 18 : error in template language (content) * 19 : typofix (domain) * 20 : blacklisted (recipient) * 21 : spam reporter (recipient) 
+   * @return typeErreur
    **/
-  @Schema(example = "opened", description = "Types d'envement. Valeurs possibles : * accepted : Provider accepted the request to send/forward the email and the message has been placed in queue. * rejected : Provider rejected the request to send/forward the email. * delivered : Provider sent the email and it was accepted by the recipient email server. * failed : Provider could not deliver the email to the recipient email server. * opened : The email recipient opened the email and enabled image viewing. Open tracking must be enabled in the Mailgun control panel, and the CNAME record must be pointing to Provider * clicked : The email recipient clicked on a link in the email. Click tracking must be enabled in the Provider control panel, and the CNAME record must be pointing to Provider  * unsubscribed : The email recipient clicked on the unsubscribe link. Unsubscribe tracking must be enabled in the Provider  control panel. * complained : The email recipient clicked on the spam complaint button within their email client. Feedback loops enable the notification to be received by Provider  * stored : Provider has stored an incoming message * list_member_uploaded : This event occurs after successfully adding a member to a mailing list. * list_member_upload_error : This event occurs if an error occurs adding a member to a mailing list. * list_uploaded : This event occurs after successfully uploading a large list of members to a mailing list. ")
+  @Schema(example = "1", description = "ID numérique unique expliquant pourquoi le message n'a pas été remis avec succès au destinataire. Uniquement renvoyé si le message n'a pas été remis avec succès. Valeur possible : * 1 : user unknown (recipient) * 2 : mailbox inactive (recipient) * 3 : quota exceeded (recipient) * 4 : invalid domain (domain) * 5 : no mail host (domain) * 6 : relay/access denied (domain) * 7 : sender blocked (spam) * 8 : content blocked (spam) * 9 : policy issue (spam) * 10 : system issue (system) * 11 : protocol issue (system) * 12 : connection issue (system) * 13 : greylisted (domain) * 14 : preblocked (provider) * 15 : duplicate in campaign (provider) * 16 : spam preblocked (provider) * 17 : bad or empty template (content) * 18 : error in template language (content) * 19 : typofix (domain) * 20 : blacklisted (recipient) * 21 : spam reporter (recipient) ")
   
-  @Size(min=2,max=100)   public EvenementEnum getEvenement() {
-    return evenement;
+    public Integer getTypeErreur() {
+    return typeErreur;
   }
 
-  public void setEvenement(EvenementEnum evenement) {
-    this.evenement = evenement;
+  public void setTypeErreur(Integer typeErreur) {
+    this.typeErreur = typeErreur;
+  }
+
+  public Communication scoreSpam(Integer scoreSpam) {
+    this.scoreSpam = scoreSpam;
+    return this;
+  }
+
+  /**
+   * SpamassassinScore pour le message
+   * @return scoreSpam
+   **/
+  @Schema(example = "1", description = "SpamassassinScore pour le message")
+  
+    public Integer getScoreSpam() {
+    return scoreSpam;
+  }
+
+  public void setScoreSpam(Integer scoreSpam) {
+    this.scoreSpam = scoreSpam;
+  }
+
+  public Communication regleSpam(String regleSpam) {
+    this.regleSpam = regleSpam;
+    return this;
+  }
+
+  /**
+   * Règles de SpamAssassin correspondantes.
+   * @return regleSpam
+   **/
+  @Schema(description = "Règles de SpamAssassin correspondantes.")
+  
+  @Size(min=3,max=50)   public String getRegleSpam() {
+    return regleSpam;
+  }
+
+  public void setRegleSpam(String regleSpam) {
+    this.regleSpam = regleSpam;
+  }
+
+  public Communication UUID(String UUID) {
+    this.UUID = UUID;
+    return this;
+  }
+
+  /**
+   * UUID du message
+   * @return UUID
+   **/
+  @Schema(example = "1514cfef-8334-480e-9e06-f634f564b9ac", description = "UUID du message")
+  
+  @Size(min=3,max=50)   public String getUUID() {
+    return UUID;
+  }
+
+  public void setUUID(String UUID) {
+    this.UUID = UUID;
   }
 
 
@@ -211,17 +277,20 @@ public class Communication   {
       return false;
     }
     Communication communication = (Communication) o;
-    return Objects.equals(this.messageID, communication.messageID) &&
-        Objects.equals(this.dateEnvoi, communication.dateEnvoi) &&
-        Objects.equals(this.messageTo, communication.messageTo) &&
-        Objects.equals(this.messageFrom, communication.messageFrom) &&
-        Objects.equals(this.messageSujet, communication.messageSujet) &&
-        Objects.equals(this.evenement, communication.evenement);
+    return Objects.equals(this.ID, communication.ID) &&
+        Objects.equals(this.dateArrive, communication.dateArrive) &&
+        Objects.equals(this.destinataire, communication.destinataire) &&
+        Objects.equals(this.sujet, communication.sujet) &&
+        Objects.equals(this.statut, communication.statut) &&
+        Objects.equals(this.typeErreur, communication.typeErreur) &&
+        Objects.equals(this.scoreSpam, communication.scoreSpam) &&
+        Objects.equals(this.regleSpam, communication.regleSpam) &&
+        Objects.equals(this.UUID, communication.UUID);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(messageID, dateEnvoi, messageTo, messageFrom, messageSujet, evenement);
+    return Objects.hash(ID, dateArrive, destinataire, sujet, statut, typeErreur, scoreSpam, regleSpam, UUID);
   }
 
   @Override
@@ -229,12 +298,15 @@ public class Communication   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Communication {\n");
     
-    sb.append("    messageID: ").append(toIndentedString(messageID)).append("\n");
-    sb.append("    dateEnvoi: ").append(toIndentedString(dateEnvoi)).append("\n");
-    sb.append("    messageTo: ").append(toIndentedString(messageTo)).append("\n");
-    sb.append("    messageFrom: ").append(toIndentedString(messageFrom)).append("\n");
-    sb.append("    messageSujet: ").append(toIndentedString(messageSujet)).append("\n");
-    sb.append("    evenement: ").append(toIndentedString(evenement)).append("\n");
+    sb.append("    ID: ").append(toIndentedString(ID)).append("\n");
+    sb.append("    dateArrive: ").append(toIndentedString(dateArrive)).append("\n");
+    sb.append("    destinataire: ").append(toIndentedString(destinataire)).append("\n");
+    sb.append("    sujet: ").append(toIndentedString(sujet)).append("\n");
+    sb.append("    statut: ").append(toIndentedString(statut)).append("\n");
+    sb.append("    typeErreur: ").append(toIndentedString(typeErreur)).append("\n");
+    sb.append("    scoreSpam: ").append(toIndentedString(scoreSpam)).append("\n");
+    sb.append("    regleSpam: ").append(toIndentedString(regleSpam)).append("\n");
+    sb.append("    UUID: ").append(toIndentedString(UUID)).append("\n");
     sb.append("}");
     return sb.toString();
   }

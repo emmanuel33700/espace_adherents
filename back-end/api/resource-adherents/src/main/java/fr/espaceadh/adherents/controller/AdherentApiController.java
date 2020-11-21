@@ -5,12 +5,17 @@ import fr.espaceadh.adherents.model.Adhesion;
 import fr.espaceadh.adherents.model.ListeAdherents;
 import fr.espaceadh.adherents.model.ListeAdhesions;
 import fr.espaceadh.adherents.model.ListeManifestations;
-import fr.espaceadh.adherents.model.ListeParticipationCommunication;
+import fr.espaceadh.adherents.model.ListeCommunications;
 import fr.espaceadh.adherents.model.ParticipationManifestation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
+import fr.espaceadh.adherents.model.Communication;
+import fr.espaceadh.adherents.model.Manifestation;
 import fr.espaceadh.adherents.service.AdherentService;
+import fr.espaceadh.lib.mail.GestionMail;
+import fr.espaceadh.lib.mail.dto.ListeMessagesResulteDto;
+import fr.espaceadh.lib.mail.dto.MessageResultDto;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -25,10 +30,13 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.threeten.bp.OffsetDateTime;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
 @Controller
@@ -42,6 +50,9 @@ public class AdherentApiController implements AdherentApi {
     
     @Autowired
     protected AdherentService adherentService;
+    
+    @Autowired
+    private GestionMail getionMail;
 
     @org.springframework.beans.factory.annotation.Autowired
     public AdherentApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -181,19 +192,48 @@ public class AdherentApiController implements AdherentApi {
         return new ResponseEntity<ListeAdhesions>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<ListeParticipationCommunication> getListeCommunicationAdhrent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
+    /**
+     * 
+     * @param idadh
+     * @return 
+     */
+    public ResponseEntity<ListeCommunications> getListeCommunicationAdhrent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<ListeParticipationCommunication>(objectMapper.readValue("[ {\n  \"dateEnvoi\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"messageID\" : \"20130812164300.28108.52546@samples.mailgun.org\",\n  \"messageTo\" : \"user@example.comg\",\n  \"messageFrom\" : \"me@samples.mailgun.org\",\n  \"evenement\" : \"opened\",\n  \"messageSujet\" : \"Hello\"\n}, {\n  \"dateEnvoi\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"messageID\" : \"20130812164300.28108.52546@samples.mailgun.org\",\n  \"messageTo\" : \"user@example.comg\",\n  \"messageFrom\" : \"me@samples.mailgun.org\",\n  \"evenement\" : \"opened\",\n  \"messageSujet\" : \"Hello\"\n} ]", ListeParticipationCommunication.class), HttpStatus.NOT_IMPLEMENTED);
+                return new ResponseEntity<ListeCommunications>(objectMapper.readValue("[  ]", ListeCommunications.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<ListeParticipationCommunication>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<ListeCommunications>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
-
-        return new ResponseEntity<ListeParticipationCommunication>(HttpStatus.NOT_IMPLEMENTED);
+        
+        AdherentDto adh = this.adherentService.recupererAdherent(idadh);
+        ListeMessagesResulteDto lstMessage = this.getionMail.recupeHistoriqueMessage(adh.getEmail());
+        
+        ListeCommunications listeCommunications = new ListeCommunications();
+        
+        if (lstMessage.getLstMessageResulteDto() != null && !lstMessage.getLstMessageResulteDto().isEmpty()){
+           ArrayList<Manifestation> lstManifestationModel = new ArrayList();
+           for(MessageResultDto msgDto : lstMessage.getLstMessageResulteDto()){
+                Communication communicationModel = new Communication();
+               
+                //TODO Ajouter date
+              //  this.convertDate(communicationModel)
+               communicationModel.setDestinataire(communicationModel.getDestinataire());
+               communicationModel.setID(communicationModel.getID());
+               communicationModel.setRegleSpam(communicationModel.getRegleSpam());
+               communicationModel.setScoreSpam(communicationModel.getScoreSpam());
+               communicationModel.setStatut(communicationModel.getStatut());
+               communicationModel.setSujet(communicationModel.getSujet());
+               
+               listeCommunications.add(communicationModel);
+           }   
+        }
+        
+        return new ResponseEntity<>(listeCommunications,HttpStatus.OK);
     }
+
 
     public ResponseEntity<ListeManifestations> getListeManifestationsAdhrent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
@@ -206,7 +246,10 @@ public class AdherentApiController implements AdherentApi {
             }
         }
 
+
+
         return new ResponseEntity<ListeManifestations>(HttpStatus.NOT_IMPLEMENTED);
+
     }
 
     public ResponseEntity<Void> updateAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion de modifier", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion,@Parameter(in = ParameterIn.DEFAULT, description = "mise à jour d'une adhesion", required=true, schema=@Schema()) @Valid @RequestBody Adhesion body) {
