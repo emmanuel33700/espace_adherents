@@ -199,16 +199,7 @@ public class AdherentApiController implements AdherentApi {
      * @return 
      */
     public ResponseEntity<ListeCommunications> getListeCommunicationAdhrent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<ListeCommunications>(objectMapper.readValue("[  ]", ListeCommunications.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<ListeCommunications>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-        
+       
         AdherentDto adh = this.adherentService.recupererAdherent(idadh);
         ListeMessagesResulteDto lstMessage = this.getionMail.recupeHistoriqueMessage(adh.getEmail());
         
