@@ -2,7 +2,7 @@
 export interface Manifestation {
 
   /**
-   * Date de début de l'évènement
+   * Date de début de l'évènement (format ISO8601)
    */
   dateDebut?: string;
 

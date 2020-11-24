@@ -12,8 +12,7 @@ externalDocs:
   description: Find out more about Swagger
   url: 'http://swagger.io'
 servers:
-  - url: 'https://api.jalle-astro.fr/'
-  - url: 'http://api.jalle-astro.fr/v1'
+  - url: 'https://api.jalle-astro.fr/resource-adherents/'
 tags:
   - name: adherent
     description: gestion des adhérents
@@ -22,6 +21,21 @@ tags:
       url: 'http://plusdedétail.ht'
   - name: listing adherent
     description: listing des adhérents
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'
+  - name: adhesion
+    description: gestion des adhesions
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'
+  - name: Manifestation
+    description: Gestion de la participation d'un adherent à une manifestion
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'
+  - name: Communication
+    description: Gestion de communication d'un adherent
     externalDocs:
       description: Pour plus de détail
       url: 'http://plusdedétail.ht'
@@ -36,7 +50,7 @@ paths:
         - oAuth:
             - ress-adherent-admin
       requestBody:
-        description: Besoin de l'objet adhérent pour ajouter un adhérent
+        description: Objet adhérent
         content:
           application/json:
             schema:
@@ -65,7 +79,7 @@ paths:
     get:
       tags:
         - adherent
-      summary: rechercher adherent par id
+      summary: rechercher adherent
       operationId: getAdherent
       security:
         - oAuth:
@@ -73,7 +87,7 @@ paths:
       parameters:
         - name: idadh
           in: path
-          description: id de la personne à modifier
+          description: id de l'adherent
           required: true
           schema:
             type: integer
@@ -106,7 +120,7 @@ paths:
     delete:
       tags:
         - adherent
-      summary: Supression de l'adherent par id
+      summary: Supression de l'adherent
       operationId: deleteUser
       security:
         - oAuth:
@@ -114,7 +128,7 @@ paths:
       parameters:
         - name: idadh
           in: path
-          description: id de la personne à modifier
+          description: id de l'adherent
           required: true
           schema:
             type: integer
@@ -152,17 +166,247 @@ paths:
       parameters:
         - name: idadh
           in: path
-          description: id de la personne à modifier
+          description: id de l'adherent
           required: true
           schema:
             type: integer
             format: int64
       requestBody:
-        description: mise à jour de la personne
+        description: Objet adherent
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Adherent'
+        required: true
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/adhesion':
+    post:
+      tags:
+        - adhesion
+      summary: Ajouter une adhesions pour un adherent
+      operationId: ajoutAdhesionAdherent
+      security:
+        - oAuth:
+            - ress-adhesion-write
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Objet adhesion
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Adhesion'
+        required: true
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/adhesions':
+    get:
+      tags:
+        - adhesion
+      summary: rechercher la liste des adhésions pour un adherent
+      operationId: getListeAdhesionsAdherent
+      security:
+        - oAuth:
+            - ress-adhesion-read
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeAdhesions'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/adhesion/{idAdhesion}' :
+    get:
+      tags:
+        - adhesion
+      summary: rechercher une adhésion pour un adherent
+      operationId: getAdhesionAdherent
+      security:
+        - oAuth:
+            - ress-adhesion-read
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idAdhesion
+          in: path
+          description: id de l'adhesion à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Adhesion'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags:
+        - adhesion
+      summary: Supression d'une adhesion pour cet adherent
+      operationId: deleteAdhesionAdherent
+      security:
+        - oAuth:
+            - ress-adhesion-del
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idAdhesion
+          in: path
+          description: id de l'adhesion à supprimer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      tags:
+        - adhesion
+      summary: Mise à jour d'une adhesion pour cet adherent
+      description: Mise à jour d'une adhesion pour cet adherent
+      operationId: updateAdhesionAdherent
+      security:
+        - oAuth:
+            - ress-adhesion-write
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idAdhesion
+          in: path
+          description: id de l'adhesion de modifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: mise à jour d'une adhesion
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Adhesion'
         required: true
       responses:
         '200':
@@ -253,92 +497,233 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/manifestion':
+    post:
+      tags:
+        - Manifestation
+      summary: Ajouter la participation à une manifestation pour un adherent
+      operationId: ajoutManifestationAdherent
+      security:
+        - oAuth:
+            - ress-manifestation-write
+      parameters:
+        - name: idadh
+          in: path
+          description: id l'adherent à modifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Besoin de l'objet manifestation le lier à un adherents
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipationManifestation'
+        required: true
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/manifestions':
+    get:
+      tags:
+        - Manifestation
+      summary: rechercher la liste des manifestations auxquels participe un adherent
+      operationId: getListeManifestationsAdhrent
+      security:
+        - oAuth:
+            - ress-manifestation-read
+      parameters:
+        - name: idadh
+          in: path
+          description: id d'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListeManifestations'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/manifestion/{idManifestation}':
+    delete:
+      tags:
+        - Manifestation
+      summary: Supression d'une manifestation pour un adherent
+      operationId: deleteManifestationAdherent
+      security:
+        - oAuth:
+            - ress-manifestation-del
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idManifestation
+          in: path
+          description: id de la manifestation à supprimer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      tags:
+        - Manifestation
+      summary: Mise à jour d'une manifestation pour un adherent
+      description: Mise à jour d'une manifestation pour un adherent
+      operationId: updateManifestationAdherent
+      security:
+        - oAuth:
+            - ress-manifestation-write
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idManifestation
+          in: path
+          description: id de la manifestation à modifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: mise à jour d'une adhesion
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipationManifestation'
+        required: true
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/communications':
+    get:
+      tags:
+        - Communication
+      summary: rechercher la liste de communications que le client a recu
+      operationId: getListeCommunicationAdhrent
+      security:
+        - oAuth:
+            - ress-communication-read
+      parameters:
+        - name: idadh
+          in: path
+          description: id d'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListeCommunications'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
 components:
   schemas:
-    listeAdherents:
-      type: array
-      items:
-        $ref: '#/components/schemas/Adherent'
-    Adherent:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        civilite:
-          type: string
-          description: civilite de l'adhenrent
-          enum:
-            - Mr
-            - Mme
-        nom:
-          maxLength: 20
-          minLength: 3
-          type: string
-        prenom:
-          maxLength: 20
-          minLength: 3
-          type: string
-        adresse1:
-          maxLength: 37
-          minLength: 3
-          type: string
-        adresse2:
-          maxLength: 37
-          minLength: 3
-          type: string
-        codePostal:
-          maxLength: 5
-          minLength: 5
-          type: string
-        ville:
-          maxLength: 50
-          minLength: 3
-          type: string
-        telMaison:
-          maxLength: 10
-          minLength: 10
-          type: string
-        telTravail:
-          maxLength: 10
-          minLength: 10
-          type: string
-        telPortable:
-          maxLength: 10
-          minLength: 10
-          type: string
-        email:
-          maxLength: 40
-          minLength: 5
-          type: string
-        profession:
-          maxLength: 50
-          minLength: 5
-          type: string
-        dateNaissance:
-          type: string
-          format: date-time
-        lienPhotoProfil:
-          type: string
-          description: lien vers la photo de profile
-        accordMail:
-          type: boolean
-          description: donne son accord pour recevoiur des mails
-        publicContact:
-          type: boolean
-          description: donne son accord afficher ces coordonnées dans l'espace adherents
-        commentaire:
-          maxLength: 100
-          minLength: 2
-          type: string
-        dateEnregistrement:
-          type: string
-          format: date-time
-        dateMiseAJour:
-          type: string
-          format: date-time
-      xml:
-        name: Order
     ApiResponse:
       type: object
       properties:
@@ -349,27 +734,393 @@ components:
           type: string
         message:
           type: string
+    listeAdherents:
+      type: array
+      items:
+        $ref: '#/components/schemas/Adherent'
+    Adherent:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        civilite:
+          type: string
+          description: civilite de l'adhenrent
+          enum:
+            - Mr
+            - Mme
+        nom:
+          maxLength: 20
+          minLength: 3
+          type: string
+          example: Dupont
+        prenom:
+          maxLength: 20
+          minLength: 3
+          type: string
+          example: Jean
+        adresse1:
+          maxLength: 37
+          minLength: 3
+          type: string
+          example: 6 rue des adresse
+        adresse2:
+          maxLength: 37
+          minLength: 3
+          type: string
+          example: domaine des adresse
+        codePostal:
+          maxLength: 5
+          minLength: 5
+          type: string
+          example: 33127
+        ville:
+          maxLength: 50
+          minLength: 3
+          type: string
+          example: Martignas
+        telMaison:
+          maxLength: 10
+          minLength: 10
+          type: string
+          example: 0555555555
+        telTravail:
+          maxLength: 10
+          minLength: 10
+          type: string
+          example: 0555555555
+        telPortable:
+          maxLength: 10
+          minLength: 10
+          type: string
+          example: 0655555555
+        email:
+          maxLength: 40
+          minLength: 5
+          type: string
+          example: test.test@gmail.com
+        profession:
+          maxLength: 50
+          minLength: 5
+          type: string
+          example: Astronome
+        dateNaissance:
+          type: string
+          example: '2020-01-18T21:00:00'
+          description: date de naissance au format iso8601
+        lienPhotoProfil:
+          type: string
+          description: lien vers la photo de profile
+          example: photo.jpg
+        accordMail:
+          type: boolean
+          description: donne son accord pour recevoiur des mails
+          example: true
+        publicContact:
+          type: boolean
+          description: donne son accord afficher ces coordonnées dans l'espace adherents
+          example: false
+        commentaire:
+          maxLength: 100
+          minLength: 2
+          type: string
+          example: voici un commentaire
+        dateEnregistrement:
+          type: string
+          example: '2020-01-18T21:00:00'
+          description: date de'enregistrement au format iso8601
+        dateMiseAJour:
+          type: string
+          example: '2020-01-18T21:00:00'
+          description: date de mise à jour au format iso8601
+      xml:
+        name: Order
+    listeAdhesions:
+      type: array
+      items:
+        $ref: '#/components/schemas/Adhesion'
+    Adhesion:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Id de l'adhesion
+          example: 1
+        idAdherent:
+          type: integer
+          format: int64
+          description: Id de l'adherent
+          example: 1
+        idAnneeAdhesion:
+          type: integer
+          format: int64
+          description: Id anne adhesion
+          example: 1
+        idTypeAdhesion:
+          type: integer
+          format: int64
+          description: |
+            Types d'adhersions. Valeurs possibles :
+            * 1 : ADULTE               
+            * 2 : FAMILLE             
+            * 3 : RESPONSABLE DE FAMILLE                 
+            * 4 : ENFANT
+            * 5 : BIENFAITEUR                  
+            * 6 : HONNEUR 
+            * 7 : ETUDIANT          
+            * 8 : DEMANDEUR EMPLOI  
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+        comptaSomme:
+          type: integer
+          format: int64
+          description: Somme payé par l'adherent pour cette adhesion
+          example: 45
+        comptaBanque:
+          maxLength: 35
+          minLength: 2
+          type: string
+          description: Nom de la banque si paiement par cheque
+          example: Credit agricole
+        comptaNumCheque:
+          maxLength: 35
+          minLength: 2
+          type: string
+          description: Num du cheque si paiement par cheque
+          example: 15gg778
+        cheque:
+          type: boolean
+          description: Indique si paiement par cheque
+          example: true
+        espace:
+          type: boolean
+          description: Indique si paiement par espece
+          example: false
+    ListeManifestations:
+      type: array
+      items:
+        $ref: '#/components/schemas/Manifestation'
+    Manifestation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Id de la manifestation
+          example: 1
+        idAdherent:
+          type: integer
+          format: int64
+          description: Id de l'adherent
+          example: 1
+        descriptionCourte:
+          maxLength: 100
+          minLength: 2
+          type: string
+          description: Description courte de l'évènement
+          example: Manifestation à la conférence
+        descriptionLongue:
+          maxLength: 500
+          minLength: 2
+          type: string
+          description: Description longue de l'évènement
+          example: Manifestation à la conférence sur le soleil qui sera présenté par Mr dupond
+        lieux:
+          maxLength: 100
+          minLength: 2
+          type: string
+          description: Description du lieux de l'évènement
+          example: Martignas
+        dateDebut:
+          type: string
+          description: Date de début de l'évènement (format ISO8601)
+          example: '2020-01-18T21:00:00'
+        dateFin:
+          type: string
+          description: Date de fin de l'évènement 
+          example: '2020-01-18T21:00:00'
+        statutParticipation:
+          type: integer
+          format: int64
+          description: |
+            Types de participation. Valeurs possibles :
+            * 1 : PARTICIPE               
+            * 2 : PARTICIPE PAS             
+            * 3 : NE SAIS PAS               
+          enum:
+            - 1
+            - 2
+            - 3
+          example: 1
+      xml:
+        name: Order
+    ParticipationManifestation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Id de la manifestation
+          example: 1
+        idAdherent:
+          type: integer
+          format: int64
+          description: Id de l'adherent
+          example: 1
+        statutParticipation:
+          type: integer
+          format: int64
+          description: |
+            Types de participation. Valeurs possibles :
+            * 1 : PARTICIPE               
+            * 2 : PARTICIPE PAS             
+            * 3 : NE SAIS PAS               
+          enum:
+            - 1
+            - 2
+            - 3
+          example: 1
+      xml:
+        name: Order
+    ListeCommunications:
+      type: array
+      items:
+        $ref: '#/components/schemas/Communication'
+    Communication:
+      type: object
+      properties:
+        id:
+          description: Id du message envoyé
+          type: integer
+          format: int64
+          example: 1152921509764664300
+        dateArrive:
+          type: string
+          description: date d'arrive du message (format ISO8601)
+          example: '2020-01-18T21:00:00'
+        destinataire:
+          maxLength: 100
+          minLength: 2
+          type: string
+          description: mail de l'adherent qui recoit le message
+          example: user@example.comg
+        sujet:
+          maxLength: 100
+          minLength: 2
+          type: string
+          description: sujet du message envoyé
+          example: Hello
+        statut:
+          description: statut du mail
+          maxLength: 50
+          minLength: 3
+          type: string
+          enum:
+          - unknown
+          - queued
+          - sent
+          - opened
+          - clicked
+          - bounce
+          - spam
+          - unsub
+          - blocked
+          - hardbounced
+          - softbounced
+          - deferred
+          example: clicked
+        typeErreur:
+          type: integer
+          description: |
+            ID numérique unique expliquant pourquoi le message n'a pas été remis avec succès au destinataire. Uniquement renvoyé si le message n'a pas été remis avec succès. Valeur possible :
+            * 1 : user unknown (recipient)
+            * 2 : mailbox inactive (recipient)
+            * 3 : quota exceeded (recipient)
+            * 4 : invalid domain (domain)
+            * 5 : no mail host (domain)
+            * 6 : relay/access denied (domain)
+            * 7 : sender blocked (spam)
+            * 8 : content blocked (spam)
+            * 9 : policy issue (spam)
+            * 10 : system issue (system)
+            * 11 : protocol issue (system)
+            * 12 : connection issue (system)
+            * 13 : greylisted (domain)
+            * 14 : preblocked (provider)
+            * 15 : duplicate in campaign (provider)
+            * 16 : spam preblocked (provider)
+            * 17 : bad or empty template (content)
+            * 18 : error in template language (content)
+            * 19 : typofix (domain)
+            * 20 : blacklisted (recipient)
+            * 21 : spam reporter (recipient)
+          example: 1 
+        scoreSpam:
+          type: integer
+          description: SpamassassinScore pour le message
+          example: 1 
+        regleSpam:
+          description: Règles de SpamAssassin correspondantes.
+          maxLength: 50
+          minLength: 3
+          type: string
+        UUID:
+          description: UUID du message
+          maxLength: 50
+          minLength: 3
+          type: string
+          example: 1514cfef-8334-480e-9e06-f634f564b9ac  
+      xml:
+        name: Order
   securitySchemes:
     oAuth:
       type: oauth2
       description: 'This API uses OAuth 2 with the implicit grant flow. [More info]'
       flows:
         clientCredentials:
-          tokenUrl: 'http://127.0.0.1:8081/authorization-server/oauth/token'
+          tokenUrl: 'https://api.jalle-astro.fr/authorization-server/oauth/token'
           scopes:
             ress-adherent-admin: droit administration sur les ressources autorisation
         authorizationCode:
-          authorizationUrl: 'http://127.0.0.1:8081/authorization-server/oauth/authorize'
-          tokenUrl: 'http://127.0.0.1:8081/authorization-server/oauth/token'
+          authorizationUrl: 'https://api.jalle-astro.fr/authorization-server/oauth/authorize'
+          tokenUrl: 'https://api.jalle-astro.fr/authorization-server/oauth/token'
           scopes:
             ress-adherent-admin: droit administration sur les ressources adherent
             ress-adherent-read: droit de lecteur sur les ressoruces adherent
             ress-adherent-write: droit d'écriture sur les ressoruces adherent
             ress-adherent-del: droit de suppression sur les ressoruces adherent
+            ress-adhesion-admin: droit administration sur les ressources adhesion
+            ress-adhesion-read: droit de lecteur sur les ressoruces adhesion
+            ress-adhesion-write: droit d'écriture sur les ressoruces adhesion
+            ress-adhesion-del: droit de suppression sur les adherent adhesion
+            ress-manifestation-admin: droit administration sur les ressources manifestation
+            ress-manifestation-read: droit de lecteur sur les ressoruces manifestation
+            ress-manifestation-write: droit d'écriture sur les ressoruces manifestation
+            ress-manifestation-del: droit de suppression sur les adherent manifestation
+            ress-communication-read: droit de lecture des communication envoyé aux adherents
         password:
-          tokenUrl: 'http://127.0.0.1:8081/authorization-server/oauth/token'
+          tokenUrl: 'https://api.jalle-astro.fr/authorization-server/oauth/token'
           scopes:
             ress-adherent-admin: droit administration sur les ressources adherent
             ress-adherent-read: droit de lecteur sur les ressoruces adherent
             ress-adherent-write: droit d'écriture sur les ressoruces adherent
             ress-adherent-del: droit de suppression sur les adherent autorisation
+            ress-adhesion-admin: droit administration sur les ressources adhesion
+            ress-adhesion-read: droit de lecteur sur les ressoruces adhesion
+            ress-adhesion-write: droit d'écriture sur les ressoruces adhesion
+            ress-adhesion-del: droit de suppression sur les adherent adhesion
+            ress-manifestation-admin: droit administration sur les ressources manifestation
+            ress-manifestation-read: droit de lecteur sur les ressoruces manifestation
+            ress-manifestation-write: droit d'écriture sur les ressoruces manifestation
+            ress-manifestation-del: droit de suppression sur les adherent manifestation
+            ress-communication-read: droit de lecture des communication envoyé aux adherents

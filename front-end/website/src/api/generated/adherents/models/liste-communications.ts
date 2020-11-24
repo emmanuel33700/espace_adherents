@@ -1,3 +1,3 @@
 /* tslint:disable */
 import { Communication } from './communication';
-export type ListeParticipationCommunication = Array<Communication>;
+export type ListeCommunications = Array<Communication>;

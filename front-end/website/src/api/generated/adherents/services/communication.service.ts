@@ -8,7 +8,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
-import { ListeParticipationCommunication } from '../models/liste-participation-communication';
+import { ListeCommunications } from '../models/liste-communications';
 
 
 /**
@@ -43,7 +43,7 @@ export class CommunicationService extends BaseService {
      */
     idadh: number;
 
-  }): Observable<StrictHttpResponse<ListeParticipationCommunication>> {
+  }): Observable<StrictHttpResponse<ListeCommunications>> {
 
     const rb = new RequestBuilder(this.rootUrl, CommunicationService.GetListeCommunicationAdhrentPath, 'get');
     if (params) {
@@ -57,7 +57,7 @@ export class CommunicationService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ListeParticipationCommunication>;
+        return r as StrictHttpResponse<ListeCommunications>;
       })
     );
   }
@@ -75,10 +75,10 @@ export class CommunicationService extends BaseService {
      */
     idadh: number;
 
-  }): Observable<ListeParticipationCommunication> {
+  }): Observable<ListeCommunications> {
 
     return this.getListeCommunicationAdhrent$Response(params).pipe(
-      map((r: StrictHttpResponse<ListeParticipationCommunication>) => r.body as ListeParticipationCommunication)
+      map((r: StrictHttpResponse<ListeCommunications>) => r.body as ListeCommunications)
     );
   }
 

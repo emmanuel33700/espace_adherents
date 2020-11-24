@@ -14,8 +14,20 @@ export interface Adherent {
   civilite?: 'Mr' | 'Mme';
   codePostal?: string;
   commentaire?: string;
+
+  /**
+   * date de'enregistrement au format iso8601
+   */
   dateEnregistrement?: string;
+
+  /**
+   * date de mise à jour au format iso8601
+   */
   dateMiseAJour?: string;
+
+  /**
+   * date de naissance au format iso8601
+   */
   dateNaissance?: string;
   email?: string;
   id?: number;

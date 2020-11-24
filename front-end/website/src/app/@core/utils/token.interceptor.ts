@@ -1,4 +1,4 @@
-import {Injectable, Injector} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -7,17 +7,20 @@ import {
 } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
-import {nbAuthCreateToken, NbAuthJWTToken, NbAuthService, NbAuthToken} from '@nebular/auth';
+import { NbAuthService, NbAuthToken} from '@nebular/auth';
 import {switchMap} from 'rxjs/operators';
+import {LoggerService} from './logger.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   strategy: string = '';
 
-  constructor(private authService: NbAuthService) {}
+  constructor(private authService: NbAuthService,
+              private loggerService: LoggerService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
+    this.loggerService.info('*************token interceptor***********************');
     return this.authService.getToken()
       .pipe(
         switchMap((token: NbAuthToken) => {
@@ -37,7 +40,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
   getClaims(rawToken: string): string {
 
-    console.info(rawToken);
+    this.loggerService.debug(rawToken);
     const obj = JSON.parse(rawToken);
     return obj.access_token ;
   //  if (!rawToken) {

@@ -2,44 +2,68 @@
 export interface Communication {
 
   /**
-   * Date d'envoi
+   * UUID du message
    */
-  dateEnvoi?: string;
+  UUID?: string;
 
   /**
-   * Types d'envement. Valeurs possibles :
-   * * accepted : Provider accepted the request to send/forward the email and the message has been placed in queue.
-   * * rejected : Provider rejected the request to send/forward the email.
-   * * delivered : Provider sent the email and it was accepted by the recipient email server.
-   * * failed : Provider could not deliver the email to the recipient email server.
-   * * opened : The email recipient opened the email and enabled image viewing. Open tracking must be enabled in the Mailgun control panel, and the CNAME record must be pointing to Provider
-   * * clicked : The email recipient clicked on a link in the email. Click tracking must be enabled in the Provider control panel, and the CNAME record must be pointing to Provider 
-   * * unsubscribed : The email recipient clicked on the unsubscribe link. Unsubscribe tracking must be enabled in the Provider  control panel.
-   * * complained : The email recipient clicked on the spam complaint button within their email client. Feedback loops enable the notification to be received by Provider 
-   * * stored : Provider has stored an incoming message
-   * * list_member_uploaded : This event occurs after successfully adding a member to a mailing list.
-   * * list_member_upload_error : This event occurs if an error occurs adding a member to a mailing list.
-   * * list_uploaded : This event occurs after successfully uploading a large list of members to a mailing list.
+   * date d'arrive du message (format ISO8601)
    */
-  evenement?: 'accepted' | 'rejected' | 'delivered' | 'failed' | 'opened' | 'clicked' | 'unsubscribed' | 'complained' | 'stored' | 'list_member_uploaded' | 'list_member_upload_error' | 'list_uploaded';
+  dateArrive?: string;
 
   /**
    * mail de l'adherent qui recoit le message
    */
-  messageFrom?: string;
+  destinataire?: string;
 
   /**
-   * id du message
+   * Id du message envoyé
    */
-  messageID?: string;
+  id?: number;
 
   /**
-   * sujet du message
+   * Règles de SpamAssassin correspondantes.
    */
-  messageSujet?: string;
+  regleSpam?: string;
 
   /**
-   * mail de l'adherent qui recoit le message
+   * SpamassassinScore pour le message
    */
-  messageTo?: string;
+  scoreSpam?: number;
+
+  /**
+   * statut du mail
+   */
+  statut?: 'unknown' | 'queued' | 'sent' | 'opened' | 'clicked' | 'bounce' | 'spam' | 'unsub' | 'blocked' | 'hardbounced' | 'softbounced' | 'deferred';
+
+  /**
+   * sujet du message envoyé
+   */
+  sujet?: string;
+
+  /**
+   * ID numérique unique expliquant pourquoi le message n'a pas été remis avec succès au destinataire. Uniquement renvoyé si le message n'a pas été remis avec succès. Valeur possible :
+   * * 1 : user unknown (recipient)
+   * * 2 : mailbox inactive (recipient)
+   * * 3 : quota exceeded (recipient)
+   * * 4 : invalid domain (domain)
+   * * 5 : no mail host (domain)
+   * * 6 : relay/access denied (domain)
+   * * 7 : sender blocked (spam)
+   * * 8 : content blocked (spam)
+   * * 9 : policy issue (spam)
+   * * 10 : system issue (system)
+   * * 11 : protocol issue (system)
+   * * 12 : connection issue (system)
+   * * 13 : greylisted (domain)
+   * * 14 : preblocked (provider)
+   * * 15 : duplicate in campaign (provider)
+   * * 16 : spam preblocked (provider)
+   * * 17 : bad or empty template (content)
+   * * 18 : error in template language (content)
+   * * 19 : typofix (domain)
+   * * 20 : blacklisted (recipient)
+   * * 21 : spam reporter (recipient)
+   */
+  typeErreur?: number;
 }

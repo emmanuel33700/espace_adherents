@@ -6,5 +6,5 @@ export { Adhesion } from './models/adhesion';
 export { ListeManifestations } from './models/liste-manifestations';
 export { Manifestation } from './models/manifestation';
 export { ParticipationManifestation } from './models/participation-manifestation';
-export { ListeParticipationCommunication } from './models/liste-participation-communication';
+export { ListeCommunications } from './models/liste-communications';
 export { Communication } from './models/communication';

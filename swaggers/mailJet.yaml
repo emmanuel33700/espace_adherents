@@ -1,0 +1,240 @@
+openapi: 3.0.1
+info:
+  title: Swagger mailjet
+  description:  Swagger mailjet
+  contact:
+    email: manu.chenais@gmail.com
+  license:
+    name: GNU General Public License v3.0
+    url: https://www.gnu.org/licenses/gpl-3.0.fr.html
+  version: 1.0.0
+servers:
+- url: https://api.mailjet.com/v3/REST/
+tags:
+- name: mailjet
+paths:
+  /message:
+    get:
+      tags:
+      - mailjet
+      summary: Récupérer les informations d'authentification
+      description: vérifier si un login existe dans la BD
+      operationId: getMessage
+      parameters:
+        - in: query
+          name: ContactAlt
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListeMessages'
+        404:
+          description: login non trouvée
+        403:
+          description: Droit insufisant 
+        405:
+          description: Invalid input
+
+components:
+  schemas:
+    ListeMessages:
+      type: object
+      properties:
+        Count:
+          type: integer
+          format: int64
+          description: Nombre de message
+          example: 1
+        Data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Message'
+        Total:
+          type: integer
+          format: int64
+          description: Nombre de message
+          example: 1
+    Message:
+      type: object
+      properties:
+        ArrivedAt:
+          type: string
+          description: date d'arrive du message
+          format: date-time
+        AttachmentCount:
+          type: integer
+          minimum: 0
+          maximum: 20
+          description: Nombre de fichier attaché
+          example: 1
+        AttemptCount:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Nombre de tentatice de remise de message
+          example: 1
+        CampaignID:
+          type: integer
+          format: int64
+          description: id de la camapgne
+          example: 1  
+        ContactAlt:
+          description: mail du destinataire
+          maxLength: 50
+          minLength: 3
+          type: string
+          example: test.test@gmail.com
+        ContactID:
+          type: integer
+          format: int64
+          description: ID numérique unique du contact auquel le message a été envoyé
+          example: 1  
+        Delay:
+          type: integer
+          minimum: 0
+          description: Delais en seconde entre le traitement du message et sa remise
+          example: 1
+        DestinationID:
+          type: integer
+          minimum: 0
+          description: ID numérique unique du domaine de l'e-mail du destinataire.
+          example: 1
+        FilterTime:
+          type: integer
+          minimum: 0
+          description: Temps passé à traiter le texte du message (en millisecondes).
+          example: 1
+        ID:
+          description: Id du message envoyé
+          type: integer
+          format: int64
+          example: 1152921509764664300
+        IsClickTracked:
+          description: Indique si les clics sont suivis pour ce message ou non.
+          type: boolean
+          example: true
+        IsHTMLPartIncluded:
+          description: Indique si le message inclut du contenu HTML
+          type: boolean
+          example: true
+        IsOpenTracked:
+          description: indique si les ouvertures sont suivies pour ce message ou non.
+          type: boolean
+          example: true
+        IsTextPartIncluded:
+          description: indique si le message comprend une partie de texte brut 
+          type: boolean
+          example: true
+        IsUnsubTracked:
+          description: Indicates whether unsubscriptions are tracked for this message or not.
+          type: boolean
+          example: true
+        MessageSize:
+          type: integer
+          minimum: 0
+          description: taille du message (en byte)
+          example: 1
+        SenderID:
+          type: integer
+          format: int64
+          description: ID numérique unique de l'adresse e-mail de l'expéditeur.
+          example: 1 
+        SpamassassinScore:
+          type: integer
+          description: SpamassassinScore pour le message
+          example: 1 
+        SpamassRules:
+          description: Règles de SpamAssassin correspondantes.
+          maxLength: 50
+          minLength: 3
+          type: string
+        StateID:
+          type: integer
+          description: |
+            ID numérique unique expliquant pourquoi le message n'a pas été remis avec succès au destinataire. Uniquement renvoyé si le message n'a pas été remis avec succès. Valeur possible :
+            * 1 : user unknown (recipient)
+            * 2 : mailbox inactive (recipient)
+            * 3 : quota exceeded (recipient)
+            * 4 : invalid domain (domain)
+            * 5 : no mail host (domain)
+            * 6 : relay/access denied (domain)
+            * 7 : sender blocked (spam)
+            * 8 : content blocked (spam)
+            * 9 : policy issue (spam)
+            * 10 : system issue (system)
+            * 11 : protocol issue (system)
+            * 12 : connection issue (system)
+            * 13 : greylisted (domain)
+            * 14 : preblocked (Mailjet)
+            * 15 : duplicate in campaign (Mailjet)
+            * 16 : spam preblocked (Mailjet)
+            * 17 : bad or empty template (content)
+            * 18 : error in template language (content)
+            * 19 : typofix (domain)
+            * 20 : blacklisted (recipient)
+            * 21 : spam reporter (recipient)
+          example: 1 
+        StatePermanent:
+          description: Indique si l'état actuel du message est permanent (c'est-à-dire qu'il ne peut plus être changé) ou non.
+          type: boolean
+          example: true
+        Status:
+          description: statut du mail
+          maxLength: 50
+          minLength: 3
+          type: string
+          enum:
+          - unknown
+          - queued
+          - sent
+          - opened
+          - clicked
+          - bounce
+          - spam
+          - unsub
+          - blocked
+          - hardbounced
+          - softbounced
+          - deferred
+          example: clicked
+        Subject:
+          description: Sujet du mail
+          maxLength: 200
+          minLength: 1
+          type: string
+          example: un exemple de mail
+        UUID:
+          description: UUID du message
+          maxLength: 50
+          minLength: 3
+          type: string
+          example: 1514cfef-8334-480e-9e06-f634f564b9ac  
+  securitySchemes:
+    oAuth:    
+      type: oauth2
+      description: This API uses OAuth 2 with the implicit grant flow. [More info]
+      flows:
+        clientCredentials:  
+          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
+          scopes:
+            ress-autorization-admin: droit administration sur les ressources autorisation
+        authorizationCode:  
+          authorizationUrl: http://127.0.0.1:8081/authorization-server/oauth/authorize
+          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
+          scopes:
+            ress-autorization-admin: droit administration sur les ressources autorisation
+            ress-autorization-read : droit de lecteur sur les ressoruces autorisation
+            ress-autorization-write : droit d'écriture sur les ressoruces autorisation
+            ress-autorization-del : droit de suppression sur les ressoruces autorisation
+        password:
+          tokenUrl: http://127.0.0.1:8081/authorization-server/oauth/token
+          scopes:
+            ress-autorization-admin: droit administration sur les ressources autorisation
+            ress-autorization-read : droit de lecteur sur les ressoruces autorisation
+            ress-autorization-write : droit d'écriture sur les ressoruces autorisation
+            ress-autorization-del : droit de suppression sur les ressoruces autorisation
