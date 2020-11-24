@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
@@ -34,10 +32,10 @@ public class Manifestation   {
   private String lieux = null;
 
   @JsonProperty("dateDebut")
-  private OffsetDateTime dateDebut = null;
+  private String dateDebut = null;
 
   @JsonProperty("dateFin")
-  private OffsetDateTime dateFin = null;
+  private String dateFin = null;
 
   /**
    * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS                
@@ -169,27 +167,26 @@ public class Manifestation   {
     this.lieux = lieux;
   }
 
-  public Manifestation dateDebut(OffsetDateTime dateDebut) {
+  public Manifestation dateDebut(String dateDebut) {
     this.dateDebut = dateDebut;
     return this;
   }
 
   /**
-   * Date de début de l'évènement
+   * Date de début de l'évènement (format ISO8601)
    * @return dateDebut
    **/
-  @Schema(description = "Date de début de l'évènement")
+  @Schema(example = "2020-01-18T21:00:00", description = "Date de début de l'évènement (format ISO8601)")
   
-    @Valid
-    public OffsetDateTime getDateDebut() {
+    public String getDateDebut() {
     return dateDebut;
   }
 
-  public void setDateDebut(OffsetDateTime dateDebut) {
+  public void setDateDebut(String dateDebut) {
     this.dateDebut = dateDebut;
   }
 
-  public Manifestation dateFin(OffsetDateTime dateFin) {
+  public Manifestation dateFin(String dateFin) {
     this.dateFin = dateFin;
     return this;
   }
@@ -198,14 +195,13 @@ public class Manifestation   {
    * Date de fin de l'évènement
    * @return dateFin
    **/
-  @Schema(description = "Date de fin de l'évènement")
+  @Schema(example = "2020-01-18T21:00:00", description = "Date de fin de l'évènement")
   
-    @Valid
-    public OffsetDateTime getDateFin() {
+    public String getDateFin() {
     return dateFin;
   }
 
-  public void setDateFin(OffsetDateTime dateFin) {
+  public void setDateFin(String dateFin) {
     this.dateFin = dateFin;
   }
 

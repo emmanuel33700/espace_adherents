@@ -30,10 +30,15 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.TimeZone;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.threeten.bp.DateTimeUtils;
@@ -210,10 +215,9 @@ public class AdherentApiController implements AdherentApi {
            for(MessageResultDto msgDto : lstMessage.getLstMessageResulteDto()){
                 Communication communicationModel = new Communication();
                 
-               OffsetDateTime odt = DateTimeUtils.toInstant(msgDto.getDateArrive()).atOffset(org.threeten.bp.ZoneOffset.UTC);
-               communicationModel.setDateArrive(odt);
+               communicationModel.setDateArrive(this.dateToString(msgDto.getDateArrive()));
                communicationModel.setDestinataire(msgDto.getMailDestinataire());
-               communicationModel.setID(msgDto.getId());
+               communicationModel.setId(msgDto.getId());
                communicationModel.setRegleSpam(msgDto.getRegleSpam());
                communicationModel.setScoreSpam(msgDto.getScoreSpam());
                communicationModel.setStatut(this.convertStatutEnum(msgDto.getStatut()));
@@ -302,9 +306,7 @@ public class AdherentApiController implements AdherentApi {
         adh.setEmail(model.getEmail());
         adh.setProfession(model.getProfession());
         if (model.getDateNaissance() != null) {
-            long epochMilli = model.getDateNaissance().toInstant().toEpochMilli();
-            Date dateNaissance = new Date(epochMilli);
-            adh.setDateNaissance(dateNaissance);
+            adh.setDateNaissance(this.convertToDate(model.getDateNaissance()));
         }
         adh.setAccordMail(model.isAccordMail());
         adh.setPublicContact(model.isPublicContact());
@@ -388,5 +390,28 @@ public class AdherentApiController implements AdherentApi {
         return Communication.StatutEnum.UNKNOWN;
     }
 
+    /**
+     * convertir date en string format ISO
+     * @param dateArrive
+     * @return 
+     */
+    private String dateToString(Date dateArrive) {
+        SimpleDateFormat sdf;
+        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        sdf.setTimeZone(TimeZone.getTimeZone("CET"));
+        return sdf.format(dateArrive);
+    }
+
+    private Date convertToDate(String dateNaissance) {
+        DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        try {
+            return df1.parse(dateNaissance);
+        } catch (ParseException ex) {
+            log.error("error dans formatage de date " + ex.getLocalizedMessage());
+        }
+        return null;
+    }
+
+    
 
 }

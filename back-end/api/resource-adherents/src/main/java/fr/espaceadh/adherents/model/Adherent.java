@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
@@ -88,7 +86,7 @@ public class Adherent   {
   private String profession = null;
 
   @JsonProperty("dateNaissance")
-  private OffsetDateTime dateNaissance = null;
+  private String dateNaissance = null;
 
   @JsonProperty("lienPhotoProfil")
   private String lienPhotoProfil = null;
@@ -103,10 +101,10 @@ public class Adherent   {
   private String commentaire = null;
 
   @JsonProperty("dateEnregistrement")
-  private OffsetDateTime dateEnregistrement = null;
+  private String dateEnregistrement = null;
 
   @JsonProperty("dateMiseAJour")
-  private OffsetDateTime dateMiseAJour = null;
+  private String dateMiseAJour = null;
 
   public Adherent id(Long id) {
     this.id = id;
@@ -355,23 +353,22 @@ public class Adherent   {
     this.profession = profession;
   }
 
-  public Adherent dateNaissance(OffsetDateTime dateNaissance) {
+  public Adherent dateNaissance(String dateNaissance) {
     this.dateNaissance = dateNaissance;
     return this;
   }
 
   /**
-   * Get dateNaissance
+   * date de naissance au format iso8601
    * @return dateNaissance
    **/
-  @Schema(description = "")
+  @Schema(example = "2020-01-18T21:00:00", description = "date de naissance au format iso8601")
   
-    @Valid
-    public OffsetDateTime getDateNaissance() {
+    public String getDateNaissance() {
     return dateNaissance;
   }
 
-  public void setDateNaissance(OffsetDateTime dateNaissance) {
+  public void setDateNaissance(String dateNaissance) {
     this.dateNaissance = dateNaissance;
   }
 
@@ -451,43 +448,41 @@ public class Adherent   {
     this.commentaire = commentaire;
   }
 
-  public Adherent dateEnregistrement(OffsetDateTime dateEnregistrement) {
+  public Adherent dateEnregistrement(String dateEnregistrement) {
     this.dateEnregistrement = dateEnregistrement;
     return this;
   }
 
   /**
-   * Get dateEnregistrement
+   * date de'enregistrement au format iso8601
    * @return dateEnregistrement
    **/
-  @Schema(description = "")
+  @Schema(example = "2020-01-18T21:00:00", description = "date de'enregistrement au format iso8601")
   
-    @Valid
-    public OffsetDateTime getDateEnregistrement() {
+    public String getDateEnregistrement() {
     return dateEnregistrement;
   }
 
-  public void setDateEnregistrement(OffsetDateTime dateEnregistrement) {
+  public void setDateEnregistrement(String dateEnregistrement) {
     this.dateEnregistrement = dateEnregistrement;
   }
 
-  public Adherent dateMiseAJour(OffsetDateTime dateMiseAJour) {
+  public Adherent dateMiseAJour(String dateMiseAJour) {
     this.dateMiseAJour = dateMiseAJour;
     return this;
   }
 
   /**
-   * Get dateMiseAJour
+   * date de mise à jour au format iso8601
    * @return dateMiseAJour
    **/
-  @Schema(description = "")
+  @Schema(example = "2020-01-18T21:00:00", description = "date de mise à jour au format iso8601")
   
-    @Valid
-    public OffsetDateTime getDateMiseAJour() {
+    public String getDateMiseAJour() {
     return dateMiseAJour;
   }
 
-  public void setDateMiseAJour(OffsetDateTime dateMiseAJour) {
+  public void setDateMiseAJour(String dateMiseAJour) {
     this.dateMiseAJour = dateMiseAJour;
   }
 

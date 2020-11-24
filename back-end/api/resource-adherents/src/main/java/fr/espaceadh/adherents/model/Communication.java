@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
@@ -18,11 +16,11 @@ import javax.validation.constraints.*;
 
 
 public class Communication   {
-  @JsonProperty("ID")
-  private Long ID = null;
+  @JsonProperty("id")
+  private Long id = null;
 
   @JsonProperty("dateArrive")
-  private OffsetDateTime dateArrive = null;
+  private String dateArrive = null;
 
   @JsonProperty("destinataire")
   private String destinataire = null;
@@ -95,42 +93,41 @@ public class Communication   {
   @JsonProperty("UUID")
   private String UUID = null;
 
-  public Communication ID(Long ID) {
-    this.ID = ID;
+  public Communication id(Long id) {
+    this.id = id;
     return this;
   }
 
   /**
    * Id du message envoyé
-   * @return ID
+   * @return id
    **/
   @Schema(example = "1152921509764664300", description = "Id du message envoyé")
   
-    public Long getID() {
-    return ID;
+    public Long getId() {
+    return id;
   }
 
-  public void setID(Long ID) {
-    this.ID = ID;
+  public void setId(Long id) {
+    this.id = id;
   }
 
-  public Communication dateArrive(OffsetDateTime dateArrive) {
+  public Communication dateArrive(String dateArrive) {
     this.dateArrive = dateArrive;
     return this;
   }
 
   /**
-   * date d'arrive du message
+   * date d'arrive du message (format ISO8601)
    * @return dateArrive
    **/
-  @Schema(description = "date d'arrive du message")
+  @Schema(example = "2020-01-18T21:00:00", description = "date d'arrive du message (format ISO8601)")
   
-    @Valid
-    public OffsetDateTime getDateArrive() {
+    public String getDateArrive() {
     return dateArrive;
   }
 
-  public void setDateArrive(OffsetDateTime dateArrive) {
+  public void setDateArrive(String dateArrive) {
     this.dateArrive = dateArrive;
   }
 
@@ -277,7 +274,7 @@ public class Communication   {
       return false;
     }
     Communication communication = (Communication) o;
-    return Objects.equals(this.ID, communication.ID) &&
+    return Objects.equals(this.id, communication.id) &&
         Objects.equals(this.dateArrive, communication.dateArrive) &&
         Objects.equals(this.destinataire, communication.destinataire) &&
         Objects.equals(this.sujet, communication.sujet) &&
@@ -290,7 +287,7 @@ public class Communication   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(ID, dateArrive, destinataire, sujet, statut, typeErreur, scoreSpam, regleSpam, UUID);
+    return Objects.hash(id, dateArrive, destinataire, sujet, statut, typeErreur, scoreSpam, regleSpam, UUID);
   }
 
   @Override
@@ -298,7 +295,7 @@ public class Communication   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Communication {\n");
     
-    sb.append("    ID: ").append(toIndentedString(ID)).append("\n");
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    dateArrive: ").append(toIndentedString(dateArrive)).append("\n");
     sb.append("    destinataire: ").append(toIndentedString(destinataire)).append("\n");
     sb.append("    sujet: ").append(toIndentedString(sujet)).append("\n");
