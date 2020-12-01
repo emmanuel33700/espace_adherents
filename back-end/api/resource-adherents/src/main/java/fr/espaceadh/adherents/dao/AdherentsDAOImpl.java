@@ -17,7 +17,9 @@
 package fr.espaceadh.adherents.dao;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.adherents.dto.AdhesionDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
+import fr.espaceadh.adherents.dto.TypeAdhesionEnum;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -89,8 +91,8 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
     
     @Override
     public long creerAdherent(AdherentDto adherentDto) {
-       
-        adherentDto.setId(this.recupererIdAdherent());
+        
+        final long idAdh = this.recupererIdAdherent();
         
         StringBuilder query = new StringBuilder();
         query.append(" INSERT INTO t_adherents( ");
@@ -102,7 +104,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         
        int nbCreation;          
        nbCreation = this.getJdbcTemplate().update(query.toString() 
-            , adherentDto.getId()
+            , idAdh
             , adherentDto.getEmail()
             , adherentDto.getCivilite().toString()
             , adherentDto.getNom()
@@ -129,7 +131,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
             , adherentDto.getDateMiseAJour()
             ) ;
        
-        if (nbCreation ==  1) return adherentDto.getId();
+        if (nbCreation ==  1) return idAdh;
         else {
             LOGGER.error("Erreur lors de la creation de l'utilisateur : nombre de ligne crée {} ", nbCreation );
         }
@@ -241,6 +243,97 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
             return false;
         }
     }
+
+    @Override
+    public boolean creerAdhesion(AdhesionDto adhesionDto) {
+        final long idAdhesion = this.recupererIdAdhesion();
+
+        StringBuilder query = new StringBuilder();
+        query.append(" INSERT INTO t_adhesions( ");
+        query.append("		id_adhesions, fk_id_adherents, fk_id_annee_adhesions, fk_id_type_adhesion, ");
+        query.append("		compta_somme, compta_banque, num_cheque, cheque, espece, a_carte_adhesions) ");
+        query.append("	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+
+        int nbCreation;
+        nbCreation = this.getJdbcTemplate().update(query.toString(),
+                 idAdhesion,
+                 adhesionDto.getIdAdherent(),
+                 adhesionDto.getIdAnneeAdhesion(),
+                 adhesionDto.getIdTypeAdhesion().toInt(),
+                 adhesionDto.getComptaSomme(),
+                 adhesionDto.getComptaBanque(),
+                 adhesionDto.getComptaNumCheque(),
+                 adhesionDto.isCheque(),
+                 adhesionDto.isEspace(),
+                 adhesionDto.isCarteAdhesion()
+        );
+
+        if (nbCreation == 1) {
+            return true;
+        } else {
+            LOGGER.error("Erreur lors de la creation d'une adhésion : nombre de ligne crée {} ", nbCreation);
+        }
+        return false;
+
+    }
+    
+    /**
+     * récupérer un nouvel id d'adhésion
+     * @return 
+     */
+    private long recupererIdAdhesion(){
+        StringBuilder query = new StringBuilder()
+            .append(" select nextval('seq_t_adhesion') ");
+        
+        final long idAdhesion = this.getJdbcTemplate().queryForObject(query.toString(),  Long.class);
+        
+        return idAdhesion;
+    }
+
+    @Override
+    public Collection<AdhesionDto> getAdhesionsPourUnAdherent(long idAdh) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT id_adhesions, fk_id_adherents, fk_id_annee_adhesions, fk_id_type_adhesion");
+        query.append("        , compta_somme, compta_banque, num_cheque, cheque, espece, a_carte_adhesions ");
+        query.append("	FROM t_adhesions ");
+        query.append("	WHERE fk_id_adherents = ? ");
+
+        
+        List<AdhesionDto> lstAdhesions = this.getJdbcTemplate().query(query.toString(), new AdhesionsMapper(), idAdh);
+
+        LOGGER.debug("Nombre d'adherents récupéré (ensemble de la list des adhérents {} ", lstAdhesions.size());
+        return  lstAdhesions;   
+    }
+
+    @Override
+    public AdhesionDto getAdhesionPourUnAdherent(long idAdh, long idAnneAdhesion) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT id_adhesions, fk_id_adherents, fk_id_annee_adhesions, fk_id_type_adhesion");
+        query.append("        , compta_somme, compta_banque, num_cheque, cheque, espece, a_carte_adhesions ");
+        query.append("	FROM t_adhesions ");
+        query.append("	WHERE fk_id_adherents = ? ");
+        query.append("	AND fk_id_annee_adhesions = ? ");
+
+        
+        List<AdhesionDto> lstAdhesions = this.getJdbcTemplate().query(query.toString(), new AdhesionsMapper(), idAdh, idAnneAdhesion);
+
+        LOGGER.debug("Nombre d'adherents récupéré (ensemble de la list des adhérents {} ", lstAdhesions.size());
+        if (!lstAdhesions.isEmpty()) return lstAdhesions.get(0);
+        else {
+            LOGGER.info("aucune adhésion retrouvé pour cet adh {} et cette année {}",idAdh, idAnneAdhesion );
+            return null;
+        }
+    }
+
+    @Override
+    public boolean majAdhesion(AdhesionDto adhesionDto) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean suppAdhesion(long idAdh, long idAnneAdhesion) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     
     public static final class AdherentsMapper implements RowMapper<AdherentDto> {
@@ -277,5 +370,40 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         }
         
     }
+    
+    /**
+     * Mapper adhésions
+     */
+     public static final class AdhesionsMapper implements RowMapper<AdhesionDto> {
+
+        @Override
+        public AdhesionDto mapRow(ResultSet rs, int i) throws SQLException {
+            AdhesionDto dto = new AdhesionDto();
+            
+            dto.setId(rs.getLong("id_adhesions"));
+            dto.setIdAdherent(rs.getLong("fk_id_adherents"));
+            dto.setIdAnneeAdhesion(rs.getLong("fk_id_annee_adhesions"));
+            
+            int typeAdh = rs.getInt("fk_id_type_adhesion");
+            if (typeAdh == TypeAdhesionEnum.BIENFAITEUR.toInt())  dto.setIdTypeAdhesion(TypeAdhesionEnum.BIENFAITEUR);
+            else if (typeAdh == TypeAdhesionEnum.DEMANDEUR_EMPLOI.toInt())  dto.setIdTypeAdhesion(TypeAdhesionEnum.DEMANDEUR_EMPLOI);
+            else if (typeAdh == TypeAdhesionEnum.ENFANT.toInt())  dto.setIdTypeAdhesion(TypeAdhesionEnum.ENFANT);
+            else if (typeAdh == TypeAdhesionEnum.ETUDIANT.toInt())  dto.setIdTypeAdhesion(TypeAdhesionEnum.ETUDIANT);
+            else if (typeAdh == TypeAdhesionEnum.FAMILLE.toInt())  dto.setIdTypeAdhesion(TypeAdhesionEnum.FAMILLE);
+            else if (typeAdh == TypeAdhesionEnum.HONNEUR.toInt())  dto.setIdTypeAdhesion(TypeAdhesionEnum.HONNEUR);
+            else if (typeAdh == TypeAdhesionEnum.RESPONSABLE_DE_FAMILLE.toInt())  dto.setIdTypeAdhesion(TypeAdhesionEnum.RESPONSABLE_DE_FAMILLE);
+            else dto.setIdTypeAdhesion(TypeAdhesionEnum.ADULTE);
+            
+            dto.setComptaSomme(rs.getLong("compta_somme"));
+            dto.setComptaBanque(rs.getString("compta_banque"));
+            dto.setComptaNumCheque(rs.getString("num_cheque"));
+            dto.setCheque(rs.getBoolean("cheque"));
+            dto.setEspace(rs.getBoolean("espece"));
+            dto.setCarteAdhesion(rs.getBoolean("a_carte_adhesions"));
+            
+            return dto;
+        }
+         
+     }
     
 }

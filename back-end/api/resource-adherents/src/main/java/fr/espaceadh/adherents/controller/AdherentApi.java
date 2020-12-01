@@ -73,6 +73,7 @@ public interface AdherentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
+    @PreAuthorize("#oauth2.hasScope('ress-adhesion-write') and isDansGroupe('BUREAU')")     
     ResponseEntity<Void> ajoutAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.DEFAULT, description = "Objet adhesion", required=true, schema=@Schema()) @Valid @RequestBody Adhesion body);
 
 
@@ -114,6 +115,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/adhesion/{idAdhesion}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
+    @PreAuthorize("#oauth2.hasScope('ress-adhesion-del') and isDansGroupe('ADMIN')")  
     ResponseEntity<Void> deleteAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à supprimer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion);
 
 
@@ -156,7 +158,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    @PreAuthorize("#oauth2.hasScope('ress-adherent-del') and isDansGroupe('BUREAU')")         
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-del') and isDansGroupe('ADMIN')")         
     ResponseEntity<Void> deleteUser(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
 
 
@@ -200,6 +202,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/adhesion/{idAdhesion}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
+    @PreAuthorize("#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('BUREAU')")  
     ResponseEntity<Adhesion> getAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à recuperer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion);
 
 
@@ -265,6 +268,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/adhesions",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
+    @PreAuthorize("#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('BUREAU')")  
     ResponseEntity<ListeAdhesions> getListeAdhesionsAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
 
 
@@ -330,6 +334,7 @@ public interface AdherentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
+    @PreAuthorize("#oauth2.hasScope('ress-adhesion-write') and isDansGroupe('BUREAU')")  
     ResponseEntity<Void> updateAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de l'adhesion de modifier", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion, @Parameter(in = ParameterIn.DEFAULT, description = "mise à jour d'une adhesion", required=true, schema=@Schema()) @Valid @RequestBody Adhesion body);
 
 

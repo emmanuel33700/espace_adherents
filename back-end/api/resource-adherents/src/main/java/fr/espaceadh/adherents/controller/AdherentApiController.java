@@ -9,9 +9,10 @@ import fr.espaceadh.adherents.model.ListeCommunications;
 import fr.espaceadh.adherents.model.ParticipationManifestation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.adherents.dto.AdhesionDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
+import fr.espaceadh.adherents.dto.TypeAdhesionEnum;
 import fr.espaceadh.adherents.model.Communication;
-import fr.espaceadh.adherents.model.Manifestation;
 import fr.espaceadh.adherents.service.AdherentService;
 import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.lib.mail.dto.ListeMessagesResulteDto;
@@ -26,23 +27,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.threeten.bp.DateTimeUtils;
-import org.threeten.bp.OffsetDateTime;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
 @Controller
@@ -88,7 +83,12 @@ public class AdherentApiController implements AdherentApi {
 
     public ResponseEntity<Void> ajoutAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "Objet adhesion", required=true, schema=@Schema()) @Valid @RequestBody Adhesion body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+
+        boolean ok = this.adherentService.creerAdhesion(this.convertDto(body));
+        if (ok) return  new ResponseEntity<Void>(HttpStatus.CREATED);
+        //Revoir les codes retours en erreur
+        
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<Void> ajoutManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id l'adherent à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body) {
@@ -98,6 +98,7 @@ public class AdherentApiController implements AdherentApi {
 
     public ResponseEntity<Void> deleteAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à supprimer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion) {
         String accept = request.getHeader("Accept");
+        //TODO A implémenter
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -136,12 +137,11 @@ public class AdherentApiController implements AdherentApi {
     public ResponseEntity<Adhesion> getAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à recuperer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Adhesion>(objectMapper.readValue("{\n  \"comptaSomme\" : 45,\n  \"espace\" : false,\n  \"idAdherent\" : 1,\n  \"idTypeAdhesion\" : 0,\n  \"comptaNumCheque\" : \"15gg778\",\n  \"cheque\" : true,\n  \"idAnneeAdhesion\" : 1,\n  \"id\" : 1,\n  \"comptaBanque\" : \"Credit agricole\"\n}", Adhesion.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Adhesion>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            AdhesionDto dto = this.adherentService.getAdhesionPourUnAdherent(idadh, idAdhesion);
+            
+            Adhesion model = this.convertModel(dto);
+            
+            return new ResponseEntity<>(model,HttpStatus.OK);
         }
 
         return new ResponseEntity<Adhesion>(HttpStatus.NOT_IMPLEMENTED);
@@ -187,12 +187,11 @@ public class AdherentApiController implements AdherentApi {
     public ResponseEntity<ListeAdhesions> getListeAdhesionsAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<ListeAdhesions>(objectMapper.readValue("[ {\n  \"comptaSomme\" : 45,\n  \"espace\" : false,\n  \"idAdherent\" : 1,\n  \"idTypeAdhesion\" : 0,\n  \"comptaNumCheque\" : \"15gg778\",\n  \"cheque\" : true,\n  \"idAnneeAdhesion\" : 1,\n  \"id\" : 1,\n  \"comptaBanque\" : \"Credit agricole\"\n}, {\n  \"comptaSomme\" : 45,\n  \"espace\" : false,\n  \"idAdherent\" : 1,\n  \"idTypeAdhesion\" : 0,\n  \"comptaNumCheque\" : \"15gg778\",\n  \"cheque\" : true,\n  \"idAnneeAdhesion\" : 1,\n  \"id\" : 1,\n  \"comptaBanque\" : \"Credit agricole\"\n} ]", ListeAdhesions.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<ListeAdhesions>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            Collection<AdhesionDto> lstDto = this.adherentService.getAdhesionsPourUnAdherent(idadh);
+            
+            ListeAdhesions lstModel = this.convertModel(lstDto);
+            
+            return new ResponseEntity<>(lstModel,HttpStatus.OK);
         }
 
         return new ResponseEntity<ListeAdhesions>(HttpStatus.NOT_IMPLEMENTED);
@@ -250,7 +249,7 @@ public class AdherentApiController implements AdherentApi {
     }
 
     public ResponseEntity<Void> updateAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion de modifier", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion,@Parameter(in = ParameterIn.DEFAULT, description = "mise à jour d'une adhesion", required=true, schema=@Schema()) @Valid @RequestBody Adhesion body) {
-        String accept = request.getHeader("Accept");
+        //TODO A implémzenter
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -306,7 +305,7 @@ public class AdherentApiController implements AdherentApi {
         adh.setEmail(model.getEmail());
         adh.setProfession(model.getProfession());
         if (model.getDateNaissance() != null) {
-            adh.setDateNaissance(this.convertToDate(model.getDateNaissance()));
+            adh.setDateNaissance(this.stringToDate(model.getDateNaissance()));
         }
         adh.setAccordMail(model.isAccordMail());
         adh.setPublicContact(model.isPublicContact());
@@ -344,17 +343,12 @@ public class AdherentApiController implements AdherentApi {
         model.setTelTravail(adherent.getTelTravail());
         model.setEmail(adherent.getEmail());
         model.setProfession(adherent.getProfession());
-        if (adherent.getDateNaissance() != null) {
-            long epochMilli = adherent.getDateNaissance().toInstant().toEpochMilli();
-            Date dateNaissance = new Date(epochMilli);
-            //model.setDateNaissance(dateNaissance);
-        }
+        model.setDateNaissance(this.dateToString(adherent.getDateNaissance()));
         model.setAccordMail(adherent.isAccordMail());
         model.setPublicContact(adherent.isPublicContact());
         model.setCommentaire(adherent.getCommentaire());
-        //model.setDateEnregistrement(adherent.getDateEnregistrement());
-        //model.setDateMiseAJour(adherent.getDateMiseAJour());
-        //TODO date à revoir
+        model.setDateEnregistrement(this.dateToString(adherent.getDateEnregistrement()));
+        model.setDateMiseAJour(this.dateToString(adherent.getDateMiseAJour()));
         
         return model;
     }
@@ -395,22 +389,151 @@ public class AdherentApiController implements AdherentApi {
      * @param dateArrive
      * @return 
      */
-    private String dateToString(Date dateArrive) {
+    private String dateToString(Date date) {
+        if (date == null){
+            log.info("date est null");
+            return null;
+        }
         SimpleDateFormat sdf;
         sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         sdf.setTimeZone(TimeZone.getTimeZone("CET"));
-        return sdf.format(dateArrive);
+        return sdf.format(date);
     }
 
-    private Date convertToDate(String dateNaissance) {
+    private Date stringToDate(String date) {
+        if (date == null){
+            log.info("date est null");
+            return null;
+        }
         DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         try {
-            return df1.parse(dateNaissance);
+            return df1.parse(date);
         } catch (ParseException ex) {
             log.error("error dans formatage de date " + ex.getLocalizedMessage());
         }
         return null;
     }
+
+    /**
+     * Convert adhesion model en adhesion DTO
+     * @param body
+     * @return 
+     */
+    private AdhesionDto convertDto(Adhesion body) {
+        AdhesionDto dto = new AdhesionDto();
+        
+        dto.setId(body.getId());
+        dto.setIdAdherent(body.getIdAdherent());
+        dto.setIdAnneeAdhesion(body.getIdAnneeAdhesion());
+        
+        switch (body.getIdTypeAdhesion()) {
+            case NUMBER_1:
+                dto.setIdTypeAdhesion(TypeAdhesionEnum.ADULTE);
+                break;
+            case NUMBER_2:
+                dto.setIdTypeAdhesion(TypeAdhesionEnum.FAMILLE);
+                break;
+            case NUMBER_3:
+                dto.setIdTypeAdhesion(TypeAdhesionEnum.RESPONSABLE_DE_FAMILLE);
+                break;
+            case NUMBER_4:
+                dto.setIdTypeAdhesion(TypeAdhesionEnum.ENFANT);
+                break;
+            case NUMBER_5:        
+                dto.setIdTypeAdhesion(TypeAdhesionEnum.BIENFAITEUR);
+                break;
+            case NUMBER_6:
+                dto.setIdTypeAdhesion(TypeAdhesionEnum.HONNEUR);
+                break;
+            case NUMBER_7:
+                dto.setIdTypeAdhesion(TypeAdhesionEnum.ETUDIANT);
+                break;
+            default:
+                dto.setIdTypeAdhesion(TypeAdhesionEnum.ADULTE);
+                break;
+        }
+        
+        dto.setComptaBanque(body.getComptaBanque());
+        dto.setComptaNumCheque(body.getComptaNumCheque());
+        dto.setComptaSomme(body.getComptaSomme());
+        dto.setCheque(body.isCheque());
+        dto.setEspace(body.isEspace());
+        dto.setCarteAdhesion(false); //TODO A intégrer la gestion des impression des cartes
+        
+        return dto;
+    }
+
+    /**
+     * Convert adhesion dto en adhesion model
+     * @param dto
+     * @return 
+     */
+    private Adhesion convertModel(AdhesionDto dto) {
+        if (dto == null) return null;
+        
+        Adhesion adh = new Adhesion();
+        adh.setId(dto.getId());
+        adh.setIdAdherent(dto.getIdAdherent());
+        adh.setIdAnneeAdhesion(dto.getIdAnneeAdhesion());
+
+        switch (dto.getIdTypeAdhesion()) {
+            case ADULTE:
+                adh.setIdTypeAdhesion(Adhesion.IdTypeAdhesionEnum.NUMBER_1);
+                break;
+            case FAMILLE:
+                adh.setIdTypeAdhesion(Adhesion.IdTypeAdhesionEnum.NUMBER_2);
+                break;
+            case RESPONSABLE_DE_FAMILLE:
+                adh.setIdTypeAdhesion(Adhesion.IdTypeAdhesionEnum.NUMBER_3);
+                break;
+            case ENFANT:
+                adh.setIdTypeAdhesion(Adhesion.IdTypeAdhesionEnum.NUMBER_4);
+                break;
+            case BIENFAITEUR:        
+                 adh.setIdTypeAdhesion(Adhesion.IdTypeAdhesionEnum.NUMBER_5);
+                break;
+            case HONNEUR:
+                adh.setIdTypeAdhesion(Adhesion.IdTypeAdhesionEnum.NUMBER_6);
+                break;
+            case ETUDIANT:
+                adh.setIdTypeAdhesion(Adhesion.IdTypeAdhesionEnum.NUMBER_7);
+                break;
+            default:
+                adh.setIdTypeAdhesion(Adhesion.IdTypeAdhesionEnum.NUMBER_1);
+                break;
+        }
+                
+        
+        adh.setComptaBanque(dto.getComptaBanque());
+        adh.setComptaNumCheque(dto.getComptaNumCheque());
+        adh.setComptaSomme(dto.getComptaSomme());
+        adh.setCheque(dto.isCheque());
+        adh.setEspace(dto.isEspace());
+        //TODO A intégrer la gestion des impression des cartes
+        
+        return adh;
+    }
+
+    /**
+     * Convert aliste dhesion dto en liste adhesion model
+     * @param lstDto
+     * @return 
+     */
+    private ListeAdhesions convertModel(Collection<AdhesionDto> lstDto) {
+        ListeAdhesions lstAdhesions = new ListeAdhesions();
+
+        if (lstDto != null && !lstDto.isEmpty()) {
+            for (AdhesionDto dto : lstDto) {
+                lstAdhesions.add(this.convertModel(dto));
+            }
+            return lstAdhesions;
+        }
+        else {
+            return null;
+        }
+
+    }
+
 
     
 

@@ -18,6 +18,7 @@ package fr.espaceadh.adherents.service;
 
 import fr.espaceadh.adherents.dao.AdherentsDAO;
 import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.adherents.dto.AdhesionDto;
 import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
@@ -102,19 +103,52 @@ public class AdherentServiceImpl implements AdherentService{
 
     
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Collection<AdherentDto> recupererListeCompletAdherent() {
         return adherentsDAO.recupererListeCompletAdherent();
     }
 
     
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Collection<AdherentDto> recupererListeAdherentSaison() {
         return adherentsDAO.recupererListeAdherentSaison();
     }
 
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean updateAdherents(AdherentDto adherentDto) {
         return this.adherentsDAO.updateAdherents(adherentDto);
+    }
+
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean creerAdhesion(AdhesionDto adhesionDto) {
+        return this.adherentsDAO.creerAdhesion(adhesionDto);
+    }
+
+    @Override
+    public Collection<AdhesionDto> getAdhesionsPourUnAdherent(Long idAdh) {
+        return this.adherentsDAO.getAdhesionsPourUnAdherent(idAdh);
+    }
+
+    @Override
+    public AdhesionDto getAdhesionPourUnAdherent(Long idAdh, Long idAnneAdhesion) {
+        return this.adherentsDAO.getAdhesionPourUnAdherent(idAdh, idAnneAdhesion);
+    }
+
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean majAdhesion(AdhesionDto adhesionDto) {
+        //TODO a implémenter
+        return false;
+    }
+
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean suppAdhesion(Long idAdh, Long idAnneAdhesion) {
+        //TODO a implémenter
+        return false;
     }
     
     

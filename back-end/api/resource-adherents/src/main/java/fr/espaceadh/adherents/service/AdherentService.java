@@ -17,6 +17,7 @@
 package fr.espaceadh.adherents.service;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.adherents.dto.AdhesionDto;
 import java.util.Collection;
 
 /**
@@ -62,4 +63,43 @@ public interface AdherentService {
      * @return 
      */
     public boolean updateAdherents (AdherentDto adherentDto);
+    
+    
+    /**
+     * Création d'une adhésion pour un adhérent
+     * @param adhesionDto
+     * @return 
+     */
+    public boolean creerAdhesion(AdhesionDto adhesionDto);
+    
+    /**
+     * Rechercher l'ensemble des adhésions pour un adherent
+     * @param idAdh id de l'adherent
+     * @return liste des adhésions de l'adherent
+     */
+    public Collection<AdhesionDto> getAdhesionsPourUnAdherent(Long idAdh);
+    
+    /**
+     * Récupérer l'adhésion d'un année pour un adhérent
+     * @param idAdh id de l'adherent
+     * @param idAnneAdhesion id de l'année 
+     * @return  adhésion
+     */
+    public AdhesionDto getAdhesionPourUnAdherent(Long idAdh, Long idAnneAdhesion);
+    
+    /**
+     * Mise à jour d'une adhésion pour un adhérent
+     * @param adhesionDto
+     * @return 
+     */
+    public boolean majAdhesion(AdhesionDto adhesionDto);
+    
+    /**
+     * Supprimer une adhésion pour un adhérent
+     * @param idAdh id de l'adherent
+     * @param idAnneAdhesion id de l'année 
+     * @return 
+     */
+    public boolean suppAdhesion(Long idAdh, Long idAnneAdhesion);
+    
 }

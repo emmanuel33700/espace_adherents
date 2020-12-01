@@ -17,6 +17,7 @@
 package fr.espaceadh.adherents.dao;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.adherents.dto.AdhesionDto;
 import java.util.Collection;
 
 /**
@@ -44,7 +45,7 @@ public interface AdherentsDAO {
      * @param adherentDto adherents DTO
      * @return  id de l'adherent créé
      */
-    public long creerAdherent(AdherentDto adherentDto);
+    public long creerAdherent(final AdherentDto adherentDto);
     
     
     /**
@@ -65,7 +66,42 @@ public interface AdherentsDAO {
      * @param adherentDto
      * @return 
      */
-    public boolean updateAdherents(AdherentDto adherentDto);
+    public boolean updateAdherents(final AdherentDto adherentDto);
     
+    /**
+     * Création d'une adhésion pour un adhérent
+     * @param adhesionDto
+     * @return 
+     */
+    public boolean creerAdhesion(final AdhesionDto adhesionDto);
     
+    /**
+     * Rechercher l'ensemble des adhésions pour un adherent
+     * @param idAdh id de l'adherent
+     * @return liste des adhésions de l'adherent
+     */
+    public Collection<AdhesionDto> getAdhesionsPourUnAdherent(final long idAdh);
+    
+    /**
+     * Récupérer l'adhésion d'un année pour un adhérent
+     * @param idAdh id de l'adherent
+     * @param idAnneAdhesion id de l'année 
+     * @return  adhésion
+     */
+    public AdhesionDto getAdhesionPourUnAdherent(final long idAdh, final long idAnneAdhesion);
+    
+    /**
+     * Mise à jour d'une adhésion pour un adhérent
+     * @param adhesionDto
+     * @return 
+     */
+    public boolean majAdhesion(final AdhesionDto adhesionDto);
+    
+    /**
+     * Supprimer une adhésion pour un adhérent
+     * @param idAdh id de l'adherent
+     * @param idAnneAdhesion id de l'année 
+     * @return 
+     */
+    public boolean suppAdhesion(final long idAdh, final long idAnneAdhesion);    
 }
