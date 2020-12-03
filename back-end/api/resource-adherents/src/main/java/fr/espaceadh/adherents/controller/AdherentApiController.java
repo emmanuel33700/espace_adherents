@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -305,7 +306,7 @@ public class AdherentApiController implements AdherentApi {
         adh.setEmail(model.getEmail());
         adh.setProfession(model.getProfession());
         if (model.getDateNaissance() != null) {
-            adh.setDateNaissance(this.stringToDate(model.getDateNaissance()));
+            adh.setDateNaissance(this.toDate(model.getDateNaissance()));
         }
         adh.setAccordMail(model.isAccordMail());
         adh.setPublicContact(model.isPublicContact());
@@ -414,6 +415,21 @@ public class AdherentApiController implements AdherentApi {
         return null;
     }
 
+        /** Transform ISO 8601 string to Calendar.
+     * @param iso8601string
+     * @return  */
+    public  Date toDate(final String iso8601string) {
+
+        String s = iso8601string.replace("Z", "+00:00");
+        Date date = null;
+        try {
+            s = s.substring(0, 22) + s.substring(23);  
+            date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(s);
+        } catch (IndexOutOfBoundsException | ParseException ex) {
+            log.error("error dans formatage de date " + ex);
+        }
+        return date;
+    }
     /**
      * Convert adhesion model en adhesion DTO
      * @param body
