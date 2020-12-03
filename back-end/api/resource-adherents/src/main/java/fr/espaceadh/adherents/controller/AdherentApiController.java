@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
@@ -420,15 +421,8 @@ public class AdherentApiController implements AdherentApi {
      * @return  */
     public  Date toDate(final String iso8601string) {
 
-        String s = iso8601string.replace("Z", "+00:00");
-        Date date = null;
-        try {
-            s = s.substring(0, 22) + s.substring(23);  
-            date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(s);
-        } catch (IndexOutOfBoundsException | ParseException ex) {
-            log.error("error dans formatage de date " + ex);
-        }
-        return date;
+        if (iso8601string == null) return null;
+        return Date.from( Instant.parse( iso8601string));
     }
     /**
      * Convert adhesion model en adhesion DTO
