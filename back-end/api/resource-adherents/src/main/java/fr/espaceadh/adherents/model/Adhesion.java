@@ -26,6 +26,9 @@ public class Adhesion   {
   @JsonProperty("idAnneeAdhesion")
   private Long idAnneeAdhesion = null;
 
+  @JsonProperty("libelleAnneeAdhesion")
+  private String libelleAnneeAdhesion = null;
+
   /**
    * Types d'adhersions. Valeurs possibles : * 1 : ADULTE                * 2 : FAMILLE              * 3 : RESPONSABLE DE FAMILLE                  * 4 : ENFANT * 5 : BIENFAITEUR                   * 6 : HONNEUR  * 7 : ETUDIANT           * 8 : DEMANDEUR EMPLOI   
    */
@@ -141,6 +144,25 @@ public class Adhesion   {
 
   public void setIdAnneeAdhesion(Long idAnneeAdhesion) {
     this.idAnneeAdhesion = idAnneeAdhesion;
+  }
+
+  public Adhesion libelleAnneeAdhesion(String libelleAnneeAdhesion) {
+    this.libelleAnneeAdhesion = libelleAnneeAdhesion;
+    return this;
+  }
+
+  /**
+   * Libellé anne adhesion
+   * @return libelleAnneeAdhesion
+   **/
+  @Schema(example = "2019/2020", description = "Libellé anne adhesion")
+  
+    public String getLibelleAnneeAdhesion() {
+    return libelleAnneeAdhesion;
+  }
+
+  public void setLibelleAnneeAdhesion(String libelleAnneeAdhesion) {
+    this.libelleAnneeAdhesion = libelleAnneeAdhesion;
   }
 
   public Adhesion idTypeAdhesion(IdTypeAdhesionEnum idTypeAdhesion) {
@@ -270,6 +292,7 @@ public class Adhesion   {
     return Objects.equals(this.id, adhesion.id) &&
         Objects.equals(this.idAdherent, adhesion.idAdherent) &&
         Objects.equals(this.idAnneeAdhesion, adhesion.idAnneeAdhesion) &&
+        Objects.equals(this.libelleAnneeAdhesion, adhesion.libelleAnneeAdhesion) &&
         Objects.equals(this.idTypeAdhesion, adhesion.idTypeAdhesion) &&
         Objects.equals(this.comptaSomme, adhesion.comptaSomme) &&
         Objects.equals(this.comptaBanque, adhesion.comptaBanque) &&
@@ -280,7 +303,7 @@ public class Adhesion   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, idAdherent, idAnneeAdhesion, idTypeAdhesion, comptaSomme, comptaBanque, comptaNumCheque, cheque, espace);
+    return Objects.hash(id, idAdherent, idAnneeAdhesion, libelleAnneeAdhesion, idTypeAdhesion, comptaSomme, comptaBanque, comptaNumCheque, cheque, espace);
   }
 
   @Override
@@ -291,6 +314,7 @@ public class Adhesion   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    idAdherent: ").append(toIndentedString(idAdherent)).append("\n");
     sb.append("    idAnneeAdhesion: ").append(toIndentedString(idAnneeAdhesion)).append("\n");
+    sb.append("    libelleAnneeAdhesion: ").append(toIndentedString(libelleAnneeAdhesion)).append("\n");
     sb.append("    idTypeAdhesion: ").append(toIndentedString(idTypeAdhesion)).append("\n");
     sb.append("    comptaSomme: ").append(toIndentedString(comptaSomme)).append("\n");
     sb.append("    comptaBanque: ").append(toIndentedString(comptaBanque)).append("\n");

@@ -202,7 +202,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/adhesion/{idAdhesion}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize("#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('BUREAU')")  
+    @PreAuthorize("(#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('BUREAU')) or isProprietraireDonnee(#idadh) ")                
     ResponseEntity<Adhesion> getAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à recuperer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion);
 
 
@@ -268,7 +268,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/adhesions",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize("#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('BUREAU')")  
+    @PreAuthorize("(#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('BUREAU')) or isProprietraireDonnee(#idadh) ")  
     ResponseEntity<ListeAdhesions> getListeAdhesionsAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
 
 

@@ -293,11 +293,11 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
     @Override
     public Collection<AdhesionDto> getAdhesionsPourUnAdherent(long idAdh) {
         StringBuilder query = new StringBuilder();
-        query.append("SELECT id_adhesions, fk_id_adherents, fk_id_annee_adhesions, fk_id_type_adhesion");
-        query.append("        , compta_somme, compta_banque, num_cheque, cheque, espece, a_carte_adhesions ");
-        query.append("	FROM t_adhesions ");
-        query.append("	WHERE fk_id_adherents = ? ");
-
+        query.append("SELECT A.id_adhesions, A.fk_id_adherents, A.fk_id_annee_adhesions, B.libelle_annee, A.fk_id_type_adhesion, ");
+        query.append("        A.compta_somme, A.compta_banque, A.num_cheque, A.cheque, A.espece, A.a_carte_adhesions ");
+        query.append("	FROM t_adhesions as A, i_annee_adhesion as B ");
+        query.append("	where B.id_annee_adhesion = A.fk_id_annee_adhesions ");
+        query.append("	and A.fk_id_adherents = ? ");
         
         List<AdhesionDto> lstAdhesions = this.getJdbcTemplate().query(query.toString(), new AdhesionsMapper(), idAdh);
 
@@ -308,11 +308,12 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
     @Override
     public AdhesionDto getAdhesionPourUnAdherent(long idAdh, long idAnneAdhesion) {
         StringBuilder query = new StringBuilder();
-        query.append("SELECT id_adhesions, fk_id_adherents, fk_id_annee_adhesions, fk_id_type_adhesion");
-        query.append("        , compta_somme, compta_banque, num_cheque, cheque, espece, a_carte_adhesions ");
-        query.append("	FROM t_adhesions ");
-        query.append("	WHERE fk_id_adherents = ? ");
-        query.append("	AND fk_id_annee_adhesions = ? ");
+        query.append("SELECT A.id_adhesions, A.fk_id_adherents, A.fk_id_annee_adhesions, B.libelle_annee, A.fk_id_type_adhesion, ");
+        query.append("        A.compta_somme, A.compta_banque, A.num_cheque, A.cheque, A.espece, A.a_carte_adhesions ");
+        query.append("	FROM t_adhesions as A, i_annee_adhesion as B ");
+        query.append("	where B.id_annee_adhesion = A.fk_id_annee_adhesions ");
+        query.append("	and A.fk_id_adherents = ? ");
+        query.append("	AND A.fk_id_annee_adhesions = ? ");
 
         
         List<AdhesionDto> lstAdhesions = this.getJdbcTemplate().query(query.toString(), new AdhesionsMapper(), idAdh, idAnneAdhesion);
@@ -383,6 +384,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
             dto.setId(rs.getLong("id_adhesions"));
             dto.setIdAdherent(rs.getLong("fk_id_adherents"));
             dto.setIdAnneeAdhesion(rs.getLong("fk_id_annee_adhesions"));
+            dto.setLibelleAnneeAdhesion(rs.getString("libelle_annee"));
             
             int typeAdh = rs.getInt("fk_id_type_adhesion");
             if (typeAdh == TypeAdhesionEnum.BIENFAITEUR.toInt())  dto.setIdTypeAdhesion(TypeAdhesionEnum.BIENFAITEUR);

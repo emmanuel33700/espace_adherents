@@ -25,6 +25,7 @@ public class AdhesionDto {
     private Long id = null;
     private Long idAdherent = null;
     private Long idAnneeAdhesion = null;
+    private String libelleAnneeAdhesion = null;
     private TypeAdhesionEnum idTypeAdhesion = null;
     private Long comptaSomme = null;
     private String comptaBanque = null;
@@ -111,6 +112,14 @@ public class AdhesionDto {
 
     public void setCarteAdhesion(boolean carteAdhesion) {
         this.carteAdhesion = carteAdhesion;
+    }
+
+    public String getLibelleAnneeAdhesion() {
+        return libelleAnneeAdhesion;
+    }
+
+    public void setLibelleAnneeAdhesion(String libelleAnneeAdhesion) {
+        this.libelleAnneeAdhesion = libelleAnneeAdhesion;
     }
 
   

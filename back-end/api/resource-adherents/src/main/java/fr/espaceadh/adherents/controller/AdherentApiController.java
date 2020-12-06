@@ -393,27 +393,12 @@ public class AdherentApiController implements AdherentApi {
      */
     private String dateToString(Date date) {
         if (date == null){
-            log.info("date est null");
             return null;
         }
         SimpleDateFormat sdf;
         sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         sdf.setTimeZone(TimeZone.getTimeZone("CET"));
         return sdf.format(date);
-    }
-
-    private Date stringToDate(String date) {
-        if (date == null){
-            log.info("date est null");
-            return null;
-        }
-        DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        try {
-            return df1.parse(date);
-        } catch (ParseException ex) {
-            log.error("error dans formatage de date " + ex.getLocalizedMessage());
-        }
-        return null;
     }
 
         /** Transform ISO 8601 string to Calendar.
@@ -519,7 +504,7 @@ public class AdherentApiController implements AdherentApi {
         adh.setComptaSomme(dto.getComptaSomme());
         adh.setCheque(dto.isCheque());
         adh.setEspace(dto.isEspace());
-        //TODO A intégrer la gestion des impression des cartes
+        adh.setLibelleAnneeAdhesion(dto.getLibelleAnneeAdhesion());
         
         return adh;
     }
