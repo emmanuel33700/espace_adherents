@@ -46,6 +46,7 @@ public class AdherentDto {
   private Date dateMiseAJour; 
   private String tokenAcces ;
   private Long idAdherentUpdate ;
+  private boolean adhesionSaisonCourante;
 
     public Long getId() {
         return id;
@@ -220,6 +221,14 @@ public class AdherentDto {
 
     public void setPublicContact(boolean publicContact) {
         this.publicContact = publicContact;
+    }
+
+    public boolean isAdhesionSaisonCourante() {
+        return adhesionSaisonCourante;
+    }
+
+    public void setAdhesionSaisonCourante(boolean adhesionSaisonCourante) {
+        this.adhesionSaisonCourante = adhesionSaisonCourante;
     }
   
   

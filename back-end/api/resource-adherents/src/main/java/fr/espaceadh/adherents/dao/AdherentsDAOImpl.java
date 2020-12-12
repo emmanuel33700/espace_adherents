@@ -57,6 +57,14 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("        , tel3, date_maissance, profession, link_picture, public_contact ");
         query.append("        , accord_mail, token_acces, commentaire, date_enregistrement ");
         query.append("        , fk_id_adherents_update, update_date ");
+        query.append("	      , CASE ");
+        query.append("			 WHEN (select 1 ");
+        query.append("			 from t_adhesions, i_annee_adhesion");
+        query.append("			 where t_adhesions.fk_id_annee_adhesions =   i_annee_adhesion.id_annee_adhesion ");
+        query.append("			 and i_annee_adhesion.annee_courante = true ");
+        query.append("			 and t_adherents.id_adherents = t_adhesions.fk_id_adherents)  = 1 THEN true ");
+        query.append("			 ELSE false");
+        query.append("        END as adherent_saison_courante");
         query.append("  FROM t_adherents");
         query.append(" where e_mail =  ?");
         
@@ -76,6 +84,14 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("        , tel3, date_maissance, profession, link_picture, public_contact ");
         query.append("        , accord_mail, token_acces, commentaire, date_enregistrement ");
         query.append("        , fk_id_adherents_update, update_date ");
+        query.append("	      , CASE ");
+        query.append("			 WHEN (select 1 ");
+        query.append("			 from t_adhesions, i_annee_adhesion");
+        query.append("			 where t_adhesions.fk_id_annee_adhesions =   i_annee_adhesion.id_annee_adhesion ");
+        query.append("			 and i_annee_adhesion.annee_courante = true ");
+        query.append("			 and t_adherents.id_adherents = t_adhesions.fk_id_adherents)  = 1 THEN true ");
+        query.append("			 ELSE false");
+        query.append("        END as adherent_saison_courante");
         query.append("  FROM t_adherents");
         query.append(" where id_adherents =  ?");
         
@@ -160,6 +176,14 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("        , tel3, date_maissance, profession, link_picture, public_contact ");
         query.append("        , accord_mail, token_acces, commentaire, date_enregistrement ");
         query.append("        , fk_id_adherents_update, update_date ");
+        query.append("	      , CASE ");
+        query.append("			 WHEN (select 1 ");
+        query.append("			 from t_adhesions, i_annee_adhesion");
+        query.append("			 where t_adhesions.fk_id_annee_adhesions =   i_annee_adhesion.id_annee_adhesion ");
+        query.append("			 and i_annee_adhesion.annee_courante = true ");
+        query.append("			 and t_adherents.id_adherents = t_adhesions.fk_id_adherents)  = 1 THEN true ");
+        query.append("			 ELSE false");
+        query.append("        END as adherent_saison_courante");
         query.append("  FROM t_adherents ");
         query.append("  ORDER BY nom, premon");
         
@@ -176,10 +200,12 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("        , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
         query.append("        , tel3, date_maissance, profession, link_picture, public_contact ");
         query.append("        , accord_mail, token_acces, commentaire, date_enregistrement ");
-        query.append("        , fk_id_adherents_update, update_date ");
-        query.append("  FROM t_adherents");
+        query.append("        , fk_id_adherents_update, update_date, true as adherent_saison_courante ");
+        query.append("  FROM t_adherents, t_adhesions, i_annee_adhesion ");
+        query.append("  WHERE t_adherents.id_adherents = t_adhesions.fk_id_adherents ");
+        query.append("  AND t_adhesions.fk_id_annee_adhesions =   i_annee_adhesion.id_annee_adhesion");
+        query.append("  AND i_annee_adhesion.annee_courante = true ");
         query.append("  ORDER BY nom, premon");
-        //TODO a compélter avec la jointure sur la saison courante
         
         List<AdherentDto> lstAdherents = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper());
 
@@ -366,7 +392,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
             adh.setDateEnregistrement(rs.getDate("date_enregistrement"));
             adh.setIdAdherentUpdate(rs.getLong("fk_id_adherents_update"));
             adh.setDateMiseAJour(rs.getDate("update_date"));
-            
+            adh.setAdhesionSaisonCourante(rs.getBoolean("adherent_saison_courante"));
             return adh;
         }
         

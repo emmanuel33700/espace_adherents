@@ -106,6 +106,9 @@ public class Adherent   {
   @JsonProperty("dateMiseAJour")
   private String dateMiseAJour = null;
 
+  @JsonProperty("adhesionsSaisonCourante")
+  private Boolean adhesionsSaisonCourante = null;
+
   public Adherent id(Long id) {
     this.id = id;
     return this;
@@ -486,6 +489,25 @@ public class Adherent   {
     this.dateMiseAJour = dateMiseAJour;
   }
 
+  public Adherent adhesionsSaisonCourante(Boolean adhesionsSaisonCourante) {
+    this.adhesionsSaisonCourante = adhesionsSaisonCourante;
+    return this;
+  }
+
+  /**
+   * Indique si l'adhérent est adhérent dans la saison courante
+   * @return adhesionsSaisonCourante
+   **/
+  @Schema(example = "true", description = "Indique si l'adhérent est adhérent dans la saison courante")
+  
+    public Boolean isAdhesionsSaisonCourante() {
+    return adhesionsSaisonCourante;
+  }
+
+  public void setAdhesionsSaisonCourante(Boolean adhesionsSaisonCourante) {
+    this.adhesionsSaisonCourante = adhesionsSaisonCourante;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -515,12 +537,13 @@ public class Adherent   {
         Objects.equals(this.publicContact, adherent.publicContact) &&
         Objects.equals(this.commentaire, adherent.commentaire) &&
         Objects.equals(this.dateEnregistrement, adherent.dateEnregistrement) &&
-        Objects.equals(this.dateMiseAJour, adherent.dateMiseAJour);
+        Objects.equals(this.dateMiseAJour, adherent.dateMiseAJour) &&
+        Objects.equals(this.adhesionsSaisonCourante, adherent.adhesionsSaisonCourante);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, civilite, nom, prenom, adresse1, adresse2, codePostal, ville, telMaison, telTravail, telPortable, email, profession, dateNaissance, lienPhotoProfil, accordMail, publicContact, commentaire, dateEnregistrement, dateMiseAJour);
+    return Objects.hash(id, civilite, nom, prenom, adresse1, adresse2, codePostal, ville, telMaison, telTravail, telPortable, email, profession, dateNaissance, lienPhotoProfil, accordMail, publicContact, commentaire, dateEnregistrement, dateMiseAJour, adhesionsSaisonCourante);
   }
 
   @Override
@@ -548,6 +571,7 @@ public class Adherent   {
     sb.append("    commentaire: ").append(toIndentedString(commentaire)).append("\n");
     sb.append("    dateEnregistrement: ").append(toIndentedString(dateEnregistrement)).append("\n");
     sb.append("    dateMiseAJour: ").append(toIndentedString(dateMiseAJour)).append("\n");
+    sb.append("    adhesionsSaisonCourante: ").append(toIndentedString(adhesionsSaisonCourante)).append("\n");
     sb.append("}");
     return sb.toString();
   }

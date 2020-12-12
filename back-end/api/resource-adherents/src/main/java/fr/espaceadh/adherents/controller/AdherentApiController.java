@@ -30,14 +30,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -351,7 +348,7 @@ public class AdherentApiController implements AdherentApi {
         model.setCommentaire(adherent.getCommentaire());
         model.setDateEnregistrement(this.dateToString(adherent.getDateEnregistrement()));
         model.setDateMiseAJour(this.dateToString(adherent.getDateMiseAJour()));
-        
+        model.setAdhesionsSaisonCourante(adherent.isAdhesionSaisonCourante());
         return model;
     }
 
