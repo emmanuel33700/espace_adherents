@@ -1,9 +1,17 @@
+<ng-container *ngIf="adhesions.length">
+  <nb-list>
 
-      <nb-list>
-        <nb-list-item *ngFor="let user of users">
+    <nb-list-item *ngFor="let adhesion of adhesions">
 
-            <nb-user   [name]="user.name" [title]="user.title"  [badgeText]="user.libelle" >
-            </nb-user>
+      <nb-user  [name]="'Saison  ' + adhesion.libelleAnneeAdhesion"
+                [title]="getTypeAdhesion(adhesion.idTypeAdhesion)"   >
+      </nb-user>
 
-        </nb-list-item>
-      </nb-list>
+    </nb-list-item>
+
+
+  </nb-list>
+</ng-container>
+<ng-container *ngIf="!adhesions.length">
+  Aucune adhésion
+</ng-container>

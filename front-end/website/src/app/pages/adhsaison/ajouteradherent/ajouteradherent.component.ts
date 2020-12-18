@@ -4,13 +4,14 @@ import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
 import { NbToastrService } from '@nebular/theme';
 import {LoggerService} from '../../../@core/utils/logger.service';
+import {DateService} from '../../../@core/utils';
 
 @Component({
   selector: 'ngx-form-layouts',
-  styleUrls: ['./ajouter.component.scss'],
-  templateUrl: './ajouter.component.html',
+  styleUrls: ['./ajouteradherent.component.scss'],
+  templateUrl: './ajouteradherent.component.html',
 })
-export class AjouterComponent implements OnInit {
+export class AjouteradherentComponent implements OnInit {
   form: FormGroup;
   adherent: Adherent = {};
 
@@ -21,7 +22,6 @@ export class AjouterComponent implements OnInit {
   user: any = {};
 
   // Toaster
-  private index: number = 0;
   @HostBinding('class')
   classes = 'example-items-rows';
   // fin toaster
@@ -31,6 +31,7 @@ export class AjouterComponent implements OnInit {
     private adherentService: AdherentService,
     private toastrService: NbToastrService,
     private loggerService: LoggerService,
+    private dateService: DateService,
     ) {}
 
   ngOnInit(): void {
@@ -55,7 +56,7 @@ export class AjouterComponent implements OnInit {
     this.adherent.ville = this.user.ville;
     this.adherent.telPortable = this.user.telPortable;
     this.adherent.telMaison = this.user.telFixe;
-    this.adherent.dateNaissance = null; // TODO a revoir la date de naisance
+    this.adherent.dateNaissance =  this.dateService.convertIsoDate(this.user.dateNaissance);
     this.adherent.commentaire = this.user.commentaire;
     if (this.user.accordmail) {
       this.adherent.accordMail = true;

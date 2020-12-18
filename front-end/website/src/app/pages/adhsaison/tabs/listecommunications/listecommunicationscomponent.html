@@ -1,9 +1,18 @@
 
-      <nb-list>
-        <nb-list-item *ngFor="let user of users">
+<ng-container *ngIf="communications.length">
+   <nb-list>
 
-            <nb-user   [name]="user.name" [title]="user.title"  [badgeText]="user.libelle"  [color]="user.color">
-            </nb-user>
+        <nb-list-item *ngFor="let communication of communications">
+
+          <nb-user  [name]="'le ' + dateFormat(communication.dateArrive) + ' - ' + communication.sujet"
+                   [title]="communication.statut" [color]="getColor(communication.statut)"   >
+          </nb-user>
 
         </nb-list-item>
+
+
       </nb-list>
+</ng-container>
+<ng-container *ngIf="!communications.length">
+	Aucune communication
+</ng-container>

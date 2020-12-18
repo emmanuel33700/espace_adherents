@@ -18,7 +18,6 @@ export class ListeComponent implements OnInit {
 
 
   ngOnInit(): void {
-    // TODO Attention, appel de service à charger
     this.listingAdherentService.getListeAdherentsSaison( {})
       .subscribe(
         (data) => {

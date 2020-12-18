@@ -3,7 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AdhsaisonComponent } from './adhsaison.component';
 import { ListeComponent } from './liste/liste.component';
-import { AjouterComponent } from './ajouter/ajouter.component';
+import { AjouteradherentComponent } from './ajouteradherent/ajouteradherent.component';
+import { AjouteradhesionComponent } from './ajouteradhesion/ajouteradhesion.component';
 import {  TabsComponent } from './tabs/tabs.component';
 
 import { InfosadhComponent} from './tabs/infosadh/infosadh.component';
@@ -21,8 +22,12 @@ const routes: Routes = [{
       component: ListeComponent,
     },
     {
-      path: 'ajouter',
-      component: AjouterComponent,
+      path: 'ajouteradherent',
+      component: AjouteradherentComponent,
+    },
+    {
+      path: 'ajouteradhesion',
+      component: AjouteradhesionComponent,
     },
     {
       path: 'tabs',

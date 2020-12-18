@@ -4,6 +4,8 @@ import {FormBuilder, FormGroup, NgForm} from '@angular/forms';
 import {AdherentService} from '../../../../../api/generated/adherents/services/adherent.service';
 import { NbToastrService } from '@nebular/theme';
 import {LoggerService} from '../../../../@core/utils/logger.service';
+import {DateService} from '../../../../@core/utils/date.service';
+
 
 
 @Component({
@@ -34,41 +36,28 @@ export class InfosadhComponent implements OnInit {
     private adherentService: AdherentService,
     private toastrService: NbToastrService,
     private loggerService: LoggerService,
+    private dateService: DateService,
   ) {}
 
   ngOnInit(): void {
 
     this.idAdherent = Number(localStorage.getItem('id_adh_selected'));
-    this.loggerService.info('id adh recupere ' + this.idAdherent);
+    this.adherent = JSON.parse(localStorage.getItem('adh_selected'));
 
-    this.adherentService.getAdherent({
-      idadh: this.idAdherent,
-    }).subscribe(
-      (data) => {
-        this.adherent = data;
-      },
-      (error) => {
-        this.loggerService.error(error);
-      },
-      () => {
+    this.user.civilite = this.adherent.civilite;
+    this.user.nom = this.adherent.nom;
+    this.user.prenom = this.adherent.prenom;
+    this.user.email = this.adherent.email;
+    this.user.adresse1 = this.adherent.adresse1;
+    this.user.adresse2 = this.adherent.adresse2;
+    this.user.ville = this.adherent.ville;
+    this.user.telPortable = this.adherent.telPortable;
+    this.user.telMaison = this.adherent.telMaison;
+    this.user.dateNaissance = this.dateService.dateFormatForPrint(this.adherent.dateNaissance);
+    this.user.commentaire = this.adherent.commentaire;
+    this.user.accordMail = this.adherent.accordMail;
+    this.user.publicContact = this.adherent.publicContact;
 
-        this.loggerService.info('adherent recupe api '  + JSON.stringify(this.adherent));
-        localStorage.setItem('adh_selected', JSON.stringify(this.adherent));
-
-        this.user.civilite = this.adherent.civilite;
-        this.user.nom = this.adherent.nom;
-        this.user.prenom = this.adherent.prenom;
-        this.user.email = this.adherent.email;
-        this.user.adresse1 = this.adherent.adresse1;
-        this.user.adresse2 = this.adherent.adresse2;
-        this.user.ville = this.adherent.ville;
-        this.user.telPortable = this.adherent.telPortable;
-        this.user.telMaison = this.adherent.telMaison;
-        this.user.dateNaissance = null; // TODO a revoir la date de naisance
-        this.user.commentaire = this.adherent.commentaire;
-        this.user.accordMail = this.adherent.accordMail;
-        this.user.publicContact = this.adherent.publicContact;
-      });
 
 
   }
@@ -92,7 +81,7 @@ export class InfosadhComponent implements OnInit {
     this.adherent.ville = this.user.ville;
     this.adherent.telPortable = this.user.telPortable;
     this.adherent.telMaison = this.user.telFixe;
-    this.adherent.dateNaissance = null; // TODO a revoir la date de naisance
+    this.adherent.dateNaissance = this.dateService.convertIsoDate(this.user.dateNaissance);
     this.adherent.commentaire = this.user.commentaire;
     if (this.user.accordmail) {
       this.adherent.accordMail = true;
@@ -123,4 +112,7 @@ export class InfosadhComponent implements OnInit {
       );
 
   }
+
+
+
 }

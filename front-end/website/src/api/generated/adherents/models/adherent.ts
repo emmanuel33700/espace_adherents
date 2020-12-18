@@ -5,6 +5,11 @@ export interface Adherent {
    * donne son accord pour recevoiur des mails
    */
   accordMail?: boolean;
+
+  /**
+   * Indique si l'adhérent est adhérent dans la saison courante
+   */
+  adhesionsSaisonCourante?: boolean;
   adresse1?: string;
   adresse2?: string;
 

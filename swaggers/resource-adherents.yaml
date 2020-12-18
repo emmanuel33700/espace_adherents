@@ -835,6 +835,10 @@ components:
           type: string
           example: '2020-01-18T21:00:00'
           description: date de mise à jour au format iso8601
+        adhesionsSaisonCourante:
+          type: boolean
+          description: Indique si l'adhérent est adhérent dans la saison courante
+          example: true        
       xml:
         name: Order
     listeAdhesions:
@@ -859,6 +863,10 @@ components:
           format: int64
           description: Id anne adhesion
           example: 1
+        libelleAnneeAdhesion:
+          type: string
+          description: Libellé anne adhesion
+          example: 2019/2020
         idTypeAdhesion:
           type: integer
           format: int64

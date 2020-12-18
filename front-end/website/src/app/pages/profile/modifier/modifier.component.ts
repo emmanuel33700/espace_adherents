@@ -1,10 +1,10 @@
 import {Component, OnInit, HostBinding} from '@angular/core';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
-import {FormBuilder, FormGroup, NgForm, Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
+import {FormBuilder, FormGroup, NgForm} from '@angular/forms';
 import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
 import { NbToastrService } from '@nebular/theme';
 import {LoggerService} from '../../../@core/utils/logger.service';
+import {DateService} from '../../../@core/utils';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -24,7 +24,6 @@ export class ModifierComponent implements OnInit {
   user: any = {};
 
   // Toaster
-  private index: number = 0;
   @HostBinding('class')
   classes = 'example-items-rows';
   // fin toaster
@@ -34,6 +33,7 @@ export class ModifierComponent implements OnInit {
     private adherentService: AdherentService,
     private toastrService: NbToastrService,
     private loggerService: LoggerService,
+    private dateService: DateService,
   ) {}
 
   /**
@@ -55,7 +55,7 @@ export class ModifierComponent implements OnInit {
     this.user.ville = this.adherent.ville;
     this.user.telPortable = this.adherent.telPortable;
     this.user.telMaison = this.adherent.telMaison;
-    this.user.dateNaissance = null; // TODO a revoir la date de naisance
+    this.user.dateNaissance = this.dateService.dateFormatForPrint(this.adherent.dateNaissance);
     this.user.commentaire = this.adherent.commentaire;
     this.user.accordMail = this.adherent.accordMail;
     this.user.publicContact = this.adherent.publicContact;
@@ -88,7 +88,7 @@ export class ModifierComponent implements OnInit {
     this.adherent.ville = this.user.ville;
     this.adherent.telPortable = this.user.telPortable;
     this.adherent.telMaison = this.user.telFixe;
-    this.adherent.dateNaissance = null; // TODO a revoir la date de naisance
+    this.adherent.dateNaissance = this.dateService.convertIsoDate(this.user.dateNaissance);
     this.adherent.commentaire = this.user.commentaire;
     if (this.user.accordmail) {
       this.adherent.accordMail = true;

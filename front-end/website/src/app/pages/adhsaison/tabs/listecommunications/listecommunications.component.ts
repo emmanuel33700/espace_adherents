@@ -3,7 +3,7 @@ import {CommunicationService} from '../../../../../api/generated/adherents/servi
 import {Communication} from '../../../../../api/generated/adherents/models/communication';
 import {Router} from '@angular/router';
 import {LoggerService} from '../../../../@core/utils';
-
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'ngx-list',
@@ -15,25 +15,19 @@ export class ListecommunicationsComponent implements OnInit {
 
 
   public idAdherent: number = 0;
-  public communication: Communication[] = [];
+  public communications: Communication[] = [];
 
   // Toaster
-  private index: number = 0;
   @HostBinding('class')
   classes = 'example-items-rows';
   // fin toaster
 
-  users: { libelle: string, name: string, title: string, color: string }[] = [
-    { libelle: '4', name: 'Assemble générale du 1er janvier 2020', title: 'en cours', color: 'red' },
-    { libelle: '3', name: 'mail Fete du la lune du 1er fevrier 2020', title: 'envoyé' , color: 'red'},
-    { libelle: '2', name: 'mail Fete du soleil du 1er fevrier 2020', title: 'envoyé' , color: 'blue'},
-    { libelle: '1', name: 'mail assemblé générale du 1er dec 2020', title: 'ouvert' , color: 'green' },
-  ];
 
   constructor(
     private communicationService: CommunicationService,
     private router: Router,
     private loggerService: LoggerService,
+    private datePipe: DatePipe,
   ) {}
 
   ngOnInit(): void {
@@ -42,9 +36,9 @@ export class ListecommunicationsComponent implements OnInit {
 
     this.communicationService.getListeCommunicationAdhrent({idadh: this.idAdherent}).subscribe(
       (data) => {
-        this.communication = data;
+        this.communications = data;
         this.loggerService.info(JSON.stringify(data));
-        this.loggerService.info(JSON.stringify(this.communication));
+        this.loggerService.info(JSON.stringify(this.communications));
       },
       (error) => {
         this.loggerService.error(error);
@@ -52,5 +46,21 @@ export class ListecommunicationsComponent implements OnInit {
       () => {
         this.loggerService.debug('fini');
       });
+  }
+
+  getColor(statut: 'unknown' | 'queued' | 'sent' | 'opened' | 'clicked' | 'bounce' | 'spam' | 'unsub' | 'blocked' | 'hardbounced' | 'softbounced' | 'deferred') {
+
+    if ((statut === 'unknown') || (statut === 'queued') || (statut === 'sent')) {
+      return 'blue';
+    } else if ((statut === 'opened') || (statut === 'clicked')) {
+      return 'green';
+    } else {
+      return 'red';
+    }
+  }
+
+  dateFormat(dateArrive: string) {
+    const date: Date = new Date(dateArrive);
+    return this.datePipe.transform(date, 'dd-MM-yyyy à hh:mm:ss' );
   }
 }

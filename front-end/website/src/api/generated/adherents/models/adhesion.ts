@@ -53,4 +53,9 @@ export interface Adhesion {
    * * 8 : DEMANDEUR EMPLOI
    */
   idTypeAdhesion?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+
+  /**
+   * Libellé anne adhesion
+   */
+  libelleAnneeAdhesion?: string;
 }

@@ -5,7 +5,7 @@ export class LoggerService {
 
   logs: Array<string> = [];
 
-  level: number = 2;  // debug:2, info:1, error:0
+  level: number = 1;  // debug:2, info:1, error:0
 
 
   debug(message: string) {

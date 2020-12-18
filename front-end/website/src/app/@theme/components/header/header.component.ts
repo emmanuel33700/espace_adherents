@@ -3,9 +3,8 @@ import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeServ
 
 import {UserData} from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
-import {map, switchMap, takeUntil} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import {Router} from '@angular/router';
 import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 import {NbAuthService, NbAuthToken} from '@nebular/auth';
@@ -71,6 +70,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
 
 
+    // Recupérer l'id de l'année de l'adhésion courante
+    // TODO à récupérer l'id de l'adhésion courante
+    localStorage.setItem('id_annee_adhesion', '1');
 
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()

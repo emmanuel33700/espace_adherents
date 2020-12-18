@@ -22,7 +22,8 @@ import { ListeadhesionsComponent} from './tabs/listeadhesions/listeadhesions.com
 import { ListeparticipationsComponent} from './tabs/listeparticipations/listeparticipations.component';
 import { ListecommunicationsComponent } from './tabs/listecommunications/listecommunications.component';
 import { ConnexionComponent } from './tabs/connexion/connexion.component';
-import { AjouterComponent } from './ajouter/ajouter.component';
+import { AjouteradherentComponent } from './ajouteradherent/ajouteradherent.component';
+import { AjouteradhesionComponent } from './ajouteradhesion/ajouteradhesion.component';
 import {NbSecurityModule} from '@nebular/security';
 import { FormsModule as ngFormsModule } from '@angular/forms';
 import {CommonModule} from '@angular/common';
@@ -66,7 +67,8 @@ import {HttpClientModule} from '@angular/common/http';
     ListeparticipationsComponent,
     ListecommunicationsComponent,
     ConnexionComponent,
-    AjouterComponent,
+    AjouteradherentComponent,
+    AjouteradhesionComponent,
   ],
   providers: [
     AdhsaisonService,

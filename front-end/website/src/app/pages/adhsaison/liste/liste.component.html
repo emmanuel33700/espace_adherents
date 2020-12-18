@@ -6,9 +6,9 @@
       <nb-card-body>
         <nb-actions size="medium" fullWidth>
           <nb-action>
-            <nb-toggle labelPosition="end">Afficher les adhérents de la saision</nb-toggle>
+            <nb-toggle labelPosition="end" (change)="changeListe($event)" >Afficher les adhérents de la saision</nb-toggle>
           </nb-action>
-          <nb-action routerLink="../ajouter">
+          <nb-action routerLink="../ajouteradherent">
             <nb-icon class="action-icon" icon="file-add"></nb-icon>
             <span>Ajouter un adhérents</span>
           </nb-action>
@@ -21,16 +21,20 @@
   </div>
 
 
-
-<div class="col-md-auto col-lg-12 col-xxxl-12">
+  <div class="col-md-auto col-lg-12 col-xxxl-12">
     <nb-card class="list-card" size="giant">
       <nb-card-header>Adhérents</nb-card-header>
       <nb-list>
         <nb-list-item *ngFor="let adherent of adherents">
 
-            <nb-user picture="assets/images/nick.png"  [name]="adherent.nom + ' ' +adherent.prenom" [title]="adherent.email"  (click)="sectionAdherents(adherent.id)"  >
-            </nb-user>
-
+          <nb-user picture="assets/images/nick.png" [name]="adherent.nom + ' ' +adherent.prenom"
+                   [title]="adherent.email" (click)="sectionAdherents(adherent.id)">
+          </nb-user>
+          <ng-container *ngIf="!adherent.adhesionsSaisonCourante">
+            <div style="display:flex; justify-content:flex-end; width:100%; padding:0;">
+              <button (click)="ajouterAdhesion(adherent.id)" size="small" nbButton>Ajouter adhésion</button>
+            </div>
+          </ng-container>
         </nb-list-item>
       </nb-list>
     </nb-card>
