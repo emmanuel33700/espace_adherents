@@ -4,6 +4,8 @@ import fr.espaceadh.utilitaire.model.Evenement;
 import fr.espaceadh.utilitaire.model.ListeEvenements;
 import fr.espaceadh.utilitaire.model.ModelApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fr.espaceadh.utilitaire.dto.EvenementDto;
+import fr.espaceadh.utilitaire.service.AgendaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -33,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-02T08:30:39.723Z[GMT]")
 @RestController
@@ -43,6 +46,10 @@ public class AgendaApiController implements AgendaApi {
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
+    
+        @Autowired
+    protected AgendaService agendaService;
+    
 
     @org.springframework.beans.factory.annotation.Autowired
     public AgendaApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -52,7 +59,13 @@ public class AgendaApiController implements AgendaApi {
 
     public ResponseEntity<Void> addEvenement(@Parameter(in = ParameterIn.DEFAULT, description = "Objet adhérent", required=true, schema=@Schema()) @Valid @RequestBody Evenement body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        EvenementDto dto = new EvenementDto();
+        
+        boolean result = agendaService.creerEvenement(dto);
+        
+        if(result) return  new ResponseEntity<Void>(HttpStatus.CREATED);
+        
+        return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public ResponseEntity<Void> deleteEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement) {
