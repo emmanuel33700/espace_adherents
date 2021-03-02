@@ -358,27 +358,29 @@ public class AdherentApiController implements AdherentApi {
       * @return 
       */
     private Communication.StatutEnum convertStatutEnum(String statut) {
-        if(String.valueOf(Communication.StatutEnum.BLOCKED).equals(statut)){
+        if(String.valueOf(fr.espaceadh.lib.mail.model.mailjet.Message.StatusEnum.BLOCKED).equals(statut)){
             return Communication.StatutEnum.BLOCKED;
-        } else if(String.valueOf(Communication.StatutEnum.BOUNCE).equals(statut)){
+        } else if(String.valueOf(fr.espaceadh.lib.mail.model.mailjet.Message.StatusEnum.BOUNCE).equals(statut)){
             return Communication.StatutEnum.BOUNCE;
-        } else if(String.valueOf(Communication.StatutEnum.CLICKED).equals(statut)){
+        } else if(String.valueOf(fr.espaceadh.lib.mail.model.mailjet.Message.StatusEnum.CLICKED).equals(statut)){
             return Communication.StatutEnum.CLICKED;
-        } else if(String.valueOf(Communication.StatutEnum.DEFERRED).equals(statut)){
+        } else if(String.valueOf(fr.espaceadh.lib.mail.model.mailjet.Message.StatusEnum.DEFERRED).equals(statut)){
             return Communication.StatutEnum.DEFERRED;
-        } else if(String.valueOf(Communication.StatutEnum.HARDBOUNCED).equals(statut)){
+        } else if(String.valueOf(fr.espaceadh.lib.mail.model.mailjet.Message.StatusEnum.HARDBOUNCED).equals(statut)){
             return Communication.StatutEnum.HARDBOUNCED;
-        } else if(String.valueOf(Communication.StatutEnum.OPENED).equals(statut)){
+        } else if(String.valueOf(fr.espaceadh.lib.mail.model.mailjet.Message.StatusEnum.OPENED).equals(statut)){
             return Communication.StatutEnum.OPENED;
-        } else if(String.valueOf(Communication.StatutEnum.QUEUED).equals(statut)){
+        } else if(String.valueOf(fr.espaceadh.lib.mail.model.mailjet.Message.StatusEnum.QUEUED).equals(statut)){
             return Communication.StatutEnum.QUEUED;
-        } else if(String.valueOf(Communication.StatutEnum.SOFTBOUNCED).equals(statut)){
+        } else if(String.valueOf(fr.espaceadh.lib.mail.model.mailjet.Message.StatusEnum.SOFTBOUNCED).equals(statut)){
             return Communication.StatutEnum.SOFTBOUNCED;
-        } else if(String.valueOf(Communication.StatutEnum.SPAM).equals(statut)){
+        } else if(String.valueOf(fr.espaceadh.lib.mail.model.mailjet.Message.StatusEnum.SPAM).equals(statut)){
             return Communication.StatutEnum.SPAM;
-        } else if(String.valueOf(Communication.StatutEnum.UNSUB).equals(statut)){
+        } else if(String.valueOf(fr.espaceadh.lib.mail.model.mailjet.Message.StatusEnum.UNSUB).equals(statut)){
             return Communication.StatutEnum.UNSUB;
-        } 
+        }  else if(String.valueOf(fr.espaceadh.lib.mail.model.mailjet.Message.StatusEnum.SENT).equals(statut)){
+            return Communication.StatutEnum.SENT;
+        }
         
         return Communication.StatutEnum.UNKNOWN;
     }
