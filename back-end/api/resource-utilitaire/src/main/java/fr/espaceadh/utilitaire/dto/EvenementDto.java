@@ -16,10 +16,78 @@
  */
 package fr.espaceadh.utilitaire.dto;
 
+import java.util.Date;
+
 /**
  *
  * @author emmanuel
  */
 public class EvenementDto {
+    
+    private long idEvenement;
+    private String descriptionCourte;
+    private String descriptionLongue;
+    private String lieux;
+    private Date dateDebut;
+    private Date dateFin;
+    private int idAuthority;
+
+    public long getIdEvenement() {
+        return idEvenement;
+    }
+
+    public void setIdEvenement(long idEvenement) {
+        this.idEvenement = idEvenement;
+    }
+
+    public String getDescriptionCourte() {
+        return descriptionCourte;
+    }
+
+    public void setDescriptionCourte(String descriptionCourte) {
+        this.descriptionCourte = descriptionCourte;
+    }
+
+    public String getDescriptionLongue() {
+        return descriptionLongue;
+    }
+
+    public void setDescriptionLongue(String descriptionLongue) {
+        this.descriptionLongue = descriptionLongue;
+    }
+
+    public String getLieux() {
+        return lieux;
+    }
+
+    public void setLieux(String lieux) {
+        this.lieux = lieux;
+    }
+
+    public Date getDateDebut() {
+        return dateDebut;
+    }
+
+    public void setDateDebut(Date dateDebut) {
+        this.dateDebut = dateDebut;
+    }
+
+    public Date getDateFin() {
+        return dateFin;
+    }
+
+    public void setDateFin(Date dateFin) {
+        this.dateFin = dateFin;
+    }
+
+    public int getIdAuthority() {
+        return idAuthority;
+    }
+
+    public void setIdAuthority(int idAuthority) {
+        this.idAuthority = idAuthority;
+    }
+    
+
     
 }

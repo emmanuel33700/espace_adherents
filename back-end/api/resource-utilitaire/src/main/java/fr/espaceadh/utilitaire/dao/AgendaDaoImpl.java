@@ -19,6 +19,7 @@ package fr.espaceadh.utilitaire.dao;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -26,13 +27,48 @@ import org.springframework.stereotype.Repository;
  * @author emmanuel
  */
 @Repository
-public class AgendaDaoImpl implements AgendaDao{
+public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AgendaDaoImpl.class);  
     
     @Override
     public boolean creerEvenement(EvenementDto evenement) {
-        return true;
+        final long idEvenement = this.recupererIdEvenement();
+        
+                StringBuilder query = new StringBuilder();
+        query.append(" INSERT INTO public.t_evenement( ");
+        query.append("			id_evenement, description_courte, detail_text, lieux, date_debut, date_fin, fk_id_type_authority) ");
+        query.append("	VALUES (?, ?, ?, ?, ?, ?, ?) ");
+
+        int nbCreation;
+        nbCreation = this.getJdbcTemplate().update(query.toString(),
+                 idEvenement,
+                 evenement.getDescriptionCourte(),
+                 evenement.getDescriptionLongue(),
+                 evenement.getLieux(),
+                 evenement.getDateDebut(),
+                 evenement.getDateFin(),
+                 evenement.getIdAuthority()
+        );
+
+        if (nbCreation == 1) {
+            return true;
+        } else {
+            LOGGER.error("Erreur lors de la creation d'un évènement : nombre de ligne crée {} ", nbCreation);
+        }
+        return false;
+
     }
     
+    
+    
+    
+    private long recupererIdEvenement(){
+        StringBuilder query = new StringBuilder()
+            .append(" select nextval('seq_t_evenement') ");
+        
+        final long idEvenement = this.getJdbcTemplate().queryForObject(query.toString(),  Long.class);
+        
+        return  idEvenement;
+    }
 }

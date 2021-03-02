@@ -33,6 +33,8 @@ import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +63,7 @@ public class AgendaApiController implements AgendaApi {
         String accept = request.getHeader("Accept");
         EvenementDto dto = new EvenementDto();
         
-        boolean result = agendaService.creerEvenement(dto);
+        boolean result = agendaService.creerEvenement(this.convertDto(body));
         
         if(result) return  new ResponseEntity<Void>(HttpStatus.CREATED);
         
@@ -104,6 +106,29 @@ public class AgendaApiController implements AgendaApi {
     public ResponseEntity<Void> updateEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement,@Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Evenement body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    private EvenementDto convertDto(Evenement evenementModel) {
+        EvenementDto dto = new EvenementDto();
+        dto.setIdEvenement(evenementModel.getId());
+        dto.setDescriptionCourte(evenementModel.getDescription());
+        dto.setDescriptionLongue(evenementModel.getDetail());
+        dto.setLieux(null); //TODO a revoir avec rajout du lieux dans le swagger utilitaire
+        dto.setDateDebut(this.toDate(evenementModel.getDatedebut()));
+        dto.setDateFin(this.toDate(evenementModel.getDatefin()));
+        dto.setIdAuthority(1);
+        
+        return dto;
+    }
+    
+    
+            /** Transform ISO 8601 string to Calendar.
+     * @param iso8601string
+     * @return  */
+    public  Date toDate(final String iso8601string) {
+
+        if (iso8601string == null) return null;
+        return Date.from( Instant.parse( iso8601string));
     }
 
 }
