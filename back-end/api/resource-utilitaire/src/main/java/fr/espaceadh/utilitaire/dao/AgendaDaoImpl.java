@@ -17,8 +17,10 @@
 package fr.espaceadh.utilitaire.dao;
 
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
@@ -30,6 +32,12 @@ import org.springframework.stereotype.Repository;
 public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AgendaDaoImpl.class);  
+    
+    @Autowired
+    public AgendaDaoImpl(DataSource dataSource) {
+        this.setDataSource(dataSource);
+    }
+
     
     @Override
     public boolean creerEvenement(EvenementDto evenement) {
