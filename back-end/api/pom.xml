@@ -88,6 +88,7 @@
 		<module>authorization-server</module>
 		<module>resource-authorization</module>
 		<module>resource-adherents</module>
+                <module>resource-utilitaire</module>
 	</modules>
 
 	<profiles>
