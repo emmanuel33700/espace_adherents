@@ -127,17 +127,16 @@ public class AgendaApiController implements AgendaApi {
      */
     private boolean hasRole(String role) {
         LOGGER.info("--> start hasRole");
-      Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>)
-      SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-      boolean hasRole = false;
+      Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) 
+              SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+      
       for (GrantedAuthority authority : authorities) {
-         hasRole = authority.getAuthority().equals(role);
-         LOGGER.info("Role : {} ",authority.getAuthority());
-         if (hasRole) {
-              break;
+         if (authority.getAuthority().contains(role)) {
+             return true;
          }
+
       }
-      return hasRole;
+      return false;
     }  
 
 
