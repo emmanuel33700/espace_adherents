@@ -119,6 +119,7 @@ public interface AgendaApi {
     @RequestMapping(value = "/agenda/evenements",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
+    @PreAuthorize("isDansGroupe('ADHERENT')")            
     ResponseEntity<ListeEvenements> getListeEvenements();
 
 

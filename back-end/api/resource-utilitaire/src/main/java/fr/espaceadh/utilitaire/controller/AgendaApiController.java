@@ -34,16 +34,20 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-02T08:30:39.723Z[GMT]")
 @RestController
 public class AgendaApiController implements AgendaApi {
 
-    private static final Logger log = LoggerFactory.getLogger(AgendaApiController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AgendaApiController.class);
 
     private final ObjectMapper objectMapper;
 
@@ -81,7 +85,7 @@ public class AgendaApiController implements AgendaApi {
             try {
                 return new ResponseEntity<Evenement>(objectMapper.readValue("{\n  \"datedebut\" : \"2020-01-18T21:00:00\",\n  \"description\" : \"Conférence sur le soleil\",\n  \"datefin\" : \"2020-01-18T21:00:00\",\n  \"id\" : 1,\n  \"detail\" : \"Conférence sur le soleil présenté par Monsieur Dupont\",\n  \"type\" : 1\n}", Evenement.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
+                LOGGER.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<Evenement>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -89,13 +93,21 @@ public class AgendaApiController implements AgendaApi {
         return new ResponseEntity<Evenement>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    /**
+     * Récupérer la list d'évènement en fonction des droits d'une personne
+     * @return 
+     */
     public ResponseEntity<ListeEvenements> getListeEvenements() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
+                
+                if (this.hasRole("ADMIN"))
+                    LOGGER.info("L'utilisateur à le role ADMIN");
+                
                 return new ResponseEntity<ListeEvenements>(objectMapper.readValue("[ {\n  \"datedebut\" : \"2020-01-18T21:00:00\",\n  \"description\" : \"Conférence sur le soleil\",\n  \"datefin\" : \"2020-01-18T21:00:00\",\n  \"id\" : 1,\n  \"detail\" : \"Conférence sur le soleil présenté par Monsieur Dupont\",\n  \"type\" : 1\n}, {\n  \"datedebut\" : \"2020-01-18T21:00:00\",\n  \"description\" : \"Conférence sur le soleil\",\n  \"datefin\" : \"2020-01-18T21:00:00\",\n  \"id\" : 1,\n  \"detail\" : \"Conférence sur le soleil présenté par Monsieur Dupont\",\n  \"type\" : 1\n} ]", ListeEvenements.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
+                LOGGER.error("Couldn't serialize response for content type application/json", e);
                 return new ResponseEntity<ListeEvenements>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
@@ -103,6 +115,30 @@ public class AgendaApiController implements AgendaApi {
         return new ResponseEntity<ListeEvenements>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    
+    
+
+    /**
+     * Vérifier le type de role de l'utilisateur
+     * @param role
+     * @return 
+     */
+    private boolean hasRole(String role) {
+      Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>)
+      SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+      boolean hasRole = false;
+      for (GrantedAuthority authority : authorities) {
+         hasRole = authority.getAuthority().equals(role);
+         LOGGER.info("Role : {} ",authority.getAuthority());
+         if (hasRole) {
+              break;
+         }
+      }
+      return hasRole;
+    }  
+
+
+    
     public ResponseEntity<Void> updateEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement,@Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Evenement body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
