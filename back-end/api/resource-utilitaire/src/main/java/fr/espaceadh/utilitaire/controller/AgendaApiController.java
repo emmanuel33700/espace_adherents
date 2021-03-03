@@ -98,12 +98,14 @@ public class AgendaApiController implements AgendaApi {
      * @return 
      */
     public ResponseEntity<ListeEvenements> getListeEvenements() {
+        if (this.hasRole("ADMIN"))
+            LOGGER.info("L'utilisateur à le role ADMIN");
+                        
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
                 
-                if (this.hasRole("ADMIN"))
-                    LOGGER.info("L'utilisateur à le role ADMIN");
+
                 
                 return new ResponseEntity<ListeEvenements>(objectMapper.readValue("[ {\n  \"datedebut\" : \"2020-01-18T21:00:00\",\n  \"description\" : \"Conférence sur le soleil\",\n  \"datefin\" : \"2020-01-18T21:00:00\",\n  \"id\" : 1,\n  \"detail\" : \"Conférence sur le soleil présenté par Monsieur Dupont\",\n  \"type\" : 1\n}, {\n  \"datedebut\" : \"2020-01-18T21:00:00\",\n  \"description\" : \"Conférence sur le soleil\",\n  \"datefin\" : \"2020-01-18T21:00:00\",\n  \"id\" : 1,\n  \"detail\" : \"Conférence sur le soleil présenté par Monsieur Dupont\",\n  \"type\" : 1\n} ]", ListeEvenements.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
@@ -124,6 +126,7 @@ public class AgendaApiController implements AgendaApi {
      * @return 
      */
     private boolean hasRole(String role) {
+        LOGGER.info("--> start hasRole");
       Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>)
       SecurityContextHolder.getContext().getAuthentication().getAuthorities();
       boolean hasRole = false;
