@@ -17,6 +17,7 @@
 package fr.espaceadh.utilitaire.dao;
 
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import java.util.Collection;
 
 /**
  *
@@ -24,5 +25,17 @@ import fr.espaceadh.utilitaire.dto.EvenementDto;
  */
 public interface AgendaDao {
     
+    /**
+     * Crééer un évènement
+     * @param evenement
+     * @return  true si évènement est créé
+     */
     public boolean creerEvenement(EvenementDto evenement);
+    
+    /**
+     * Recuperer la liste des évènement en fonction du type d'autority
+     * @param typeAutority
+     * @return liste d'évènement
+     */
+    public Collection<EvenementDto> getLstEvenement(int typeAutority);
 }

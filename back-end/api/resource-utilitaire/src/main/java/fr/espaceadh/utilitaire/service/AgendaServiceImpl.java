@@ -19,6 +19,7 @@ package fr.espaceadh.utilitaire.service;
 import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.utilitaire.dao.AgendaDao;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +48,26 @@ public class AgendaServiceImpl implements AgendaService{
     protected AgendaDao agendaDao;
             
         
-    
+    /**
+     * Crééer un évènement
+     * @param evenement
+     * @return  true si évènement est créé
+     */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean creerEvenement(EvenementDto evenement) {
         return this.agendaDao.creerEvenement(evenement);
+    }
+
+    /**
+     * Recuperer la liste des évènement en fonction du type d'autority
+     * @param typeAutority
+     * @return liste d'évènement
+     */
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Collection<EvenementDto> getLstEvenement(int typeAutority) {
+        return this.agendaDao.getLstEvenement(typeAutority);
     }
     
 }

@@ -17,10 +17,15 @@
 package fr.espaceadh.utilitaire.dao;
 
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
@@ -38,7 +43,11 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
         this.setDataSource(dataSource);
     }
 
-    
+    /**
+     * Crééer un évènement
+     * @param evenement
+     * @return  true si évènement est créé
+     */
     @Override
     public boolean creerEvenement(EvenementDto evenement) {
         final long idEvenement = this.recupererIdEvenement();
@@ -70,7 +79,10 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
     
     
     
-    
+    /**
+     * recupérer un nouvel id evenement
+     * @return 
+     */
     private long recupererIdEvenement(){
         StringBuilder query = new StringBuilder()
             .append(" select nextval('seq_t_evenement') ");
@@ -78,5 +90,57 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
         final long idEvenement = this.getJdbcTemplate().queryForObject(query.toString(),  Long.class);
         
         return  idEvenement;
+    }
+
+    /**
+     * Recuperer la liste des évènements en fonction du type d'autority
+     * @param typeAutority
+     * @return liste d'évènement
+     */
+    @Override
+    public Collection<EvenementDto> getLstEvenement(int typeAutority) {
+        StringBuilder query = new StringBuilder();
+        
+        query.append(" SELECT id_evenement, description_courte, detail_text, lieux, date_debut, date_fin, fk_id_type_authority ");
+        query.append("	FROM t_evenement ");
+        query.append(" 	WHERE fk_id_type_authority <= ? ");
+        
+        
+        List<EvenementDto> lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), typeAutority);
+        
+        
+        
+        LOGGER.debug("Nombre d'évènements récupérés  {} ", lstEvenement.size());
+        
+        return lstEvenement;
+    }
+    
+    /**
+     * 
+     */
+    public static final class EvenementsMapper implements RowMapper<EvenementDto> {
+
+        /**
+         * Mapper table t_evenement
+         * @param rs
+         * @param i
+         * @return
+         * @throws SQLException 
+         */
+        @Override
+        public EvenementDto mapRow(ResultSet rs, int i) throws SQLException {
+            EvenementDto dto = new EvenementDto();
+            
+            dto.setIdEvenement(rs.getLong("id_evenement"));
+            dto.setDescriptionCourte(rs.getString("description_courte"));
+            dto.setDescriptionLongue(rs.getString("detail_text"));
+            dto.setLieux(rs.getString("lieux"));
+            dto.setDateDebut(rs.getDate("date_debut"));
+            dto.setDateFin(rs.getDate("date_fin"));
+            dto.setIdAuthority(rs.getInt("fk_id_type_authority"));
+            
+            return dto;
+        }
+        
     }
 }

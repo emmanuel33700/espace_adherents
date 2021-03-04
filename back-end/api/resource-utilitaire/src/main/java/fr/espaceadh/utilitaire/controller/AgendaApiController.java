@@ -2,44 +2,28 @@ package fr.espaceadh.utilitaire.controller;
 
 import fr.espaceadh.utilitaire.model.Evenement;
 import fr.espaceadh.utilitaire.model.ListeEvenements;
-import fr.espaceadh.utilitaire.model.ModelApiResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
 import fr.espaceadh.utilitaire.service.AgendaService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -98,20 +82,33 @@ public class AgendaApiController implements AgendaApi {
      * @return 
      */
     public ResponseEntity<ListeEvenements> getListeEvenements() {
-        if (this.hasRole("ADMIN"))
-            LOGGER.info("L'utilisateur à le role ADMIN");
-                        
+
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                
-
-                
-                return new ResponseEntity<ListeEvenements>(objectMapper.readValue("[ {\n  \"datedebut\" : \"2020-01-18T21:00:00\",\n  \"description\" : \"Conférence sur le soleil\",\n  \"datefin\" : \"2020-01-18T21:00:00\",\n  \"id\" : 1,\n  \"detail\" : \"Conférence sur le soleil présenté par Monsieur Dupont\",\n  \"type\" : 1\n}, {\n  \"datedebut\" : \"2020-01-18T21:00:00\",\n  \"description\" : \"Conférence sur le soleil\",\n  \"datefin\" : \"2020-01-18T21:00:00\",\n  \"id\" : 1,\n  \"detail\" : \"Conférence sur le soleil présenté par Monsieur Dupont\",\n  \"type\" : 1\n} ]", ListeEvenements.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                LOGGER.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<ListeEvenements>(HttpStatus.INTERNAL_SERVER_ERROR);
+            int typeAutority = 1;
+            if (this.hasRole("ADHERENT")) {
+                typeAutority = 2;
+            } else if (this.hasRole("CONSEIL")) {
+                typeAutority = 3;
+            } else if (this.hasRole("BUREAU")) {
+                typeAutority = 4;
+            } else if (this.hasRole("ADMIN")) {
+                typeAutority = 5;
             }
+
+            final Collection<EvenementDto> lstEvenementDto = this.agendaService.getLstEvenement(typeAutority);
+
+            ListeEvenements lstEvenementModel = new ListeEvenements();
+
+            if (lstEvenementDto != null && !lstEvenementDto.isEmpty()) {
+                for (EvenementDto dto : lstEvenementDto) {
+                    lstEvenementModel.add(this.transformeModel(dto));
+                }
+            }
+
+            return new ResponseEntity<>(lstEvenementModel, HttpStatus.OK);
+        } else {
+            LOGGER.error(" requete http ne contient pas application/json");
         }
 
         return new ResponseEntity<ListeEvenements>(HttpStatus.NOT_IMPLEMENTED);
@@ -160,13 +157,50 @@ public class AgendaApiController implements AgendaApi {
     }
     
     
-            /** Transform ISO 8601 string to Calendar.
+    /**
+     * Transform ISO 8601 string to Calendar.
+     *
      * @param iso8601string
-     * @return  */
-    public  Date toDate(final String iso8601string) {
+     * @return
+     */
+    public Date toDate(final String iso8601string) {
 
-        if (iso8601string == null) return null;
-        return Date.from( Instant.parse( iso8601string));
+        if (iso8601string == null) {
+            return null;
+        }
+        return Date.from(Instant.parse(iso8601string));
+    }
+
+    /**
+     * convertir date en string format ISO
+     * @param date
+     * @return 
+     */
+    private String dateToString(Date date) {
+        if (date == null) {
+            return null;
+        }
+        SimpleDateFormat sdf;
+        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        sdf.setTimeZone(TimeZone.getTimeZone("CET"));
+        return sdf.format(date);
+    }
+
+    /**
+     * Transforme un dto evenement en model envement
+     * @param dto
+     * @return 
+     */
+    private Evenement transformeModel(EvenementDto dto) {
+        Evenement evenementModel = new Evenement();
+        evenementModel.setId(dto.getIdEvenement());
+        evenementModel.setDescription(dto.getDescriptionCourte());
+        evenementModel.setDetail(dto.getDescriptionLongue());
+        evenementModel.setDatedebut(this.dateToString(dto.getDateDebut()));
+        evenementModel.setDatefin(this.dateToString(dto.getDateFin()));
+        evenementModel.setType(Evenement.TypeEnum.NUMBER_1); //TODO a revoir sur le type d'évènement
+        
+        return evenementModel;
     }
 
 }
