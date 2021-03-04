@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -123,7 +126,6 @@ public class AgendaApiController implements AgendaApi {
      * @return 
      */
     private boolean hasRole(String role) {
-        LOGGER.info("--> start hasRole");
       Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) 
               SecurityContextHolder.getContext().getAuthentication().getAuthorities();
       
@@ -164,11 +166,21 @@ public class AgendaApiController implements AgendaApi {
      * @return
      */
     public Date toDate(final String iso8601string) {
-
         if (iso8601string == null) {
             return null;
         }
-        return Date.from(Instant.parse(iso8601string));
+        
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
+        Date result2 = null;
+        try {
+            result2 = df2.parse(iso8601string);
+        } catch (ParseException ex) {
+            LOGGER.error("Erreur sur le formatage  de date. Date en entré {}. {}", iso8601string , ex.getMessage());
+        }
+
+
+        return result2;
     }
 
     /**
