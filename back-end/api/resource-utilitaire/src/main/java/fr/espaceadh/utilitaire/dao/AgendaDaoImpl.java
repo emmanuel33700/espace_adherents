@@ -135,6 +135,8 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
             dto.setDescriptionCourte(rs.getString("description_courte"));
             dto.setDescriptionLongue(rs.getString("detail_text"));
             dto.setLieux(rs.getString("lieux"));
+            
+            LOGGER.info("date dans DAO {} " , rs.getDate("date_debut"));
             dto.setDateDebut(rs.getDate("date_debut"));
             dto.setDateFin(rs.getDate("date_fin"));
             dto.setIdAuthority(rs.getInt("fk_id_type_authority"));

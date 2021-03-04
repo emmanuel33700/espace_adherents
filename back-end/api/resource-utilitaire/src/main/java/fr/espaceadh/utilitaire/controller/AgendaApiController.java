@@ -182,7 +182,7 @@ public class AgendaApiController implements AgendaApi {
         }
         SimpleDateFormat sdf;
         sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-        LOGGER.info("date {} ", date);
+        LOGGER.info("date {} ", date.toString());
         //sdf.setTimeZone(TimeZone.getTimeZone("CET"));
         return sdf.format(date);
     }
