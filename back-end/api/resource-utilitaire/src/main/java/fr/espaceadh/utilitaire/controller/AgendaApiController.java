@@ -170,7 +170,7 @@ public class AgendaApiController implements AgendaApi {
             return null;
         }
         
-        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.XXX");
 
         Date result2 = null;
         try {
