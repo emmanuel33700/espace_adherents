@@ -60,7 +60,7 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
 
         int nbCreation;
         nbCreation = this.getJdbcTemplate().update(query.toString(),
-                 idEvenement,
+                 evenement.getIdEvenement(),
                  evenement.getDescriptionCourte(),
                  evenement.getDescriptionLongue(),
                  evenement.getLieux(),
