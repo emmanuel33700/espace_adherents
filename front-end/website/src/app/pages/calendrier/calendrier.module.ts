@@ -18,10 +18,14 @@ import { ListeComponent } from './liste/liste.component';
 import { FormsModule as ngFormsModule } from '@angular/forms';
 import { FullCalendarModule } from '@fullcalendar/angular'; // the main connector. must go first
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
+import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction'; // a plugin
+import listPlugin from '@fullcalendar/list';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
+  timeGridPlugin,
+  listPlugin,
   interactionPlugin,
 ]);
 

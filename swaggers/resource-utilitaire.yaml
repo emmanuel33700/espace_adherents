@@ -1,0 +1,440 @@
+openapi: 3.0.1
+info:
+  title: API utilitaires
+  description: Description de l'API utilitaire
+  contact:
+    email: manu.chenais@gmail.com
+  license:
+    name: MIT License
+    url: 'https://opensource.org/licenses/MIT'
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
+servers:
+  - url: 'https://api.jalle-astro.fr/resource-utilitaire/'
+tags:
+  - name: Agenda
+    description: gestion de l'agendas
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'
+  - name: Documentation
+    description: gestion de la documentation de l'association
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'
+  - name: Diffusion mail
+    description: gestion de la diffusion des mails
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'
+  - name: Saison
+    description: Gestion des saisons
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'
+paths:
+  /agenda/evenement:
+    post:
+      tags:
+        - Agenda
+      summary: Ajouter un évenement
+      operationId: addEvenement
+      security:
+        - oAuth:
+            - ress-utilitaire-agenda-add
+      requestBody:
+        description: Objet adhérent
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/evenement'
+        required: true
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/agenda/evenement/{idevenement}':
+    get:
+      tags:
+        - Agenda
+      summary: rechercher un evenement
+      operationId: getEvenement
+      security:
+        - oAuth:
+            - ress-utilitaire-agenda-read
+      parameters:
+        - name: idevenement
+          in: path
+          description: id de l'evenement
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/evenement'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: evenement non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags:
+        - Agenda
+      summary: Supprimer un evenement
+      operationId: deleteEvenement
+      security:
+        - oAuth:
+            - ress-utilitaire-agenda-del
+      parameters:
+        - name: idevenement
+          in: path
+          description: id de l'evenement
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: evenement non trouvé
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      tags:
+        - Agenda
+      summary: Mise à jour d'une evenement
+      description: Mise à jour d'un evenement
+      operationId: updateEvenement
+      security:
+        - oAuth:
+            - ress-utilitaire-agenda-write
+      parameters:
+        - name: idevenement
+          in: path
+          description: id de l'evenement
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Objet adherent
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/evenement'
+        required: true
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: evenement non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/agenda/evenements':
+    get:
+      tags:
+        - Agenda
+      summary: rechercher la liste d'évenement
+      operationId: getListeEvenements
+      security:
+        - oAuth:
+            - ress-utilitaire-agenda-read
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeEvenements'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: evenement non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /saison/active:
+    get:
+      tags:
+        - Saison
+      summary: récupérer la saison courante
+      operationId: getSaisonCourante
+      security:
+        - oAuth:
+            - ress-utilitaire-saison-read
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/saison'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: saison non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      tags:
+        - Saison
+      summary: Mise à jour de la saison courante
+      description: Mise à jour de la saison courante
+      operationId: updateSaisonCourante
+      security:
+        - oAuth:
+            - ress-utilitaire-saison-write
+      requestBody:
+        description: Objet adherent
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/saison'
+        required: true
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: saison non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /saison/liste:
+    get:
+      tags:
+        - Saison
+      summary: récupérer la liste des saisons
+      operationId: getListeSaison
+      security:
+        - oAuth:
+            - ress-utilitaire-saison-read
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeSaison'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: saison non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
+
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+    listeEvenements:
+      type: array
+      items:
+        $ref: '#/components/schemas/evenement'
+    evenement:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        type:
+          type: integer
+          example: 1
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+          description: |
+            Types evenement
+            * 1 : CONFERENCE               
+            * 2 : MANIFESTATION            
+            * 3 : OBSERVATION
+            * 4 : ANIMATION
+            * 5 : REUNION
+            * 6 : SORTIE
+            * 7 : ATELIER
+            * 8 : DIVERS
+        description:
+          maxLength: 100
+          minLength: 3
+          type: string
+          example: Conférence sur le soleil
+        detail:
+          maxLength: 500
+          minLength: 3
+          type: string
+          example: Conférence sur le soleil présenté par Monsieur Dupont
+        datedebut:
+          type: string
+          example: '2020-01-18T21:00:00'
+          description: date de début au format iso8601
+        datefin:
+          type: string
+          example: '2020-01-18T21:00:00'
+          description: date de fin au format iso8601
+      xml:
+        name: Order
+    listeSaison:
+      type: array
+      items:
+        $ref: '#/components/schemas/saison'
+    saison:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id de la saison
+          example: 1
+        libelle:
+          type: string
+          example: '2019/2020'
+          description: libelle de la saison
+        saisonActive:
+          type: boolean
+          description: indique si la saison est active
+      xml:
+        name: Order
+  securitySchemes:
+    oAuth:
+      type: oauth2
+      description: 'This API uses OAuth 2 with the implicit grant flow. [More info]'
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://api.jalle-astro.fr/authorization-server/oauth/token'
+          scopes:
+            ress-adherent-admin: droit administration sur les ressources autorisation
+        authorizationCode:
+          authorizationUrl: 'https://api.jalle-astro.fr/authorization-server/oauth/authorize'
+          tokenUrl: 'https://api.jalle-astro.fr/authorization-server/oauth/token'
+          scopes:
+            ress-adherent-admin: droit administration sur les ressources adherent
+        password:
+          tokenUrl: 'https://api.jalle-astro.fr/authorization-server/oauth/token'
+          scopes:
+            ress-adherent-admin: droit administration sur les ressources adherent
