@@ -77,6 +77,9 @@ public class Evenement   {
   @JsonProperty("datefin")
   private String datefin = null;
 
+  @JsonProperty("envoyerInfoAdherents")
+  private Boolean envoyerInfoAdherents = null;
+
   public Evenement id(Long id) {
     this.id = id;
     return this;
@@ -191,6 +194,25 @@ public class Evenement   {
     this.datefin = datefin;
   }
 
+  public Evenement envoyerInfoAdherents(Boolean envoyerInfoAdherents) {
+    this.envoyerInfoAdherents = envoyerInfoAdherents;
+    return this;
+  }
+
+  /**
+   * indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement
+   * @return envoyerInfoAdherents
+   **/
+  @Schema(example = "true", description = "indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement")
+  
+    public Boolean isEnvoyerInfoAdherents() {
+    return envoyerInfoAdherents;
+  }
+
+  public void setEnvoyerInfoAdherents(Boolean envoyerInfoAdherents) {
+    this.envoyerInfoAdherents = envoyerInfoAdherents;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -206,12 +228,13 @@ public class Evenement   {
         Objects.equals(this.description, evenement.description) &&
         Objects.equals(this.detail, evenement.detail) &&
         Objects.equals(this.datedebut, evenement.datedebut) &&
-        Objects.equals(this.datefin, evenement.datefin);
+        Objects.equals(this.datefin, evenement.datefin) &&
+        Objects.equals(this.envoyerInfoAdherents, evenement.envoyerInfoAdherents);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, description, detail, datedebut, datefin);
+    return Objects.hash(id, type, description, detail, datedebut, datefin, envoyerInfoAdherents);
   }
 
   @Override
@@ -225,6 +248,7 @@ public class Evenement   {
     sb.append("    detail: ").append(toIndentedString(detail)).append("\n");
     sb.append("    datedebut: ").append(toIndentedString(datedebut)).append("\n");
     sb.append("    datefin: ").append(toIndentedString(datefin)).append("\n");
+    sb.append("    envoyerInfoAdherents: ").append(toIndentedString(envoyerInfoAdherents)).append("\n");
     sb.append("}");
     return sb.toString();
   }
