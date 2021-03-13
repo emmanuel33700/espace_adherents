@@ -6,13 +6,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * Manifestation
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-07T09:56:02.754Z[GMT]")
 
 
 public class Manifestation   {
@@ -36,6 +37,51 @@ public class Manifestation   {
 
   @JsonProperty("dateFin")
   private String dateFin = null;
+
+  /**
+   * Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS 
+   */
+  public enum TypeEnum {
+    NUMBER_1(1),
+    
+    NUMBER_2(2),
+    
+    NUMBER_3(3),
+    
+    NUMBER_4(4),
+    
+    NUMBER_5(5),
+    
+    NUMBER_6(6),
+    
+    NUMBER_7(7),
+    
+    NUMBER_8(8);
+
+    private Integer value;
+
+    TypeEnum(Integer value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static TypeEnum fromValue(String text) {
+      for (TypeEnum b : TypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
+  @JsonProperty("type")
+  private TypeEnum type = null;
 
   /**
    * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS                
@@ -205,6 +251,25 @@ public class Manifestation   {
     this.dateFin = dateFin;
   }
 
+  public Manifestation type(TypeEnum type) {
+    this.type = type;
+    return this;
+  }
+
+  /**
+   * Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS 
+   * @return type
+   **/
+  @Schema(example = "1", description = "Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS ")
+  
+    public TypeEnum getType() {
+    return type;
+  }
+
+  public void setType(TypeEnum type) {
+    this.type = type;
+  }
+
   public Manifestation statutParticipation(StatutParticipationEnum statutParticipation) {
     this.statutParticipation = statutParticipation;
     return this;
@@ -241,12 +306,13 @@ public class Manifestation   {
         Objects.equals(this.lieux, manifestation.lieux) &&
         Objects.equals(this.dateDebut, manifestation.dateDebut) &&
         Objects.equals(this.dateFin, manifestation.dateFin) &&
+        Objects.equals(this.type, manifestation.type) &&
         Objects.equals(this.statutParticipation, manifestation.statutParticipation);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, idAdherent, descriptionCourte, descriptionLongue, lieux, dateDebut, dateFin, statutParticipation);
+    return Objects.hash(id, idAdherent, descriptionCourte, descriptionLongue, lieux, dateDebut, dateFin, type, statutParticipation);
   }
 
   @Override
@@ -261,6 +327,7 @@ public class Manifestation   {
     sb.append("    lieux: ").append(toIndentedString(lieux)).append("\n");
     sb.append("    dateDebut: ").append(toIndentedString(dateDebut)).append("\n");
     sb.append("    dateFin: ").append(toIndentedString(dateFin)).append("\n");
+    sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    statutParticipation: ").append(toIndentedString(statutParticipation)).append("\n");
     sb.append("}");
     return sb.toString();

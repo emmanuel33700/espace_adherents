@@ -13,25 +13,17 @@ import javax.validation.constraints.*;
  * ParticipationManifestation
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-07T09:56:02.754Z[GMT]")
 
 
 public class ParticipationManifestation   {
-  @JsonProperty("id")
-  private Long id = null;
-
-  @JsonProperty("idAdherent")
-  private Long idAdherent = null;
-
   /**
-   * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS                
+   * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              
    */
   public enum StatutParticipationEnum {
     NUMBER_1(1l),
     
-    NUMBER_2(2l),
-    
-    NUMBER_3(3l);
+    NUMBER_2(2l);
 
     private Long value;
 
@@ -58,54 +50,16 @@ public class ParticipationManifestation   {
   @JsonProperty("statutParticipation")
   private StatutParticipationEnum statutParticipation = null;
 
-  public ParticipationManifestation id(Long id) {
-    this.id = id;
-    return this;
-  }
-
-  /**
-   * Id de la manifestation
-   * @return id
-   **/
-  @Schema(example = "1", description = "Id de la manifestation")
-  
-    public Long getId() {
-    return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public ParticipationManifestation idAdherent(Long idAdherent) {
-    this.idAdherent = idAdherent;
-    return this;
-  }
-
-  /**
-   * Id de l'adherent
-   * @return idAdherent
-   **/
-  @Schema(example = "1", description = "Id de l'adherent")
-  
-    public Long getIdAdherent() {
-    return idAdherent;
-  }
-
-  public void setIdAdherent(Long idAdherent) {
-    this.idAdherent = idAdherent;
-  }
-
   public ParticipationManifestation statutParticipation(StatutParticipationEnum statutParticipation) {
     this.statutParticipation = statutParticipation;
     return this;
   }
 
   /**
-   * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS                
+   * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              
    * @return statutParticipation
    **/
-  @Schema(example = "1", description = "Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS                ")
+  @Schema(example = "1", description = "Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              ")
   
     public StatutParticipationEnum getStatutParticipation() {
     return statutParticipation;
@@ -125,14 +79,12 @@ public class ParticipationManifestation   {
       return false;
     }
     ParticipationManifestation participationManifestation = (ParticipationManifestation) o;
-    return Objects.equals(this.id, participationManifestation.id) &&
-        Objects.equals(this.idAdherent, participationManifestation.idAdherent) &&
-        Objects.equals(this.statutParticipation, participationManifestation.statutParticipation);
+    return Objects.equals(this.statutParticipation, participationManifestation.statutParticipation);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, idAdherent, statutParticipation);
+    return Objects.hash(statutParticipation);
   }
 
   @Override
@@ -140,8 +92,6 @@ public class ParticipationManifestation   {
     StringBuilder sb = new StringBuilder();
     sb.append("class ParticipationManifestation {\n");
     
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    idAdherent: ").append(toIndentedString(idAdherent)).append("\n");
     sb.append("    statutParticipation: ").append(toIndentedString(statutParticipation)).append("\n");
     sb.append("}");
     return sb.toString();

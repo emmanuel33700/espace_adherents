@@ -9,10 +9,13 @@ import fr.espaceadh.adherents.model.ListeCommunications;
 import fr.espaceadh.adherents.model.ParticipationManifestation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.adherents.dto.AdherentEvenementDto;
 import fr.espaceadh.adherents.dto.AdhesionDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
 import fr.espaceadh.adherents.dto.TypeAdhesionEnum;
 import fr.espaceadh.adherents.model.Communication;
+import fr.espaceadh.adherents.model.Manifestation;
+import fr.espaceadh.adherents.service.AdherentEvenementsService;
 import fr.espaceadh.adherents.service.AdherentService;
 import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.lib.mail.dto.ListeMessagesResulteDto;
@@ -30,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Collection;
@@ -37,6 +42,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
 @Controller
@@ -50,6 +56,9 @@ public class AdherentApiController implements AdherentApi {
     
     @Autowired
     protected AdherentService adherentService;
+    
+    @Autowired
+    protected AdherentEvenementsService adherentEvenementsService;
     
     @Autowired
     private GestionMail getionMail;
@@ -90,11 +99,11 @@ public class AdherentApiController implements AdherentApi {
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity<Void> ajoutManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id l'adherent à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body) {
+    public ResponseEntity<Void> ajoutManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id l'adherent à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de la manifestation à modifier", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation,@Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
-
+    
     public ResponseEntity<Void> deleteAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à supprimer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion) {
         String accept = request.getHeader("Accept");
         //TODO A implémenter
@@ -213,7 +222,7 @@ public class AdherentApiController implements AdherentApi {
            for(MessageResultDto msgDto : lstMessage.getLstMessageResulteDto()){
                 Communication communicationModel = new Communication();
                 
-               communicationModel.setDateArrive(this.dateToString(msgDto.getDateArrive()));
+               communicationModel.setDateArrive(this.dateToStringAvecMS(msgDto.getDateArrive()));
                communicationModel.setDestinataire(msgDto.getMailDestinataire());
                communicationModel.setId(msgDto.getId());
                communicationModel.setRegleSpam(msgDto.getRegleSpam());
@@ -230,21 +239,56 @@ public class AdherentApiController implements AdherentApi {
     }
 
 
-    public ResponseEntity<ListeManifestations> getListeManifestationsAdhrent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
+    /**
+     * Recupérer la liste des manifestations avec précisions si l'adhérent y participe
+     * @param idadh
+     * @return 
+     */
+    public ResponseEntity<ListeManifestations> getListeManifestationsAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.QUERY, description = "date de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut,@Parameter(in = ParameterIn.QUERY, description = "date de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<ListeManifestations>(objectMapper.readValue("[ {\n  \"descriptionLongue\" : \"Manifestation à la conférence sur le soleil qui sera présenté par Mr dupond\",\n  \"dateDebut\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"idAdherent\" : 1,\n  \"descriptionCourte\" : \"Manifestation à la conférence\",\n  \"lieux\" : \"Martignas\",\n  \"id\" : 1,\n  \"dateFin\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"statutParticipation\" : 1\n}, {\n  \"descriptionLongue\" : \"Manifestation à la conférence sur le soleil qui sera présenté par Mr dupond\",\n  \"dateDebut\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"idAdherent\" : 1,\n  \"descriptionCourte\" : \"Manifestation à la conférence\",\n  \"lieux\" : \"Martignas\",\n  \"id\" : 1,\n  \"dateFin\" : \"2000-01-23T04:56:07.000+00:00\",\n  \"statutParticipation\" : 1\n} ]", ListeManifestations.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<ListeManifestations>(HttpStatus.INTERNAL_SERVER_ERROR);
+            Collection<AdherentEvenementDto>  lstAdhEvenementDto = null;
+            
+            if (datedebut != null && datefin != null) {
+                Date dateDebutIso = toDateSansMS(datedebut);
+                 Date dateFinIso = toDateSansMS(datefin);
+                lstAdhEvenementDto = this.adherentEvenementsService.getLstEvenement(idadh, dateDebutIso, dateFinIso);
+            } else {
+                lstAdhEvenementDto = this.adherentEvenementsService.getLstEvenement(idadh);
             }
+            
+            ListeManifestations lstManifestation = new ListeManifestations();
+            if (lstAdhEvenementDto != null){
+                for (AdherentEvenementDto dto : lstAdhEvenementDto){
+                    lstManifestation.add(this.transformeModel(dto));
+                }
+            }
+            return new ResponseEntity<>(lstManifestation,HttpStatus.OK);
         }
-
-
 
         return new ResponseEntity<ListeManifestations>(HttpStatus.NOT_IMPLEMENTED);
 
+    }
+    
+    
+        /**
+     * Transforme un dto evenement en model envement
+     * @param dto
+     * @return 
+     */
+    private Manifestation transformeModel(AdherentEvenementDto dto) {
+        Manifestation model = new Manifestation();
+        model.setId(dto.getIdEvenement());
+        model.setIdAdherent(dto.getIdAdherent());
+        model.setDescriptionCourte(dto.getDescriptionCourte());
+        model.setDescriptionLongue(dto.getDescriptionLongue());
+        model.setLieux(dto.getLieux());
+        model.setDateDebut(this.dateToStringAvecMS(dto.getDateDebut()));
+        model.setDateFin(this.dateToStringAvecMS(dto.getDateFin()));
+        model.setType(Manifestation.TypeEnum.NUMBER_1); //TODO a revoir sur le type d'évènement
+        model.setStatutParticipation(Manifestation.StatutParticipationEnum.NUMBER_1); //TODO a compléter à la participation
+ 
+        return model;
     }
 
     public ResponseEntity<Void> updateAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion de modifier", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion,@Parameter(in = ParameterIn.DEFAULT, description = "mise à jour d'une adhesion", required=true, schema=@Schema()) @Valid @RequestBody Adhesion body) {
@@ -342,12 +386,12 @@ public class AdherentApiController implements AdherentApi {
         model.setTelTravail(adherent.getTelTravail());
         model.setEmail(adherent.getEmail());
         model.setProfession(adherent.getProfession());
-        model.setDateNaissance(this.dateToString(adherent.getDateNaissance()));
+        model.setDateNaissance(this.dateToStringAvecMS(adherent.getDateNaissance()));
         model.setAccordMail(adherent.isAccordMail());
         model.setPublicContact(adherent.isPublicContact());
         model.setCommentaire(adherent.getCommentaire());
-        model.setDateEnregistrement(this.dateToString(adherent.getDateEnregistrement()));
-        model.setDateMiseAJour(this.dateToString(adherent.getDateMiseAJour()));
+        model.setDateEnregistrement(this.dateToStringAvecMS(adherent.getDateEnregistrement()));
+        model.setDateMiseAJour(this.dateToStringAvecMS(adherent.getDateMiseAJour()));
         model.setAdhesionsSaisonCourante(adherent.isAdhesionSaisonCourante());
         return model;
     }
@@ -390,7 +434,7 @@ public class AdherentApiController implements AdherentApi {
      * @param dateArrive
      * @return 
      */
-    private String dateToString(Date date) {
+    private String dateToStringAvecMS(Date date) {
         if (date == null){
             return null;
         }
@@ -398,6 +442,30 @@ public class AdherentApiController implements AdherentApi {
         sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
         sdf.setTimeZone(TimeZone.getTimeZone("CET"));
         return sdf.format(date);
+    }
+    
+    
+    /**
+     * Convertir un date iso en date sans les milisecondes
+     * @param iso8601string
+     * @return 
+     */
+    public Date toDateSansMS(final String iso8601string) {
+        if (iso8601string == null) {
+            return null;
+        }
+        
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+        Date result2 = null;
+        try {
+            result2 = df2.parse(iso8601string);
+        } catch (ParseException ex) {
+            log.error("Erreur sur le formatage  de date. Date en entré {}. {}", iso8601string , ex.getMessage());
+        }
+
+
+        return result2;
     }
 
         /** Transform ISO 8601 string to Calendar.

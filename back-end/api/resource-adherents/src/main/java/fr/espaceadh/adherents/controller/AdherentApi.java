@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
@@ -79,7 +80,19 @@ public interface AdherentApi {
 
     @Operation(summary = "Ajouter la participation à une manifestation pour un adherent", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
-            ""        })    }, tags={ "Manifestation" })
+            "ress-adherent-admin",
+"ress-adherent-read",
+"ress-adherent-write",
+"ress-adherent-del",
+"ress-adhesion-admin",
+"ress-adhesion-read",
+"ress-adhesion-write",
+"ress-adhesion-del",
+"ress-manifestation-admin",
+"ress-manifestation-read",
+"ress-manifestation-write",
+"ress-manifestation-del",
+"ress-communication-read"        })    }, tags={ "Manifestation" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "Operation réussie"),
         
@@ -90,12 +103,11 @@ public interface AdherentApi {
         @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))),
         
         @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))) })
-    @RequestMapping(value = "/adherent/{idadh}/manifestion",
+    @RequestMapping(value = "/adherent/{idadh}/manifestion/{idManifestation}",
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> ajoutManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id l'adherent à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body);
-
+    ResponseEntity<Void> ajoutManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id l'adherent à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la manifestation à modifier", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation, @Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body);
 
     @Operation(summary = "Supression d'une adhesion pour cet adherent", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
@@ -121,7 +133,19 @@ public interface AdherentApi {
 
     @Operation(summary = "Supression d'une manifestation pour un adherent", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
-            ""        })    }, tags={ "Manifestation" })
+            "ress-adherent-admin",
+"ress-adherent-read",
+"ress-adherent-write",
+"ress-adherent-del",
+"ress-adhesion-admin",
+"ress-adhesion-read",
+"ress-adhesion-write",
+"ress-adhesion-del",
+"ress-manifestation-admin",
+"ress-manifestation-read",
+"ress-manifestation-write",
+"ress-manifestation-del",
+"ress-communication-read"        })    }, tags={ "Manifestation" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Operation réussie"),
         
@@ -294,9 +318,21 @@ public interface AdherentApi {
     ResponseEntity<ListeCommunications> getListeCommunicationAdhrent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
 
 
-    @Operation(summary = "rechercher la liste des manifestations auxquels participe un adherent", description = "", security = {
+   @Operation(summary = "rechercher la liste des manifestations affectée au un adhérents", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
-            ""        })    }, tags={ "Manifestation" })
+            "ress-adherent-admin",
+"ress-adherent-read",
+"ress-adherent-write",
+"ress-adherent-del",
+"ress-adhesion-admin",
+"ress-adhesion-read",
+"ress-adhesion-write",
+"ress-adhesion-del",
+"ress-manifestation-admin",
+"ress-manifestation-read",
+"ress-manifestation-write",
+"ress-manifestation-del",
+"ress-communication-read"        })    }, tags={ "Manifestation" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(schema = @Schema(implementation = ListeManifestations.class))),
         
@@ -312,9 +348,11 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/manifestions",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<ListeManifestations> getListeManifestationsAdhrent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
-
-
+    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('BUREAU')) or isProprietraireDonnee(#idadh) ")           
+    ResponseEntity<ListeManifestations> getListeManifestationsAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.QUERY, description = "date de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut, @Parameter(in = ParameterIn.QUERY, description = "date de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin);
+    
+    
+    
     @Operation(summary = "Mise à jour d'une adhesion pour cet adherent", description = "Mise à jour d'une adhesion pour cet adherent", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
             ""        })    }, tags={ "adhesion" })
@@ -340,7 +378,19 @@ public interface AdherentApi {
 
     @Operation(summary = "Mise à jour d'une manifestation pour un adherent", description = "Mise à jour d'une manifestation pour un adherent", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
-            ""        })    }, tags={ "Manifestation" })
+            "ress-adherent-admin",
+"ress-adherent-read",
+"ress-adherent-write",
+"ress-adherent-del",
+"ress-adhesion-admin",
+"ress-adhesion-read",
+"ress-adhesion-write",
+"ress-adhesion-del",
+"ress-manifestation-admin",
+"ress-manifestation-read",
+"ress-manifestation-write",
+"ress-manifestation-del",
+"ress-communication-read"        })    }, tags={ "Manifestation" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Operation réussie"),
         
