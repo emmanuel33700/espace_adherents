@@ -37,7 +37,11 @@ export class PagesComponent  implements OnInit {
 
     if (this.role.includes('ADMIN')) {
       this.role = 'ADMIN';
-    } else {
+    } else if (this.role.includes('BUREAU')) {
+      this.role = 'BUREAU';
+    }  else if (this.role.includes('CONSEIL')) {
+      this.role = 'CONSEIL';
+    }  else {
       this.role = 'ADHERENT';
     }
 

@@ -12,6 +12,11 @@ export interface Evenement {
   datefin?: string;
   description?: string;
   detail?: string;
+
+  /**
+   * indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement
+   */
+  envoyerInfoAdherents?: boolean;
   id?: number;
 
   /**

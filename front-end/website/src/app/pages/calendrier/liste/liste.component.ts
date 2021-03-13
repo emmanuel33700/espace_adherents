@@ -2,10 +2,14 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import frLocale from '@fullcalendar/core/locales/fr';
 import {CalendarOptions, DateSelectArg, EventClickArg, EventApi} from '@fullcalendar/angular';
 import {AgendaService} from '../../../../api/generated/utilitaire/services/agenda.service';
+import {ManifestationService} from '../../../../api/generated/adherents/services/manifestation.service';
 import {Evenement} from '../../../../api/generated/utilitaire/models/evenement';
+import {Manifestation} from '../../../../api/generated/adherents/models/manifestation';
 import {LoggerService} from '../../../@core/utils/logger.service';
 import {NbToastrService} from '@nebular/theme';
 import {EventInput} from '@fullcalendar/angular';
+import {Adherent} from '../../../../api/generated/adherents/models/adherent';
+
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -13,9 +17,11 @@ import {EventInput} from '@fullcalendar/angular';
   templateUrl: './liste.component.html',
 })
 export class ListeComponent implements OnInit {
+  adherent: Adherent;
+  role: string;
 
   calendarVisible = false;
-  evenements: Evenement[] = [];
+  manifestations: Manifestation[] = [];
   initialEvent: EventInput[] = [];
   currentEvents: EventApi[] = [];
 
@@ -24,6 +30,7 @@ export class ListeComponent implements OnInit {
 // https://github.com/fullcalendar/fullcalendar-example-projects/tree/master/angular/src/app
   constructor(
     private agendaService: AgendaService,
+    private manifestationService: ManifestationService,
     private loggerService: LoggerService,
     private toastrService: NbToastrService,
   ) {
@@ -36,48 +43,88 @@ export class ListeComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+    this.adherent = JSON.parse (localStorage.getItem('adherent'));
+    this.role = localStorage.getItem('ROLE');
+
+
     this.calendarVisible = false;
-    this.agendaService.getListeEvenements({})
+
+    this.manifestationService.getListeManifestationsAdherent({idadh: this.adherent.id})
       .subscribe(
         (data) => {
-          this.evenements = data;
+          this.manifestations = data;
           this.loggerService.info(JSON.stringify(data));
 
 
-          this.evenements.forEach((value, index) => {
+          this.manifestations.forEach((value, index) => {
 
 
             const eventprivate: EventInput = {};
             eventprivate.id = String(value.id);
-            eventprivate.title = value.description;
-            eventprivate.start = value.datedebut;
-            eventprivate.end = value.datefin;
+            eventprivate.title = value.descriptionCourte;
+            eventprivate.start = value.dateDebut;
+            eventprivate.end = value.dateFin;
+
+            if (value.statutParticipation === 2 ) {
+              // Si l'utilisateur ne participe pas
+              eventprivate.backgroundColor = '#b4c5cd';
+            } else if (value.statutParticipation === 1 ) {
+              // si il participe
+              eventprivate.backgroundColor = '#58df89';
+            } else {
+                // si aucune réponse
+              eventprivate.backgroundColor = '#8ecae2';
+
+            }
+
 
             this.initialEvent.push(eventprivate);
 
           });
 
           this.calendarVisible = true;
-          this.calendarOptions = {
-            headerToolbar: {
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
-            },
-            initialView: 'timeGridWeek',
-            weekends: true,
-            editable: true,
-            selectable: true,
-            selectMirror: true,
-            dayMaxEvents: true,
-            select: this.handleDateSelect.bind(this),
-            eventClick: this.handleEventClick.bind(this),
-            eventsSet: this.handleEvents.bind(this),
-            eventDrop: this.updateEvent.bind(this),
-            eventResize: this.updateEvent.bind(this),
-            locale: frLocale,
-            events: this.initialEvent,
-          };
+
+          if (this.role.includes('ADMIN') || this.role.includes('BUREAU')) {
+            this.calendarOptions = {
+              headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+              },
+              initialView: 'timeGridWeek',
+              weekends: true,
+              editable: true,
+              selectable: true,
+              selectMirror: true,
+              dayMaxEvents: true,
+              select: this.handleDateSelect.bind(this),
+              eventClick: this.handleEventClick.bind(this),
+              eventsSet: this.handleEvents.bind(this),
+              eventDrop: this.updateEvent.bind(this),
+              eventResize: this.updateEvent.bind(this),
+              locale: frLocale,
+              events: this.initialEvent,
+            };
+          } else {
+            this.calendarOptions = {
+              headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+              },
+              initialView: 'timeGridWeek',
+              weekends: true,
+              editable: false,
+              selectable: false,
+              selectMirror: false,
+              dayMaxEvents: true,
+              eventClick: this.handleEventClick.bind(this),
+              locale: frLocale,
+              events: this.initialEvent,
+            };
+          }
+
 
         },
         (error) => {
@@ -125,7 +172,7 @@ export class ListeComponent implements OnInit {
         );
 
       calendarApi.addEvent({
-        id: '10',
+        id: String(evenement.id),
         title,
         start: selectInfo.startStr,
         end: selectInfo.endStr,
@@ -151,5 +198,7 @@ export class ListeComponent implements OnInit {
     this.loggerService.info(' --> Date de début' + clickInfo.event.startStr);
     this.loggerService.info(' --> Date de fin ' + clickInfo.event.endStr);
   }
+
+
 
 }

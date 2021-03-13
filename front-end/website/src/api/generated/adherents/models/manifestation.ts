@@ -43,4 +43,17 @@ export interface Manifestation {
    * * 3 : NE SAIS PAS
    */
   statutParticipation?: 1 | 2 | 3;
+
+  /**
+   * Types evenement
+   * * 1 : CONFERENCE               
+   * * 2 : MANIFESTATION            
+   * * 3 : OBSERVATION
+   * * 4 : ANIMATION
+   * * 5 : REUNION
+   * * 6 : SORTIE
+   * * 7 : ATELIER
+   * * 8 : DIVERS
+   */
+  type?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 }
