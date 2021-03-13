@@ -108,7 +108,7 @@ public interface AuthentificationApi {
     @RequestMapping(value = "/authentification/{idadh}/roles",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize("#oauth2.hasScope('ress-autorization-admin') or hasRole('ADMIN') ")        
+    @PreAuthorize("#oauth2.hasScope('ress-autorization-admin') or ( #oauth2.hasScope('ress-autorization-write') and  isDansGroupe('ADMIN')) ")        
     ResponseEntity<Roles> getRoles(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh);
     
     
@@ -122,6 +122,7 @@ public interface AuthentificationApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
+    @PreAuthorize("#oauth2.hasScope('ress-autorization-admin') or ( #oauth2.hasScope('ress-autorization-write') and  isDansGroupe('ADMIN')) ")                
     ResponseEntity<Void> updateRoles(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh, @Valid @RequestBody Roles body);
     
     
