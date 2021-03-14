@@ -285,16 +285,21 @@ public class AdherentApiController implements AdherentApi {
         model.setLieux(dto.getLieux());
         model.setDateDebut(this.dateToStringAvecMS(dto.getDateDebut()));
         model.setDateFin(this.dateToStringAvecMS(dto.getDateFin()));
-        if (dto.getTypePArticipation() == 0){
-            model.setType(Manifestation.TypeEnum.NUMBER_2); 
-        } else if (dto.getTypePArticipation() == 1){
-             model.setType(Manifestation.TypeEnum.NUMBER_1); 
-        } else {
-            model.setType(Manifestation.TypeEnum.NUMBER_3); 
-        }
         
-        //TODO a revoir sur le type d'évènement
-        model.setStatutParticipation(Manifestation.StatutParticipationEnum.NUMBER_1); //TODO a compléter à la participation
+        /**
+         * type de participation
+        1 : PARTICIPE
+        2 : PARTICIPE PAS
+        3 : NE SAIS PAS
+        **/
+        if (dto.getTypeParticipation()== 1){
+            model.setStatutParticipation(Manifestation.StatutParticipationEnum.NUMBER_1); 
+        } else if (dto.getTypeParticipation() == 2){
+             model.setStatutParticipation(Manifestation.StatutParticipationEnum.NUMBER_2); 
+        } else {
+            model.setStatutParticipation(Manifestation.StatutParticipationEnum.NUMBER_3); 
+        }
+
  
         return model;
     }

@@ -61,22 +61,34 @@ public class AdherentEvenementsDAOImpl extends JdbcDaoSupport implements Adheren
         StringBuilder query = new StringBuilder();
         
         query.append(" SELECT id_evenement, description_courte, detail_text, lieux, date_debut, date_fin, fk_id_type_authority ");
-        query.append("	, (SELECT count(1) ");
+        query.append(" , ( ");
+        query.append(" 	SELECT CASE WHEN ( ");
+        query.append(" 		SELECT bool_or(participe_evenement) ");
         query.append(" 		FROM r_adh_evenement ");
-        query.append(" 	  	where r_adh_evenement.fk_id_evenement = t_evenement.id_evenement ");
-        query.append(" 	  	and r_adh_evenement.fk_id_adherent = ?) as adh_participe ");
-        query.append(" 	FROM t_evenement ");       
-        query.append(" 	where fk_id_type_authority <= ? ");
+        query.append("		where r_adh_evenement.fk_id_evenement = t_evenement.id_evenement ");
+        query.append("		and r_adh_evenement.fk_id_adherent = ? ");
+        query.append("	) = true then 1 ");
+        query.append("	WHEN ( ");
+        query.append("		SELECT bool_or(participe_evenement) ");
+        query.append("		FROM r_adh_evenement ");
+        query.append("		where r_adh_evenement.fk_id_evenement = t_evenement.id_evenement ");
+        query.append("		and r_adh_evenement.fk_id_adherent = ? ");
+        query.append("	) = false then 2 ");
+        query.append("	ELSE 3 ");
+        query.append("	END  ");
+        query.append("  ) as adh_participe ");
+        query.append(" FROM t_evenement ");
+        query.append(" where fk_id_type_authority <= ?  ");
         
         if (dateDebut != null && dateFin != null) {
             query.append("      and date_debut >=  ?	 ");
             query.append(" 	and date_fin <= ? ");
             
-             lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), idAdh, typeAutority, dateDebut, dateFin);
+             lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), idAdh, idAdh, typeAutority, dateDebut, dateFin);
         } 
         
         else {
-             lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), idAdh, typeAutority);
+             lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), idAdh, idAdh,  typeAutority);
         }
         
         
@@ -110,7 +122,7 @@ public class AdherentEvenementsDAOImpl extends JdbcDaoSupport implements Adheren
             dto.setDateDebut(new Date(rs.getTimestamp("date_debut").getTime()));
             dto.setDateFin(new Date(rs.getTimestamp("date_fin").getTime()));
             dto.setIdAuthority(rs.getInt("fk_id_type_authority"));
-            dto.setTypePArticipation(rs.getInt("adh_participe"));
+            dto.setTypeParticipation(rs.getInt("adh_participe"));
             
             return dto;
         }

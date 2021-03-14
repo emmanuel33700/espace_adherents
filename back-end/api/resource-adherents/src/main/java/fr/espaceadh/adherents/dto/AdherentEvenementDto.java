@@ -32,7 +32,7 @@ public class AdherentEvenementDto {
     private Date dateDebut;
     private Date dateFin;
     private int idAuthority;
-    private int typePArticipation;
+    private int typeParticipation;
 
     public long getIdEvenement() {
         return idEvenement;
@@ -90,20 +90,33 @@ public class AdherentEvenementDto {
         this.idAuthority = idAuthority;
     }
 
-    public int getTypePArticipation() {
-        return typePArticipation;
-    }
-
-    public void setTypePArticipation(int typePArticipation) {
-        this.typePArticipation = typePArticipation;
-    }
-
     public long getIdAdherent() {
         return idAdherent;
     }
 
     public void setIdAdherent(long idAdherent) {
         this.idAdherent = idAdherent;
+    }
+
+    /**
+     *  Type de participation
+    1 : PARTICIPE
+    2 : PARTICIPE PAS
+    3 : NE SAIS PAS
+     */
+    public int getTypeParticipation() {
+        return typeParticipation;
+    }
+
+    /**
+     *  Type de participation
+    1 : PARTICIPE
+    2 : PARTICIPE PAS
+    3 : NE SAIS PAS
+     * @param typeParticipation 
+     */
+    public void setTypeParticipation(int typeParticipation) {
+        this.typeParticipation = typeParticipation;
     }
     
 
