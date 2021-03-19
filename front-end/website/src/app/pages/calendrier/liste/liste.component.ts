@@ -6,10 +6,11 @@ import {ManifestationService} from '../../../../api/generated/adherents/services
 import {Evenement} from '../../../../api/generated/utilitaire/models/evenement';
 import {Manifestation} from '../../../../api/generated/adherents/models/manifestation';
 import {LoggerService} from '../../../@core/utils/logger.service';
-import {NbToastrService} from '@nebular/theme';
+import {NbToastrService, NbDialogService} from '@nebular/theme';
 import {EventInput} from '@fullcalendar/angular';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
-
+import {DialogDetailEvenementComponent} from './dialog-detail-evenement/dialog-detail-evenement.component';
+import {DialogAjoutEvenementComponent} from './dialog-ajout-evenement/dialog-ajout-evenement.component';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -33,6 +34,7 @@ export class ListeComponent implements OnInit {
     private manifestationService: ManifestationService,
     private loggerService: LoggerService,
     private toastrService: NbToastrService,
+    private dialogService: NbDialogService,
   ) {
   }
 
@@ -139,53 +141,35 @@ export class ListeComponent implements OnInit {
   }
 
 
+  /**
+   * Ajouter un évènement
+   * @param selectInfo
+   */
   handleDateSelect(selectInfo: DateSelectArg) {
-    this.loggerService.info('handleDateSelect' + selectInfo.startStr);
-    const title = prompt('Entrer le nom de l\'evenement');
-    const calendarApi = selectInfo.view.calendar;
 
-    calendarApi.unselect(); // clear date selection
+    this.dialogService.open(DialogAjoutEvenementComponent, {
+      context: {
+        dateDebut: selectInfo.startStr,
+        dateFin: selectInfo.endStr,
+        selectInfo: selectInfo,
+      },
+    });
 
-    if (title) {
-      const evenement: Evenement = {};
-      evenement.id = Date.now();
-      evenement.description = title;
-      evenement.datedebut = selectInfo.startStr;
-      evenement.datefin = selectInfo.endStr;
-      evenement.detail = 'TODO A compléter';
-      evenement.type = 1;
 
-      this.agendaService.addEvenement({body: evenement})
-        .subscribe(
-          (data) => {
-            this.loggerService.info(JSON.stringify(data));
-          },
-          (error) => {
-            this.loggerService.error(JSON.stringify(error));
-            this.toastrService.danger(
-              'Erreur technique lors de enregistrement',
-              'Erreur ');
-          },
-          () => {
-            this.loggerService.info('Enregistrement fini');
-          },
-        );
-
-      calendarApi.addEvent({
-        id: String(evenement.id),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay,
-      });
-    }
   }
 
+  /**
+   * Détail d'un évènement
+   * @param clickInfo
+   */
   handleEventClick(clickInfo: EventClickArg) {
-    this.loggerService.info('handleEventClick');
-    if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-      clickInfo.event.remove();
-    }
+    this.dialogService.open(DialogDetailEvenementComponent, {
+      context: {
+        title: clickInfo.event.title,
+        idEvenement: clickInfo.event.id,
+      },
+    });
+
   }
 
   handleEvents(events: EventApi[]) {

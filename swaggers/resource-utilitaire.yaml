@@ -398,6 +398,10 @@ components:
           type: string
           example: '2020-01-18T21:00:00'
           description: date de fin au format iso8601
+        envoyerInfoAdherents:
+          type: boolean
+          example: true
+          description: indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement
       xml:
         name: Order
     listeSaison:

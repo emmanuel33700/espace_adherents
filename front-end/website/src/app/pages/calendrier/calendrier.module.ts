@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import {
-  NbActionsModule,
+  NbActionsModule, NbAlertModule,
   NbButtonModule,
   NbCardModule,
   NbCheckboxModule,
@@ -21,6 +21,8 @@ import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction'; // a plugin
 import listPlugin from '@fullcalendar/list';
+import {DialogDetailEvenementComponent} from './liste/dialog-detail-evenement/dialog-detail-evenement.component';
+import {DialogAjoutEvenementComponent} from './liste/dialog-ajout-evenement/dialog-ajout-evenement.component';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
@@ -44,11 +46,15 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     NbSelectModule,
     NbIconModule,
     ngFormsModule,
-    FullCalendarModule, // register FullCalendar with you app
+    FullCalendarModule,
+    NbAlertModule,
+    // register FullCalendar with you app
   ],
   declarations: [
     CalendrierComponent,
     ListeComponent,
+    DialogDetailEvenementComponent,
+    DialogAjoutEvenementComponent,
   ],
 })
 export class CalendrierModule { }

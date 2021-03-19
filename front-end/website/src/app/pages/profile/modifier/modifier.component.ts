@@ -70,7 +70,6 @@ export class ModifierComponent implements OnInit {
    */
   submit(form: NgForm) {
 
-
     // Initialisation des variables
     this.submitted = true;
     this.errors = [];

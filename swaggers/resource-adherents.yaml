@@ -497,7 +497,107 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-  '/adherent/{idadh}/manifestion':
+  '/adherent/{idadh}/manifestions':
+    get:
+      tags:
+        - Manifestation
+      summary: rechercher la liste des manifestations affectée au un adhérents
+      operationId: getListeManifestationsAdherent
+      security:
+        - oAuth:
+            - ress-manifestation-read
+      parameters:
+        - name: idadh
+          in: path
+          description: id d'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: datedebut
+          schema:
+            type: string
+          description: date de début
+        - in: query
+          name: datefin
+          schema:
+            type: string
+          description: date de fin
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListeManifestations'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/manifestion/{idManifestation}':
+    get:
+      tags:
+        - Manifestation
+      summary: rechercher le d'étail d'une  manifestations affectée au un adhérent
+      operationId: getManifestationsAdherent
+      security:
+        - oAuth:
+            - ress-manifestation-read
+      parameters:
+        - name: idadh
+          in: path
+          description: id d'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idManifestation
+          in: path
+          description: id de la manifestation à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Manifestation'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
     post:
       tags:
         - Manifestation
@@ -510,6 +610,13 @@ paths:
         - name: idadh
           in: path
           description: id l'adherent à modifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idManifestation
+          in: path
+          description: id de la manifestation à modifier
           required: true
           schema:
             type: integer
@@ -540,49 +647,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-  '/adherent/{idadh}/manifestions':
-    get:
-      tags:
-        - Manifestation
-      summary: rechercher la liste des manifestations auxquels participe un adherent
-      operationId: getListeManifestationsAdhrent
-      security:
-        - oAuth:
-            - ress-manifestation-read
-      parameters:
-        - name: idadh
-          in: path
-          description: id d'adherent à recuperer
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: Operation réussie
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListeManifestations'
-        '401':
-          description: utilisateur non authentifié
-        '403':
-          description: Droit insufisant
-        '404':
-          description: username non trouvée
-        '405':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
-        '500':
-          description: Erreur serveur
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
-  '/adherent/{idadh}/manifestion/{idManifestation}':
     delete:
       tags:
         - Manifestation
@@ -957,6 +1021,28 @@ components:
           type: string
           description: Date de fin de l'évènement 
           example: '2020-01-18T21:00:00'
+        type:
+          type: integer
+          example: 1
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+          description: |
+            Types evenement
+            * 1 : CONFERENCE               
+            * 2 : MANIFESTATION            
+            * 3 : OBSERVATION
+            * 4 : ANIMATION
+            * 5 : REUNION
+            * 6 : SORTIE
+            * 7 : ATELIER
+            * 8 : DIVERS
         statutParticipation:
           type: integer
           format: int64
@@ -975,16 +1061,6 @@ components:
     ParticipationManifestation:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: Id de la manifestation
-          example: 1
-        idAdherent:
-          type: integer
-          format: int64
-          description: Id de l'adherent
-          example: 1
         statutParticipation:
           type: integer
           format: int64
@@ -992,11 +1068,9 @@ components:
             Types de participation. Valeurs possibles :
             * 1 : PARTICIPE               
             * 2 : PARTICIPE PAS             
-            * 3 : NE SAIS PAS               
           enum:
             - 1
             - 2
-            - 3
           example: 1
       xml:
         name: Order
