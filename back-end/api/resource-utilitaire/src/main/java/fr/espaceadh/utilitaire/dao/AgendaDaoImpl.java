@@ -115,6 +115,78 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
         
         return lstEvenement;
     }
+
+            /**
+     * Mise à jour d'un évènement
+     * @param evenement
+     * @return  true si l'évènement est modifié
+     */
+    @Override
+    public boolean updateEvenement(EvenementDto evenement) {
+                StringBuilder query = new StringBuilder();
+        query.append(" UPDATE t_evenement ");
+        query.append("	   	SET description_courte=?, detail_text=?, lieux=?, date_debut=?, date_fin=?, fk_id_type_authority=? ");
+        query.append("	 	WHERE id_evenement=?");
+
+        int nbUpdate;
+        nbUpdate = this.getJdbcTemplate().update(query.toString(),
+                 evenement.getDescriptionCourte(),
+                 evenement.getDescriptionLongue(),
+                 evenement.getLieux(),
+                 evenement.getDateDebut(),
+                 evenement.getDateFin(),
+                 evenement.getIdAuthority(),
+                 evenement.getIdEvenement()
+        );
+
+        if (nbUpdate == 1) {
+            return true;
+        } else {
+            LOGGER.error("Erreur lors de la modification d'un évènement : nombre de ligne crée {} ", nbUpdate);
+        }
+        return false;    }
+
+        /**
+     * Supression d'un évènement
+     * @param idEvenement id de l'évènement à supprimer
+     * @return true si l'évènement est supprimé 
+     */
+    @Override
+    public boolean deleteEvenement(long idEvenement) {
+        StringBuilder query = new StringBuilder();
+            query.append(" DELETE FROM t_evenement WHERE id_evenement = ? ");
+
+        int nbSupression;
+        nbSupression = this.getJdbcTemplate().update(query.toString(),
+                 idEvenement
+        );
+
+        if (nbSupression == 1) {
+            return true;
+        } else {
+            LOGGER.error("Erreur lors de la suppression d'un évènement ", idEvenement);
+        }
+        return false;    
+    }
+
+    
+        /**
+     * Supression des participations à un évènement
+     * @param idEvenement id de l'évènement à supprimer
+     * @return  true si l'évènement est supprimé 
+     */
+    @Override
+    public boolean deleteParticipationEvenement(long idEvenement) {
+        StringBuilder query = new StringBuilder();
+            query.append(" DELETE FROM r_adh_evenement	WHERE fk_id_evenement = ? ");
+
+
+        this.getJdbcTemplate().update(query.toString(),
+                 idEvenement
+        );
+
+        return true;        
+    }
     
     /**
      * 

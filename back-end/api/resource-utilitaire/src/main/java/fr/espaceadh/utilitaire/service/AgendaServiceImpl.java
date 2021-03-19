@@ -51,12 +51,19 @@ public class AgendaServiceImpl implements AgendaService{
     /**
      * Crééer un évènement
      * @param evenement
+     * @param envoyerMailInfo indique si il faut envoyer un mail d'information au adhérent
      * @return  true si évènement est créé
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public boolean creerEvenement(EvenementDto evenement) {
-        return this.agendaDao.creerEvenement(evenement);
+    public boolean creerEvenement(EvenementDto evenement, boolean  envoyerMailInfo) {
+        boolean resultCreation = this.agendaDao.creerEvenement(evenement);
+        
+        if (envoyerMailInfo) {
+            LOGGER.debug("Envoyer un mail d'information au adhérent sur la création d'un évènement {}", evenement.getIdEvenement());
+            //TODO envoyer un email au adhérent
+        } 
+        return resultCreation;
     }
 
     /**
@@ -68,6 +75,29 @@ public class AgendaServiceImpl implements AgendaService{
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Collection<EvenementDto> getLstEvenement(int typeAutority) {
         return this.agendaDao.getLstEvenement(typeAutority);
+    }
+
+        /**
+     * Mise à jour d'un évènement
+     * @param evenement
+     * @return  true si l'évènement est modifié
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean updateEvenement(EvenementDto evenement) {
+        return this.agendaDao.updateEvenement(evenement);
+    }
+
+        /**
+     * Supression d'un évènement
+     * @param idEvenement id de l'évènement à supprimer
+     * @return true si l'évènement est supprimé 
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean deleteEvenement(long idEvenement) {
+        this.agendaDao.deleteParticipationEvenement(idEvenement);
+        return this.agendaDao.deleteEvenement(idEvenement);
     }
     
 }

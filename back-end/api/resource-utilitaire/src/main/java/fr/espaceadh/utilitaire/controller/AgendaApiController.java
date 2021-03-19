@@ -50,20 +50,36 @@ public class AgendaApiController implements AgendaApi {
         this.request = request;
     }
 
+    /**
+     * A jouter un évènement
+     * @param body
+     * @return 
+     */
     public ResponseEntity<Void> addEvenement(@Parameter(in = ParameterIn.DEFAULT, description = "Objet adhérent", required=true, schema=@Schema()) @Valid @RequestBody Evenement body) {
         String accept = request.getHeader("Accept");
         EvenementDto dto = new EvenementDto();
         
-        boolean result = agendaService.creerEvenement(this.convertDto(body));
+        boolean result = agendaService.creerEvenement(this.convertDto(body), body.isEnvoyerInfoAdherents());
         
         if(result) return  new ResponseEntity<Void>(HttpStatus.CREATED);
         
         return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Supprimer un évènement
+     * @param idevenement
+     * @return 
+     */
     public ResponseEntity<Void> deleteEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        
+        
+        boolean result = agendaService.deleteEvenement(idevenement);
+        
+        if (result) return  new ResponseEntity<Void>(HttpStatus.OK);
+        
+        return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     public ResponseEntity<Evenement> getEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement) {
@@ -139,10 +155,18 @@ public class AgendaApiController implements AgendaApi {
     }  
 
 
-    
+    /**
+     * Mise à jour d'un évènement
+     * @param idevenement
+     * @param body
+     * @return 
+     */
     public ResponseEntity<Void> updateEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement,@Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Evenement body) {
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        boolean result = agendaService.updateEvenement(this.convertDto(body));
+        
+        if(result) return  new ResponseEntity<Void>(HttpStatus.OK);
+        
+        return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private EvenementDto convertDto(Evenement evenementModel) {
@@ -153,7 +177,7 @@ public class AgendaApiController implements AgendaApi {
         dto.setLieux(null); //TODO a revoir avec rajout du lieux dans le swagger utilitaire
         dto.setDateDebut(this.toDate(evenementModel.getDatedebut()));
         dto.setDateFin(this.toDate(evenementModel.getDatefin()));
-        dto.setIdAuthority(1);
+        dto.setIdAuthority(1); //TODO a revoir le type d'authority
         
         return dto;
     }

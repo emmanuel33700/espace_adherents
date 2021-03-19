@@ -38,4 +38,27 @@ public interface AgendaDao {
      * @return liste d'évènement
      */
     public Collection<EvenementDto> getLstEvenement(int typeAutority);
+    
+    
+        /**
+     * Mise à jour d'un évènement
+     * @param evenement
+     * @return  true si l'évènement est modifié
+     */
+    public boolean updateEvenement(EvenementDto evenement);
+    
+
+    /**
+     * Supression d'un évènement
+     * @param idEvenement id de l'évènement à supprimer
+     * @return true si l'évènement est supprimé 
+     */
+    public boolean deleteEvenement(long idEvenement);
+    
+    /**
+     * Supression des participations à un évènement
+     * @param idEvenement id de l'évènement à supprimer
+     * @return  true si l'évènement est supprimé 
+     */
+    public boolean deleteParticipationEvenement(long idEvenement);
 }

@@ -29,9 +29,10 @@ public interface AgendaService {
     /**
      * Crééer un évènement
      * @param evenement
+     * @param envoyerMailInfo indique si il faut envoyer un mail d'information au adhérent
      * @return  true si évènement est créé
      */
-    public boolean creerEvenement(EvenementDto evenement);
+    public boolean creerEvenement(EvenementDto evenement, boolean  envoyerMailInfo);
     
     /**
      * Recuperer la liste des évènement en fonction du type d'autority
@@ -39,4 +40,20 @@ public interface AgendaService {
      * @return liste d'évènement
      */
     public Collection<EvenementDto> getLstEvenement(int typeAutority);
+    
+    /**
+     * Mise à jour d'un évènement
+     * @param evenement
+     * @return  true si l'évènement est modifié
+     */
+    public boolean updateEvenement(EvenementDto evenement);
+    
+
+    /**
+     * Supression d'un évènement
+     * @param idEvenement id de l'évènement à supprimer
+     * @param idAdherent id de l'adhérent
+     * @return true si l'évènement est supprimé 
+     */
+    public boolean deleteEvenement(long idEvenement);
 }
