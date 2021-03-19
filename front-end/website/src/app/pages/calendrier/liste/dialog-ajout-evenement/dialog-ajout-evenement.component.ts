@@ -4,7 +4,7 @@ import {DateSelectArg} from '@fullcalendar/angular';
 import {Evenement} from '../../../../../api/generated/utilitaire/models/evenement';
 import {DateService, LoggerService} from '../../../../@core/utils';
 import {AgendaService} from '../../../../../api/generated/utilitaire/services/agenda.service';
-import {FormBuilder, FormGroup, NgForm} from '@angular/forms';
+import { NgForm} from '@angular/forms';
 
 @Component({
   selector: 'ngx-showcase-dialog',
@@ -28,7 +28,8 @@ export class DialogAjoutEvenementComponent implements OnInit {
               private toastrService: NbToastrService,
               private agendaService: AgendaService,
               private dateService: DateService,
-  ) {}
+  ) {
+  }
 
 
   /**
@@ -50,7 +51,7 @@ export class DialogAjoutEvenementComponent implements OnInit {
    * @param form
    */
   ajouterEvenement(form: NgForm) {
-	this.loggerService.error('Validation du formulaire');
+    this.loggerService.error('Validation du formulaire');
 
     const calendarApi = this.selectInfo.view.calendar;
 
@@ -59,8 +60,8 @@ export class DialogAjoutEvenementComponent implements OnInit {
     evenement.id = Date.now();
     evenement.detail = this.evenementForm.description;
     evenement.description = this.evenementForm.titre;
-    evenement.datedebut = this.dateService.convertISODate(this.evenementForm.dateDebut , this.evenementForm.heureDebut);
-    evenement.datefin = this.dateService.convertISODate(this.evenementForm.dateFin , this.evenementForm.heureFin);
+    evenement.datedebut = this.dateService.convertISODate(this.evenementForm.dateDebut, this.evenementForm.heureDebut);
+    evenement.datefin = this.dateService.convertISODate(this.evenementForm.dateFin, this.evenementForm.heureFin);
     evenement.type = 1;
 
     this.agendaService.addEvenement({body: evenement})
@@ -82,8 +83,8 @@ export class DialogAjoutEvenementComponent implements OnInit {
     calendarApi.addEvent({
       id: String(evenement.id),
       title: this.evenementForm.titre,
-      start: this.dateService.convertISODate(this.evenementForm.dateDebut , this.evenementForm.heureDebut),
-      end: this.dateService.convertISODate(this.evenementForm.dateFin , this.evenementForm.heureFin),
+      start: this.dateService.convertISODate(this.evenementForm.dateDebut, this.evenementForm.heureDebut),
+      end: this.dateService.convertISODate(this.evenementForm.dateFin, this.evenementForm.heureFin),
       allDay: this.selectInfo.allDay,
     });
 

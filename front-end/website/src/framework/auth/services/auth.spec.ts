@@ -103,9 +103,9 @@ describe('auth-service', () => {
         NbDummyAuthStrategy,
       ],
     });
-    authService = TestBed.get(NbAuthService);
-    tokenService = TestBed.get(NbTokenService);
-    dummyAuthStrategy = TestBed.get(NbDummyAuthStrategy);
+    authService = TestBed.inject(NbAuthService);  // TestBed.get(NbAuthService);
+    tokenService = TestBed.inject(NbTokenService); // TestBed.get(NbTokenService);
+    dummyAuthStrategy = TestBed.inject(NbDummyAuthStrategy); // TestBed.get(NbDummyAuthStrategy)
   });
 
   it('get test token before set', () => {
