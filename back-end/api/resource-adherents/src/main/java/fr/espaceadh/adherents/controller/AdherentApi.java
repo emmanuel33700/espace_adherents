@@ -11,6 +11,7 @@ import fr.espaceadh.adherents.model.ListeAdherents;
 import fr.espaceadh.adherents.model.ListeAdhesions;
 import fr.espaceadh.adherents.model.ListeManifestations;
 import fr.espaceadh.adherents.model.ListeCommunications;
+import fr.espaceadh.adherents.model.Manifestation;
 import fr.espaceadh.adherents.model.ModelApiResponse;
 import fr.espaceadh.adherents.model.ParticipationManifestation;
 import io.swagger.annotations.Api;
@@ -107,6 +108,7 @@ public interface AdherentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
+    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('BUREAU')) or isProprietraireDonnee(#idadh) ")         
     ResponseEntity<Void> ajoutManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id l'adherent à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la manifestation à modifier", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation, @Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body);
 
     @Operation(summary = "Supression d'une adhesion pour cet adherent", description = "", security = {
@@ -161,6 +163,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/manifestion/{idManifestation}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
+    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('BUREAU')) or isProprietraireDonnee(#idadh) ")         
     ResponseEntity<Void> deleteManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la manifestation à supprimer", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation);
 
 
@@ -353,6 +356,40 @@ public interface AdherentApi {
     
     
     
+        @Operation(summary = "rechercher le d'étail d'une  manifestations affectée au un adhérent", description = "", security = {
+        @SecurityRequirement(name = "oAuth", scopes = {
+            "ress-adherent-admin",
+"ress-adherent-read",
+"ress-adherent-write",
+"ress-adherent-del",
+"ress-adhesion-admin",
+"ress-adhesion-read",
+"ress-adhesion-write",
+"ress-adhesion-del",
+"ress-manifestation-admin",
+"ress-manifestation-read",
+"ress-manifestation-write",
+"ress-manifestation-del",
+"ress-communication-read"        })    }, tags={ "Manifestation" })
+    @ApiResponses(value = { 
+        @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(schema = @Schema(implementation = Manifestation.class))),
+        
+        @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
+        
+        @ApiResponse(responseCode = "403", description = "Droit insufisant"),
+        
+        @ApiResponse(responseCode = "404", description = "username non trouvée"),
+        
+        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))),
+        
+        @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/adherent/{idadh}/manifestion/{idManifestation}",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('BUREAU')) or isProprietraireDonnee(#idadh) ")          
+    ResponseEntity<Manifestation> getManifestationsAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la manifestation à recuperer", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation);
+    
+    
     @Operation(summary = "Mise à jour d'une adhesion pour cet adherent", description = "Mise à jour d'une adhesion pour cet adherent", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
             ""        })    }, tags={ "adhesion" })
@@ -407,6 +444,7 @@ public interface AdherentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
+    @PreAuthorize("(#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('BUREAU')) or isProprietraireDonnee(#idadh) ")            
     ResponseEntity<Void> updateManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la manifestation à modifier", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation, @Parameter(in = ParameterIn.DEFAULT, description = "mise à jour d'une adhesion", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body);
 
 

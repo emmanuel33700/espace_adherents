@@ -39,4 +39,29 @@ public interface AdherentEvenementsDAO {
      */
     public Collection<AdherentEvenementDto> getLstEvenement(final int typeAutority, final long idAdh, final Date dateDebut, final Date dateFin);
     
+    /**
+     * recupérer un évènement pour un adhérent
+     * @param typeAutority
+     * @param idAdh
+     * @param idEvenement
+     * @return 
+     */
+     public AdherentEvenementDto evenement(final int typeAutority, final long idAdh, final long idEvenement);
+     
+         /**
+     * Supression des participations à un évènement
+     * @param idEvenement id de l'évènement à supprimer
+     * @return  true si l'évènement est supprimé 
+     */
+    public boolean deleteParticipationEvenement(long idEvenement, long idAdherent);
+    
+    /**
+     * Création d'une participation à un évènement
+     * @param idEvenement
+     * @param idAdherent
+     * @param typeParticipation
+     * @return 
+     */
+    public boolean creationParticipationEvenement(long idEvenement, long idAdherent, int typeParticipation);
+    
 }

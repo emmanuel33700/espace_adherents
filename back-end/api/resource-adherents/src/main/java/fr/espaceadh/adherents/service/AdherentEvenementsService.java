@@ -41,4 +41,22 @@ public interface AdherentEvenementsService {
      * @return 
      */
     public Collection<AdherentEvenementDto> getLstEvenement(final long idAdh);
+    
+    /**
+     * REcuperer le détail d'un évènement pour un adhérent
+     * @param idAdh
+     * @param idEvenement
+     * @return 
+     */
+    public AdherentEvenementDto getEvenement(final long idAdh, final long idEvenement);
+    
+    
+    /**
+     * Mise à jour des participations aux évènements
+     * @param idAdh
+     * @param idEvenement
+     * @param typeParticipation
+     * @return 
+     */
+    public boolean updateParticipationEvenement(final long idAdh, final long idEvenement, final int typeParticipation);
 }

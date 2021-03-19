@@ -99,9 +99,21 @@ public class AdherentApiController implements AdherentApi {
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Ajouter la participation à une manigestation
+     * @param idadh
+     * @param idManifestation
+     * @param body
+     * @return 
+     */
     public ResponseEntity<Void> ajoutManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id l'adherent à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de la manifestation à modifier", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation,@Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        
+        
+        boolean ok = this.adherentEvenementsService.updateParticipationEvenement(idadh, idManifestation, this.statutParticipationManifestation(body.getStatutParticipation()));
+        if (ok) return  new ResponseEntity<Void>(HttpStatus.CREATED);
+        
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
     
     public ResponseEntity<Void> deleteAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à supprimer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion) {
@@ -110,9 +122,19 @@ public class AdherentApiController implements AdherentApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    /**
+     * Supression d'une participation à un adhérent
+     * @param idadh
+     * @param idManifestation
+     * @return 
+     */
     public ResponseEntity<Void> deleteManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de la manifestation à supprimer", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        
+        boolean ok = this.adherentEvenementsService.updateParticipationEvenement(idadh, idManifestation, 3);
+        if (ok) return  new ResponseEntity<Void>(HttpStatus.CREATED);
+        
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -303,15 +325,47 @@ public class AdherentApiController implements AdherentApi {
  
         return model;
     }
+    
+    
+    
+    public ResponseEntity<Manifestation> getManifestationsAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de la manifestation à recuperer", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            AdherentEvenementDto  adhEvenementDto = null;
+            
+            adhEvenementDto = this.adherentEvenementsService.getEvenement(idadh, idManifestation);
+            
+            Manifestation manifestation = new Manifestation();
+            if (adhEvenementDto != null){
+                manifestation = this.transformeModel(adhEvenementDto);
+            }
+            return new ResponseEntity<>(manifestation,HttpStatus.OK);
+        }
+
+        return new ResponseEntity<Manifestation>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    
 
     public ResponseEntity<Void> updateAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion de modifier", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion,@Parameter(in = ParameterIn.DEFAULT, description = "mise à jour d'une adhesion", required=true, schema=@Schema()) @Valid @RequestBody Adhesion body) {
         //TODO A implémzenter
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    /**
+     * MàJ de la participation pour un adhérent
+     * @param idadh
+     * @param idManifestation
+     * @param body
+     * @return 
+     */
     public ResponseEntity<Void> updateManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de la manifestation à modifier", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation,@Parameter(in = ParameterIn.DEFAULT, description = "mise à jour d'une adhesion", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        
+        boolean ok = this.adherentEvenementsService.updateParticipationEvenement(idadh, idManifestation, this.statutParticipationManifestation(body.getStatutParticipation())
+        );
+        if (ok) return  new ResponseEntity<Void>(HttpStatus.CREATED);
+        
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -607,6 +661,22 @@ public class AdherentApiController implements AdherentApi {
             return null;
         }
 
+    }
+
+    private int statutParticipationManifestation(ParticipationManifestation.StatutParticipationEnum statutParticipation) {
+        /**
+         * type de participation
+        1 : PARTICIPE
+        2 : PARTICIPE PAS
+        3 : NE SAIS PAS
+        **/
+        if (statutParticipation ==  ParticipationManifestation.StatutParticipationEnum.NUMBER_1){
+           return 1;
+        } else if (statutParticipation ==  ParticipationManifestation.StatutParticipationEnum.NUMBER_2){
+             return 2;
+        } else {
+            return 3;
+        }
     }
 
 

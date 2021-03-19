@@ -184,5 +184,36 @@ public class AdherentEvenementsServiceImpl implements AdherentEvenementsService{
 
         return  oAuthRestTemplate.getAccessToken();
     }
+
+    /**
+     * REcuperer le détail d'un évènement pour un adhérent
+     * @param idAdh
+     * @param idEvenement
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public AdherentEvenementDto getEvenement(long idAdh, long idEvenement) {
+        int typeAuthority = this.recupererAutorityAdherent(idAdh);
+        return this.adherentEvenementsDAO.evenement(typeAuthority, idAdh, idEvenement);
+    }
+
+    /**
+     * Mise à jour d'une participation à un évènement
+     * @param idAdh
+     * @param idEvenement
+     * @param typeParticipation
+     * @return 
+     */
+    @Override
+    public boolean updateParticipationEvenement(long idAdh, long idEvenement, int typeParticipation) {
+        this.adherentEvenementsDAO.deleteParticipationEvenement(idEvenement, idAdh);
+        //Si l'adhérent participe ou ne participe pas
+        if (typeParticipation != 3 ){
+            return this.adherentEvenementsDAO.creationParticipationEvenement(idEvenement, idAdh, typeParticipation);
+        }
+        return true;
+        
+    }
     
 }

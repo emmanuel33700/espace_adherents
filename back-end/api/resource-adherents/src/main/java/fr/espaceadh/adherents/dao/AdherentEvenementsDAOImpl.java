@@ -97,7 +97,98 @@ public class AdherentEvenementsDAOImpl extends JdbcDaoSupport implements Adheren
         
         return lstEvenement;
     }
+
+    /**
+     *   recupérer un évènement pour un adhérent
+     * @param typeAutority
+     * @param idAdh
+     * @param idEvenement
+     * @return 
+     */
+    @Override
+    public AdherentEvenementDto evenement(int typeAutority, long idAdh, long idEvenement) {
+        List<AdherentEvenementDto> lstEvenement = null;
+        
+        StringBuilder query = new StringBuilder();
+        
+        query.append(" SELECT id_evenement, description_courte, detail_text, lieux, date_debut, date_fin, fk_id_type_authority ");
+        query.append(" , ( ");
+        query.append(" 	SELECT CASE WHEN ( ");
+        query.append(" 		SELECT bool_or(participe_evenement) ");
+        query.append(" 		FROM r_adh_evenement ");
+        query.append("		where r_adh_evenement.fk_id_evenement = t_evenement.id_evenement ");
+        query.append("		and r_adh_evenement.fk_id_adherent = ? ");
+        query.append("	) = true then 1 ");
+        query.append("	WHEN ( ");
+        query.append("		SELECT bool_or(participe_evenement) ");
+        query.append("		FROM r_adh_evenement ");
+        query.append("		where r_adh_evenement.fk_id_evenement = t_evenement.id_evenement ");
+        query.append("		and r_adh_evenement.fk_id_adherent = ? ");
+        query.append("	) = false then 2 ");
+        query.append("	ELSE 3 ");
+        query.append("	END  ");
+        query.append("  ) as adh_participe ");
+        query.append(" FROM t_evenement ");
+        query.append(" where fk_id_type_authority <= ?  ");
+        query.append(" and  id_evenement = ?  ");
+
+
+        lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), idAdh, idAdh,  typeAutority, idEvenement);
+
+        LOGGER.debug("Nombre d'évènements récupérés  {} ", lstEvenement.size());
+        
+        if (!lstEvenement.isEmpty()) {
+            return lstEvenement.get(0);
+        }
+        else {
+            LOGGER.error("Erreur, aucun évènement récupéré");
+        }
+        
+        return new AdherentEvenementDto();
+    }
+        
     
+    /**
+     * Supression des participations à un évènement
+     * @param idEvenement id de l'évènement à supprimer
+     * @return  true si l'évènement est supprimé 
+     */
+    @Override
+    public boolean deleteParticipationEvenement(long idEvenement, long idAdherent) {
+        StringBuilder query = new StringBuilder();
+            query.append(" DELETE FROM r_adh_evenement	WHERE fk_id_evenement = ? and fk_id_adherent = ? ");
+
+
+        this.getJdbcTemplate().update(query.toString(),
+                 idEvenement, idAdherent
+        );
+
+        return true;        
+    }
+
+    /**
+     * 
+     * @param idEvenement
+     * @param idAdherent
+     * @param typeParticipation
+     * @return 
+     */
+    @Override
+    public boolean creationParticipationEvenement(long idEvenement, long idAdherent, int typeParticipation) {
+        StringBuilder query = new StringBuilder();
+            query.append(" INSERT INTO r_adh_evenement( ");
+            query.append("  	fk_id_adherent, fk_id_evenement, date_enregistrement, participe_evenement) ");
+            query.append(" 	VALUES (?, ?, now(), ?) ");    
+    
+        int nbResult = this.getJdbcTemplate().update(query.toString(),
+                 idEvenement, idAdherent
+        );
+
+        LOGGER.debug("Nombre dde participation créé {} ", nbResult);
+
+        return true;     
+    
+    }
     
         /**
      * 
