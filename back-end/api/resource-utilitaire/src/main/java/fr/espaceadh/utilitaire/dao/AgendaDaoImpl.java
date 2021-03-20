@@ -187,6 +187,31 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
 
         return true;        
     }
+
+    /**
+     * Récupérer le détail d'un évènement
+     * @param idEvnement
+     * @return 
+     */
+    @Override
+    public EvenementDto getEvenement(long idEvnement) {
+        StringBuilder query = new StringBuilder();
+        
+        query.append(" SELECT id_evenement, description_courte, detail_text, lieux, date_debut, date_fin, fk_id_type_authority ");
+        query.append("	FROM t_evenement ");
+        query.append(" 	WHERE id_evenement = ? ");
+        
+        
+        List<EvenementDto> lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), idEvnement);
+        
+        if (! lstEvenement.isEmpty()) {
+            return lstEvenement.get(0);
+        }
+        
+        LOGGER.debug("Nombre d'évènements récupérés  {} ", lstEvenement.size());
+        
+        return null;    
+    }
     
     /**
      * 

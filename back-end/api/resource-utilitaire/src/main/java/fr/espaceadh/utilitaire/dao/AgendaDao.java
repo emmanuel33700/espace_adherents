@@ -40,6 +40,13 @@ public interface AgendaDao {
     public Collection<EvenementDto> getLstEvenement(int typeAutority);
     
     
+    /**
+     * Récupérer le détail d'un évènement
+     * @param idEvnement
+     * @return 
+     */
+    public EvenementDto getEvenement(long idEvnement);
+    
         /**
      * Mise à jour d'un évènement
      * @param evenement

@@ -85,6 +85,17 @@ public class AgendaServiceImpl implements AgendaService{
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean updateEvenement(EvenementDto evenement) {
+        
+        EvenementDto evenementtmp = this.agendaDao.getEvenement(evenement.getIdEvenement());
+        
+        if (evenement.getDateDebut() == null) evenement.setDateDebut(evenementtmp.getDateDebut());
+        if (evenement.getDateFin()== null) evenement.setDateFin(evenementtmp.getDateFin());
+        if (evenement.getDescriptionCourte()== null) evenement.setDescriptionCourte(evenementtmp.getDescriptionCourte());
+        if (evenement.getDescriptionLongue()== null) evenement.setDescriptionLongue(evenementtmp.getDescriptionLongue());
+        if (evenement.getIdAuthority() == 0) evenement.setIdAuthority(evenementtmp.getIdAuthority());
+        if (evenement.getLieux()== null) evenement.setLieux(evenementtmp.getLieux());
+        
+        
         return this.agendaDao.updateEvenement(evenement);
     }
 
