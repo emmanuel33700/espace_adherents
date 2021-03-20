@@ -167,21 +167,21 @@ public class AdherentEvenementsDAOImpl extends JdbcDaoSupport implements Adheren
     }
 
     /**
-     * 
+     * Création d'une participation à un évènement
      * @param idEvenement
      * @param idAdherent
-     * @param typeParticipation
+     * @param participeEvenement 
      * @return 
      */
     @Override
-    public boolean creationParticipationEvenement(long idEvenement, long idAdherent, int typeParticipation) {
+    public boolean creationParticipationEvenement(long idEvenement, long idAdherent, boolean participeEvenement) {
         StringBuilder query = new StringBuilder();
             query.append(" INSERT INTO r_adh_evenement( ");
             query.append("  	fk_id_adherent, fk_id_evenement, date_enregistrement, participe_evenement) ");
             query.append(" 	VALUES (?, ?, now(), ?) ");    
     
         int nbResult = this.getJdbcTemplate().update(query.toString(),
-                 idEvenement, idAdherent, typeParticipation
+                 idEvenement, idAdherent, participeEvenement
         );
 
         LOGGER.debug("Nombre dde participation créé {} ", nbResult);

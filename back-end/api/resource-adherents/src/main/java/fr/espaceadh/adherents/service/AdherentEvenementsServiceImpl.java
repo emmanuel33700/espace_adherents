@@ -208,9 +208,12 @@ public class AdherentEvenementsServiceImpl implements AdherentEvenementsService{
     @Override
     public boolean updateParticipationEvenement(long idAdh, long idEvenement, int typeParticipation) {
         this.adherentEvenementsDAO.deleteParticipationEvenement(idEvenement, idAdh);
+        
         //Si l'adhérent participe ou ne participe pas
         if (typeParticipation != 3 ){
-            return this.adherentEvenementsDAO.creationParticipationEvenement(idEvenement, idAdh, typeParticipation);
+            boolean participeEvenement = true;
+            if (typeParticipation == 2) participeEvenement = false;
+            return this.adherentEvenementsDAO.creationParticipationEvenement(idEvenement, idAdh, participeEvenement);
         }
         return true;
         

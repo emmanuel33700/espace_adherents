@@ -59,9 +59,9 @@ public interface AdherentEvenementsDAO {
      * Création d'une participation à un évènement
      * @param idEvenement
      * @param idAdherent
-     * @param typeParticipation
+     * @param participeEvenement 
      * @return 
      */
-    public boolean creationParticipationEvenement(long idEvenement, long idAdherent, int typeParticipation);
+    public boolean creationParticipationEvenement(long idEvenement, long idAdherent, boolean participeEvenement);
     
 }
