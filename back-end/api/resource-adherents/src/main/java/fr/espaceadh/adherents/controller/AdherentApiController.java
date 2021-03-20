@@ -272,8 +272,8 @@ public class AdherentApiController implements AdherentApi {
             Collection<AdherentEvenementDto>  lstAdhEvenementDto = null;
             
             if (datedebut != null && datefin != null) {
-                Date dateDebutIso = toDateSansMS(datedebut);
-                 Date dateFinIso = toDateSansMS(datefin);
+                Date dateDebutIso = toDateSansHeure(datedebut);
+                Date dateFinIso = toDateSansHeure(datefin);
                 lstAdhEvenementDto = this.adherentEvenementsService.getLstEvenement(idadh, dateDebutIso, dateFinIso);
             } else {
                 lstAdhEvenementDto = this.adherentEvenementsService.getLstEvenement(idadh);
@@ -510,6 +510,30 @@ public class AdherentApiController implements AdherentApi {
         sdf.setTimeZone(TimeZone.getTimeZone("CET"));
         return sdf.format(date);
     }
+    
+    /**
+     * Convertir une date iso dans les heures
+     * @param iso8601string
+     * @return 
+     */
+    public Date toDateSansHeure(final String iso8601string) {
+        if (iso8601string == null) {
+            return null;
+        }
+        
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date result2 = null;
+        try {
+            result2 = df2.parse(iso8601string);
+        } catch (ParseException ex) {
+            log.error("Erreur sur le formatage  de date. Date en entré {}. {}", iso8601string , ex.getMessage());
+        }
+
+
+        return result2;
+    }
+
     
     
     /**
