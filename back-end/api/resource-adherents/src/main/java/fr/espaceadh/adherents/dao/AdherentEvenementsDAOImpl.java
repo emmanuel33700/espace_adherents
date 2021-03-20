@@ -181,7 +181,7 @@ public class AdherentEvenementsDAOImpl extends JdbcDaoSupport implements Adheren
             query.append(" 	VALUES (?, ?, now(), ?) ");    
     
         int nbResult = this.getJdbcTemplate().update(query.toString(),
-                 idEvenement, idAdherent
+                 idEvenement, idAdherent, typeParticipation
         );
 
         LOGGER.debug("Nombre dde participation créé {} ", nbResult);
