@@ -168,6 +168,9 @@ public class AgendaApiController implements AgendaApi {
      * @return 
      */
     public ResponseEntity<Void> updateEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement,@Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Evenement body) {
+        
+        body.setId(idevenement);
+        
         boolean result = agendaService.updateEvenement(this.convertDto(body));
         
         if(result) return  new ResponseEntity<Void>(HttpStatus.OK);
