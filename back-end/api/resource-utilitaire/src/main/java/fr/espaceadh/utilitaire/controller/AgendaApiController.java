@@ -59,7 +59,13 @@ public class AgendaApiController implements AgendaApi {
         String accept = request.getHeader("Accept");
         EvenementDto dto = new EvenementDto();
         
-        boolean result = agendaService.creerEvenement(this.convertDto(body), body.isEnvoyerInfoAdherents());
+        boolean envoyerMailAdh = false;
+        if (body.isEnvoyerInfoAdherents()!= null){
+            envoyerMailAdh = body.isEnvoyerInfoAdherents();
+        }
+        
+        
+        boolean result = agendaService.creerEvenement(this.convertDto(body), envoyerMailAdh);
         
         if(result) return  new ResponseEntity<Void>(HttpStatus.CREATED);
         
