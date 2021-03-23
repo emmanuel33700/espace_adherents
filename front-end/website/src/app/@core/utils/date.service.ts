@@ -3,6 +3,15 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class DateService {
 
+  /**
+   * Transforme un date au format date en format ISO YYY-mm-dd
+   * @param date
+   */
+  convertDateToStringIsoWithOutHour(date: Date) {
+    return date.getFullYear()
+      + '-' + ((date.getMonth() + 1).toString()).padStart(2, '0')
+      + '-' + (date.getDate().toString()).padStart(2, '0');
+  }
 
   /**
    * Concertion d'une date au format dd/mm/YYYY en format iso

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, HostBinding, Input, OnInit} from '@angular/core';
 import {NbDialogRef, NbToastrService} from '@nebular/theme';
 import {DateSelectArg} from '@fullcalendar/angular';
 import {Evenement} from '../../../../../api/generated/utilitaire/models/evenement';
@@ -18,6 +18,11 @@ export class DialogAjoutEvenementComponent implements OnInit {
   submitted = false;
 
   evenementForm: any = {};
+
+  // Toaster
+  @HostBinding('class')
+  classes = 'example-items-rows';
+  // fin toaster
 
   @Input() dateDebut: string;
   @Input() dateFin: string;

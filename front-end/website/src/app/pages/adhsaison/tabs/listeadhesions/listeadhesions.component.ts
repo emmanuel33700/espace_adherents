@@ -7,7 +7,6 @@ import {DatePipe} from '@angular/common';
 import {NbToastrService} from '@nebular/theme';
 
 
-
 @Component({
   selector: 'ngx-list',
   templateUrl: 'listeadhesions.component.html',
@@ -15,8 +14,7 @@ import {NbToastrService} from '@nebular/theme';
 })
 
 
-
-export class ListeadhesionsComponent  implements OnInit {
+export class ListeadhesionsComponent implements OnInit {
 
   public idAdherent: number = 0;
   public adhesions: Adhesion[] = [];
@@ -26,24 +24,32 @@ export class ListeadhesionsComponent  implements OnInit {
   classes = 'example-items-rows';
   // fin toaster
 
+  // indicateur de chargement
+  loading = true;
+
   constructor(
     private adhesionService: AdhesionService,
     private router: Router,
     private loggerService: LoggerService,
     private datePipe: DatePipe,
     private toastrService: NbToastrService,
-  ) {}
+  ) {
+  }
 
 
   ngOnInit(): void {
 
     this.idAdherent = Number(localStorage.getItem('id_adh_selected'));
 
+    this.loading = false;
+
     this.adhesionService.getListeAdhesionsAdherent({idadh: this.idAdherent}).subscribe(
       (data) => {
         this.adhesions = data;
         this.loggerService.debug(JSON.stringify(data));
         this.loggerService.debug(JSON.stringify(this.adhesions));
+
+        this.loading = false;
       },
       (error) => {
         this.loggerService.error(error);
@@ -53,6 +59,8 @@ export class ListeadhesionsComponent  implements OnInit {
       },
       () => {
         this.loggerService.debug('fini');
+
+        this.loading = false;
       });
   }
 

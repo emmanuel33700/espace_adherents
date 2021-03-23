@@ -4,6 +4,7 @@ import {ListingAdherentService} from '../../../../api/generated/adherents/servic
 import {LoggerService} from '../../../@core/utils/logger.service';
 import {Adherent} from '../../../../api/generated/adherents/models';
 import {NbToastrService} from '@nebular/theme';
+import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
 
 
 
@@ -20,6 +21,7 @@ export class ListeComponent implements OnInit {
 
   adherents: Adherent[] = [];
   isAdherentSaison: boolean;
+  adherentSelected: Adherent = {};
 
   // Toaster
   @HostBinding('class')
@@ -31,6 +33,7 @@ export class ListeComponent implements OnInit {
     private router: Router,
     private loggerService: LoggerService,
     private toastrService: NbToastrService,
+    private adherentService: AdherentService,
   ) {}
 
 
@@ -61,7 +64,21 @@ export class ListeComponent implements OnInit {
    */
   sectionAdherents(id: number) {
     localStorage.setItem('id_adh_selected', String(id));
-    return this.router.navigateByUrl('pages/adhsaison/tabs/infosadh');
+
+    this.adherentService.getAdherent({
+      idadh: id,
+    }).subscribe(
+      (data) => {
+        this.adherentSelected = data;
+      },
+      (error) => {
+        this.loggerService.error(error);
+      },
+      () => {
+        this.loggerService.info('adherent recupe api '  + JSON.stringify(id));
+        localStorage.setItem('adh_selected', JSON.stringify(this.adherentSelected ));
+        return this.router.navigateByUrl('pages/adhsaison/tabs/infosadh');
+      });
   }
 
   /**

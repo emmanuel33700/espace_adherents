@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import frLocale from '@fullcalendar/core/locales/fr';
 import {CalendarOptions, DateSelectArg, EventClickArg, EventApi} from '@fullcalendar/angular';
 import {AgendaService} from '../../../../api/generated/utilitaire/services/agenda.service';
@@ -11,6 +11,7 @@ import {EventInput} from '@fullcalendar/angular';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 import {DialogDetailEvenementComponent} from './dialog-detail-evenement/dialog-detail-evenement.component';
 import {DialogAjoutEvenementComponent} from './dialog-ajout-evenement/dialog-ajout-evenement.component';
+import {DateService} from '../../../@core/utils';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -28,6 +29,9 @@ export class ListeComponent implements OnInit {
 
   calendarOptions: CalendarOptions = {};
 
+  // indicateur de chargement
+  loading = true;
+
 // https://github.com/fullcalendar/fullcalendar-example-projects/tree/master/angular/src/app
   constructor(
     private agendaService: AgendaService,
@@ -35,6 +39,7 @@ export class ListeComponent implements OnInit {
     private loggerService: LoggerService,
     private toastrService: NbToastrService,
     private dialogService: NbDialogService,
+    private dateService: DateService,
   ) {
   }
 
@@ -52,7 +57,19 @@ export class ListeComponent implements OnInit {
 
     this.calendarVisible = false;
 
-    this.manifestationService.getListeManifestationsAdherent({idadh: this.adherent.id})
+    // Gestion date debut et fin de recherche
+    const dDebut = new Date();
+    dDebut.setMonth(dDebut.getMonth() - 2);
+
+    const dFin = new Date();
+    dFin.setMonth(dFin.getMonth() + 8);
+
+    const dateDebutString = this.dateService.convertDateToStringIsoWithOutHour(dDebut);
+    const dateFinString = this.dateService.convertDateToStringIsoWithOutHour(dFin);
+
+    this.manifestationService.getListeManifestationsAdherent({idadh: this.adherent.id
+      , datedebut: dateDebutString
+      , datefin: dateFinString})
       .subscribe(
         (data) => {
           this.manifestations = data;
@@ -126,7 +143,8 @@ export class ListeComponent implements OnInit {
               events: this.initialEvent,
             };
           }
-
+          // Le calendrier peut-etre affiché
+          this.loading = false;
 
         },
         (error) => {
@@ -167,6 +185,7 @@ export class ListeComponent implements OnInit {
       context: {
         title: clickInfo.event.title,
         idEvenement: clickInfo.event.id,
+        clickInfo: clickInfo,
       },
     });
 
@@ -178,9 +197,31 @@ export class ListeComponent implements OnInit {
   }
 
   updateEvent(clickInfo: EventClickArg) {
-    this.loggerService.info('Evenement modifié ' + clickInfo.event.id);
-    this.loggerService.info(' --> Date de début' + clickInfo.event.startStr);
-    this.loggerService.info(' --> Date de fin ' + clickInfo.event.endStr);
+    this.loggerService.debug('Evenement modifié ' + clickInfo.event.id);
+    this.loggerService.debug(' --> Date de début' + clickInfo.event.startStr);
+    this.loggerService.debug(' --> Date de fin ' + clickInfo.event.endStr);
+
+    const evenement: Evenement = {};
+    evenement.id = Number(clickInfo.event.id);
+    evenement.datedebut = clickInfo.event.startStr;
+    evenement.datefin = clickInfo.event.endStr;
+
+
+    this.agendaService.updateEvenement( {idevenement: Number(clickInfo.event.id), body: evenement})
+      .subscribe(
+        (data) => {
+          this.loggerService.info(JSON.stringify(data));
+        },
+        (error) => {
+          this.loggerService.error(JSON.stringify(error));
+          this.toastrService.danger(
+            'Erreur technique lors de enregistrement',
+            'Erreur ');
+        },
+        () => {
+          this.loggerService.info('Enregistrement fini');
+        },
+      );
   }
 
 

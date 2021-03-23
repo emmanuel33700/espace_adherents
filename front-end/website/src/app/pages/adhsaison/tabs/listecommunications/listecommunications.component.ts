@@ -22,6 +22,9 @@ export class ListecommunicationsComponent implements OnInit {
   classes = 'example-items-rows';
   // fin toaster
 
+  // indicateur de chargement
+  loading = true;
+
 
   constructor(
     private communicationService: CommunicationService,
@@ -37,14 +40,15 @@ export class ListecommunicationsComponent implements OnInit {
     this.communicationService.getListeCommunicationAdhrent({idadh: this.idAdherent}).subscribe(
       (data) => {
         this.communications = data;
-        this.loggerService.info(JSON.stringify(data));
-        this.loggerService.info(JSON.stringify(this.communications));
+        this.loggerService.debug(JSON.stringify(data));
+        this.loggerService.debug(JSON.stringify(this.communications));
       },
       (error) => {
         this.loggerService.error(error);
       },
       () => {
         this.loggerService.debug('fini');
+        this.loading = false;
       });
   }
 

@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import {
-    NbActionsModule, NbAlertModule,
-    NbButtonModule,
-    NbCardModule,
-    NbCheckboxModule,
-    NbDatepickerModule, NbIconModule,
-    NbInputModule,
-    NbRadioModule,
-    NbSelectModule,
-    NbUserModule,
+  NbActionsModule, NbAlertModule,
+  NbButtonModule,
+  NbCardModule,
+  NbCheckboxModule,
+  NbDatepickerModule, NbIconModule,
+  NbInputModule,
+  NbRadioModule,
+  NbSelectModule, NbSpinnerModule,
+  NbUserModule,
 } from '@nebular/theme';
 
 import { ThemeModule } from '../../@theme/theme.module';
@@ -39,6 +39,7 @@ import { HttpClientModule } from '@angular/common/http';
         HttpClientModule,
         ReactiveFormsModule,
         NbAlertModule,
+        NbSpinnerModule,
     ],
   declarations: [
     ProfileComponent,

@@ -1,4 +1,7 @@
-<ng-container *ngIf="adhesions.length">
+<ng-container *ngIf="loading" >
+	Chargement...
+</ng-container>
+<ng-container *ngIf="!loading && adhesions.length" >
   <nb-list>
 
     <nb-list-item *ngFor="let adhesion of adhesions">
@@ -12,6 +15,6 @@
 
   </nb-list>
 </ng-container>
-<ng-container *ngIf="!adhesions.length">
+<ng-container *ngIf="!loading && !adhesions.length" >
   Aucune adhésion
 </ng-container>

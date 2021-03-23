@@ -9,6 +9,7 @@ import {
   NbRadioModule,
   NbSelectModule,
   NbUserModule,
+  NbSpinnerModule, NbToggleModule,
 } from '@nebular/theme';
 
 import { ThemeModule } from '../../@theme/theme.module';
@@ -48,6 +49,8 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     ngFormsModule,
     FullCalendarModule,
     NbAlertModule,
+    NbSpinnerModule,
+    NbToggleModule,
     // register FullCalendar with you app
   ],
   declarations: [

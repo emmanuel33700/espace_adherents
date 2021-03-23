@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-    NbAccordionModule, NbActionsModule, NbAlertModule,
-    NbButtonModule,
-    NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule,
-    NbListModule, NbRadioModule,
-    NbRouteTabsetModule, NbSelectModule,
-    NbStepperModule,
-    NbTabsetModule, NbToggleModule, NbUserModule,
+  NbAccordionModule, NbActionsModule, NbAlertModule,
+  NbButtonModule,
+  NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule,
+  NbListModule, NbRadioModule,
+  NbRouteTabsetModule, NbSelectModule, NbSpinnerModule,
+  NbStepperModule,
+  NbTabsetModule, NbToggleModule, NbUserModule,
 } from '@nebular/theme';
 
 import { ThemeModule } from '../../@theme/theme.module';
@@ -57,6 +57,7 @@ import {HttpClientModule} from '@angular/common/http';
         HttpClientModule,
         NbInputModule,
         NbAlertModule,
+        NbSpinnerModule,
     ],
   declarations: [
     AdhsaisonComponent,

@@ -29,6 +29,9 @@ export class ConnexionComponent implements OnInit {
   classes = 'example-items-rows';
   // fin toaster
 
+  // indicateur de chargement
+  loading = true;
+
   constructor(
     private formBuilder: FormBuilder,
     private rolesService: RolesService,
@@ -69,6 +72,8 @@ export class ConnexionComponent implements OnInit {
           this.user.role = 'ADHERENT';
         }
         this.user.email = this.adherent.email;
+
+        this.loading = false;
 
       });
 

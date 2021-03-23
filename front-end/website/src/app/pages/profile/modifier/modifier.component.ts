@@ -28,6 +28,10 @@ export class ModifierComponent implements OnInit {
   classes = 'example-items-rows';
   // fin toaster
 
+  // indicateur de chargement
+  loading = true;
+
+
   constructor(
     private formBuilder: FormBuilder,
     private adherentService: AdherentService,
@@ -60,7 +64,7 @@ export class ModifierComponent implements OnInit {
     this.user.accordMail = this.adherent.accordMail;
     this.user.publicContact = this.adherent.publicContact;
 
-
+    this.loading = false;
   }
 
 

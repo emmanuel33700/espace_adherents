@@ -1,5 +1,7 @@
-
-<ng-container *ngIf="communications.length">
+<ng-container *ngIf="loading" >
+	Chargement...
+</ng-container>
+<ng-container *ngIf="!loading && communications.length">
    <nb-list>
 
         <nb-list-item *ngFor="let communication of communications">
@@ -13,6 +15,6 @@
 
       </nb-list>
 </ng-container>
-<ng-container *ngIf="!communications.length">
+<ng-container *ngIf="!loading && !communications.length" >
 	Aucune communication
 </ng-container>

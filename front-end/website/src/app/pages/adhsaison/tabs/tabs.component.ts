@@ -12,7 +12,7 @@ import {LoggerService} from '../../../@core/utils/logger.service';
 })
 export class TabsComponent implements OnInit {
 
-  adherent: Adherent;
+  adherent: Adherent = JSON.parse(localStorage.getItem('adh_selected'));
   public idAdherent: number = 0;
 
   constructor(
@@ -46,21 +46,9 @@ export class TabsComponent implements OnInit {
 
   ngOnInit(): void {
     this.idAdherent = Number(localStorage.getItem('id_adh_selected'));
-    this.loggerService.info('id adh recupere ' + this.idAdherent);
+   // this.adherent = JSON.parse(localStorage.getItem('adh_selected'));
 
-    this.adherentService.getAdherent({
-      idadh: this.idAdherent,
-    }).subscribe(
-      (data) => {
-        this.adherent = data;
-      },
-      (error) => {
-        this.loggerService.error(error);
-      },
-      () => {
-        this.loggerService.info('adherent recupe api '  + JSON.stringify(this.adherent));
-        localStorage.setItem('adh_selected', JSON.stringify(this.adherent));
-      });
+    this.loggerService.info('id adh recupere ' + this.idAdherent);
 
   }
 
