@@ -5,9 +5,9 @@ import {
   NbCardModule,
   NbCheckboxModule,
   NbDatepickerModule, NbIconModule,
-  NbInputModule,
+  NbInputModule, NbListModule,
   NbRadioModule,
-  NbSelectModule,
+  NbSelectModule, NbSpinnerModule, NbToggleModule,
   NbUserModule,
 } from '@nebular/theme';
 
@@ -34,6 +34,9 @@ import {FormsModule as ngFormsModule} from '@angular/forms';
     NbSelectModule,
     NbIconModule,
     ngFormsModule,
+    NbSpinnerModule,
+    NbListModule,
+    NbToggleModule,
   ],
   declarations: [
     DashboardComponent,

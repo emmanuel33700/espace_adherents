@@ -73,7 +73,7 @@ export class ListeComponent implements OnInit {
       .subscribe(
         (data) => {
           this.manifestations = data;
-          this.loggerService.info(JSON.stringify(data));
+          this.loggerService.debug(JSON.stringify(data));
 
 
           this.manifestations.forEach((value, index) => {
@@ -85,16 +85,12 @@ export class ListeComponent implements OnInit {
             eventprivate.start = value.dateDebut;
             eventprivate.end = value.dateFin;
 
-            if (value.statutParticipation === 2 ) {
+            if (value.statutParticipation == 2 ) {
               // Si l'utilisateur ne participe pas
               eventprivate.backgroundColor = '#b4c5cd';
-            } else if (value.statutParticipation === 1 ) {
-              // si il participe
-              eventprivate.backgroundColor = '#58df89';
-            } else {
-                // si aucune réponse
+            } else if (value.statutParticipation == 3 ) {
+              // si aucune réponse
               eventprivate.backgroundColor = '#8ecae2';
-
             }
 
 

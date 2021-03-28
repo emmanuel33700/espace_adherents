@@ -3,6 +3,12 @@ import {NbMenuItem} from '@nebular/theme';
 export const MENU_ITEMS_ADMIN: NbMenuItem[] = [
 
   {
+    title: 'Tableau de bord',
+    icon: 'home-outline',
+    home: true,
+    link: '/pages/dashboard',
+  },
+  {
     title: 'Agendas',
     icon: 'calendar-outline',
     link: '/pages/calendrier/liste',
@@ -42,6 +48,12 @@ export const MENU_ITEMS_ADMIN: NbMenuItem[] = [
 
 export const MENU_ITEMS_ADH: NbMenuItem[] = [
 
+  {
+    title: 'Tableau de bord',
+    icon: 'home-outline',
+    home: true,
+    link: '/pages/dashboard',
+  },
   {
     title: 'Agendas',
     icon: 'calendar-outline',

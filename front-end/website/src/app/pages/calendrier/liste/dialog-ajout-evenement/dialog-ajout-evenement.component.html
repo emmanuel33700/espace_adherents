@@ -57,15 +57,15 @@
           <input nbInput
                  [(ngModel)]="evenementForm.heureDebut"
                  #heureDebut="ngModel"
-                 pattern="^(?:([01]?\d|2[0-3]):([0-5]?\d):)?([0-5]?\d)$"
+                 pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"
                  id="input-heureDebut"
                  name="heureDebut"
-                 placeholder="10:00:00"
+                 placeholder="10:00"
                  fullWidth
                  [status]="heureDebut.dirty ? (heureDebut.invalid  ? 'danger' : 'success') : 'basic'"
                  [required]="true"
-                 [minlength]="8"
-                 [maxlength]="8"
+                 [minlength]="5"
+                 [maxlength]="5"
                  [attr.aria-invalid]="heureDebut.invalid && heureDebut.touched ? true : null">
           <ng-container *ngIf="heureDebut.invalid && heureDebut.touched">
             <p class="caption status-danger" *ngIf="heureDebut.errors?.minlength || heureDebut.errors?.maxlength">
@@ -113,19 +113,19 @@
           <input nbInput
                  [(ngModel)]="evenementForm.heureFin "
                  #heureFin="ngModel"
-                 pattern="^(?:([01]?\d|2[0-3]):([0-5]?\d):)?([0-5]?\d)$"
+                 pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"
                  id="input-heureFin"
                  name="heureFin"
-                 placeholder="10:00:00"
+                 placeholder="10:00"
                  fullWidth
                  [status]="heureFin.dirty ? (heureFin.invalid  ? 'danger' : 'success') : 'basic'"
                  [required]="true"
-                 [minlength]="8"
-                 [maxlength]="8"
+                 [minlength]="5"
+                 [maxlength]="5"
                  [attr.aria-invalid]="heureFin.invalid && heureFin.touched ? true : null">
           <ng-container *ngIf="heureFin.invalid && heureFin.touched">
             <p class="caption status-danger" *ngIf="heureFin.errors?.minlength || heureFin.errors?.maxlength">
-              L'heure doit avoir 8 caracteres
+              L'heure doit avoir 5 caracteres
             </p>
             <p class="caption status-danger" *ngIf="heureFin.errors?.pattern">
               Erreur dans le format de l'heure
@@ -141,7 +141,7 @@
                  [(ngModel)]="evenementForm.titre"
                  #titre="ngModel"
                  id="input-titre"
-                 name="adresse2"
+                 name="titre"
                  placeholder="Conférence sur le soleil"
                  fullWidth
                  [status]="titre.dirty ? (titre.invalid  ? 'danger' : 'success') : 'basic'"
@@ -163,24 +163,25 @@
       <div class="form-group row">
         <label for="input-description" class="label col-sm-3 col-form-label">Description de l'évènement</label>
         <div class="col-sm-9">
-          <input nbInput
-                 [(ngModel)]="evenementForm.description"
-                 #description="ngModel"
-                 id="input-description"
-                 name="adresse2"
-                 placeholder="Conférence sur le soleil qui aura se déroulera dans la salle ..."
-                 fullWidth
-                 [status]="titre.dirty ? (titre.invalid  ? 'danger' : 'success') : 'basic'"
-                 [required]="false"
-                 [minlength]="3"
-                 [maxlength]="100"
-                 [attr.aria-invalid]="description.invalid && description.touched ? true : null">
+          <textarea nbInput
+                    [(ngModel)]="evenementForm.description"
+                    #description="ngModel"
+                    id="input-description"
+                    name="description"
+                    placeholder="Conférence sur le soleil qui aura se déroulera dans la salle ..."
+                    fullWidth
+                    [status]="description.dirty ? (description.invalid  ? 'danger' : 'success') : 'basic'"
+                    [required]="false"
+                    [minlength]="3"
+                    [maxlength]="500"
+                    [attr.aria-invalid]="description.invalid && description.touched ? true : null">
+          </textarea>
           <ng-container *ngIf="description.invalid && description.touched">
             <p class="caption status-danger" *ngIf="description.errors?.required">
               Le nom est nécésaire
             </p>
             <p class="caption status-danger" *ngIf="description.errors?.minlength || description.errors?.maxlength">
-              Le description doit comporter entre 3 en 100 characteres
+              Le description doit comporter entre 3 en 500 characteres
             </p>
           </ng-container>
         </div>

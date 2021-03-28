@@ -56,7 +56,6 @@ export class DialogAjoutEvenementComponent implements OnInit {
    * @param form
    */
   ajouterEvenement(form: NgForm) {
-    this.loggerService.error('Validation du formulaire');
 
     const calendarApi = this.selectInfo.view.calendar;
 
@@ -91,6 +90,7 @@ export class DialogAjoutEvenementComponent implements OnInit {
       start: this.dateService.convertISODate(this.evenementForm.dateDebut, this.evenementForm.heureDebut),
       end: this.dateService.convertISODate(this.evenementForm.dateFin, this.evenementForm.heureFin),
       allDay: this.selectInfo.allDay,
+      backgroundColor: '#8ecae2',
     });
 
 

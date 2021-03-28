@@ -1,19 +1,84 @@
 <div class="row">
-  <div class="col-md-6">
-    <nb-card status="success">
-      <nb-card-header>Mes participations aux prochaines manifestations</nb-card-header>
+
+  <!-- TDB les participations en attente de confirmation -->
+  <div class="col-xxxl-9 col-xxl-8 col-lg-7 col-md-6">
+    <nb-card size="large" class="table-card" [nbSpinner]='loadingEvenement'>
+      <nb-card-header>Mes participations en attentes</nb-card-header>
       <nb-card-body>
-            <b>Vendredi 10 Janvier 2020</b> : Assemblé générale
+        <nb-list-item *ngFor="let manifestation of manifestationsNonSaisieParticipation">
+          <div class="row show-grid">
+            <div class=".col-12 .col-sm-6 .col-md-8">
+              <div>{{ manifestation.descriptionCourte }} le {{ afficherDate(manifestation.dateDebut) }}
+                à  {{ afficherHeure(manifestation.dateDebut) }}</div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; width:100%; padding:0;">
+              <button status='success' type="submit" nbButton (click)="participeEvenement(true, 1, manifestation.id)">Je
+                participe
+              </button>
+              <button status='warning' type="submit" nbButton (click)="participeEvenement(true, 2, manifestation.id)">Je ne
+                participe pas
+              </button>
+            </div>
+          </div>
+        </nb-list-item>
       </nb-card-body>
     </nb-card>
-
-    <nb-card  status="warning">
-      <nb-card-header>Manifestation en attente de ma réponse</nb-card-header>
-      <nb-card-body>
-        <div class="buttons-row">
-          <b>Vendredi 10 Janvier 2020</b> : Assemblé générale  <button status='success' type="submit" nbButton>Je participe</button> <button status='warning' type="submit" nbButton>Je ne participe pas</button>
-        </div>
-      </nb-card-body>
-    </nb-card>
-
   </div>
+
+  <!-- TDB les participations déja confirmée confirmation -->
+  <div class="col-xxxl-3 col-xxl-4 col-lg-5 col-md-6">
+    <nb-card size="large" class="table-card" [nbSpinner]='loadingEvenement'>
+      <nb-card-header>Mes participations déjà enregistrées</nb-card-header>
+      <nb-card-body>
+        <nb-list-item *ngFor="let manifestation of manifestationsSaisieParticipation">
+          <div class="row show-grid">
+            <div class=".col-12 .col-sm-6 .col-md-8">
+              <div>{{ manifestation.descriptionCourte }} le {{ afficherDate(manifestation.dateDebut) }}
+                à  {{ afficherHeure(manifestation.dateDebut) }}</div>
+            </div>
+            <ng-container *ngIf="manifestation.statutParticipation == 1">
+              <nb-toggle labelPosition="right" [checked]="true"
+                         (change)="participerEvenement($event, manifestation.id)">Je
+                participe à l'évènement
+              </nb-toggle>
+            </ng-container>
+            <ng-container *ngIf="manifestation.statutParticipation == 2">
+              <nb-toggle labelPosition="right" [checked]="false"
+                         (change)="participerEvenement($event, manifestation.id)">Je
+                participe à l'évènement
+              </nb-toggle>
+            </ng-container>
+          </div>
+
+        </nb-list-item>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+
+  <!-- TDB les derniers documents publié -->
+  <div class="col-xxxl-3 col-xxl-4 col-lg-5 col-md-6">
+    <nb-card size="large" class="table-card" [nbSpinner]='loadingDocument'>
+      <nb-card-header>Mes derniers documents</nb-card-header>
+      <nb-card-body>
+
+        <nb-list>
+          <nb-list-item *ngFor="let document of documents">
+            <span>
+              <nb-icon icon="file-outline" pack="eva"></nb-icon>
+            </span>
+            <span class="results">
+              {{ document.date }} <span class="caption">{{ document.titre }}</span>
+            </span>
+          </nb-list-item>
+        </nb-list>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+
+
+</div>

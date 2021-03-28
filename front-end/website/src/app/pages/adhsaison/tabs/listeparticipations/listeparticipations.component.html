@@ -1,9 +1,17 @@
+<ng-container *ngIf="loading" >
+  Chargement...
+</ng-container>
+<ng-container *ngIf="!loading && manifestations.length">
+  <nb-list>
 
-      <nb-list>
-        <nb-list-item *ngFor="let user of users">
+    <nb-list-item *ngFor="let manifestation of manifestations">
 
-            <nb-user   [name]="user.name" [title]="user.title"  [badgeText]="user.libelle"  [color]="user.color">
-            </nb-user>
+      <nb-user  [name]="'le ' + dateFormat(manifestation.dateDebut) + ' - ' + manifestation.descriptionLongue"
+                [title]="manifestation.statutParticipation" [color]="getColor(manifestation.statutParticipation)"   >
+      </nb-user>
 
-        </nb-list-item>
-      </nb-list>
+    </nb-list-item>
+
+
+  </nb-list>
+</ng-container>

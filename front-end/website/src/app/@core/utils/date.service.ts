@@ -39,7 +39,7 @@ export class DateService {
   }
 
   /**
-   * Convertion d'une date au format iso en heure au format hh:mm:ss
+   * Convertion d'une date au format iso en heure au format hh:mm
    * @param dateStringISO
    */
   heureFormatForPrint(dateStringISO: string) {
@@ -47,14 +47,13 @@ export class DateService {
       return null;
     }
     const date: Date = new Date(dateStringISO);
-    return (date.getHours().toString()).padStart(2, '0') + ':' + (date.getMinutes().toString()).padStart(2, '0') + ':'
-      + (date.getSeconds().toString()).padStart(2, '0');
+    return (date.getHours().toString()).padStart(2, '0') + ':' + (date.getMinutes().toString()).padStart(2, '0') ;
   }
 
   /**
    *  Convertion d'une date et heure au format ISO
    * @param date au format dd/mm/yyyy
-   * @param heure au format hh:mm:ss
+   * @param heure au format hh:mm
    */
   convertISODate(sdate: string, heure: string) {
     if (this.isEmpty(sdate)) {
@@ -70,7 +69,7 @@ export class DateService {
       , parseInt(darr[0], 10)
       , parseInt(harr[0], 10)
       , parseInt(harr[1], 10)
-      , parseInt(harr[2], 10));
+      , 0);
 
 
     return date.getFullYear()
@@ -83,11 +82,11 @@ export class DateService {
       + '+01:00';
   }
 
-  private isEmpty(str) {
+  private  isEmpty(str) {
     return (!str || 0 === str.length);
   }
 
-  private isBlank(str) {
+  private  isBlank(str) {
     return (!str || /^\s*$/.test(str));
   }
 

@@ -8,7 +8,7 @@ import {Manifestation} from '../../../../../api/generated/adherents/models/manif
 import {DateService, LoggerService} from '../../../../@core/utils';
 import {Evenement} from '../../../../../api/generated/utilitaire/models/evenement';
 import {AgendaService} from '../../../../../api/generated/utilitaire/services/agenda.service';
-import { NgForm} from '@angular/forms';
+import {NgForm} from '@angular/forms';
 
 @Component({
   selector: 'ngx-showcase-dialog',
@@ -25,6 +25,9 @@ export class DialogDetailEvenementComponent implements OnInit {
   submitted = false;
 
   evenementForm: any = {};
+
+  // statut du toogle de confirmation de participation à la manifestation
+  statutToogle = false;
 
   // Toaster
   @HostBinding('class')
@@ -53,7 +56,7 @@ export class DialogDetailEvenementComponent implements OnInit {
    * Récupération des informations pour init de la page
    */
   ngOnInit(): void {
-    this.adherent = JSON.parse (localStorage.getItem('adherent'));
+    this.adherent = JSON.parse(localStorage.getItem('adherent'));
     const role = localStorage.getItem('ROLE');
 
     // tester si la personne à le droit d'éditer la page
@@ -61,30 +64,37 @@ export class DialogDetailEvenementComponent implements OnInit {
       this.droitEditionEvenement = true;
     }
 
-    this.manifestationService.getManifestationsAdherent({idadh: this.adherent.id
-      , idManifestation: Number(this.idEvenement)})
+    this.manifestationService.getManifestationsAdherent({
+      idadh: this.adherent.id
+      , idManifestation: Number(this.idEvenement),
+    })
       .subscribe(
-      (data) => {
-        this.manifestation = data;
-        this.evenementForm.dateDebut = this.dateService.dateFormatForPrint(this.manifestation.dateDebut);
-        this.evenementForm.heureDebut = this.dateService.heureFormatForPrint(this.manifestation.dateDebut);
-        this.evenementForm.dateFin = this.dateService.dateFormatForPrint(this.manifestation.dateFin);
-        this.evenementForm.heureFin = this.dateService.heureFormatForPrint(this.manifestation.dateFin);
-        this.evenementForm.titre = this.manifestation.descriptionCourte;
-        this.evenementForm.description = this.manifestation.descriptionLongue;
-        this.evenementForm.demandeEnvoyerMail = false;
+        (data) => {
+          this.manifestation = data;
+          this.evenementForm.dateDebut = this.dateService.dateFormatForPrint(this.manifestation.dateDebut);
+          this.evenementForm.heureDebut = this.dateService.heureFormatForPrint(this.manifestation.dateDebut);
+          this.evenementForm.dateFin = this.dateService.dateFormatForPrint(this.manifestation.dateFin);
+          this.evenementForm.heureFin = this.dateService.heureFormatForPrint(this.manifestation.dateFin);
+          this.evenementForm.titre = this.manifestation.descriptionCourte;
+          this.evenementForm.description = this.manifestation.descriptionLongue;
+          this.evenementForm.demandeEnvoyerMail = false;
+          this.evenementForm.lieux = this.manifestation.lieux;
 
-        this.typeParticipationEvenement = this.manifestation.statutParticipation;
-      },
-      (error) => {
-        this.loggerService.error(error);
-        this.toastrService.danger(
-          'Erreur technique lors de recuperation des données',
-          'Erreur ');
-      },
-      () => {
-        this.loggerService.debug('fini');
-      });
+          this.typeParticipationEvenement = this.manifestation.statutParticipation;
+          if (this.manifestation.statutParticipation == 1) {
+            this.statutToogle = true;
+          }
+
+        },
+        (error) => {
+          this.loggerService.error(error);
+          this.toastrService.danger(
+            'Erreur technique lors de recuperation des données',
+            'Erreur ');
+        },
+        () => {
+          this.loggerService.debug('fini');
+        });
 
   }
 
@@ -99,19 +109,28 @@ export class DialogDetailEvenementComponent implements OnInit {
    * @param $event
    */
   participerEvenement($event: Event) {
-    const participationManifestation: ParticipationManifestation = {};
-    participationManifestation.statutParticipation = 1;
 
+
+    const participationManifestation: ParticipationManifestation = {};
+
+    this.loggerService.debug('statut toogle' + this.statutToogle);
     // Définition du type de manifestation
-    if (this.typeParticipationEvenement === 1) {
-      participationManifestation.statutParticipation = 2;
-    } else {
+    // SI le statut toogle etat à true ==> La personne souhaite ne plus participer à la manifestation.
+    // sinon, il souhaite participer à la manifestation
+    if (this.statutToogle) {
       participationManifestation.statutParticipation = 1;
+    } else {
+      participationManifestation.statutParticipation = 2;
+
     }
 
-    this.manifestationService.updateManifestationAdherent({idadh: this.adherent.id
+
+
+    this.manifestationService.updateManifestationAdherent({
+      idadh: this.adherent.id
       , idManifestation: this.manifestation.id
-      , body: participationManifestation})
+      , body: participationManifestation,
+    })
       .subscribe(
         (data) => {
           this.loggerService.debug(JSON.stringify(data));
