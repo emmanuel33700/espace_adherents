@@ -81,7 +81,7 @@ export class DialogDetailEvenementComponent implements OnInit {
           this.evenementForm.lieux = this.manifestation.lieux;
 
           this.typeParticipationEvenement = this.manifestation.statutParticipation;
-          if (this.manifestation.statutParticipation == 1) {
+          if (String(this.manifestation.statutParticipation) === '1') {
             this.statutToogle = true;
           }
 

@@ -171,7 +171,8 @@ export class DashboardComponent implements OnInit {
           this.loggerService.debug(JSON.stringify(data));
 
           this.manifestationsComplet.forEach((value, index) => {
-            if (value.statutParticipation == 3) {
+
+            if (String(value.statutParticipation) === '3') {
               this.manifestationsNonSaisieParticipation.push(value);
             } else {
               this.manifestationsSaisieParticipation.push(value);

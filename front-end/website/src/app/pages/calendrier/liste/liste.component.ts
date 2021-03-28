@@ -85,10 +85,10 @@ export class ListeComponent implements OnInit {
             eventprivate.start = value.dateDebut;
             eventprivate.end = value.dateFin;
 
-            if (value.statutParticipation == 2 ) {
+            if (String(value.statutParticipation) === '2' ) {
               // Si l'utilisateur ne participe pas
               eventprivate.backgroundColor = '#b4c5cd';
-            } else if (value.statutParticipation == 3 ) {
+            } else if (String (value.statutParticipation) === '3' ) {
               // si aucune réponse
               eventprivate.backgroundColor = '#8ecae2';
             }
