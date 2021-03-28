@@ -29,7 +29,7 @@ export class DashboardComponent implements OnInit {
   manifestationsNonSaisieParticipation: Manifestation[] = [];
 
   // Gestion des documents
-  private documents = [
+  documents = [
     { titre: 'Conférence sur le soleil', libelle: 'conférence du 18/02', date: '2021-02-01' },
     { titre: 'Conférence sur la lune', libelle: 'conférence du 18/02' , date: '2021-02-01' },
     { titre: 'Conférence sur la terre', libelle: 'conférence du 18/02', date: '2021-02-01' },
