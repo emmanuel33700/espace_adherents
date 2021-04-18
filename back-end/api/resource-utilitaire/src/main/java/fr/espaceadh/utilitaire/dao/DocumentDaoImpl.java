@@ -21,6 +21,7 @@ import fr.espaceadh.utilitaire.dto.EvenementDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import javax.sql.DataSource;
 import org.slf4j.Logger;
@@ -130,7 +131,21 @@ public class DocumentDaoImpl extends JdbcDaoSupport implements DocumentDao {
 
         @Override
         public DocumentDto mapRow(ResultSet rs, int i) throws SQLException {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            DocumentDto dto = new DocumentDto();
+            
+            dto.setIdDocument(rs.getLong("id_share_docs"));
+            dto.setIdDocumentParent(rs.getLong("fk_id_share_docs"));
+            dto.setLablelCourt(rs.getString("label_short"));
+            dto.setLabelLong(rs.getString("label_long"));
+            dto.setDateDeCreation(new Date(rs.getTimestamp("date_save").getTime()));
+            dto.setDossier(rs.getBoolean("is_folder"));
+            dto.setFichier(rs.getBoolean("is_file"));
+            dto.setNonFichier(rs.getString("filer"));
+            dto.setIdAuteur(rs.getLong("fk_id_user_created"));
+            dto.setIdAuthority(rs.getInt("fk_id_type_authority"));
+            dto.setaEnfant(rs.getInt("aEnfant") == 1 ? true : false);
+            
+            return dto;
         }
 
     }

@@ -202,8 +202,8 @@ public class DocumentsApiController implements DocumentsApi {
         DocumentDto dto = new DocumentDto();
         
         dto.setIdDocument(body.getId());
-        dto.setIdDocumentParent(body.getIdDossierRattachement());
-        dto.setIdAuthority(1); // TODO type d'authority a revoir pour la création de document
+        if (body.getIdDossierRattachement() != null)dto.setIdDocumentParent(body.getIdDossierRattachement());
+        dto.setIdAuthority(2); // TODO type d'authority a revoir pour la création de document
         dto.setLablelCourt(body.getLibelleCourt());
         dto.setLabelLong(body.getLibelleLong());
         dto.setNonFichier(body.getNomFichier());
@@ -285,7 +285,7 @@ public class DocumentsApiController implements DocumentsApi {
         Document documentModel = new Document();
         documentModel.setDateCreation(dateToString(dto.getDateDeCreation()));
         documentModel.setId(dto.getIdDocument());
-        documentModel.setIdAuthority(Document.IdAuthorityEnum.NUMBER_1); // TODO TYpe d'authority a revoir
+        documentModel.setIdAuthority(Document.IdAuthorityEnum.NUMBER_2); // TODO TYpe d'authority a revoir
         documentModel.setLibelleCourt(dto.getLablelCourt());
         documentModel.setLibelleLong(dto.getLabelLong());
         documentModel.setNomFichier(dto.getNonFichier());
