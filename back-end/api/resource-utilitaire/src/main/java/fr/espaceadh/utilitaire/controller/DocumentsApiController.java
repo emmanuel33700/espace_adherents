@@ -289,6 +289,7 @@ public class DocumentsApiController implements DocumentsApi {
         documentModel.setLibelleCourt(dto.getLablelCourt());
         documentModel.setLibelleLong(dto.getLabelLong());
         documentModel.setNomFichier(dto.getNonFichier());
+        documentModel.setIdDossierRattachement(dto.getIdDocumentParent());
 
         return documentModel;
     }

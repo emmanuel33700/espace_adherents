@@ -85,7 +85,7 @@ public class DocumentDaoImpl extends JdbcDaoSupport implements DocumentDao {
         nbCreation = this.getJdbcTemplate().update(query.toString(),
                  document.getIdDocument(),
                  document.getIdDocumentParent(),
-                 document.getLabelLong(),
+                 document.getLablelCourt(),
                  document.getLabelLong(),
                  document.isDossier(),
                  document.isFichier(),
@@ -143,7 +143,7 @@ public class DocumentDaoImpl extends JdbcDaoSupport implements DocumentDao {
             dto.setNonFichier(rs.getString("filer"));
             dto.setIdAuteur(rs.getLong("fk_id_user_created"));
             dto.setIdAuthority(rs.getInt("fk_id_type_authority"));
-            dto.setaEnfant(rs.getInt("aEnfant") == 1 ? true : false);
+            dto.setaEnfant((rs.getInt("aEnfant") == 1));
             
             return dto;
         }
