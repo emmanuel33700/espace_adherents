@@ -28,6 +28,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-04-11T08:45:53.348Z[GMT]")
 @RestController
@@ -85,17 +88,13 @@ public class DocumentsApiController implements DocumentsApi {
         return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<Void> addFichierBinaire(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier,@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Object body) {
+    public ResponseEntity<Void> addFichierBinaire(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="orderId", required=false)  Integer orderId,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="userId", required=false)  Integer userId,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile fileName) {
         String accept = request.getHeader("Accept");
-         InputStream stream;
-         
-        if (body instanceof InputStream) stream =  (InputStream) body;
-        else {
-            LOGGER.info("Classe de type {} ", body.getClass().getName());
-        }
         
+        LOGGER.debug("userid {}, fileName {}", idFichier, fileName);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
+
 
     public ResponseEntity<Document> delDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier) {
         String accept = request.getHeader("Accept");

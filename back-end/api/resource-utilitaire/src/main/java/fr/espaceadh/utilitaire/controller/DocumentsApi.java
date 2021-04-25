@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-04-11T08:45:53.348Z[GMT]")
 @Validated
@@ -85,9 +88,9 @@ public interface DocumentsApi {
         @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))) })
     @RequestMapping(value = "/documents/fichier/{idFichier}",
         produces = { "application/json" }, 
-        consumes = { "application/pdf" }, 
+        consumes = { "multipart/form-data" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> addFichierBinaire(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Object body);
+    ResponseEntity<Void> addFichierBinaire(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="orderId", required=false)  Integer orderId, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="userId", required=false)  Integer userId, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile fileName);
 
 
     @Operation(summary = "Supprimer un dossier (avec les sous fichier associé)", description = "", security = {
