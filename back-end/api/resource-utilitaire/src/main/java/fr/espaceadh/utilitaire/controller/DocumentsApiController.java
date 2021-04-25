@@ -91,7 +91,7 @@ public class DocumentsApiController implements DocumentsApi {
     public ResponseEntity<Void> addFichierBinaire(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="orderId", required=false)  Integer orderId,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="userId", required=false)  Integer userId,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile fileName) {
         String accept = request.getHeader("Accept");
         
-        LOGGER.debug("userid {}, fileName {}", idFichier, fileName);
+        LOGGER.info("userid {}, fileName {}", idFichier, fileName);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
