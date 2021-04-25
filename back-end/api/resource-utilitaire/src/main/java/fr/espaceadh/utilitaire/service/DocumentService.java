@@ -40,4 +40,11 @@ public interface DocumentService {
      */
     public boolean creerDocument(DocumentDto document);
     
+    /**
+     *  recupérer le détail d'un document
+     * @param idDocument
+     * @return 
+     */
+    public DocumentDto getDocuments(long idDocument);
+    
 }

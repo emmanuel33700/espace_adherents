@@ -20,12 +20,17 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,6 +49,9 @@ public class DocumentsApiController implements DocumentsApi {
     
     @Autowired
     protected DocumentService documentService; 
+    
+    @Autowired
+    private Environment env;
 
     @org.springframework.beans.factory.annotation.Autowired
     public DocumentsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -88,10 +96,37 @@ public class DocumentsApiController implements DocumentsApi {
         return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<Void> addFichierBinaire(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="orderId", required=false)  Integer orderId,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="userId", required=false)  Integer userId,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile fileName) {
+    /**
+     * Copier un fichier recu sur le File système
+     * @param idFichier
+     * @param orderId
+     * @param userId
+     * @param file
+     * @return 
+     */
+    public ResponseEntity<Void> addFichierBinaire(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="orderId", required=false)  Integer orderId,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="userId", required=false)  Integer userId,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file) {
         String accept = request.getHeader("Accept");
         
-        LOGGER.info("userid {}, fileName {}", idFichier, fileName);
+        LOGGER.info("userid {}, fileName {}", idFichier, file);
+        
+        try {
+
+            DocumentDto dto = documentService.getDocuments(idFichier);
+            
+            StringBuilder cheminFichier = new StringBuilder();
+            cheminFichier.append(env.getProperty("folder.path.document"));
+            cheminFichier.append("/");
+            cheminFichier.append(dto.getNonFichier());
+            
+            LOGGER.info("Enregistrement du fichier : {}", cheminFichier.toString());
+
+            // Copies Spring's multipartfile inputStream to /sismed/temp/exames (absolute path)
+            Files.copy(file.getInputStream(), Paths.get(cheminFichier.toString()), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ex) {
+            LOGGER.error("Erreur copie fichier {}", ex);
+            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 

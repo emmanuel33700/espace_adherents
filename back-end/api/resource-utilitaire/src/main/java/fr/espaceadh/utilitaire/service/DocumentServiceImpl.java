@@ -130,5 +130,16 @@ public class DocumentServiceImpl implements DocumentService {
     public boolean creerDocument(DocumentDto document) {
         return documentDao.creerDocument(document);
     }
+
+    /**
+     * recupérer le détail d'un document
+     * @param idDocument
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public DocumentDto getDocuments(long idDocument) {
+        return documentDao.getDocuments(idDocument);
+    }
     
 }

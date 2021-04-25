@@ -32,6 +32,12 @@ public interface DocumentDao {
      */
     public Collection<DocumentDto> getListDocuments(long idDossierParent);
     
+    /**
+     *  recupérer le détail d'un document
+     * @param idDocument
+     * @return 
+     */
+    public DocumentDto getDocuments(long idDocument);
     
     /**
      * Créer un document
