@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
@@ -84,14 +85,38 @@ public class DocumentsApiController implements DocumentsApi {
      * @return 
      */
     public ResponseEntity<Void> addFichier(@Parameter(in = ParameterIn.DEFAULT, description = "Objet fichier", required=true, schema=@Schema()) @Valid @RequestBody Document body) {
-        String accept = request.getHeader("Accept");
-        DocumentDto documentDto = this.transformeDto(body);
-        documentDto.setDossier(false);
-        documentDto.setFichier(true);
-        
-        boolean result = documentService.creerDocument(documentDto);
-        
-        if(result) return  new ResponseEntity<Void>(HttpStatus.CREATED);
+        try {
+            String accept = request.getHeader("Accept");
+            DocumentDto documentDto = this.transformeDto(body);
+            documentDto.setDossier(false);
+            documentDto.setFichier(true);
+            
+            boolean result = documentService.creerDocument(documentDto);
+            
+            if (result) {
+                StringBuilder cheminFichierSource = new StringBuilder();
+                cheminFichierSource.append(env.getProperty("folder.path.document"));
+                cheminFichierSource.append("/");
+                cheminFichierSource.append(body.getId());
+                cheminFichierSource.append(".tmp");
+
+
+                StringBuilder cheminFichierDestination = new StringBuilder();
+                cheminFichierDestination.append(env.getProperty("folder.path.document"));
+                cheminFichierDestination.append("/");
+                cheminFichierDestination.append(body.getNomFichier());
+
+
+                Files.move(Paths.get(cheminFichierSource.toString()), Paths.get(cheminFichierSource.toString()), StandardCopyOption.REPLACE_EXISTING);
+
+                return new ResponseEntity<Void>(HttpStatus.CREATED);
+            } else {
+                LOGGER.error("Erreur d'enregistrement du document");
+            }
+            
+        } catch (IOException ex) {
+            LOGGER.error("IOException" + ex);
+        }
         
         return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -110,17 +135,15 @@ public class DocumentsApiController implements DocumentsApi {
         LOGGER.info("userid {}, fileName {}", idFichier, file);
         
         try {
-
-            DocumentDto dto = documentService.getDocuments(idFichier);
             
             StringBuilder cheminFichier = new StringBuilder();
             cheminFichier.append(env.getProperty("folder.path.document"));
             cheminFichier.append("/");
-            cheminFichier.append(dto.getNonFichier());
+            cheminFichier.append(idFichier);
+            cheminFichier.append(".tmp");
             
             LOGGER.info("Enregistrement du fichier : {}", cheminFichier.toString());
 
-            // Copies Spring's multipartfile inputStream to /sismed/temp/exames (absolute path)
             Files.copy(file.getInputStream(), Paths.get(cheminFichier.toString()), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
             LOGGER.error("Erreur copie fichier {}", ex);
