@@ -107,7 +107,7 @@ public class DocumentsApiController implements DocumentsApi {
                 cheminFichierDestination.append(body.getNomFichier());
 
 
-                Files.move(Paths.get(cheminFichierSource.toString()), Paths.get(cheminFichierSource.toString()), StandardCopyOption.REPLACE_EXISTING);
+                Files.move(Paths.get(cheminFichierSource.toString()), Paths.get(cheminFichierDestination.toString()), StandardCopyOption.REPLACE_EXISTING);
 
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
             } else {
