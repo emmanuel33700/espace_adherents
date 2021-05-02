@@ -15,7 +15,6 @@ import {ArborescenceDocuments} from '../../../../api/generated/utilitaire/models
 import {DownloadService} from '../../../@core/utils/download.service';
 
 
-
 interface TreeNode<T> {
   data: T;
   children?: TreeNode<T>[];
@@ -162,10 +161,9 @@ export class ListeComponent implements OnInit {
     if (value.parent.nomFichier != null) {
       kind = 'doc';
     } else {
-if (value.enfants != null  && !this.isEmptyUnderkill(value.enfants)) {
-	nbElntEnfant = value.enfants.length;
-} 
-      
+      if (value.enfants != null && !this.isEmptyUnderkill(value.enfants)) {
+        nbElntEnfant = value.enfants.length;
+      }
     }
 
     const valueTreeNodeAdd: TreeNode<FSEntry> = {
@@ -435,7 +433,7 @@ if (value.enfants != null  && !this.isEmptyUnderkill(value.enfants)) {
           return true;
         }
         this.ajouterElement(value.children, idElementParent, kind, nonDocument, auteur, description
-          , idElement, lienFichier );
+          , idElement, lienFichier);
       });
     }
 
