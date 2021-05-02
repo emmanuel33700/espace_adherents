@@ -5,6 +5,7 @@ import {AdherentService} from '../../../../api/generated/adherents/services/adhe
 import { NbToastrService } from '@nebular/theme';
 import {LoggerService} from '../../../@core/utils/logger.service';
 import {DateService} from '../../../@core/utils';
+import {ImageCroppedEvent, LoadedImage} from 'ngx-image-cropper';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -31,6 +32,9 @@ export class ModifierComponent implements OnInit {
   // indicateur de chargement
   loading = true;
 
+  // gestion de l'image cropper
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -122,6 +126,28 @@ export class ModifierComponent implements OnInit {
         },
       );
 
+  }
+
+
+
+  fileChangeEvent(event: any): void {
+    this.imageChangedEvent = event;
+    this.loggerService.info('fileChangeEvent');
+  }
+  imageCropped(event: ImageCroppedEvent) {
+    this.croppedImage = event.base64;
+    this.loggerService.info('imageCropped');
+  }
+  imageLoaded(image: LoadedImage) {
+    this.loggerService.info('imageLoaded');
+  }
+  cropperReady() {
+    // cropper ready
+    this.loggerService.info('cropperReady');
+  }
+  loadImageFailed() {
+    // show message
+    this.loggerService.info('loadImageFailed');
   }
 
 }

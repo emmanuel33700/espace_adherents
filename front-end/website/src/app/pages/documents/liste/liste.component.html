@@ -9,26 +9,80 @@
       <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
       <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
+
+      <!-- affichage de nom du document -->
       <ng-container [nbTreeGridColumnDef]="customColumn">ngx-fs-icon'
         <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
           {{customColumn}}
         </th>
         <td nbTreeGridCell *nbTreeGridCellDef="let row">
+
           <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
           {{row.data[customColumn]}}
         </td>
       </ng-container>
 
+      <!-- affichage du détail du tableau-->
       <ng-container *ngFor="let column of defaultColumns; let index = index"
                     [nbTreeGridColumnDef]="column"
                     [showOn]="getShowOn(index)">
         <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
           {{column}}
         </th>
-        <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+        <td nbTreeGridCell *nbTreeGridCellDef="let row">{{ row.data[column] || '-'}} </td>
+
       </ng-container>
+
+      <!-- affichage des actions -->
+      <ng-container [nbTreeGridColumnDef]="actionColumn">
+        <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(actionColumn)" *nbTreeGridHeaderCellDef>
+          {{actionColumn}}
+        </th>
+        <td nbTreeGridCell *nbTreeGridCellDef="let row">
+
+          <!-- Bouton d'action spécifique au personne ayant le droit d'édition -->
+          <ng-container *ngIf="droitEditionDocument">
+            <!-- gestion des actions spécifgique à un répertoire -->
+            <ng-container *ngIf="row.data.kind == 'dir'">
+                <nb-icon  icon="folder-add" (click)="ajouterRepertoire(row.data.id)" nbPopover="Ajouter un répertoire" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+                <ng-container *ngIf="row.data.items == 0"> <!-- possibilité de supprimer un répertoire uniquement si il ne contient pas de fichier -->
+                  <nb-icon  icon="folder-remove" (click)="supprimerRepertoire(row.data.id)" nbPopover="Supprimer un répertoire" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+                </ng-container>
+                <nb-icon  icon="file-add" (click)="ajouterFichier(row.data.id)" nbPopover="Ajouter un document" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+                <nb-icon icon="edit" (click)="editerRepertoire(row.data.id)" nbPopover="Editer le repertoire" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+            </ng-container>
+            <!-- gestion des actions spécifgique à un fichier -->
+            <ng-container *ngIf="row.data.kind == 'doc'">
+                <nb-icon  icon="file-remove" (click)="supprimerFichier(row.data.id)" nbPopover="Supprimer le document" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+                <nb-icon  icon="edit" (click)="editerFichier(row.data.id)" nbPopover="Editier le document" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+            </ng-container>
+          </ng-container>
+
+
+          <!-- Boiton d'action pour l'ensemble des adhérents-->
+          <ng-container *ngIf="row.data.kind == 'doc'">
+              <nb-icon  icon="download" (click)="telechargerFichier(row.data.lienFichier)" nbPopover="Télécharger le document" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+          </ng-container>
+
+        </td>
+      </ng-container>
+      <!-- fin affichage  des actions -->
+
 
     </table>
 
+
   </nb-card-body>
 </nb-card>
+
+
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>Template Dialog</nb-card-header>
+    <nb-card-body>{{ data }}</nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="ref.close()">Annuler</button>
+<button nbButton (click)="ref.close()">Confirmer la suppression</button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

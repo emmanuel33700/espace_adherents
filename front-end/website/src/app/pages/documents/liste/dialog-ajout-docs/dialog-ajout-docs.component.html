@@ -1,14 +1,150 @@
 <nb-card>
-  <nb-card-header>{{ title }}</nb-card-header>
+  <nb-card-header>Ajouter un document</nb-card-header>
   <nb-card-body>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras convallis tincidunt tincidunt.
-    Vestibulum vulputate maximus massa vel tristique. Suspendisse potenti. Duis aliquet purus sed dictum dictum.
-    Donec fringilla, purus at fermentum imperdiet, velit enim malesuada turpis, quis luctus arcu arcu nec orci.
-    Duis eu mattis felis. Quisque sollicitudin elementum nunc vel tincidunt. Vestibulum egestas mi nec
-    iaculis varius. Morbi in risus sed sapien ultricies feugiat. Quisque pulvinar mattis purus,
-    in aliquet massa aliquet et.
+    <nb-stepper #stepper>
+      <nb-step label="Initialisation">
+
+        <nb-alert *ngIf="errors?.length" outline="danger" role="alert">
+          <p class="alert-title"><b>Erreur</b></p>
+          <ul class="alert-message-list">
+            <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
+            showMessages
+          </ul>
+        </nb-alert>
+
+        <nb-alert *ngIf="messages?.length" outline="success" role="alert">
+          <p class="alert-title"><b>Hooray!</b></p>
+          <ul class="alert-message-list">
+            <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
+          </ul>
+        </nb-alert>
+
+        <form
+          #form="ngForm"
+          (ngSubmit)="ajouterDocument(form)"
+          class="step-container"
+        >
+
+
+          <div class="form-group row">
+            <label for="input-fichier" class="label col-sm-3 col-form-label">Nom du document</label>
+            <div class="col-sm-9">
+              <input nbInput
+                     [(ngModel)]="documentForm.fichier"
+                     #fichier="ngModel"
+                     id="input-fichier"
+                     name="repertoire"
+                     placeholder="Nom du document"
+                     fullWidth
+                     [status]="fichier.dirty ? (fichier.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="true"
+                     [minlength]="3"
+                     [maxlength]="30"
+                     [attr.aria-invalid]="fichier.invalid && fichier.touched ? true : null">
+              <ng-container *ngIf="fichier.invalid && fichier.touched">
+                <p class="caption status-danger" *ngIf="fichier.errors?.required">
+                  Le document est nécésaire
+                </p>
+                <p class="caption status-danger" *ngIf="fichier.errors?.minlength || fichier.errors?.maxlength">
+                  Le document doit comporter entre 3 en 30 characteres
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="input-fichierDetail" class="label col-sm-3 col-form-label">Précision sur le document</label>
+            <div class="col-sm-9">
+              <input nbInput
+                     [(ngModel)]="documentForm.fichierDetail"
+                     #fichierDetail="ngModel"
+                     id="input-fichierDetail"
+                     name="fichierDetail"
+                     placeholder="Détail du répertoire"
+                     fullWidth
+                     [status]="fichierDetail.dirty ? (fichierDetail.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="true"
+                     [minlength]="3"
+                     [maxlength]="50"
+                     [attr.aria-invalid]="fichierDetail.invalid && fichierDetail.touched ? true : null">
+              <ng-container *ngIf="fichierDetail.invalid && fichierDetail.touched">
+                <p class="caption status-danger" *ngIf="fichierDetail.errors?.required">
+                  Le détail sur le répertoire est nécésaire
+                </p>
+                <p class="caption status-danger"
+                   *ngIf="fichierDetail.errors?.minlength || fichierDetail.errors?.maxlength">
+                  Le détail sur le document doit comporter entre 3 en 50 characteres
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+
+          <button nbButton
+                  fullWidth
+                  status="success"
+                  nbStepperNext
+                  [disabled]="submitted || !form.valid"
+                  [class.btn-pulse]="submitted">
+            Suivant
+          </button>
+
+
+        </form>
+      </nb-step>
+
+
+      <nb-step label="Chargement">
+
+        <nb-alert *ngIf="errors?.length" outline="danger" role="alert">
+          <p class="alert-title"><b>Erreur</b></p>
+          <ul class="alert-message-list">
+            <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
+            showMessages
+          </ul>
+        </nb-alert>
+
+
+        <form
+          (ngSubmit)="validerDocument(form)"
+          #form="ngForm"
+          class="step-container"
+        >
+
+          <div class="form-group row">
+            <div class="col-sm-9">
+              <label for="load-fichier" class="label col-sm-3 col-form-label">Télécharger un PDF : </label>
+
+              <input type="file" class="file-input"
+                     #fileUpload
+                     [required]="true"
+                     (change)="onFileSelected($event)"
+                     id="load-fichier"
+                     accept="application/pdf"
+                     >
+            </div>
+          </div>
+
+
+          <button nbButton
+                  fullWidth
+                  status="success"
+                  nbStepperNext
+                  [disabled]="!valideForm"
+                  [class.btn-pulse]="submitted"
+                  [nbSpinner]='loadingFichier'>
+            Valider
+          </button>
+
+        </form>
+      </nb-step>
+
+    </nb-stepper>
+
   </nb-card-body>
   <nb-card-footer>
-    <button nbButton hero status="primary" (click)="dismiss()">Dismiss Dialog</button>
+
   </nb-card-footer>
+
+
 </nb-card>

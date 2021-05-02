@@ -5,6 +5,9 @@
     <nb-card size="large" class="table-card" [nbSpinner]='loadingEvenement'>
       <nb-card-header>Mes participations en attentes</nb-card-header>
       <nb-card-body>
+        <ng-container *ngIf="!manifestationsNonSaisieParticipation.length" >
+          Aucune manifestation a confirmer
+        </ng-container>
         <nb-list-item *ngFor="let manifestation of manifestationsNonSaisieParticipation">
           <div class="row show-grid">
             <div class=".col-12 .col-sm-6 .col-md-8">
@@ -31,6 +34,9 @@
     <nb-card size="large" class="table-card" [nbSpinner]='loadingEvenement'>
       <nb-card-header>Mes participations déjà enregistrées</nb-card-header>
       <nb-card-body>
+        <ng-container *ngIf="!manifestationsSaisieParticipation.length" >
+          Aucune participation enregistrée
+        </ng-container>
         <nb-list-item *ngFor="let manifestation of manifestationsSaisieParticipation">
           <div class="row show-grid">
             <div class=".col-12 .col-sm-6 .col-md-8">

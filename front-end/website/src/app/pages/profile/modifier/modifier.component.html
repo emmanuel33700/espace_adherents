@@ -20,6 +20,21 @@
           </ul>
         </nb-alert>
 
+        <input type="file" (change)="fileChangeEvent($event)" />
+
+        <image-cropper
+          [imageChangedEvent]="imageChangedEvent"
+          [maintainAspectRatio]="true"
+          [roundCropper]="true"
+          format="png"
+          [resizeToWidth]="500"
+          (imageCropped)="imageCropped($event)"
+          (imageLoaded)="imageLoaded($event)"
+          (cropperReady)="cropperReady()"
+          (loadImageFailed)="loadImageFailed()" width="500" 
+        ></image-cropper>
+
+        <img [src]="croppedImage" width="500" />
 
         <form
           (ngSubmit)="submit(form)"

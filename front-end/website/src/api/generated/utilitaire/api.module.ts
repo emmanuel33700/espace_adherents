@@ -5,6 +5,7 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { AgendaService } from './services/agenda.service';
 import { SaisonService } from './services/saison.service';
+import { DocumentationService } from './services/documentation.service';
 
 /**
  * Module that provides all services and configuration.
@@ -16,6 +17,7 @@ import { SaisonService } from './services/saison.service';
   providers: [
     AgendaService,
     SaisonService,
+    DocumentationService,
     ApiConfiguration
   ],
 })

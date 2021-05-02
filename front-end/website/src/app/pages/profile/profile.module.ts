@@ -18,6 +18,7 @@ import { ModifierComponent } from './modifier/modifier.component';
 import {FormsModule as ngFormsModule, ReactiveFormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import {ImageCropperModule} from 'ngx-image-cropper';
 
 @NgModule({
     imports: [
@@ -40,6 +41,7 @@ import { HttpClientModule } from '@angular/common/http';
         ReactiveFormsModule,
         NbAlertModule,
         NbSpinnerModule,
+        ImageCropperModule,
     ],
   declarations: [
     ProfileComponent,

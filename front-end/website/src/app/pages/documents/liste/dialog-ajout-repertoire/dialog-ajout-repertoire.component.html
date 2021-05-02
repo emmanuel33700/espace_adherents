@@ -1,14 +1,100 @@
 <nb-card>
-  <nb-card-header>{{ title }}</nb-card-header>
+  <nb-card-header>Ajouter un répertoire</nb-card-header>
   <nb-card-body>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras convallis tincidunt tincidunt.
-    Vestibulum vulputate maximus massa vel tristique. Suspendisse potenti. Duis aliquet purus sed dictum dictum.
-    Donec fringilla, purus at fermentum imperdiet, velit enim malesuada turpis, quis luctus arcu arcu nec orci.
-    Duis eu mattis felis. Quisque sollicitudin elementum nunc vel tincidunt. Vestibulum egestas mi nec
-    iaculis varius. Morbi in risus sed sapien ultricies feugiat. Quisque pulvinar mattis purus,
-    in aliquet massa aliquet et.
+
+
+    <nb-alert *ngIf="errors?.length" outline="danger" role="alert">
+      <p class="alert-title"><b>Erreur</b></p>
+      <ul class="alert-message-list">
+        <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
+        showMessages
+      </ul>
+    </nb-alert>
+
+    <nb-alert *ngIf="messages?.length" outline="success" role="alert">
+      <p class="alert-title"><b>Hooray!</b></p>
+      <ul class="alert-message-list">
+        <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
+      </ul>
+    </nb-alert>
+
+    <form
+      (ngSubmit)="ajouterRepertoire(form)"
+      #form="ngForm"
+    >
+
+
+
+      <div class="form-group row">
+        <label for="input-repertoire" class="label col-sm-3 col-form-label">Nom du répertoire</label>
+        <div class="col-sm-9">
+          <input nbInput
+                 [(ngModel)]="repertoireForm.repertoire"
+                 #repertoire="ngModel"
+                 id="input-repertoire"
+                 name="repertoire"
+                 placeholder="Nom du répertoire"
+                 fullWidth
+                 [status]="repertoire.dirty ? (repertoire.invalid  ? 'danger' : 'success') : 'basic'"
+                 [required]="true"
+                 [minlength]="3"
+                 [maxlength]="30"
+                 [attr.aria-invalid]="repertoire.invalid && repertoire.touched ? true : null">
+          <ng-container *ngIf="repertoire.invalid && repertoire.touched">
+            <p class="caption status-danger" *ngIf="repertoire.errors?.required">
+              Le répertoire est nécésaire
+            </p>
+            <p class="caption status-danger" *ngIf="repertoire.errors?.minlength || repertoire.errors?.maxlength">
+              Le répertoire doit comporter entre 3 en 30 characteres
+            </p>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="input-repertoireDetail" class="label col-sm-3 col-form-label">Précision sur le répertoire</label>
+        <div class="col-sm-9">
+          <input nbInput
+                 [(ngModel)]="repertoireForm.repertoireDetail"
+                 #repertoireDetail="ngModel"
+                 id="input-repertoireDetail"
+                 name="repertoireDetail"
+                 placeholder="Détail du répertoire"
+                 fullWidth
+                 [status]="repertoireDetail.dirty ? (repertoireDetail.invalid  ? 'danger' : 'success') : 'basic'"
+                 [required]="true"
+                 [minlength]="3"
+                 [maxlength]="50"
+                 [attr.aria-invalid]="repertoireDetail.invalid && repertoireDetail.touched ? true : null">
+          <ng-container *ngIf="repertoireDetail.invalid && repertoireDetail.touched">
+            <p class="caption status-danger" *ngIf="repertoireDetail.errors?.required">
+              Le détail sur le répertoire est nécésaire
+            </p>
+            <p class="caption status-danger" *ngIf="repertoireDetail.errors?.minlength || repertoireDetail.errors?.maxlength">
+              Le détail sur le répertoire répertoire doit comporter entre 3 en 50 characteres
+            </p>
+          </ng-container>
+        </div>
+      </div>
+
+
+
+
+      <button nbButton
+              fullWidth
+              status="success"
+              [disabled]="submitted || !form.valid"
+              [class.btn-pulse]="submitted">
+        Ajouter le répertoire
+      </button>
+
+
+    </form>
+
   </nb-card-body>
   <nb-card-footer>
-    <button nbButton hero status="primary" (click)="dismiss()">Dismiss Dialog</button>
+
   </nb-card-footer>
+
+
 </nb-card>
