@@ -18,6 +18,7 @@ package fr.espaceadh.utilitaire.service;
 
 import fr.espaceadh.utilitaire.dto.DocumentDto;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  *
@@ -34,6 +35,15 @@ public interface DocumentService {
     public Collection<DocumentDto> getArboresenceDocuments(int typeAuthority);
     
     /**
+     * Recupérer les documents en fonction de la date min et max de création
+     * @param minDateCreation
+     * @param maxDateCreation
+     * @param TypeAuthority
+     * @return 
+     */
+    public Collection<DocumentDto> getDocuments(Date minDateCreation, Date maxDateCreation, int TypeAuthority);
+    
+    /**
      * Crééer un document
      * @param document
      * @return 
@@ -41,10 +51,24 @@ public interface DocumentService {
     public boolean creerDocument(DocumentDto document);
     
     /**
+     * Supprimer un document
+     * @param idDocument
+     * @return 
+     */
+    public boolean supprimerDocument(long idDocument);
+    
+    /**
+     * Modifier le document
+     * @param document
+     * @return 
+     */
+    public boolean modifierDocument(DocumentDto document);
+    
+    /**
      *  recupérer le détail d'un document
      * @param idDocument
      * @return 
      */
-    public DocumentDto getDocuments(long idDocument);
+    public DocumentDto getDocument(long idDocument);
     
 }

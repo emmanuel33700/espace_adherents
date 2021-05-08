@@ -8,6 +8,7 @@ package fr.espaceadh.utilitaire.controller;
 import fr.espaceadh.utilitaire.model.ArborescenceDocuments;
 import fr.espaceadh.utilitaire.model.ArborescenceDocumentsInit;
 import fr.espaceadh.utilitaire.model.Document;
+import fr.espaceadh.utilitaire.model.ListeDocuments;
 import fr.espaceadh.utilitaire.model.ModelApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +52,7 @@ public interface DocumentsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
+    @PreAuthorize("isDansGroupe('BUREAU')")   
     ResponseEntity<Void> addDossier(@Parameter(in = ParameterIn.DEFAULT, description = "Objet dossier", required=true, schema=@Schema()) @Valid @RequestBody Document body);
 
 
@@ -70,6 +73,7 @@ public interface DocumentsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
+    @PreAuthorize("isDansGroupe('BUREAU')")        
     ResponseEntity<Void> addFichier(@Parameter(in = ParameterIn.DEFAULT, description = "Objet fichier", required=true, schema=@Schema()) @Valid @RequestBody Document body);
 
 
@@ -90,6 +94,7 @@ public interface DocumentsApi {
         produces = { "application/json" }, 
         consumes = { "multipart/form-data" }, 
         method = RequestMethod.POST)
+    @PreAuthorize("isDansGroupe('CONSEIL')")           
     ResponseEntity<Void> addFichierBinaire(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="orderId", required=false)  Integer orderId, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="userId", required=false)  Integer userId, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile fileName);
 
 
@@ -97,7 +102,7 @@ public interface DocumentsApi {
         @SecurityRequirement(name = "oAuth", scopes = {
             "ress-adherent-admin"        })    }, tags={ "Documentation" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(schema = @Schema(implementation = Document.class))),
+        @ApiResponse(responseCode = "200", description = "Operation réussie"),
         
         @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
         
@@ -109,14 +114,15 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents/dossier/{idDossier}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<Document> delDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier);
+    @PreAuthorize("isDansGroupe('BUREAU')")           
+    ResponseEntity<Void> delDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier);
 
 
     @Operation(summary = "Supprimer un fichier", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
             "ress-adherent-admin"        })    }, tags={ "Documentation" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(schema = @Schema(implementation = Document.class))),
+        @ApiResponse(responseCode = "200", description = "Operation réussie"),
         
         @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
         
@@ -128,8 +134,8 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents/fichier/{idFichier}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<Document> delFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier);
-
+    @PreAuthorize("isDansGroupe('CONSEIL')")          
+    ResponseEntity<Void> delFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier);
 
     @Operation(summary = "Recupérer l'arboresence complet", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
@@ -144,10 +150,31 @@ public interface DocumentsApi {
         @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))),
         
         @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/documents/arboresence",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    @PreAuthorize("isDansGroupe('ADHERENT')") 
+    ResponseEntity<ArborescenceDocumentsInit> getArboresence();
+
+
+    @Operation(summary = "Rechercher une liste de document", description = "", security = {
+        @SecurityRequirement(name = "oAuth", scopes = {
+            "ress-adherent-admin"        })    }, tags={ "Documentation" })
+    @ApiResponses(value = { 
+        @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(schema = @Schema(implementation = ListeDocuments.class))),
+        
+        @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
+        
+        @ApiResponse(responseCode = "403", description = "Droit insufisant"),
+        
+        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))),
+        
+        @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))) })
     @RequestMapping(value = "/documents",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<ArborescenceDocumentsInit> getDocuments();
+    @PreAuthorize("isDansGroupe('ADHERENT')") 
+    ResponseEntity<ListeDocuments> getDocuments(@Parameter(in = ParameterIn.QUERY, description = "borne min de date de création du document" ,schema=@Schema()) @Valid @RequestParam(value = "minDateCreation", required = false) String minDateCreation, @Parameter(in = ParameterIn.QUERY, description = "borne min de date de création du document" ,schema=@Schema()) @Valid @RequestParam(value = "maxDateCreation", required = false) String maxDateCreation);
 
 
     @Operation(summary = "Recupérer les informations d'un dossier", description = "", security = {
@@ -166,6 +193,7 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents/dossier/{idDossier}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
+    @PreAuthorize("isDansGroupe('ADHERENT')")        
     ResponseEntity<Document> getDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier);
 
 
@@ -185,6 +213,7 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents/fichier/{idFichier}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
+    @PreAuthorize("isDansGroupe('ADHERENT')")           
     ResponseEntity<Document> getFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier);
 
 
@@ -205,8 +234,8 @@ public interface DocumentsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
+    @PreAuthorize("isDansGroupe('BUREAU')")             
     ResponseEntity<Void> majDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier, @Parameter(in = ParameterIn.DEFAULT, description = "Objet dossier", required=true, schema=@Schema()) @Valid @RequestBody Document body);
-
 
     @Operation(summary = "Mise à jour d'un fichier", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
@@ -225,7 +254,7 @@ public interface DocumentsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
+    @PreAuthorize("isDansGroupe('CONSEIL')")  
     ResponseEntity<Void> majFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier, @Parameter(in = ParameterIn.DEFAULT, description = "Objet fichier", required=true, schema=@Schema()) @Valid @RequestBody Document body);
-
 }
 

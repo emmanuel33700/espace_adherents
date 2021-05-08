@@ -102,28 +102,11 @@ public class DocumentDaoImpl extends JdbcDaoSupport implements DocumentDao {
         return false;
     }
 
-    /**
-     * Màj d'un document
-     * @param document
-     * @return 
-     */
-    @Override
-    public boolean majDocument(DocumentDto document) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
-    /**
-     * supprimer un document
-     * @param idDocument
-     * @return 
-     */
-    @Override
-    public boolean suppDocument(long idDocument) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
 
     @Override
-    public DocumentDto getDocuments(long idDocument) {
+    public DocumentDto getDocument(long idDocument) {
         StringBuilder query = new StringBuilder();
         
         query.append("  SELECT id_share_docs, fk_id_share_docs, label_short, label_long, date_save, ");
@@ -140,6 +123,68 @@ public class DocumentDaoImpl extends JdbcDaoSupport implements DocumentDao {
         return null;    
     
     }
+
+    /**
+     * Supprimer un document
+     * @param idDocument
+     * @return 
+     */
+    @Override
+    public boolean supprimerDocument(long idDocument) {
+        StringBuilder query = new StringBuilder();
+            query.append(" DELETE FROM t_share_docs WHERE id_share_docs = ? ");
+
+        int nbSupression;
+        nbSupression = this.getJdbcTemplate().update(query.toString(),
+                 idDocument
+        );
+
+        if (nbSupression == 1) {
+            return true;
+        } else {
+            LOGGER.error("Erreur lors de la suppression d'un document ", idDocument);
+        }
+        return false;     }
+
+    /**
+     * 
+     * @param document
+     * @return 
+     */
+    @Override
+    public boolean modifierDocument(DocumentDto document) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * Recupérer les documents en fonction de la date min et max de création
+     * @param minDateCreation
+     * @param maxDateCreation
+     * @return 
+     */
+    @Override
+    public Collection<DocumentDto> getDocuments(Date minDateCreation, Date maxDateCreation) {
+        StringBuilder query = new StringBuilder();
+        
+        query.append("  SELECT id_share_docs, fk_id_share_docs, label_short, label_long, date_save, ");
+        query.append("  	is_folder, is_file, filer, fk_id_user_created, fk_id_type_authority, ");
+        query.append("  	(select distinct 1 from t_share_docs t_share_docsBis where t_share_docsBis.fk_id_share_docs = t_share_docs.id_share_docs) as aEnfant ");
+        query.append("  FROM t_share_docs ");
+        query.append("  where id_share_docs != -1 ");
+
+        List<DocumentDto> lstEvenement = null;
+        if (minDateCreation != null && maxDateCreation != null){
+            query.append("  AND date_save >= ? ");
+            query.append("  AND date_save <= ? ");
+            lstEvenement =  this.getJdbcTemplate().query(query.toString(), new DocumentMapper(), minDateCreation, maxDateCreation );
+        } else {
+            lstEvenement =  this.getJdbcTemplate().query(query.toString(), new DocumentMapper());
+        }    
+
+        if (lstEvenement != null && !lstEvenement.isEmpty()) return lstEvenement;
+        
+        LOGGER.error("Attention aucun document trouvé pour minDateCreation {} et  maxDateCreation {}", minDateCreation, maxDateCreation);
+        return null;      }
 
     
     

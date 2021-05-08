@@ -5,6 +5,7 @@ import fr.espaceadh.utilitaire.model.Document;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.utilitaire.dto.DocumentDto;
 import fr.espaceadh.utilitaire.model.ArborescenceDocumentsInit;
+import fr.espaceadh.utilitaire.model.ListeDocuments;
 import fr.espaceadh.utilitaire.service.DocumentService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -25,6 +26,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.PosixFilePermission;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -169,32 +172,51 @@ public class DocumentsApiController implements DocumentsApi {
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Document> delDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required = true, schema = @Schema()) @PathVariable("idDossier") Long idDossier) {
+    /**
+     * Supprimer un dossier
+     * @param idDossier
+     * @return 
+     */
+    public ResponseEntity<Void> delDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier) {
         String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Document>(objectMapper.readValue("{\n  \"libelleLong\" : \"document sur les étoiles\",\n  \"dateCreation\" : \"2020-01-18T21:00:00\",\n  \"id\" : 1225668,\n  \"idAuthority\" : 1,\n  \"nomFichier\" : \"055555884.pdf\",\n  \"idDossierRattachement\" : 1225668,\n  \"libelleCourt\" : \"Etoiles\"\n}", Document.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                LOGGER.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Document>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return new ResponseEntity<Document>(HttpStatus.NOT_IMPLEMENTED);
+        boolean result = this.documentService.supprimerDocument(idDossier);
+         if(result) {
+              return  new ResponseEntity<Void>(HttpStatus.OK);
+         }
+         
+         return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ResponseEntity<Document> delFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required = true, schema = @Schema()) @PathVariable("idFichier") Long idFichier) {
+    /**
+     * Supression d'un fichier
+     * @param idFichier
+     * @return 
+     */
+    public ResponseEntity<Void> delFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier) {
         String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
+        final DocumentDto documentASupp = this.documentService.getDocument(idFichier);
+        boolean result = this.documentService.supprimerDocument(idFichier);
+        if(result) {
+            
+            StringBuilder cheminFichier = new StringBuilder();
+            cheminFichier.append(env.getProperty("folder.path.document"));
+            cheminFichier.append("/");
+            cheminFichier.append(documentASupp.getNonFichier());
             try {
-                return new ResponseEntity<Document>(objectMapper.readValue("{\n  \"libelleLong\" : \"document sur les étoiles\",\n  \"dateCreation\" : \"2020-01-18T21:00:00\",\n  \"id\" : 1225668,\n  \"idAuthority\" : 1,\n  \"nomFichier\" : \"055555884.pdf\",\n  \"idDossierRattachement\" : 1225668,\n  \"libelleCourt\" : \"Etoiles\"\n}", Document.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                LOGGER.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Document>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+                
+                Files.delete(Paths.get(cheminFichier.toString()));
+                
+                
+                return  new ResponseEntity<Void>(HttpStatus.OK);
+            } catch (IOException ex) {
+                LOGGER.error("IOException : Error lors la supression du fichier {} ", cheminFichier.toString());
+                return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
+
         }
 
-        return new ResponseEntity<Document>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -202,7 +224,7 @@ public class DocumentsApiController implements DocumentsApi {
      *
      * @return
      */
-    public ResponseEntity<ArborescenceDocumentsInit> getDocuments() {
+    public ResponseEntity<ArborescenceDocumentsInit> getArboresence() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             int typeAutority = 1;
@@ -220,7 +242,7 @@ public class DocumentsApiController implements DocumentsApi {
 
             List<ArborescenceDocuments> lstArborescenceDocuments = new ArrayList<>();
 
-            this.transformeModel(arborescence, lstArborescenceDocuments);
+            this.transformeToModel(arborescence, lstArborescenceDocuments);
 
             ArborescenceDocumentsInit arborescenceDocumentsModel = new ArborescenceDocumentsInit();
             arborescenceDocumentsModel.addAll(lstArborescenceDocuments);
@@ -234,6 +256,72 @@ public class DocumentsApiController implements DocumentsApi {
         return new ResponseEntity<ArborescenceDocumentsInit>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    /**
+     * Récupérer des documents
+     * @param minDateCreation
+     * @param maxDateCreation
+     * @return 
+     */
+    public ResponseEntity<ListeDocuments> getDocuments(@Parameter(in = ParameterIn.QUERY, description = "borne min de date de création du document" ,schema=@Schema()) @Valid @RequestParam(value = "minDateCreation", required = false) String minDateCreation,@Parameter(in = ParameterIn.QUERY, description = "borne min de date de création du document" ,schema=@Schema()) @Valid @RequestParam(value = "maxDateCreation", required = false) String maxDateCreation) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            
+            int typeAutority = 1;
+            if (this.hasRole("ADHERENT")) {
+                typeAutority = 2;
+            } else if (this.hasRole("CONSEIL")) {
+                typeAutority = 3;
+            } else if (this.hasRole("BUREAU")) {
+                typeAutority = 4;
+            } else if (this.hasRole("ADMIN")) {
+                typeAutority = 5;
+            }
+            Date dMinDateCreation = null;
+            Date dMaxDateCreation = null;
+            if (minDateCreation != null && maxDateCreation != null){
+                dMinDateCreation = this.toDateSansHeure(minDateCreation);
+                dMaxDateCreation = this.toDateSansHeure(maxDateCreation);
+                
+            }
+             Collection<DocumentDto> lstDto = this.documentService.getDocuments(dMinDateCreation, dMaxDateCreation, typeAutority); 
+             
+             ListeDocuments lstModel = new ListeDocuments();
+             for (DocumentDto dto : lstDto) {
+                 Document model = this.transformeToModel(dto);
+                 lstModel.add(model);
+             }
+             
+             return new ResponseEntity<>(lstModel, HttpStatus.OK);
+
+        }
+
+        return new ResponseEntity<ListeDocuments>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    
+    
+        /**
+     * Convertir une date iso dans les heures
+     * @param iso8601string
+     * @return 
+     */
+    public Date toDateSansHeure(final String iso8601string) {
+        if (iso8601string == null) {
+            return null;
+        }
+        
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date result2 = null;
+        try {
+            result2 = df2.parse(iso8601string);
+        } catch (ParseException ex) {
+            LOGGER.error("Erreur sur le formatage  de date. Date en entré {}. {}", iso8601string , ex.getMessage());
+        }
+
+
+        return result2;
+    }
+    
     public ResponseEntity<Document> getDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required = true, schema = @Schema()) @PathVariable("idDossier") Long idDossier) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -248,6 +336,11 @@ public class DocumentsApiController implements DocumentsApi {
         return new ResponseEntity<Document>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    /**
+     * Récupérer détail d'un fichier
+     * @param idFichier
+     * @return 
+     */
     public ResponseEntity<Document> getFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required = true, schema = @Schema()) @PathVariable("idFichier") Long idFichier) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -262,12 +355,24 @@ public class DocumentsApiController implements DocumentsApi {
         return new ResponseEntity<Document>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> majDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required = true, schema = @Schema()) @PathVariable("idDossier") Long idDossier, @Parameter(in = ParameterIn.DEFAULT, description = "Objet dossier", required = true, schema = @Schema()) @Valid @RequestBody Document body) {
+    /**
+     * MàJ d'un dossier
+     * @param idDossier
+     * @param body
+     * @return 
+     */
+    public ResponseEntity<Void> majDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier,@Parameter(in = ParameterIn.DEFAULT, description = "Objet dossier", required=true, schema=@Schema()) @Valid @RequestBody Document body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> majFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required = true, schema = @Schema()) @PathVariable("idFichier") Long idFichier, @Parameter(in = ParameterIn.DEFAULT, description = "Objet fichier", required = true, schema = @Schema()) @Valid @RequestBody Document body) {
+    /**
+     * MàJ d'un Fichier
+     * @param idFichier
+     * @param body
+     * @return 
+     */
+    public ResponseEntity<Void> majFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier,@Parameter(in = ParameterIn.DEFAULT, description = "Objet fichier", required=true, schema=@Schema()) @Valid @RequestBody Document body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
@@ -313,11 +418,11 @@ public class DocumentsApiController implements DocumentsApi {
     }
 
     /**
-     *
+     * Transforme l'arboresence DTO en arborescence model
      * @param arborescence
      * @return
      */
-    private void transformeModel(Collection<DocumentDto> arborescenceDto, List<ArborescenceDocuments> arborescenceDocumentsModel) {
+    private void transformeToModel(Collection<DocumentDto> arborescenceDto, List<ArborescenceDocuments> arborescenceDocumentsModel) {
 
         if (arborescenceDto != null && !arborescenceDto.isEmpty()) {
 
@@ -329,7 +434,7 @@ public class DocumentsApiController implements DocumentsApi {
                 if (dto.getDocumentsFils() != null && !dto.getDocumentsFils().isEmpty()) {
                     List<ArborescenceDocuments> lstEnfantsArborescenceDocuments = new ArrayList<>();
 
-                    this.transformeModel(dto.getDocumentsFils(), lstEnfantsArborescenceDocuments);
+                    this.transformeToModel(dto.getDocumentsFils(), lstEnfantsArborescenceDocuments);
 
                     arboresenceDocument.setEnfants(lstEnfantsArborescenceDocuments);
                 }
@@ -359,8 +464,12 @@ public class DocumentsApiController implements DocumentsApi {
         return sdf.format(date);
     }
 
+    /**
+     * Transforme DTO document en model document
+     * @param dto
+     * @return 
+     */
     private Document transformeToModel(DocumentDto dto) {
-        // Initialisation du répertoire racine
         Document documentModel = new Document();
         documentModel.setDateCreation(dateToString(dto.getDateDeCreation()));
         documentModel.setId(dto.getIdDocument());

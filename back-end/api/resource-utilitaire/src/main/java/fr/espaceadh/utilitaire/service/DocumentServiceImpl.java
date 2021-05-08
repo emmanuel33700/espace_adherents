@@ -19,6 +19,7 @@ package fr.espaceadh.utilitaire.service;
 import fr.espaceadh.utilitaire.dao.DocumentDao;
 import fr.espaceadh.utilitaire.dto.DocumentDto;
 import java.util.Collection;
+import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,11 @@ public class DocumentServiceImpl implements DocumentService {
     @Autowired
     protected DocumentDao documentDao;
 
-    
+    /**
+     * R2cupérer arboresence des fichiers
+     * @param typeAuthority
+     * @return 
+     */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Collection<DocumentDto> getArboresenceDocuments(int typeAuthority) {
@@ -138,8 +143,50 @@ public class DocumentServiceImpl implements DocumentService {
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public DocumentDto getDocuments(long idDocument) {
-        return documentDao.getDocuments(idDocument);
+    public DocumentDto getDocument(long idDocument) {
+        return documentDao.getDocument(idDocument);
+    }
+
+    /**
+     * Recupérer les documents en fonction de la date min et max de création
+     * @param minDateCreation
+     * @param maxDateCreation
+     * @param TypeAuthority
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Collection<DocumentDto> getDocuments(Date minDateCreation, Date maxDateCreation, int TypeAuthority) {
+        return documentDao.getDocuments(minDateCreation, maxDateCreation);
+    }
+
+    /**
+     * Supprimer un document (fichier au dossier)
+     * @param idDocument
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean supprimerDocument(long idDocument) {
+        DocumentDto documumentASupprimer = documentDao.getDocument(idDocument);
+        
+        if (documumentASupprimer.isFichier() || (documumentASupprimer.isDossier() && !documumentASupprimer.isaEnfant())) {
+            return documentDao.supprimerDocument(idDocument);
+        }
+        
+        LOGGER.error("Impossible de supprimer un dossier (id {}) avec des enfants ", idDocument);
+        return false;
+    }
+
+    /**
+     * Modifier un document (fichier ou dossier)
+     * @param document
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean modifierDocument(DocumentDto document) {
+        return documentDao.modifierDocument(document);
     }
     
 }

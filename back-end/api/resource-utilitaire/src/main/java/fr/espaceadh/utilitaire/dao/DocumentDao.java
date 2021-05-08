@@ -18,6 +18,7 @@ package fr.espaceadh.utilitaire.dao;
 
 import fr.espaceadh.utilitaire.dto.DocumentDto;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  *
@@ -37,7 +38,7 @@ public interface DocumentDao {
      * @param idDocument
      * @return 
      */
-    public DocumentDto getDocuments(long idDocument);
+    public DocumentDto getDocument(long idDocument);
     
     /**
      * Créer un document
@@ -46,19 +47,27 @@ public interface DocumentDao {
      */
     public boolean creerDocument(DocumentDto document);
     
-    /**
-     * Modifier un document
-     * @param document
-     * @return 
-     */
-    public boolean majDocument(DocumentDto document);
-    
-    /**
+
+        /**
      * Supprimer un document
      * @param idDocument
      * @return 
      */
-    public boolean suppDocument(long idDocument);
+    public boolean supprimerDocument(long idDocument);
+    
+    /**
+     * Modifier le document
+     * @param document
+     * @return 
+     */
+    public boolean modifierDocument(DocumentDto document);
     
     
+    /**
+     * Recupérer les documents en fonction de la date min et max de création
+     * @param minDateCreation
+     * @param maxDateCreation
+     * @return 
+     */
+    public Collection<DocumentDto> getDocuments(Date minDateCreation, Date maxDateCreation);
 }
