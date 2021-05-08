@@ -72,7 +72,7 @@ export class TokenInterceptor implements HttpInterceptor {
       this.injector.get(Router).navigateByUrl('/auth/login');
     }
     this.loggerService.error(errorMsg);
-    return throwError( new NotFoundError(errorMsg) ); 
+    return throwError( new NotFoundError(errorMsg) );
 // https://stackoverflow.com/questions/45464852/rxjs-observable-throw-is-not-a-function-angular4
     return Observable.throwError(errorMsg);
   }
