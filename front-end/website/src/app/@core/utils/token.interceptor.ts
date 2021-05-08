@@ -13,6 +13,7 @@ import {LoggerService} from './logger.service';
 import {Router} from '@angular/router';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
+import { throwError } from 'rxjs';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -71,6 +72,8 @@ export class TokenInterceptor implements HttpInterceptor {
       this.injector.get(Router).navigateByUrl('/auth/login');
     }
     this.loggerService.error(errorMsg);
+    return throwError( new NotFoundError(errorMsg) ); 
+// https://stackoverflow.com/questions/45464852/rxjs-observable-throw-is-not-a-function-angular4
     return Observable.throwError(errorMsg);
   }
 
