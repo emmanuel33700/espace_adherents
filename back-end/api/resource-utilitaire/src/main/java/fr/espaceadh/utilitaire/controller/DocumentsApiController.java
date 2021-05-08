@@ -24,11 +24,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -47,10 +50,10 @@ public class DocumentsApiController implements DocumentsApi {
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
-    
+
     @Autowired
-    protected DocumentService documentService; 
-    
+    protected DocumentService documentService;
+
     @Autowired
     private Environment env;
 
@@ -62,37 +65,41 @@ public class DocumentsApiController implements DocumentsApi {
 
     /**
      * Créer un dossier
+     *
      * @param body
-     * @return 
+     * @return
      */
-    public ResponseEntity<Void> addDossier(@Parameter(in = ParameterIn.DEFAULT, description = "Objet dossier", required=true, schema=@Schema()) @Valid @RequestBody Document body) {
+    public ResponseEntity<Void> addDossier(@Parameter(in = ParameterIn.DEFAULT, description = "Objet dossier", required = true, schema = @Schema()) @Valid @RequestBody Document body) {
         String accept = request.getHeader("Accept");
-        
+
         DocumentDto documentDto = this.transformeDto(body);
         documentDto.setDossier(true);
         documentDto.setFichier(false);
-        
+
         boolean result = documentService.creerDocument(documentDto);
-        
-        if(result) return  new ResponseEntity<Void>(HttpStatus.CREATED);
-        
+
+        if (result) {
+            return new ResponseEntity<Void>(HttpStatus.CREATED);
+        }
+
         return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
      * Créer un fichier
+     *
      * @param body
-     * @return 
+     * @return
      */
-    public ResponseEntity<Void> addFichier(@Parameter(in = ParameterIn.DEFAULT, description = "Objet fichier", required=true, schema=@Schema()) @Valid @RequestBody Document body) {
+    public ResponseEntity<Void> addFichier(@Parameter(in = ParameterIn.DEFAULT, description = "Objet fichier", required = true, schema = @Schema()) @Valid @RequestBody Document body) {
         try {
             String accept = request.getHeader("Accept");
             DocumentDto documentDto = this.transformeDto(body);
             documentDto.setDossier(false);
             documentDto.setFichier(true);
-            
+
             boolean result = documentService.creerDocument(documentDto);
-            
+
             if (result) {
                 StringBuilder cheminFichierSource = new StringBuilder();
                 cheminFichierSource.append(env.getProperty("folder.path.document"));
@@ -100,48 +107,57 @@ public class DocumentsApiController implements DocumentsApi {
                 cheminFichierSource.append(body.getId());
                 cheminFichierSource.append(".tmp");
 
-
                 StringBuilder cheminFichierDestination = new StringBuilder();
                 cheminFichierDestination.append(env.getProperty("folder.path.document"));
                 cheminFichierDestination.append("/");
                 cheminFichierDestination.append(body.getNomFichier());
 
-
                 Files.move(Paths.get(cheminFichierSource.toString()), Paths.get(cheminFichierDestination.toString()), StandardCopyOption.REPLACE_EXISTING);
+
+                Set<PosixFilePermission> perms = new HashSet<>();
+                perms.add(PosixFilePermission.OWNER_READ);
+                perms.add(PosixFilePermission.OWNER_WRITE);
+
+                perms.add(PosixFilePermission.OTHERS_READ);
+
+                perms.add(PosixFilePermission.GROUP_READ);
+
+                Files.setPosixFilePermissions(Paths.get(cheminFichierDestination.toString()), perms);
 
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
             } else {
                 LOGGER.error("Erreur d'enregistrement du document");
             }
-            
+
         } catch (IOException ex) {
             LOGGER.error("IOException" + ex);
         }
-        
+
         return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
      * Copier un fichier recu sur le File système
+     *
      * @param idFichier
      * @param orderId
      * @param userId
      * @param file
-     * @return 
+     * @return
      */
-    public ResponseEntity<Void> addFichierBinaire(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="orderId", required=false)  Integer orderId,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="userId", required=false)  Integer userId,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file) {
+    public ResponseEntity<Void> addFichierBinaire(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required = true, schema = @Schema()) @PathVariable("idFichier") Long idFichier, @Parameter(in = ParameterIn.DEFAULT, description = "", schema = @Schema()) @RequestParam(value = "orderId", required = false) Integer orderId, @Parameter(in = ParameterIn.DEFAULT, description = "", schema = @Schema()) @RequestParam(value = "userId", required = false) Integer userId, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file) {
         String accept = request.getHeader("Accept");
-        
+
         LOGGER.info("userid {}, fileName {}", idFichier, file);
-        
+
         try {
-            
+
             StringBuilder cheminFichier = new StringBuilder();
             cheminFichier.append(env.getProperty("folder.path.document"));
             cheminFichier.append("/");
             cheminFichier.append(idFichier);
             cheminFichier.append(".tmp");
-            
+
             LOGGER.info("Enregistrement du fichier : {}", cheminFichier.toString());
 
             Files.copy(file.getInputStream(), Paths.get(cheminFichier.toString()), StandardCopyOption.REPLACE_EXISTING);
@@ -153,8 +169,7 @@ public class DocumentsApiController implements DocumentsApi {
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-
-    public ResponseEntity<Document> delDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier) {
+    public ResponseEntity<Document> delDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required = true, schema = @Schema()) @PathVariable("idDossier") Long idDossier) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -168,7 +183,7 @@ public class DocumentsApiController implements DocumentsApi {
         return new ResponseEntity<Document>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Document> delFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier) {
+    public ResponseEntity<Document> delFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required = true, schema = @Schema()) @PathVariable("idFichier") Long idFichier) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -184,7 +199,8 @@ public class DocumentsApiController implements DocumentsApi {
 
     /**
      * Recupérer l'arboresence
-     * @return 
+     *
+     * @return
      */
     public ResponseEntity<ArborescenceDocumentsInit> getDocuments() {
         String accept = request.getHeader("Accept");
@@ -199,28 +215,26 @@ public class DocumentsApiController implements DocumentsApi {
             } else if (this.hasRole("ADMIN")) {
                 typeAutority = 5;
             }
-            
+
             Collection<DocumentDto> arborescence = this.documentService.getArboresenceDocuments(typeAutority);
-            
-            
 
             List<ArborescenceDocuments> lstArborescenceDocuments = new ArrayList<>();
-            
+
             this.transformeModel(arborescence, lstArborescenceDocuments);
-            
+
             ArborescenceDocumentsInit arborescenceDocumentsModel = new ArborescenceDocumentsInit();
             arborescenceDocumentsModel.addAll(lstArborescenceDocuments);
-            
+
             return new ResponseEntity<>(arborescenceDocumentsModel, HttpStatus.OK);
-            
-        }else {
+
+        } else {
             LOGGER.error(" requete http ne contient pas application/json");
         }
 
         return new ResponseEntity<ArborescenceDocumentsInit>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Document> getDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier) {
+    public ResponseEntity<Document> getDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required = true, schema = @Schema()) @PathVariable("idDossier") Long idDossier) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -234,7 +248,7 @@ public class DocumentsApiController implements DocumentsApi {
         return new ResponseEntity<Document>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Document> getFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier) {
+    public ResponseEntity<Document> getFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required = true, schema = @Schema()) @PathVariable("idFichier") Long idFichier) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -248,89 +262,91 @@ public class DocumentsApiController implements DocumentsApi {
         return new ResponseEntity<Document>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> majDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier,@Parameter(in = ParameterIn.DEFAULT, description = "Objet dossier", required=true, schema=@Schema()) @Valid @RequestBody Document body) {
+    public ResponseEntity<Void> majDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required = true, schema = @Schema()) @PathVariable("idDossier") Long idDossier, @Parameter(in = ParameterIn.DEFAULT, description = "Objet dossier", required = true, schema = @Schema()) @Valid @RequestBody Document body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> majFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier,@Parameter(in = ParameterIn.DEFAULT, description = "Objet fichier", required=true, schema=@Schema()) @Valid @RequestBody Document body) {
+    public ResponseEntity<Void> majFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required = true, schema = @Schema()) @PathVariable("idFichier") Long idFichier, @Parameter(in = ParameterIn.DEFAULT, description = "Objet fichier", required = true, schema = @Schema()) @Valid @RequestBody Document body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     /**
      * Transforme le model document en dto
+     *
      * @param body
-     * @return 
+     * @return
      */
     private DocumentDto transformeDto(Document body) {
         DocumentDto dto = new DocumentDto();
-        
+
         dto.setIdDocument(body.getId());
-        if (body.getIdDossierRattachement() != null)dto.setIdDocumentParent(body.getIdDossierRattachement());
+        if (body.getIdDossierRattachement() != null) {
+            dto.setIdDocumentParent(body.getIdDossierRattachement());
+        }
         dto.setIdAuthority(2); // TODO type d'authority a revoir pour la création de document
         dto.setLablelCourt(body.getLibelleCourt());
         dto.setLabelLong(body.getLibelleLong());
         dto.setNonFichier(body.getNomFichier());
         dto.setIdAuteur(24); // TODO a revoir la création de ducoument avec le bon id autheur. Pour l'instant forcé pour manu
-        
+
         return dto;
     }
 
     /**
      * Vérifier le type de role de l'utilisateur
+     *
      * @param role
-     * @return 
+     * @return
      */
     private boolean hasRole(String role) {
-      Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) 
-              SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-      
-      for (GrantedAuthority authority : authorities) {
-         if (authority.getAuthority().contains(role)) {
-             return true;
-         }
+        Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) SecurityContextHolder.getContext().getAuthentication().getAuthorities();
 
-      }
-      return false;
-    }  
+        for (GrantedAuthority authority : authorities) {
+            if (authority.getAuthority().contains(role)) {
+                return true;
+            }
+
+        }
+        return false;
+    }
 
     /**
-     * 
+     *
      * @param arborescence
-     * @return 
+     * @return
      */
     private void transformeModel(Collection<DocumentDto> arborescenceDto, List<ArborescenceDocuments> arborescenceDocumentsModel) {
-        
-        if (arborescenceDto != null && !arborescenceDto.isEmpty()){
-            
-            for (DocumentDto dto : arborescenceDto){
+
+        if (arborescenceDto != null && !arborescenceDto.isEmpty()) {
+
+            for (DocumentDto dto : arborescenceDto) {
                 ArborescenceDocuments arboresenceDocument = new ArborescenceDocuments();
                 Document documentModel = this.transformeToModel(dto);
                 arboresenceDocument.setParent(documentModel);
-                
 
-                if (dto.getDocumentsFils() != null && !dto.getDocumentsFils().isEmpty()){
+                if (dto.getDocumentsFils() != null && !dto.getDocumentsFils().isEmpty()) {
                     List<ArborescenceDocuments> lstEnfantsArborescenceDocuments = new ArrayList<>();
-                    
+
                     this.transformeModel(dto.getDocumentsFils(), lstEnfantsArborescenceDocuments);
-                    
+
                     arboresenceDocument.setEnfants(lstEnfantsArborescenceDocuments);
                 }
-                
+
                 arborescenceDocumentsModel.add(arboresenceDocument);
-            
+
             }
             LOGGER.debug("On remonte dans l'arborescence ");
         }
 
     }
-    
-    
-        /**
+
+    /**
      * convertir date en string format ISO
+     *
      * @param date
-     * @return 
+     * @return
      */
     private String dateToString(Date date) {
         if (date == null) {
@@ -342,8 +358,6 @@ public class DocumentsApiController implements DocumentsApi {
         //sdf.setTimeZone(TimeZone.getTimeZone("CET"));
         return sdf.format(date);
     }
-
-
 
     private Document transformeToModel(DocumentDto dto) {
         // Initialisation du répertoire racine
@@ -358,7 +372,5 @@ public class DocumentsApiController implements DocumentsApi {
 
         return documentModel;
     }
-
-
 
 }
