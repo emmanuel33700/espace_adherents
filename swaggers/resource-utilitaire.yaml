@@ -333,7 +333,433 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-
+  /documents:
+    get:
+      tags:
+        - Documentation
+      summary: Rechercher une liste de document
+      operationId: getDocuments
+      security:
+        - oAuth:
+            - ress-utilitaire-documents-read
+      parameters:
+        - in: query
+          name: minDateCreation
+          schema:
+            type: string
+          description: borne min de date de création du document
+        - in: query
+          name: maxDateCreation
+          schema:
+            type: string
+          description: borne min de date de création du document
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeDocuments'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /documents/arboresence:
+    get:
+      tags:
+        - Documentation
+      summary: Recupérer l'arboresence complet
+      operationId: getArboresence
+      security:
+        - oAuth:
+            - ress-utilitaire-documents-read
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/arborescenceDocumentsInit'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /documents/dossier:
+    post:
+      tags:
+        - Documentation
+      summary: Ajouter un dossier
+      operationId: addDossier
+      security:
+        - oAuth:
+            - ress-utilitaire-dossier-add
+      requestBody:
+        description: Objet dossier
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/document'
+        required: true
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/documents/dossier/{idDossier}':
+    get:
+      tags:
+        - Documentation
+      summary: Recupérer les informations d'un dossier
+      operationId: getDossier
+      security:
+        - oAuth:
+            - ress-utilitaire-dossier-read
+      parameters:
+        - name: idDossier
+          in: path
+          description: id du dossier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/document'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags:
+        - Documentation
+      summary: Supprimer un dossier (avec les sous fichier associé)
+      operationId: delDossier
+      security:
+        - oAuth:
+            - ress-utilitaire-dossier-del
+      parameters:
+        - name: idDossier
+          in: path
+          description: id du dossier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      tags:
+        - Documentation
+      summary: Mise à jour d'un dossier
+      operationId: majDossier
+      security:
+        - oAuth:
+            - ress-utilitaire-dossier-add
+      requestBody:
+        description: Objet dossier
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/document'
+        required: true
+      parameters:
+        - name: idDossier
+          in: path
+          description: id du dossier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /documents/fichier:
+    post:
+      tags:
+        - Documentation
+      summary: Ajouter un fichier (sans le binaire)
+      operationId: addFichier
+      security:
+        - oAuth:
+            - ress-utilitaire-fichier-add
+      requestBody:
+        description: Objet fichier
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/document'
+        required: true
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/documents/fichier/{idFichier}':
+    post:
+      tags:
+        - Documentation
+      summary: Ajouter fichier binaire
+      operationId: addFichierBinaire
+      security:
+        - oAuth:
+            - ress-utilitaire-fichier-add
+      parameters:
+        - name: idFichier
+          in: path
+          description: id du fichier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                orderId:
+                  type: integer
+                userId:
+                  type: integer
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    get:
+      tags:
+        - Documentation
+      summary: Recupérer les informations d'un fichier
+      operationId: getFichier
+      security:
+        - oAuth:
+            - ress-utilitaire-fichier-read
+      parameters:
+        - name: idFichier
+          in: path
+          description: id du fichier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/document'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags:
+        - Documentation
+      summary: Supprimer un fichier 
+      operationId: delFichier
+      security:
+        - oAuth:
+            - ress-utilitaire-fichier-del
+      parameters:
+        - name: idFichier
+          in: path
+          description: id du fichier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      tags:
+        - Documentation
+      summary: Mise à jour d'un fichier
+      operationId: majFichier
+      security:
+        - oAuth:
+            - ress-utilitaire-fichier-add
+      requestBody:
+        description: Objet fichier
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/document'
+        required: true
+      parameters:
+        - name: idFichier
+          in: path
+          description: id du fichier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
 
 components:
   schemas:
@@ -424,6 +850,78 @@ components:
           description: indique si la saison est active
       xml:
         name: Order
+    listeDocuments:
+      type: array
+      items:
+        $ref: '#/components/schemas/document'
+    document:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: id du document
+          example: 1225668
+        idDossierRattachement:
+          type: integer
+          format: int64
+          description: id du dossier de rattachement
+          example: 1225668
+        idAuthority:
+          type: integer
+          description: |
+            Types d'adhersions. Valeurs possibles :
+            * 1 : ADHERENT               
+            * 2 : CONSEIL ADMINISTRATON             
+            * 3 : BUREAU               
+            * 4 : ADMIN
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+          example: 1          
+        libelleCourt:
+          type: string
+          example: 'Etoiles'
+          description: libelle du document
+          maxLength: 30
+          minLength: 3
+        libelleLong:
+          type: string
+          example: 'document sur les étoiles'
+          description: libelle du document
+          maxLength: 50
+          minLength: 3
+        dateCreation:
+          type: string
+          description: Date de création (format ISO8601)
+          example: '2020-01-18T21:00:00'
+        nomFichier:
+          type: string
+          example: '055555884.pdf'
+          description: nom du fichier
+          maxLength: 50
+          minLength: 3
+      xml:
+        name: Order
+    arborescenceDocumentsInit:
+      type: array
+      items:
+        $ref: '#/components/schemas/arborescenceDocuments'
+      xml:
+        name: Order
+    arborescenceDocuments:
+      type: object
+      properties:
+        parent:
+          $ref: '#/components/schemas/document'
+        enfants:
+          type: array
+          items:
+            $ref: '#/components/schemas/arborescenceDocuments'
+      xml:
+        name: Order        
   securitySchemes:
     oAuth:
       type: oauth2

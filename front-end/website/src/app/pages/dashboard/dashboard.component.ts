@@ -5,7 +5,18 @@ import {ManifestationService} from '../../../api/generated/adherents/services/ma
 import {DateService, LoggerService} from '../../@core/utils';
 import {Adherent} from '../../../api/generated/adherents/models/adherent';
 import {ParticipationManifestation} from '../../../api/generated/adherents/models/participation-manifestation';
+import {DocumentationService} from '../../../api/generated/utilitaire/services/documentation.service';
+import {Document} from '../../../api/generated/utilitaire/models/document.js';
 
+
+interface DocumentDashboard {
+  nom: string;
+  auteur: string;
+  description: string;
+  kind: string;
+  id: number;
+  lienFichier: string;
+}
 
 @Component({
   selector: 'ngx-dashboard',
@@ -29,18 +40,14 @@ export class DashboardComponent implements OnInit {
   manifestationsNonSaisieParticipation: Manifestation[] = [];
 
   // Gestion des documents
-  documents = [
-    { titre: 'Conférence sur le soleil', libelle: 'conférence du 18/02', date: '2021-02-01' },
-    { titre: 'Conférence sur la lune', libelle: 'conférence du 18/02' , date: '2021-02-01' },
-    { titre: 'Conférence sur la terre', libelle: 'conférence du 18/02', date: '2021-02-01' },
-    { titre: 'AG', libelle: 'conférence du 18/02' , date: '2021-02-01'},
-  ];
+  documentsDashboard: DocumentDashboard[] = [];
   loadingDocument = true;
 
   constructor( private manifestationService: ManifestationService,
               private loggerService: LoggerService,
               private toastrService: NbToastrService,
-              private dateService: DateService) {
+              private dateService: DateService,
+              private documentationService: DocumentationService) {
   }
 
 
@@ -58,8 +65,11 @@ export class DashboardComponent implements OnInit {
 
   }
 
+
   /**
-   * Changement statut de participation à un évenement
+   * CHangement de statut participe à une manifestation
+   * @param premierSaisie
+   * @param typeParticipation
    * @param idEvenement
    */
   participeEvenement(premierSaisie: boolean, typeParticipation: number, idEvenement: number) {
@@ -89,7 +99,7 @@ export class DashboardComponent implements OnInit {
         () => {
           this.loggerService.debug('Enregistrement fini');
           if (premierSaisie) {
-            this.initEvenements();
+            this.basculerEvenementASaisie(typeParticipation, idEvenement );
           }
         },
       );
@@ -197,6 +207,79 @@ export class DashboardComponent implements OnInit {
    * Initialisation des documents à afficher dans le TDB
    */
   private initDocuments() {
+    // Gestion date debut et fin de recherche
+    const dateMin = new Date();
+    dateMin.setMonth(dateMin.getMonth() - 2);
+
+    const dateMax = new Date();
+
+    const dateMinString = this.dateService.convertDateToStringIsoWithOutHour(dateMin);
+    const dateMaxString = this.dateService.convertDateToStringIsoWithOutHour(dateMax);
+
+    let document: Document[] = [];
+    this.documentationService.getDocuments({minDateCreation: dateMinString, maxDateCreation: dateMaxString})
+      .subscribe(
+        (data) => {
+          document = data;
+
+          this.documentsDashboard = this.convertDocuments(document);
+
+        },
+        (error) => {
+          this.loggerService.error(error);
+          this.toastrService.danger(
+            'Erreur technique lors de recuperation des données',
+            'Erreur ');
+        },
+        () => {
+          this.loggerService.debug('fini');
+        });
+
     this.loadingDocument = false;
+  }
+
+  /**
+   * Concertir document restitué par l'API pour permettre un affichage IHM
+   * @param document
+   */
+  private convertDocuments(document: Document[]): DocumentDashboard[] {
+
+    let documents: DocumentDashboard[] = [];
+    documents = [];
+
+    document.forEach((value, index) => {
+
+      if (value.nomFichier != null) {
+        const documentTransforme: DocumentDashboard = {
+          nom: value.libelleCourt,
+          auteur: 'MANU',
+          description: value.libelleLong,
+          kind: 'doc',
+          id: value.id,
+          lienFichier: value.nomFichier,
+        };
+        documents.push(documentTransforme);
+      }
+
+    });
+
+    return documents;
+  }
+
+  /**
+   * BAsculer un évènement à saisie (suppression d'un évènement dans la liste des
+   * manifestations en attente à manifestation renseignée)
+   * @param typeParticipation
+   * @param idEvenement
+   */
+  private basculerEvenementASaisie(typeParticipation: number, idEvenement: number) {
+
+    this.manifestationsNonSaisieParticipation.forEach((value, index) => {
+      if (value.id === idEvenement) {
+        this.loggerService.debug('Bascule la manifestation ' + value.id );
+        this.manifestationsSaisieParticipation.push(value);
+        this.manifestationsNonSaisieParticipation.splice(index, 1);
+      }
+    });
   }
 }

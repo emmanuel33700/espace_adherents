@@ -56,11 +56,11 @@ export class TokenInterceptor implements HttpInterceptor {
     let errorMsg;
     if (err.error instanceof Error) {
       // A client-side or network error occurred. Handle it accordingly.
-      errorMsg = `An error occurred: ${err.error.message}`;
+      errorMsg = `Erreru retour API: ${err.error.message}`;
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
-      errorMsg = `Backend returned code ${err.status}, body was: ${err.error}`;
+      errorMsg = `Backend retourn le code http ${err.status}, avec body: ${err.error}`;
     }
     if (err.status === 404 || err.status === 403) {
       this.loggerService.debug(' Deconnection de l\'utilisateur suite a token obsolete');
@@ -72,9 +72,9 @@ export class TokenInterceptor implements HttpInterceptor {
       this.injector.get(Router).navigateByUrl('/auth/login');
     }
     this.loggerService.error(errorMsg);
-    return throwError( new NotFoundError(errorMsg) );
+    return throwError( errorMsg );
 // https://stackoverflow.com/questions/45464852/rxjs-observable-throw-is-not-a-function-angular4
-    return Observable.throwError(errorMsg);
+
   }
 
   /**

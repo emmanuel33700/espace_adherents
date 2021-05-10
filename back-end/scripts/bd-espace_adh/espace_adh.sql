@@ -129,7 +129,8 @@ ALTER TABLE public.i_type_authority OWNER TO postgres;
 -- DROP TABLE IF EXISTS public.r_adh_evenement CASCADE;
 CREATE TABLE public.r_adh_evenement (
 	fk_id_adherent numeric(9,0) NOT NULL,
-	fk_id_evenement numeric(9,0) NOT NULL,
+	fk_id_evenement numeric(20,0) NOT NULL,
+	participe_evenement boolean NOT NULL DEFAULT true,
 	date_enregistrement timestamp with time zone,
 	CONSTRAINT pk_r_adh_evenement PRIMARY KEY (fk_id_adherent,fk_id_evenement)
 
@@ -139,8 +140,11 @@ COMMENT ON TABLE public.r_adh_evenement IS 'table de participation des personnes
 -- ddl-end --
 COMMENT ON COLUMN public.r_adh_evenement.date_enregistrement IS 'date d''enregistrement de la participation ';
 -- ddl-end --
+COMMENT ON COLUMN public.r_adh_evenement.participe_evenement  IS 'indique si l adherent participe à la manifestation';
+-- ddl-end --
 ALTER TABLE public.r_adh_evenement OWNER TO postgres;
 -- ddl-end --
+
 
 -- object: public.r_groupe_diffusion_adherents | type: TABLE --
 -- DROP TABLE IF EXISTS public.r_groupe_diffusion_adherents CASCADE;
@@ -246,7 +250,7 @@ ALTER SEQUENCE public.seq_t_share_docs OWNER TO postgres;
 -- object: public.t_evenement | type: TABLE --
 -- DROP TABLE IF EXISTS public.t_evenement CASCADE;
 CREATE TABLE public.t_evenement (
-	id_evenement numeric(9,0) NOT NULL,
+	id_evenement numeric(20,0) NOT NULL,
 	description_courte character varying(100) NOT NULL,
 	detail_text text,
 	lieux character varying(100),
@@ -284,8 +288,8 @@ ALTER TABLE public.t_groupe_diffusion OWNER TO postgres;
 -- object: public.t_share_docs | type: TABLE --
 -- DROP TABLE IF EXISTS public.t_share_docs CASCADE;
 CREATE TABLE public.t_share_docs (
-	id_share_docs numeric(9,0) NOT NULL,
-	fk_id_share_docs numeric(9,0),
+	id_share_docs numeric(20,0) NOT NULL,
+	fk_id_share_docs numeric(20,0),
 	label_short character varying(30) NOT NULL,
 	label_long character varying(50),
 	date_save date NOT NULL,

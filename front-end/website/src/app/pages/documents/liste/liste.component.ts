@@ -104,7 +104,7 @@ export class ListeComponent implements OnInit {
 
     // Récupérer arborescence
     let arborescenceDocuments: ArborescenceDocuments[] = [];
-    this.documentationService.getDocuments({})
+    this.documentationService.getArboresence({})
       .subscribe(
         (data) => {
           arborescenceDocuments = data;

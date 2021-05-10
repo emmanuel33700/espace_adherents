@@ -71,12 +71,12 @@
       <nb-card-body>
 
         <nb-list>
-          <nb-list-item *ngFor="let document of documents">
+          <nb-list-item *ngFor="let document of documentsDashboard">
             <span>
               <nb-icon icon="file-outline" pack="eva"></nb-icon>
             </span>
             <span class="results">
-              {{ document.date }} <span class="caption">{{ document.titre }}</span>
+              <a href="https://api.jalle-astro.fr/partage/documents/{{ document.lienFichier }}" > {{ document.nom }} </a><span class="caption">{{ document.description }}</span>
             </span>
           </nb-list-item>
         </nb-list>

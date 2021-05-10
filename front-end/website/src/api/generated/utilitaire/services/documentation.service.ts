@@ -10,6 +10,7 @@ import { map, filter } from 'rxjs/operators';
 
 import { ArborescenceDocumentsInit } from '../models/arborescence-documents-init';
 import { Document } from '../models/document';
+import { ListeDocuments } from '../models/liste-documents';
 
 
 /**
@@ -39,9 +40,77 @@ export class DocumentationService extends BaseService {
    */
   getDocuments$Response(params?: {
 
-  }): Observable<StrictHttpResponse<ArborescenceDocumentsInit>> {
+    /**
+     * borne min de date de création du document
+     */
+    minDateCreation?: string;
+
+    /**
+     * borne min de date de création du document
+     */
+    maxDateCreation?: string;
+
+  }): Observable<StrictHttpResponse<ListeDocuments>> {
 
     const rb = new RequestBuilder(this.rootUrl, DocumentationService.GetDocumentsPath, 'get');
+    if (params) {
+
+      rb.query('minDateCreation', params.minDateCreation);
+      rb.query('maxDateCreation', params.maxDateCreation);
+
+    }
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ListeDocuments>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `getDocuments$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getDocuments(params?: {
+
+    /**
+     * borne min de date de création du document
+     */
+    minDateCreation?: string;
+
+    /**
+     * borne min de date de création du document
+     */
+    maxDateCreation?: string;
+
+  }): Observable<ListeDocuments> {
+
+    return this.getDocuments$Response(params).pipe(
+      map((r: StrictHttpResponse<ListeDocuments>) => r.body as ListeDocuments)
+    );
+  }
+
+  /**
+   * Path part for operation getArboresence
+   */
+  static readonly GetArboresencePath = '/documents/arboresence';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getArboresence()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getArboresence$Response(params?: {
+
+  }): Observable<StrictHttpResponse<ArborescenceDocumentsInit>> {
+
+    const rb = new RequestBuilder(this.rootUrl, DocumentationService.GetArboresencePath, 'get');
     if (params) {
 
 
@@ -59,15 +128,15 @@ export class DocumentationService extends BaseService {
 
   /**
    * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `getDocuments$Response()` instead.
+   * To access the full response (for headers, for example), `getArboresence$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getDocuments(params?: {
+  getArboresence(params?: {
 
   }): Observable<ArborescenceDocumentsInit> {
 
-    return this.getDocuments$Response(params).pipe(
+    return this.getArboresence$Response(params).pipe(
       map((r: StrictHttpResponse<ArborescenceDocumentsInit>) => r.body as ArborescenceDocumentsInit)
     );
   }
@@ -268,7 +337,7 @@ export class DocumentationService extends BaseService {
      */
     idDossier: number;
 
-  }): Observable<StrictHttpResponse<Document>> {
+  }): Observable<StrictHttpResponse<void>> {
 
     const rb = new RequestBuilder(this.rootUrl, DocumentationService.DelDossierPath, 'delete');
     if (params) {
@@ -277,12 +346,12 @@ export class DocumentationService extends BaseService {
 
     }
     return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
+      responseType: 'text',
+      accept: '*/*'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Document>;
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
       })
     );
   }
@@ -300,10 +369,10 @@ export class DocumentationService extends BaseService {
      */
     idDossier: number;
 
-  }): Observable<Document> {
+  }): Observable<void> {
 
     return this.delDossier$Response(params).pipe(
-      map((r: StrictHttpResponse<Document>) => r.body as Document)
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 
@@ -561,7 +630,7 @@ export class DocumentationService extends BaseService {
      */
     idFichier: number;
 
-  }): Observable<StrictHttpResponse<Document>> {
+  }): Observable<StrictHttpResponse<void>> {
 
     const rb = new RequestBuilder(this.rootUrl, DocumentationService.DelFichierPath, 'delete');
     if (params) {
@@ -570,12 +639,12 @@ export class DocumentationService extends BaseService {
 
     }
     return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
+      responseType: 'text',
+      accept: '*/*'
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Document>;
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
       })
     );
   }
@@ -593,10 +662,10 @@ export class DocumentationService extends BaseService {
      */
     idFichier: number;
 
-  }): Observable<Document> {
+  }): Observable<void> {
 
     return this.delFichier$Response(params).pipe(
-      map((r: StrictHttpResponse<Document>) => r.body as Document)
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 
