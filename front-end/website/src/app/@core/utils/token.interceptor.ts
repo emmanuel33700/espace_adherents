@@ -62,7 +62,7 @@ export class TokenInterceptor implements HttpInterceptor {
       // The response body may contain clues as to what went wrong,
       errorMsg = `Backend retourn le code http ${err.status}, avec body: ${err.error}`;
     }
-    if (err.status === 404 || err.status === 403) {
+    if (err.status === 401) {
       this.loggerService.debug(' Deconnection de l\'utilisateur suite a token obsolete');
       this.authService.logout('password')
         .subscribe(() => {

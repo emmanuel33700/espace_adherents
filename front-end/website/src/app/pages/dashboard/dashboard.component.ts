@@ -100,6 +100,7 @@ export class DashboardComponent implements OnInit {
           this.loggerService.debug('Enregistrement fini');
           if (premierSaisie) {
             this.basculerEvenementASaisie(typeParticipation, idEvenement );
+            this.loadingEvenement = false;
           }
         },
       );
@@ -277,6 +278,12 @@ export class DashboardComponent implements OnInit {
     this.manifestationsNonSaisieParticipation.forEach((value, index) => {
       if (value.id === idEvenement) {
         this.loggerService.debug('Bascule la manifestation ' + value.id );
+        if (typeParticipation === 1) {
+          value.statutParticipation = 1;
+        } else {
+          value.statutParticipation = 2;
+        }
+
         this.manifestationsSaisieParticipation.push(value);
         this.manifestationsNonSaisieParticipation.splice(index, 1);
       }
