@@ -19,6 +19,7 @@ import {FormsModule as ngFormsModule, ReactiveFormsModule} from '@angular/forms'
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {ImageCropperModule} from 'ngx-image-cropper';
+import {DialogPhotoProfilComponent} from './modifier/dialog-photo-profil/dialog-photo-profil.component';
 
 @NgModule({
     imports: [
@@ -46,6 +47,7 @@ import {ImageCropperModule} from 'ngx-image-cropper';
   declarations: [
     ProfileComponent,
     ModifierComponent,
+    DialogPhotoProfilComponent,
   ],
 })
 export class ProfileModule { }

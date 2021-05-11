@@ -264,4 +264,66 @@ export class AdherentService extends BaseService {
     );
   }
 
+  /**
+   * Path part for operation updateUserPhoto
+   */
+  static readonly UpdateUserPhotoPath = '/adherent/{idadh}/photo';
+
+  /**
+   * Mise à jour de la photo de l'adhérent
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateUserPhoto()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  updateUserPhoto$Response(params: {
+
+    /**
+     * id de l&#x27;adherent
+     */
+    idadh: number;
+      body: { 'fileName'?: string, 'file'?: Blob }
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, AdherentService.UpdateUserPhotoPath, 'put');
+    if (params) {
+
+      rb.path('idadh', params.idadh);
+
+      rb.body(params.body, 'multipart/form-data');
+    }
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Mise à jour de la photo de l'adhérent
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `updateUserPhoto$Response()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  updateUserPhoto(params: {
+
+    /**
+     * id de l&#x27;adherent
+     */
+    idadh: number;
+      body: { 'fileName'?: string, 'file'?: Blob }
+  }): Observable<void> {
+
+    return this.updateUserPhoto$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
 }

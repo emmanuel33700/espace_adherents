@@ -2,10 +2,10 @@ import {Component, OnInit, HostBinding} from '@angular/core';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 import {FormBuilder, FormGroup, NgForm} from '@angular/forms';
 import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
-import { NbToastrService } from '@nebular/theme';
+import {NbDialogService, NbToastrService} from '@nebular/theme';
 import {LoggerService} from '../../../@core/utils/logger.service';
 import {DateService} from '../../../@core/utils';
-import {ImageCroppedEvent, LoadedImage} from 'ngx-image-cropper';
+import {DialogPhotoProfilComponent} from './dialog-photo-profil/dialog-photo-profil.component';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -32,9 +32,7 @@ export class ModifierComponent implements OnInit {
   // indicateur de chargement
   loading = true;
 
-  // gestion de l'image cropper
-  imageChangedEvent: any = '';
-  croppedImage: any = '';
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -42,6 +40,7 @@ export class ModifierComponent implements OnInit {
     private toastrService: NbToastrService,
     private loggerService: LoggerService,
     private dateService: DateService,
+    private dialogService: NbDialogService,
   ) {}
 
   /**
@@ -67,6 +66,7 @@ export class ModifierComponent implements OnInit {
     this.user.commentaire = this.adherent.commentaire;
     this.user.accordMail = this.adherent.accordMail;
     this.user.publicContact = this.adherent.publicContact;
+    this.user.lienPhotoProfil = this.adherent.lienPhotoProfil;
 
     this.loading = false;
   }
@@ -129,25 +129,14 @@ export class ModifierComponent implements OnInit {
   }
 
 
-
-  fileChangeEvent(event: any): void {
-    this.imageChangedEvent = event;
-    this.loggerService.info('fileChangeEvent');
+  /**
+   * Editer la photo de profil
+   */
+  editerPhoto() {
+    this.dialogService.open(DialogPhotoProfilComponent, {
+      context: {
+        idAdherent: this.adherent.id,
+      },
+    });
   }
-  imageCropped(event: ImageCroppedEvent) {
-    this.croppedImage = event.base64;
-    this.loggerService.info('imageCropped');
-  }
-  imageLoaded(image: LoadedImage) {
-    this.loggerService.info('imageLoaded');
-  }
-  cropperReady() {
-    // cropper ready
-    this.loggerService.info('cropperReady');
-  }
-  loadImageFailed() {
-    // show message
-    this.loggerService.info('loadImageFailed');
-  }
-
 }

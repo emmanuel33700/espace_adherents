@@ -1,0 +1,52 @@
+<nb-card>
+  <nb-card-header>Photo profil</nb-card-header>
+  <nb-card-body>
+
+
+    <nb-alert *ngIf="errors?.length" outline="danger" role="alert">
+      <p class="alert-title"><b>Erreur</b></p>
+      <ul class="alert-message-list">
+        <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
+        showMessages
+      </ul>
+    </nb-alert>
+
+    <nb-alert *ngIf="messages?.length" outline="success" role="alert">
+      <p class="alert-title"><b>Hooray!</b></p>
+      <ul class="alert-message-list">
+        <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
+      </ul>
+    </nb-alert>
+
+
+    <input type="file" (change)="fileChangeEvent($event)" accept="image/*"/>
+
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent"
+      [maintainAspectRatio]="true"
+      [roundCropper]="true"
+      format="png"
+      [resizeToWidth]="100"
+      (imageCropped)="imageCropped($event)"
+      (imageLoaded)="imageLoaded($event)"
+      (cropperReady)="cropperReady()"
+      (loadImageFailed)="loadImageFailed()"
+    ></image-cropper>
+
+    <button nbButton
+            fullWidth
+            status="success"
+            [disabled]="!valideUpload"
+            [class.btn-pulse]="submitted"
+            (click)="validerLoadingPhoto()"
+            [nbSpinner]='loadingPhoto'>
+      Valider
+    </button>
+
+  </nb-card-body>
+  <nb-card-footer>
+
+  </nb-card-footer>
+
+
+</nb-card>

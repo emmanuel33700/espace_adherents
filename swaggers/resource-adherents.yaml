@@ -199,6 +199,57 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/photo':              
+    put:
+      tags:
+        - adherent
+      summary: Mise à jour de la photo de l'adhérent
+      description: Mise à jour de la photo de l'adhérent
+      operationId: updateUserPhoto
+      security:
+        - oAuth:
+            - ress-adherent-write
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                file:
+                  type: string
+                  format: binary            
+        required: true
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'                
   '/adherent/{idadh}/adhesion':
     post:
       tags:

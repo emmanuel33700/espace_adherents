@@ -23,7 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public idAdherents: number = 0;
 
 
-  user = { name: 'xxx', picture: 'assets/images/nick.png' };
+  user = { name: 'xxx', picture: null };
 
   currentTheme = 'default';
 
@@ -66,7 +66,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.user.name = this.adherent.nom + ' ' + this.adherent.prenom;
 
         // TODO a revoir
-        this.user.picture = 'assets/images/kate.png';
+        this.user.picture = this.adherent.lienPhotoProfil;
       });
 
 

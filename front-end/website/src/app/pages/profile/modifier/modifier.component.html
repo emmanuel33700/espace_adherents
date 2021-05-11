@@ -20,26 +20,29 @@
           </ul>
         </nb-alert>
 
-        <input type="file" (change)="fileChangeEvent($event)" />
 
-        <image-cropper
-          [imageChangedEvent]="imageChangedEvent"
-          [maintainAspectRatio]="true"
-          [roundCropper]="true"
-          format="png"
-          [resizeToWidth]="500"
-          (imageCropped)="imageCropped($event)"
-          (imageLoaded)="imageLoaded($event)"
-          (cropperReady)="cropperReady()"
-          (loadImageFailed)="loadImageFailed()" width="500" 
-        ></image-cropper>
-
-        <img [src]="croppedImage" width="500" />
 
         <form
           (ngSubmit)="submit(form)"
           #form="ngForm"
         >
+
+          <div class="form-group row">
+            <label class="label col-sm-3 col-form-label">Photo de profil</label>
+            <div class="col-sm-9">
+
+              <div class="circular--landscape">
+                <ng-container *ngIf="user.lienPhotoProfil == null">
+                  <img src="assets/images/user-profile.png" width="100"/>
+                </ng-container>
+                <ng-container *ngIf="user.lienPhotoProfil != null">
+                  <img src="{{user.lienPhotoProfil}}" width="100"/>
+                </ng-container>
+              </div>
+              <nb-icon  icon="edit-outline" (click)="editerPhoto()" nbPopover="Editer la photo" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+
+            </div>
+          </div>
 
           <div class="form-group row">
             <label for="input-civilite" class="label col-sm-3 col-form-label">Civilité</label>

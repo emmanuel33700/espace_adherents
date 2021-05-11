@@ -64,10 +64,10 @@ export class TokenInterceptor implements HttpInterceptor {
     }
     if (err.status === 401) {
       this.loggerService.debug(' Deconnection de l\'utilisateur suite a token obsolete');
-      this.authService.logout('password')
-        .subscribe(() => {
-          this.loggerService.debug(' Deconnection');
-        });
+   //   this.authService.logout('password')
+   //     .subscribe(() => {
+   //       this.loggerService.debug(' Deconnection');
+   //     });
 
       this.injector.get(Router).navigateByUrl('/auth/login');
     }
