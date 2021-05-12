@@ -68,6 +68,11 @@ export class ModifierComponent implements OnInit {
     this.user.publicContact = this.adherent.publicContact;
     this.user.lienPhotoProfil = this.adherent.lienPhotoProfil;
 
+    if (this.adherent.lienPhotoProfil != null) {
+      this.lienPhotoProfil = 'https://api.jalle-astro.fr/partage/photosprofil/' + this.adherent.lienPhotoProfil;
+    } else {
+      this.lienPhotoProfil = null;
+    }
     this.loading = false;
   }
 
