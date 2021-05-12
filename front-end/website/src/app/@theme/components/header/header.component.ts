@@ -65,8 +65,15 @@ export class HeaderComponent implements OnInit, OnDestroy {
         localStorage.setItem('adherent', JSON.stringify(this.adherent));
         this.user.name = this.adherent.nom + ' ' + this.adherent.prenom;
 
-        // TODO a revoir
-        this.user.picture = this.adherent.lienPhotoProfil;
+        // gestion du lien de la photo de profil
+        if (this.adherent.lienPhotoProfil != null) {
+
+          // TODO variabiliser le lien de la photo de profil
+          this.user.picture = 'https://api.jalle-astro.fr/partage/photosprofil/' + this.adherent.lienPhotoProfil;
+        } else {
+          this.user.picture = null;
+        }
+
       });
 
 

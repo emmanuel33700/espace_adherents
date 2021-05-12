@@ -6,7 +6,8 @@
       <nb-card-body>
         <nb-actions size="medium" fullWidth>
           <nb-action>
-            <nb-toggle labelPosition="end" (change)="changeListe($event)" >Afficher les adhérents de la saision</nb-toggle>
+            <nb-toggle labelPosition="end" (change)="changeListe($event)">Afficher les adhérents de la saision
+            </nb-toggle>
           </nb-action>
           <nb-action routerLink="../ajouteradherent">
             <nb-icon class="action-icon" icon="file-add"></nb-icon>
@@ -27,9 +28,22 @@
       <nb-list>
         <nb-list-item *ngFor="let adherent of adherents">
 
-          <nb-user picture="assets/images/nick.png" [name]="adherent.nom + ' ' +adherent.prenom"
-                   [title]="adherent.email" (click)="sectionAdherents(adherent.id)">
-          </nb-user>
+
+          <!-- l'adherent à une  photo de profil -->
+          <ng-container *ngIf="adherent.lienPhotoProfil != null">
+            <nb-user picture="https://api.jalle-astro.fr/partage/photosprofil/{{adherent.lienPhotoProfil}}"
+                     [name]="adherent.nom + ' ' +adherent.prenom"
+                     [title]="adherent.email" (click)="sectionAdherents(adherent.id)">
+            </nb-user>
+          </ng-container>
+          <!-- l'adherent n'a pas de   photo de profil -->
+          <ng-container *ngIf="adherent.lienPhotoProfil == null">
+            <nb-user [name]="adherent.nom + ' ' +adherent.prenom"
+                     [title]="adherent.email" (click)="sectionAdherents(adherent.id)">
+            </nb-user>
+          </ng-container>
+
+          <!-- gestion du bouton ajout adhésion saison -->
           <ng-container *ngIf="!adherent.adhesionsSaisonCourante">
             <div style="display:flex; justify-content:flex-end; width:100%; padding:0;">
               <button (click)="ajouterAdhesion(adherent.id)" size="small" nbButton>Ajouter adhésion</button>

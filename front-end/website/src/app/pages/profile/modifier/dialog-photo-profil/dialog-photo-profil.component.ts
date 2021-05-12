@@ -5,6 +5,7 @@ import {LoggerService} from '../../../../@core/utils';
 import {Document} from '../../../../../api/generated/utilitaire/models/document';
 import {ImageCroppedEvent, LoadedImage, base64ToFile} from 'ngx-image-cropper';
 import {AdherentService} from '../../../../../api/generated/adherents/services/adherent.service';
+import {Adherent} from '../../../../../api/generated/adherents/models/adherent';
 
 
 
@@ -99,9 +100,21 @@ export class DialogPhotoProfilComponent {
           // Fin d'activation du spinner
           this.loadingPhoto = false;
 
+          // changer le lien de la photo l'objet en session
+          this.changerLienPhotoLocalStorage(fileNane);
+
           // cloture de la modal
           this.ref.close();
         },
       );
+  }
+
+  /**
+   * Changer le lien de la photo dans l'objet adhérent du local storage
+   */
+  private changerLienPhotoLocalStorage(fileNane: string) {
+    const adherent: Adherent = JSON.parse (localStorage.getItem('adherent'));
+    adherent.lienPhotoProfil = fileNane;
+    localStorage.setItem('adherent', JSON.stringify(adherent));
   }
 }

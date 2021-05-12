@@ -13,9 +13,9 @@ import {DialogPhotoProfilComponent} from './dialog-photo-profil/dialog-photo-pro
   templateUrl: './modifier.component.html',
 })
 export class ModifierComponent implements OnInit {
-   adherent: Adherent;
+  adherent: Adherent;
   form: FormGroup;
-
+  lienPhotoProfil: string;
 
 
   errors: string[] = [];
@@ -138,5 +138,11 @@ export class ModifierComponent implements OnInit {
         idAdherent: this.adherent.id,
       },
     });
+    this.adherent = JSON.parse (localStorage.getItem('adherent'));
+    if (this.adherent.lienPhotoProfil != null) {
+      this.lienPhotoProfil = 'https://api.jalle-astro.fr/partage/photosprofil/' + this.adherent.lienPhotoProfil;
+    } else {
+      this.lienPhotoProfil = null;
+    }
   }
 }

@@ -36,7 +36,7 @@
                   <img src="assets/images/user-profile.png" width="100"/>
                 </ng-container>
                 <ng-container *ngIf="user.lienPhotoProfil != null">
-                  <img src="{{user.lienPhotoProfil}}" width="100"/>
+                  <img [src]="lienPhotoProfil" width="100"/>
                 </ng-container>
               </div>
               <nb-icon  icon="edit-outline" (click)="editerPhoto()" nbPopover="Editer la photo" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>

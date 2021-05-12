@@ -2,7 +2,14 @@
 
 
   <div class="col-12">
-    <h1>{{ adherent.nom }} {{ adherent.prenom }}</h1>
+<h1>
+    <div class="circular--landscape">
+      <ng-container *ngIf="adherent.lienPhotoProfil != null">
+        <img src="https://api.jalle-astro.fr/partage/photosprofil/{{adherent.lienPhotoProfil}}" width="100"/>
+      </ng-container>
+    </div>
+
+    {{ adherent.nom }} {{ adherent.prenom }}</h1>
     <nb-card >
       <nb-route-tabset [tabs]="tabs"></nb-route-tabset>
     </nb-card>
