@@ -64,6 +64,14 @@ public interface AdherentService {
      */
     public boolean updateAdherents (AdherentDto adherentDto);
     
+    /**
+     * Mise à jour du nom de la photo de profil de l'adhérent
+     * @param idAdherent id de l'adhérent
+     * @param nomPhoto nom du fichier de la photo
+     * @return  
+     */
+    public boolean updateLienPhotoAdherent (long idAdherent, String nomPhoto);
+    
     
     /**
      * Création d'une adhésion pour un adhérent

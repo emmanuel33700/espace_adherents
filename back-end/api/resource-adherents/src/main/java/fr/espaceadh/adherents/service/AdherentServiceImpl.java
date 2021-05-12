@@ -150,6 +150,19 @@ public class AdherentServiceImpl implements AdherentService{
         //TODO a implémenter
         return false;
     }
+
+    /**
+     * 
+     * @param idAdherent
+     * @param nomPhoto
+     * @return 
+     */
+    @Override
+    public boolean updateLienPhotoAdherent(long idAdherent, String nomPhoto) {
+        AdherentDto adherentDto = adherentsDAO.getAdherentByID(idAdherent);
+        adherentDto.setLienPhotoProfil(nomPhoto);
+        return this.adherentsDAO.updateAdherents(adherentDto);
+    }
     
     
 }

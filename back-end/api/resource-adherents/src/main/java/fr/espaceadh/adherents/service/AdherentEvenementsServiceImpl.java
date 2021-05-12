@@ -206,6 +206,7 @@ public class AdherentEvenementsServiceImpl implements AdherentEvenementsService{
      * @return 
      */
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean updateParticipationEvenement(long idAdh, long idEvenement, int typeParticipation) {
         this.adherentEvenementsDAO.deleteParticipationEvenement(idEvenement, idAdh);
         

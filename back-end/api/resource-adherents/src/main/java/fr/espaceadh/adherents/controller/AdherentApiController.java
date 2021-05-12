@@ -33,22 +33,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
 @Controller
 public class AdherentApiController implements AdherentApi {
 
-    private static final Logger log = LoggerFactory.getLogger(AdherentApiController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdherentApiController.class);
 
     private final ObjectMapper objectMapper;
 
@@ -62,6 +73,9 @@ public class AdherentApiController implements AdherentApi {
     
     @Autowired
     private GestionMail getionMail;
+    
+    @Autowired
+    private Environment env;
 
     @org.springframework.beans.factory.annotation.Autowired
     public AdherentApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -390,6 +404,78 @@ public class AdherentApiController implements AdherentApi {
         
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
+    /**
+     * Mise à jour de la photo de profil de l'adhérent
+     * @param idadh id de l'adhérent
+     * @param fileName nom du fichier
+     * @param file fichier binaire
+     * @return 
+     */
+    public ResponseEntity<Void> updateUserPhoto(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "", required=true,schema=@Schema()) @RequestParam(value="fileName", required=true)  String fileName,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file) {
+        String accept = request.getHeader("Accept");
+        
+       LOGGER.info("userid {}, fileName {}", idadh, fileName);
+
+        try {
+            
+            // Supression de l'ancien fichier
+            boolean resultDel = this.deleteFilesForPathByPrefix(env.getProperty("folder.path.photo.profil"), idadh.toString());
+            if (resultDel) {
+                LOGGER.error("Erreur lors de la supression du fichier avec le préfix {}", idadh.toString());
+                return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            // création du nouveau fichier
+            StringBuilder cheminFichier = new StringBuilder();
+            cheminFichier.append(env.getProperty("folder.path.photo.profil"));
+            cheminFichier.append("/");
+            cheminFichier.append(fileName);
+
+            LOGGER.info("Enregistrement du fichier : {}", cheminFichier.toString());
+
+            Files.copy(file.getInputStream(), Paths.get(cheminFichier.toString()), StandardCopyOption.REPLACE_EXISTING);
+            
+            Set<PosixFilePermission> perms = new HashSet<>();
+            perms.add(PosixFilePermission.OWNER_READ);
+            perms.add(PosixFilePermission.OWNER_WRITE);
+
+            perms.add(PosixFilePermission.OTHERS_READ);
+
+            perms.add(PosixFilePermission.GROUP_READ);
+
+            Files.setPosixFilePermissions(Paths.get(cheminFichier.toString()), perms);
+            
+            // Màj de la BD avec le nouveau nom du fichier
+            this.adherentService.updateLienPhotoAdherent(idadh, fileName);
+            
+        } catch (IOException ex) {
+            LOGGER.error("Erreur copie fichier {}", ex);
+            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+
+    /**
+     * Supression d'un fichier avec préfix
+     * @param path
+     * @param prefix
+     * @return 
+     */
+    private boolean deleteFilesForPathByPrefix(final String path, final String prefix) {
+    boolean success = true;
+    try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(Paths.get(path), prefix + "*")) {
+        for (final Path newDirectoryStreamItem : newDirectoryStream) {
+            Files.delete(newDirectoryStreamItem);
+        }
+    } catch (final Exception e) {
+        success = false;
+        LOGGER.error(e.getMessage());
+    }
+    return success;
+}
 
     
     /**
@@ -527,7 +613,7 @@ public class AdherentApiController implements AdherentApi {
         try {
             result2 = df2.parse(iso8601string);
         } catch (ParseException ex) {
-            log.error("Erreur sur le formatage  de date. Date en entré {}. {}", iso8601string , ex.getMessage());
+            LOGGER.error("Erreur sur le formatage  de date. Date en entré {}. {}", iso8601string , ex.getMessage());
         }
 
 
@@ -552,7 +638,7 @@ public class AdherentApiController implements AdherentApi {
         try {
             result2 = df2.parse(iso8601string);
         } catch (ParseException ex) {
-            log.error("Erreur sur le formatage  de date. Date en entré {}. {}", iso8601string , ex.getMessage());
+            LOGGER.error("Erreur sur le formatage  de date. Date en entré {}. {}", iso8601string , ex.getMessage());
         }
 
 
@@ -703,7 +789,5 @@ public class AdherentApiController implements AdherentApi {
         }
     }
 
-
-    
 
 }

@@ -31,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
@@ -470,5 +472,40 @@ public interface AdherentApi {
     @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('BUREAU') or isProprietraireDonnee(#idadh) )")         
     ResponseEntity<Void> updateUser(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Adherent body);
 
+    
+        @Operation(summary = "Mise à jour de la photo de l'adhérent", description = "Mise à jour de la photo de l'adhérent", security = {
+        @SecurityRequirement(name = "oAuth", scopes = {
+            "ress-adherent-admin",
+"ress-adherent-read",
+"ress-adherent-write",
+"ress-adherent-del",
+"ress-adhesion-admin",
+"ress-adhesion-read",
+"ress-adhesion-write",
+"ress-adhesion-del",
+"ress-manifestation-admin",
+"ress-manifestation-read",
+"ress-manifestation-write",
+"ress-manifestation-del",
+"ress-communication-read"        })    }, tags={ "adherent" })
+    @ApiResponses(value = { 
+        @ApiResponse(responseCode = "200", description = "Operation réussie"),
+        
+        @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
+        
+        @ApiResponse(responseCode = "403", description = "Droit insufisant"),
+        
+        @ApiResponse(responseCode = "404", description = "username non trouvée"),
+        
+        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))),
+        
+        @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/adherent/{idadh}/photo",
+        produces = { "application/json" }, 
+        consumes = { "multipart/form-data" }, 
+        method = RequestMethod.PUT)
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('BUREAU') or isProprietraireDonnee(#idadh) )")  
+    ResponseEntity<Void> updateUserPhoto(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true,schema=@Schema()) @RequestParam(value="fileName", required=true)  String fileName, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file);
+    
 }
 
