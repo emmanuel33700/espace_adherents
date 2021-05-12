@@ -540,6 +540,7 @@ public class AdherentApiController implements AdherentApi {
         model.setEmail(adherent.getEmail());
         model.setProfession(adherent.getProfession());
         model.setDateNaissance(this.dateToStringAvecMS(adherent.getDateNaissance()));
+        model.setLienPhotoProfil(adherent.getLienPhotoProfil());
         model.setAccordMail(adherent.isAccordMail());
         model.setPublicContact(adherent.isPublicContact());
         model.setCommentaire(adherent.getCommentaire());
