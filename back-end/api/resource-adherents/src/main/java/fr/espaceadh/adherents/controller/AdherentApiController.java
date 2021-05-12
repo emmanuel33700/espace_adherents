@@ -421,7 +421,7 @@ public class AdherentApiController implements AdherentApi {
             
             // Supression de l'ancien fichier
             boolean resultDel = this.deleteFilesForPathByPrefix(env.getProperty("folder.path.photo.profil"), idadh.toString());
-            if (resultDel) {
+            if (!resultDel) {
                 LOGGER.error("Erreur lors de la supression du fichier avec le préfix {}", idadh.toString());
                 return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
