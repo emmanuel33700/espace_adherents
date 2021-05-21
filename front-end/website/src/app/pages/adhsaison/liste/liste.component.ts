@@ -101,7 +101,6 @@ export class ListeComponent implements OnInit {
         localStorage.setItem('adh_selected', JSON.stringify(this.adherentSelected ));
         return this.router.navigateByUrl('pages/adhsaison/ajouteradhesion');
       });
-    
   }
 
   /**
