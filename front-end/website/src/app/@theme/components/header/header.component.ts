@@ -57,7 +57,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         console.info(error);
       },
       () => {
-        localStorage.setItem('adherent', JSON.stringify(this.adherent));
         this.user.name = this.adherent.nom + ' ' + this.adherent.prenom;
 
         // gestion du lien de la photo de profil
