@@ -14,10 +14,10 @@ import {Router} from '@angular/router';
   templateUrl: './ajouteradhesion.component.html',
 })
 export class AjouteradhesionComponent implements OnInit {
-  adherent: Adherent;
+  adherent: Adherent = JSON.parse(localStorage.getItem('adh_selected'));
   adhesion: Adhesion = {};
   form: FormGroup ;
-  public idAdherent: number = 0;
+  public idAdherent: number = Number(localStorage.getItem('id_adh_selected'));
 
 
   errors: string[] = [];
@@ -41,24 +41,6 @@ export class AjouteradhesionComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
-
-    this.idAdherent = Number(localStorage.getItem('id_adh_selected'));
-    this.loggerService.info('id adh recupere ' + this.idAdherent);
-
-    this.adherentService.getAdherent({
-      idadh: this.idAdherent,
-    }).subscribe(
-      (data) => {
-        this.adherent = data;
-      },
-      (error) => {
-        this.loggerService.error(error);
-      },
-      () => {
-
-        this.loggerService.info('adherent recupe api '  + JSON.stringify(this.adherent));
-        localStorage.setItem('adh_selected', JSON.stringify(this.adherent));
-      });
   }
 
   submit(form: NgForm) {

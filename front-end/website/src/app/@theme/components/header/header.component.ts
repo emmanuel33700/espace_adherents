@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 import {NbAuthService, NbAuthToken} from '@nebular/auth';
+import {TokenService} from '../../../@core/utils/token.service';
 
 @Component({
   selector: 'ngx-header',
@@ -36,20 +37,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private layoutService: LayoutService,
               private breakpointService: NbMediaBreakpointsService,
               private adherentService: AdherentService,
-              private authService: NbAuthService) {
+              private authService: NbAuthService,
+              private tokenService: TokenService) {
   }
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
 
-
-    this.authService.getToken()
-      .subscribe((token: NbAuthToken) => {
-        if (token && token.getValue()) {
-          this.idAdherents = Number(this.getClaims(token.getValue()));
-        }
-      });
-
+    this.idAdherents = this.tokenService.getIdAdherent();
 
     // recuperation des informations de l'adhérents
     this.adherentService.getAdherent({
@@ -73,13 +68,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
         } else {
           this.user.picture = null;
         }
-
       });
 
 
-    // Recupérer l'id de l'année de l'adhésion courante
-    // TODO à récupérer l'id de l'adhésion courante
-    localStorage.setItem('id_annee_adhesion', '1');
 
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
@@ -118,10 +109,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  getClaims(rawToken: string): string {
 
-    console.info(rawToken);
-    const obj = JSON.parse(rawToken);
-    return obj.idAdherent ;
-  }
 }

@@ -7,6 +7,7 @@ import {Adherent} from '../../../api/generated/adherents/models/adherent';
 import {ParticipationManifestation} from '../../../api/generated/adherents/models/participation-manifestation';
 import {DocumentationService} from '../../../api/generated/utilitaire/services/documentation.service';
 import {Document} from '../../../api/generated/utilitaire/models/document.js';
+import {TokenService} from '../../@core/utils/token.service';
 
 
 interface DocumentDashboard {
@@ -26,6 +27,7 @@ interface DocumentDashboard {
 export class DashboardComponent implements OnInit {
 
   adherent: Adherent;
+  idAdh: number = 0;
 
   // Toaster
   @HostBinding('class')
@@ -47,7 +49,8 @@ export class DashboardComponent implements OnInit {
               private loggerService: LoggerService,
               private toastrService: NbToastrService,
               private dateService: DateService,
-              private documentationService: DocumentationService) {
+              private documentationService: DocumentationService,
+              private tokenService: TokenService) {
   }
 
 
@@ -56,6 +59,8 @@ export class DashboardComponent implements OnInit {
    */
   ngOnInit(): void {
 
+
+    this.idAdh = this.tokenService.getIdAdherent();
 
     this.adherent = JSON.parse (localStorage.getItem('adherent'));
 
@@ -83,7 +88,7 @@ export class DashboardComponent implements OnInit {
     if (premierSaisie) {
       this.loadingEvenement = true;
     }
-    this.manifestationService.updateManifestationAdherent({idadh: this.adherent.id
+    this.manifestationService.updateManifestationAdherent({idadh: this.idAdh
       , idManifestation: idEvenement
       , body: participationManifestation})
       .subscribe(
@@ -138,7 +143,7 @@ export class DashboardComponent implements OnInit {
 
 
     this.manifestationService.updateManifestationAdherent({
-      idadh: this.adherent.id
+      idadh: this.idAdh
       , idManifestation: idManifestation
       , body: participationManifestation,
     })
@@ -173,7 +178,7 @@ export class DashboardComponent implements OnInit {
     const dateFinString = this.dateService.convertDateToStringIsoWithOutHour(dFin);
 
 
-    this.manifestationService.getListeManifestationsAdherent({idadh: this.adherent.id
+    this.manifestationService.getListeManifestationsAdherent({idadh: this.idAdh
       , datedebut: dateDebutString
       , datefin: dateFinString})
       .subscribe(

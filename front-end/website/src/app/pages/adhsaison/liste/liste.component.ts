@@ -87,7 +87,21 @@ export class ListeComponent implements OnInit {
    */
   ajouterAdhesion(id: number) {
     localStorage.setItem('id_adh_selected', String(id));
-    return this.router.navigateByUrl('pages/adhsaison/ajouteradhesion');
+    this.adherentService.getAdherent({
+      idadh: id,
+    }).subscribe(
+      (data) => {
+        this.adherentSelected = data;
+      },
+      (error) => {
+        this.loggerService.error(error);
+      },
+      () => {
+        this.loggerService.info('adherent recupe api '  + JSON.stringify(id));
+        localStorage.setItem('adh_selected', JSON.stringify(this.adherentSelected ));
+        return this.router.navigateByUrl('pages/adhsaison/ajouteradhesion');
+      });
+    
   }
 
   /**

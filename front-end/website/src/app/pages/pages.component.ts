@@ -25,39 +25,7 @@ export class PagesComponent  implements OnInit {
   constructor(private authService: NbAuthService) {}
 
   ngOnInit() {
-
-
-    this.authService.getToken()
-      .subscribe((token: NbAuthToken) => {
-        if (token && token.getValue()) {
-          this.role = this.getClaims(token.getValue());
-        }
-      });
-
-
-    if (this.role.includes('ADMIN')) {
-      this.role = 'ADMIN';
-    } else if (this.role.includes('BUREAU')) {
-      this.role = 'BUREAU';
-    }  else if (this.role.includes('CONSEIL')) {
-      this.role = 'CONSEIL';
-    }  else {
-      this.role = 'ADHERENT';
-    }
-
-    console.info(this.role);
-    localStorage.setItem('ROLE', this.role);
-
+    this.role = localStorage.getItem('ROLE');
   }
 
-  readLocalStorageValue(key: string): string {
-    return localStorage.getItem(key);
-  }
-
-
-  getClaims(rawToken: string): string {
-    console.info(rawToken);
-    const obj = JSON.parse(rawToken);
-    return obj.authorities ;
-  }
 }

@@ -5,7 +5,7 @@ import {
   NbCardModule,
   NbCheckboxModule,
   NbDatepickerModule, NbIconModule,
-  NbInputModule,
+  NbInputModule, NbPopoverModule,
   NbRadioModule,
   NbSelectModule, NbSpinnerModule,
   NbUserModule,
@@ -43,6 +43,7 @@ import {DialogPhotoProfilComponent} from './modifier/dialog-photo-profil/dialog-
         NbAlertModule,
         NbSpinnerModule,
         ImageCropperModule,
+        NbPopoverModule,
     ],
   declarations: [
     ProfileComponent,
