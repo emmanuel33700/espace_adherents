@@ -96,7 +96,7 @@ public class AuthentificationServiceImpl implements AuthentificationService {
         usersDto.setCleeModification(uuid.toString());
         usersDto.setDateModifcationClee(new Date());
         usersDto.setDateCreation(new Date());
-        usersDto.setEnabled(false);
+        usersDto.setEnabled(true);
         
         userDao.creationUser(usersDto);
         
@@ -106,35 +106,11 @@ public class AuthentificationServiceImpl implements AuthentificationService {
         List<RolesEnum> roles = new ArrayList<>();
         roles.add(RolesEnum.ADHERENT); // Par defaut création du role adhérent
         authoritiesDto.setRoles(roles);
-        authoritiesDao.creationAutorities(authoritiesDto);
+        boolean result = authoritiesDao.creationAutorities(authoritiesDto);
         
-        //envoie du mail de validation du compte
-        MailInDto mailIn = new MailInDto();
-
-        
-        Collection<String> messageTo = new ArrayList<>();
-        messageTo.add(usersDto.getUsername());
-        mailIn.setMessageTo(messageTo);
-        
-        
-        /* type de template */
-        mailIn.setTemplateMailEnum(TemplateMailEnum.DEMANDE_VALIDATION_MAIL);
-        
-        /* variables associées au tempalte **/
-        HashMap<String, String> templateVariables = new HashMap<>();
-        templateVariables.put("adh_prenom", adh.getPrenom());
-        templateVariables.put("confirmation_link", env.getProperty("validationmail.url")
-                .concat("?token=").concat(uuid.toString()
-                .concat("&id=").concat(Long.toString(adh.getId()))));
-        mailIn.setTemplateVariables(templateVariables);
-        
-                /** Sujet du mail **/
-        mailIn.setSujetMail("Finalisation de votre inscription");
-        
-        MailOutDto mailOut = getionMail.sendMail(mailIn);
-        
-        if (mailOut.getStatutEnvoi().endsWith("success")) return 0;
-        else return 99;
+        if (result) return 0;
+        return 99;
+ 
     }
 
     
