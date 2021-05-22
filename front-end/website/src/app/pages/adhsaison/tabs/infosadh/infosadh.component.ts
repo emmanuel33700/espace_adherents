@@ -57,7 +57,7 @@ export class InfosadhComponent implements OnInit {
     this.user.codePostal = this.adherent.codePostal;
     this.user.ville = this.adherent.ville;
     this.user.telPortable = this.adherent.telPortable;
-    this.user.telMaison = this.adherent.telMaison;
+    this.user.telFixe = this.adherent.telMaison;
     this.user.dateNaissance = this.dateService.dateFormatForPrint(this.adherent.dateNaissance);
     this.user.commentaire = this.adherent.commentaire;
     this.user.accordMail = this.adherent.accordMail;

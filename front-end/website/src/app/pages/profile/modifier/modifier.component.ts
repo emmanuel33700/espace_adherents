@@ -63,7 +63,7 @@ export class ModifierComponent implements OnInit {
     this.user.codePostal = this.adherent.codePostal;
     this.user.ville = this.adherent.ville;
     this.user.telPortable = this.adherent.telPortable;
-    this.user.telMaison = this.adherent.telMaison;
+    this.user.telFixe = this.adherent.telMaison;
     this.user.dateNaissance = this.dateService.dateFormatForPrint(this.adherent.dateNaissance);
     this.user.commentaire = this.adherent.commentaire;
     this.user.accordMail = this.adherent.accordMail;
@@ -145,13 +145,17 @@ export class ModifierComponent implements OnInit {
       context: {
         idAdherent: this.adherent.id,
       },
+    }).onClose.subscribe(data => {
+      this.adherent = JSON.parse(localStorage.getItem('adherent'));
+
+      if (this.adherent.lienPhotoProfil != null) {
+        this.lienPhotoProfil = 'https://api.jalle-astro.fr/partage/photosprofil/'
+          + this.adherent.lienPhotoProfil + '?' + (new Date()).getTime();
+      } else {
+        this.lienPhotoProfil = null;
+      }
     });
-    this.adherent = JSON.parse (localStorage.getItem('adherent'));
-    if (this.adherent.lienPhotoProfil != null) {
-      this.lienPhotoProfil = 'https://api.jalle-astro.fr/partage/photosprofil/' + this.adherent.lienPhotoProfil;
-    } else {
-      this.lienPhotoProfil = null;
-    }
-    this.ngOnInit();
+
+
   }
 }
