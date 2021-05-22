@@ -158,10 +158,22 @@ public class AdherentServiceImpl implements AdherentService{
      * @return 
      */
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean updateLienPhotoAdherent(long idAdherent, String nomPhoto) {
         AdherentDto adherentDto = adherentsDAO.getAdherentByID(idAdherent);
         adherentDto.setLienPhotoProfil(nomPhoto);
         return this.adherentsDAO.updateAdherents(adherentDto);
+    }
+
+    /**
+     * Récupérer les informations adhérents via son adresse email
+     * @param email
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public AdherentDto recupererAdherent(String email) {
+       return adherentsDAO.getAdherentByLogin(email);
     }
     
     

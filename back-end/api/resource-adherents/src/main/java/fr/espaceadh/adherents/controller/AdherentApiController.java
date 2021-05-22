@@ -50,6 +50,9 @@ import java.util.Set;
 import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -92,7 +95,8 @@ public class AdherentApiController implements AdherentApi {
         
         AdherentDto dto = this.translateModel(body);
         
-        //TODO ajouter l'id de l'utilisateur qui a créé l'adhérent
+        // ajouter l'id de l'utilisateur qui a créé l'adhérent
+        dto.setIdAdherentUpdate(this.getIdAdherentConnecte());
         
         int result = adherentService.creerAdherent(dto);
         
@@ -389,15 +393,17 @@ public class AdherentApiController implements AdherentApi {
      * @return 
      */
     public ResponseEntity<Void> updateUser(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Adherent body) {
-        //récupérationd e l'adh avant modification
+        //récupération de l'adh avant modification
         AdherentDto adhold = this.adherentService.recupererAdherent(idadh);
         
         AdherentDto adhnew = this.translateModel(body);
         adhnew.setId(adhold.getId());
-        adhnew.setCommentaire(adhold.getCommentaire());
+        adhnew.setDateEnregistrement(adhold.getDateEnregistrement());
+        adhnew.setLienPhotoProfil(adhold.getLienPhotoProfil());
+       // adhnew.setCommentaire(adhold.getCommentaire());
         
-        //TODO ajouter l'id de l'utilisateur qui a créé l'adhérent
-        adhnew.setIdAdherentUpdate(adhold.getIdAdherentUpdate());
+        // ajouter l'id de l'utilisateur qui a met à jour l'adhérent
+        adhnew.setIdAdherentUpdate(this.getIdAdherentConnecte());
         
         boolean updateok = this.adherentService.updateAdherents(adhnew);
         if (updateok)return new ResponseEntity<>(HttpStatus.OK);
@@ -494,6 +500,7 @@ public class AdherentApiController implements AdherentApi {
         adh.setPrenom(model.getPrenom());
         adh.setAdresse1(model.getAdresse1());
         adh.setAdresse2(model.getAdresse2());
+        adh.setCodePostal(model.getCodePostal());
         adh.setVille(model.getVille());
         adh.setTelMaison(model.getTelMaison());
         adh.setTelPortable(model.getTelPortable());
@@ -533,6 +540,7 @@ public class AdherentApiController implements AdherentApi {
         model.setPrenom(adherent.getPrenom());
         model.setAdresse1(adherent.getAdresse1());
         model.setAdresse2(adherent.getAdresse2());
+        model.setCodePostal(adherent.getCodePostal());
         model.setVille(adherent.getVille());
         model.setTelMaison(adherent.getTelMaison());
         model.setTelPortable(adherent.getTelPortable());
@@ -789,6 +797,28 @@ public class AdherentApiController implements AdherentApi {
             return 3;
         }
     }
+    
+    /**
+     * R2cupérer l'id de l'adhérent connecté
+     * @return 
+     */
+    private long getIdAdherentConnecte() {
+      Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      
+        String username = null;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        
+        if (username != null) {
+            AdherentDto dto = this.adherentService.recupererAdherent(username);
+            return dto.getId();
+        }
+        LOGGER.error("Aucun username recupérer dans le jeton d'authentification");
+        return 0;
+    }  
 
 
 }

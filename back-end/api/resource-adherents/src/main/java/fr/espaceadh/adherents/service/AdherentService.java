@@ -36,11 +36,20 @@ public interface AdherentService {
     public int creerAdherent(AdherentDto adherentDto);
     
     /**
-     * Recupérer un adhérent avec son username
+     * Recupérer un adhérent avec son id
      * @param idAdh id  de la personne
      * @return adherentDto
      */
     public AdherentDto recupererAdherent (Long idAdh);
+
+
+    /**
+     * Recupérer un adhérent avec son username
+     * @param email email de l'adherent
+     * @return adherentDto
+     */
+    public AdherentDto recupererAdherent (String email);
+
     
     /**
      * récupérer la liste complete des adhérents
