@@ -62,7 +62,7 @@ export class ConnexionComponent implements OnInit {
       },
       () => {
 
-        if (this.roles == null) {
+        if (this.roles.roles == null) {
           this.loggerService.info('Pas de role pour cet utilisateur');
           this.aRole = false;
           this.loading = false;
