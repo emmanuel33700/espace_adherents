@@ -2,16 +2,26 @@
   Chargement...
 </ng-container>
 <ng-container *ngIf="!loading && manifestations.length">
-  <nb-list>
 
+  <nb-list>
     <nb-list-item *ngFor="let manifestation of manifestations">
 
-      <nb-user  [name]="'le ' + dateFormat(manifestation.dateDebut) + ' - ' + manifestation.descriptionLongue"
-                [title]="manifestation.statutParticipation" [color]="getColor(manifestation.statutParticipation)"   >
-      </nb-user>
+      <!-- Participe à la manifestation -->
+      <ng-container *ngIf="manifestation.statutParticipation == '1'">
+        <span><nb-icon icon="checkmark-circle-2-outline" status="success" nbPopover="Participe" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
+      </ng-container>
+      <!-- Ne participe pas participe à la manifestation -->
+      <ng-container *ngIf="manifestation.statutParticipation == '2'">
+        <span><nb-icon icon="close-circle-outline" status="danger" nbPopover="Participe pas" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
+      </ng-container>
+      <!-- Aucune réponse sur la participation à la manifestation -->
+      <ng-container *ngIf="manifestation.statutParticipation == '3'">
+        <span><nb-icon icon="question-mark-outline" status="info" nbPopover="En attente" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
+      </ng-container>
+
+      <span class="results"> {{manifestation.descriptionCourte}} - {{ dateFormat(manifestation.dateDebut) }}</span>
 
     </nb-list-item>
-
-
   </nb-list>
+
 </ng-container>

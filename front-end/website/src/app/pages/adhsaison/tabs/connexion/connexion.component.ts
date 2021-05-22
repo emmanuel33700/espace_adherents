@@ -32,6 +32,9 @@ export class ConnexionComponent implements OnInit {
   // indicateur de chargement
   loading = true;
 
+  // Indicateur de role affecté à l'adhérent
+  aRole: boolean = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private rolesService: RolesService,
@@ -59,24 +62,41 @@ export class ConnexionComponent implements OnInit {
       },
       () => {
 
-        this.loggerService.info('role recuperer par API ' + JSON.stringify(this.roles));
-        this.roleStringJzon = this.getClaims(this.roles);
-
-        if (this.roleStringJzon.includes('ADMIN')) {
-          this.user.role = 'ADMIN';
-        } else if (this.roleStringJzon.includes('BUREAU')) {
-          this.user.role = 'BUREAU';
-        } else if (this.roleStringJzon.includes('CONSEIL')) {
-          this.user.role = 'CONSEIL';
+        if (this.isEmptyUnderkill(this.roles.roles)) {
+          this.loggerService.info('Pas de role pour cet utilisateur');
+          this.aRole = false;
+          this.loading = false;
         } else {
-          this.user.role = 'ADHERENT';
-        }
-        this.user.email = this.adherent.email;
+          this.loggerService.info('role recuperer par API ' + JSON.stringify(this.roles));
+          this.roleStringJzon = this.getClaims(this.roles);
 
-        this.loading = false;
+          if (this.roleStringJzon.includes('ADMIN')) {
+            this.user.role = 'ADMIN';
+          } else if (this.roleStringJzon.includes('BUREAU')) {
+            this.user.role = 'BUREAU';
+          } else if (this.roleStringJzon.includes('CONSEIL')) {
+            this.user.role = 'CONSEIL';
+          } else {
+            this.user.role = 'ADHERENT';
+          }
+          this.user.email = this.adherent.email;
+
+          this.aRole = true;
+          this.loading = false;
+        }
+
 
       });
 
+  }
+
+
+  /**
+   * Vérifier si la liste est vide
+   * @param obj
+   */
+  private isEmptyUnderkill(obj: any): boolean {
+    return Object.keys(obj).length === 0;
   }
 
   /**

@@ -20,70 +20,81 @@
           </ul>
         </nb-alert>
 
+        <!-- cahrgement en cours -->
+        <ng-container *ngIf="loading">
+          Chargement...
+        </ng-container>
 
-        <form
-          (ngSubmit)="submit(form)"
-          #form="ngForm"
-        >
+        <!-- L'adhérent n'a pas crée de compte -->
+        <ng-container *ngIf="!aRole && !loading">
+         {{ adherent.nom }} {{ adherent.prenom }} n'a pas encore créé de compte
+        </ng-container>
+
+        <!-- L'adhérent a  créé un compte -->
+        <ng-container *ngIf="aRole && !loading">
+          <form
+            (ngSubmit)="submit(form)"
+            #form="ngForm"
+          >
 
 
-          <div class="form-group row">
-            <label for="input-email" class="label col-sm-3 col-form-label">Adresse mail</label>
-            <div class="col-sm-9">
-              <input nbInput
-                     [(ngModel)]="user.email"
-                     #email="ngModel"
-                     id="input-email"
-                     name="email"
-                     pattern=".+@.+..+"
-                     placeholder="nom.prenom@fai.com"
-                     fullWidth
-                     [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="true"
-                     [minlength]="5"
-                     [maxlength]="40"
-                     [attr.aria-invalid]="email.invalid && email.touched ? true : null">
-              <ng-container *ngIf="email.invalid && email.touched">
-                <p class="caption status-danger" *ngIf="email.errors?.required">
-                  Email est nécésaire
-                </p>
-                <p class="caption status-danger" *ngIf="email.errors?.pattern">
-                  Erreur dans le format
-                </p>
-                <p class="caption status-danger" *ngIf="email.errors?.minlength || email.errors?.maxlength">
-                  Le mail doit entre compris entre 5 et 40 caracteres
-                </p>
-              </ng-container>
+            <div class="form-group row">
+              <label for="input-email" class="label col-sm-3 col-form-label">Adresse mail</label>
+              <div class="col-sm-9">
+                <input nbInput
+                       [(ngModel)]="user.email"
+                       #email="ngModel"
+                       id="input-email"
+                       name="email"
+                       pattern=".+@.+..+"
+                       placeholder="nom.prenom@fai.com"
+                       fullWidth
+                       [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'"
+                       [required]="true"
+                       [minlength]="5"
+                       [maxlength]="40"
+                       [attr.aria-invalid]="email.invalid && email.touched ? true : null">
+                <ng-container *ngIf="email.invalid && email.touched">
+                  <p class="caption status-danger" *ngIf="email.errors?.required">
+                    Email est nécésaire
+                  </p>
+                  <p class="caption status-danger" *ngIf="email.errors?.pattern">
+                    Erreur dans le format
+                  </p>
+                  <p class="caption status-danger" *ngIf="email.errors?.minlength || email.errors?.maxlength">
+                    Le mail doit entre compris entre 5 et 40 caracteres
+                  </p>
+                </ng-container>
+              </div>
             </div>
-          </div>
 
-          <div class="form-group row">
-            <label for="input-civilite" class="label col-sm-3 col-form-label">Civilité</label>
-            <div class="col-sm-9">
-              <nb-radio-group
-                [(ngModel)]="user.role"
-                id="input-role"
-                name="role"
-                fullWidth
-              >
-                <nb-radio value="ADHERENT">Adhérent</nb-radio>
-                <nb-radio value="CONSEIL">Conseil administration</nb-radio>
-                <nb-radio value="BUREAU">Bureau</nb-radio>
-                <nb-radio value="ADMIN">Administrateur</nb-radio>
-              </nb-radio-group>
-            </div>
-          </div>
-
-          <button nbButton
+            <div class="form-group row">
+              <label for="input-role" class="label col-sm-3 col-form-label">Civilité</label>
+              <div class="col-sm-9">
+                <nb-radio-group
+                  [(ngModel)]="user.role"
+                  id="input-role"
+                  name="role"
                   fullWidth
-                  status="success"
-                  [disabled]="submitted || !form.valid"
-                  [class.btn-pulse]="submitted">
-            Valider
-          </button>
+                >
+                  <nb-radio value="ADHERENT">Adhérent</nb-radio>
+                  <nb-radio value="CONSEIL">Conseil administration</nb-radio>
+                  <nb-radio value="BUREAU">Bureau</nb-radio>
+                  <nb-radio value="ADMIN">Administrateur</nb-radio>
+                </nb-radio-group>
+              </div>
+            </div>
 
-        </form>
+            <button nbButton
+                    fullWidth
+                    status="success"
+                    [disabled]="submitted || !form.valid"
+                    [class.btn-pulse]="submitted">
+              Valider
+            </button>
 
+          </form>
+        </ng-container>
 
       </nb-card-body>
     </nb-card>

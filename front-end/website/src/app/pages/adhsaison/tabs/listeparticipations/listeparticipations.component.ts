@@ -28,12 +28,7 @@ export class ListeparticipationsComponent implements OnInit  {
 
   manifestations: Manifestation[] = [];
 
-  users: { libelle: string, name: string, title: string, color: string }[] = [
-    { libelle: '4', name: 'Assemble générale', title: 'Participe pas', color: 'red' },
-    { libelle: '3', name: 'Fete du la lune', title: 'Participe pas' , color: 'red'},
-    { libelle: '2', name: 'Fete du soleil', title: 'Participe' , color: 'blue'},
-    { libelle: '1', name: 'Fete des etoiles', title: 'Participe' , color: 'blue' },
-  ];
+
 
   constructor( private manifestationService: ManifestationService,
                private loggerService: LoggerService,
@@ -82,13 +77,5 @@ export class ListeparticipationsComponent implements OnInit  {
     return this.datePipe.transform(date, 'dd-MM-yyyy à hh:mm:ss' );
   }
 
-  getColor(statutParticipation: 1 | 2 | 3) {
-    if (statutParticipation === 1) {
-      return 'green';
-    } else if (statutParticipation === 2) {
-      return 'red';
-    } else {
-      return 'blue';
-    }
-  }
+
 }

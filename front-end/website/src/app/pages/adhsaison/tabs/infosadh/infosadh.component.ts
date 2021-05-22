@@ -54,6 +54,7 @@ export class InfosadhComponent implements OnInit {
     this.user.email = this.adherent.email;
     this.user.adresse1 = this.adherent.adresse1;
     this.user.adresse2 = this.adherent.adresse2;
+    this.user.codePostal = this.adherent.codePostal;
     this.user.ville = this.adherent.ville;
     this.user.telPortable = this.adherent.telPortable;
     this.user.telMaison = this.adherent.telMaison;
@@ -82,12 +83,13 @@ export class InfosadhComponent implements OnInit {
     this.adherent.email = this.user.email;
     this.adherent.adresse1 = this.user.adresse1;
     this.adherent.adresse2 = this.user.adresse2;
+    this.adherent.codePostal = this.user.codePostal;
     this.adherent.ville = this.user.ville;
     this.adherent.telPortable = this.user.telPortable;
     this.adherent.telMaison = this.user.telFixe;
     this.adherent.dateNaissance = this.dateService.convertIsoDate(this.user.dateNaissance);
     this.adherent.commentaire = this.user.commentaire;
-    if (this.user.accordmail) {
+    if (this.user.accordMail) {
       this.adherent.accordMail = true;
     }
     if (this.user.publicContact) {

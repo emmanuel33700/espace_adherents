@@ -6,9 +6,38 @@
 
         <nb-list-item *ngFor="let communication of communications">
 
-          <nb-user  [name]="'le ' + dateFormat(communication.dateArrive) + ' - ' + communication.sujet"
-                   [title]="communication.statut" [color]="getColor(communication.statut)"   >
-          </nb-user>
+          <!-- mail en cours d'envoie -->
+          <ng-container *ngIf="communication.statut == 'queued' ">
+            <span><nb-icon icon="loader-outline" status="info" nbPopover="En cours d'envoi" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
+          </ng-container>
+
+          <!-- mail non lu -->
+          <ng-container *ngIf="communication.statut == 'sent' ">
+            <span><nb-icon icon=="email-outline" status="info" nbPopover="Envoyé" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
+          </ng-container>
+
+          <!-- mail lu -->
+          <ng-container *ngIf="communication.statut == 'opened' ">
+            <span><nb-icon icon=="checkmark-square-2-outline" nbPopover="Ouvert" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
+          </ng-container>
+
+
+          <!-- mail lu  et cliqué -->
+          <ng-container *ngIf="communication.statut == 'clicked' ">
+            <span><nb-icon icon=="checkmark-square-2-outline" status="success" nbPopover="Cliqué" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
+          </ng-container>
+
+          <!-- mail en erreur -->
+          <ng-container *ngIf="(communication.statut != 'queued')
+          || (communication.statut == 'sent')
+           || (communication.statut == 'opened')
+           || (communication.statut == 'opened')
+          ">
+            <span><nb-icon icon=="alert-triangle-outline"></nb-icon></span>
+          </ng-container>
+
+          <span class="results"> {{communication.sujet}} - {{ dateFormat(communication.dateArrive) }} ( statut mail : {{communication.statut}})</span>
+
 
         </nb-list-item>
 
