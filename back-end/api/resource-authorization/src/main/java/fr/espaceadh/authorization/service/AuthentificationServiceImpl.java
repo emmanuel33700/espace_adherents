@@ -265,6 +265,13 @@ public class AuthentificationServiceImpl implements AuthentificationService {
     public AuthoritiesDto recupererAuthorities(int idUser) {
         /** on recherche l'utilisateur rematif à l'id **/
         UserDto  user = this.userDao.lectureUtilisateur(idUser);
+        
+        if(user == null) {
+            LOGGER.info("Aucun utilisateur récupéré via l'ID {} ", idUser);
+            AuthoritiesDto dto = new AuthoritiesDto();
+            dto.setRoles(new ArrayList<>());
+            return dto;
+        }
 
         return this.authoritiesDao.recupererAutorities(user.getUsername());
     }
