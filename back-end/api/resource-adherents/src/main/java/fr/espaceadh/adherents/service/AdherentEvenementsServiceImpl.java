@@ -138,6 +138,10 @@ public class AdherentEvenementsServiceImpl implements AdherentEvenementsService{
             
             
             int roleMax = 0;
+            if (roles == null) {
+                LOGGER.debug("L'adherent {} n'a pas encore activé son compte ", idAdh);
+                return 1;
+            }
             for(Roles.RolesEnum role : roles.getRoles()) {
                 if (role == Roles.RolesEnum.ADHERENT & roleMax <1){
                     roleMax = 1;

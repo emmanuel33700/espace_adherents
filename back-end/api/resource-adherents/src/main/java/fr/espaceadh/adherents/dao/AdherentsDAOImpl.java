@@ -380,8 +380,8 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
             adh.setCodePostal(rs.getString("code_postal"));
             adh.setVille(rs.getString("ville"));
             adh.setTelMaison(rs.getString("tel1"));
-            adh.setTelPortable(rs.getString("tel2"));
-            adh.setTelTravail(rs.getString("tel3"));
+            adh.setTelPortable(rs.getString("tel3"));
+            adh.setTelTravail(rs.getString("tel2"));
             adh.setDateNaissance(rs.getDate("date_maissance"));
             adh.setProfession(rs.getString("profession"));
             adh.setLienPhotoProfil(rs.getString("link_picture"));
