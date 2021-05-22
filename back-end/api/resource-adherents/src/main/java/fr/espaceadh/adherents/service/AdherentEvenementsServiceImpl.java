@@ -138,7 +138,7 @@ public class AdherentEvenementsServiceImpl implements AdherentEvenementsService{
             
             
             int roleMax = 0;
-            if (roles == null) {
+            if (roles.getRoles() == null) {
                 LOGGER.debug("L'adherent {} n'a pas encore activé son compte ", idAdh);
                 return 1;
             }
