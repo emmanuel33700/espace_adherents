@@ -48,6 +48,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.GrantedAuthority;
@@ -182,6 +183,28 @@ public class AdherentApiController implements AdherentApi {
         return new ResponseEntity<>(adh,HttpStatus.OK);
     }
 
+    /**
+     * Recherche un adhérent via son mail
+     * @param mailadherent
+     * @return 
+     */
+   public ResponseEntity<Adherent> getAdherentByMail(@NotNull @Parameter(in = ParameterIn.QUERY, description = "mail de l'adhérent" ,required=true,schema=@Schema()) @Valid @RequestParam(value = "mailadherent", required = true) String mailadherent) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            AdherentDto dto = this.adherentService.recupererAdherent(mailadherent);
+            if (dto == null){
+                return new ResponseEntity<>(null,HttpStatus.OK);
+            } 
+            else {
+                Adherent adh = this.translateDto(dto);
+                return new ResponseEntity<>(adh,HttpStatus.OK);
+            }
+        }
+
+        return new ResponseEntity<Adherent>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    
+    
     public ResponseEntity<Adhesion> getAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à recuperer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
