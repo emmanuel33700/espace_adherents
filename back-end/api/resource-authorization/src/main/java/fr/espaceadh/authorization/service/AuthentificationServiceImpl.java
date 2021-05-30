@@ -266,9 +266,15 @@ public class AuthentificationServiceImpl implements AuthentificationService {
     public boolean modifierInformationUtilisateur(int idUser, String username) {
         final UserDto userOld = this.userDao.lectureUtilisateur(idUser);
         
+        
+        AuthoritiesDto authoritoesDto = this.authoritiesDao.recupererAutorities(userOld.getUsername());
+        
+        this.authoritiesDao.suppressionAutorities(userOld.getUsername());
+        
         this.userDao.modifierUserNameUtilisateur(idUser, username);
         
-        this.authoritiesDao.modifierUserNameUtilisateur(userOld.getUsername(), username);
+        authoritoesDto.setUsername(username);
+        this.authoritiesDao.creationAutorities(authoritoesDto);
         
         return true;
     }
