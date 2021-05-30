@@ -22,7 +22,10 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
         <!-- jdbc token store -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -34,9 +37,13 @@
             <artifactId>postgresql</artifactId>
             <version>9.1-901-1.jdbc4</version>
         </dependency>
-
-        <!-- oauth -->
+        
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
+        <!-- oauth -->
+       <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
             <version>${oauth.version}</version>
@@ -61,6 +68,12 @@
             <version>${commons-io.version}</version>
         </dependency>
                 
+        <!--mail -->
+        <dependency>
+            <groupId>fr.espaceadh</groupId>
+            <artifactId>lib-mail</artifactId>
+            <version>${project.version}</version>
+        </dependency>
                 
         <!--SpringFox dependencies -->
         <dependency>
@@ -79,29 +92,11 @@
             <version>2.6.4</version>
         </dependency>
         
-        <!--mail -->
         <dependency>
-            <groupId>fr.espaceadh</groupId>
-            <artifactId>lib-mail</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>io.gsonfire</groupId>
-            <artifactId>gson-fire</artifactId>
-            <version>${gson-fire-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>${swagger-core-version}</version>
-        </dependency>
-                
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>3.0.0</version>
+        </dependency>                
 
         <dependency>
             <groupId>junit</groupId>

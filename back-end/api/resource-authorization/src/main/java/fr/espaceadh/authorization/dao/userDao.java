@@ -63,4 +63,20 @@ public interface userDao {
      */
     boolean validationUtilisateur (int idUser, String cleeValidation);
     
+    /**
+     * Changer le statut d'acces à un compte utilisateur
+     * @param idUser
+     * @param statutActivation true => COmpte activé ; false => compte désactivé
+     * @return 
+     */
+    boolean changerValidationUtilisateur (int idUser, boolean statutActivation);
+    
+    /**
+     * Modifier le username d'un utilisateur
+     * @param idUser
+     * @param username
+     * @return 
+     */
+    boolean modifierUserNameUtilisateur (int idUser, String username);
+    
 }

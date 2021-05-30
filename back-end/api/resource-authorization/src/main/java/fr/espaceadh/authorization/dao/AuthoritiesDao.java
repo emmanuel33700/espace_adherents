@@ -48,4 +48,14 @@ public interface AuthoritiesDao {
      */
     AuthoritiesDto recupererAutorities (String username);
     
+    
+
+    /**
+     * Modifier le username d'un utilisateur
+     * @param usernameOld
+     * @param usernameNew
+     * @return 
+     */
+    boolean modifierUserNameUtilisateur (String usernameOld, String usernameNew);
+    
 }

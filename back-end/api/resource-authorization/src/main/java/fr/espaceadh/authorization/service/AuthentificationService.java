@@ -43,7 +43,34 @@ public interface AuthentificationService {
      */
     boolean modifierRolesUtilisateur (int idUser, List<RolesEnum> rolesEnum );
     
-    
+    /**
+     * Récupérer les authorities pour un id utilisateur
+     * @param idUser
+     * @return 
+     */
     AuthoritiesDto recupererAuthorities (int idUser);
+    
+    /**
+     * Modifier le username d'un utilisateur
+     * @param idUser
+     * @param username
+     * @return 
+     */
+    boolean modifierInformationUtilisateur(int idUser, String username);
+    
+    
+    /**
+     * Activier un compte utilisateur
+     * @param idUser
+     * @return 
+     */
+    boolean activerAuthentification(int idUser);
+    
+    /**
+     * désactiver un compte utilisateur
+     * @param idUser
+     * @return 
+     */
+    boolean desactiverAuthentification(int idUser);
     
 }

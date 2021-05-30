@@ -103,6 +103,29 @@ public class AuthoritiesDaoImpl extends JdbcDaoSupport implements AuthoritiesDao
         return dto;
         
     }
+
+    /**
+     *  Modifier le username d'un utilisateur
+     * @param usernameOld
+     * @param usernameNew
+     * @return 
+     */
+    @Override
+    public boolean modifierUserNameUtilisateur(String usernameOld, String usernameNew) {
+        StringBuilder query = new StringBuilder();
+        query.append(" UPDATE authorities SET username = ? WHERE username = ? ");
+        
+        int nbDelete = 0;    
+        nbDelete =  this.getJdbcTemplate().update(query.toString()
+                ,usernameNew
+                ,usernameOld
+                );
+        if (nbDelete >  0) return true;
+        else {
+            LOGGER.error("Erreur aucune mise à jour du username {} pour le user {} ",usernameNew, usernameOld );
+            return false;
+        }    
+    }
     
     
      public static final class AutoritiesMapper implements  RowMapper<RolesEnum> {

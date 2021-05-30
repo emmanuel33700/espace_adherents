@@ -200,6 +200,55 @@ public class UserDaoImpl extends JdbcDaoSupport implements userDao{
         return null;
     }
 
+    /**
+     * Modifier le username d'un utilisateur
+     * @param idUser
+     * @param username
+     * @return 
+     */
+    @Override
+    public boolean modifierUserNameUtilisateur(int idUser, String username) {
+        StringBuilder query = new StringBuilder();
+                 query.append(" UPDATE users	SET datemodif= now(), username = ? WHERE idadherent = ? ");
+
+        
+        int nbMaj;          
+        nbMaj = this.getJdbcTemplate().update(query.toString(),
+                username,
+                idUser
+        );
+        if (nbMaj ==  1) return true;
+        else {
+            LOGGER.error("Erreur lors de la modification du username {}  pour l'id utilisateur {} => Nb de mise à jour ",username, idUser, nbMaj );
+        }
+        return false;    
+    }
+
+    /**
+     * Changer le statut d'acces à un compte utilisateur
+     * @param idUser
+     * @param statutActivation true => COmpte activé ; false => compte désactivé
+     * @return 
+     */
+    @Override
+    public boolean changerValidationUtilisateur(int idUser, boolean statutActivation) {
+        StringBuilder query = new StringBuilder();
+                 query.append(" UPDATE users ");
+                 query.append("     SET datemodif= now(), enabled = ?  ");
+                 query.append("    WHERE idadherent= ? ");
+        
+        int nbMaj;          
+        nbMaj = this.getJdbcTemplate().update(query.toString(),
+                statutActivation,
+                idUser
+        );
+        if (nbMaj ==  1) return true;
+        else {
+            LOGGER.error("Erreur lors de la validation du changement du statut d'activation d'un compte {} . Nb de ligne mis à jour {} ", idUser, nbMaj );
+        }
+        return false;
+    }
+
     
     /**
      * 

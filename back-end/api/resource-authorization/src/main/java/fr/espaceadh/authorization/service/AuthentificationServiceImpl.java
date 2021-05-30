@@ -115,6 +115,7 @@ public class AuthentificationServiceImpl implements AuthentificationService {
 
     
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean validationCreationUser(int idUser, String cleeValidation) {
         return userDao.validationUtilisateur(idUser, cleeValidation);
     }
@@ -215,6 +216,7 @@ public class AuthentificationServiceImpl implements AuthentificationService {
      * @return 
      */
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean modifierRolesUtilisateur(int idUser, List<RolesEnum> rolesEnum ) {
         
         /** on recherche l'utilisateur rematif à l'id **/
@@ -238,6 +240,7 @@ public class AuthentificationServiceImpl implements AuthentificationService {
      * @return 
      */
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public AuthoritiesDto recupererAuthorities(int idUser) {
         /** on recherche l'utilisateur rematif à l'id **/
         UserDto  user = this.userDao.lectureUtilisateur(idUser);
@@ -250,6 +253,46 @@ public class AuthentificationServiceImpl implements AuthentificationService {
         }
 
         return this.authoritiesDao.recupererAutorities(user.getUsername());
+    }
+
+    /**
+     *  Modifier le username d'un utilisateur
+     * @param idUser
+     * @param username
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean modifierInformationUtilisateur(int idUser, String username) {
+        final UserDto userOld = this.userDao.lectureUtilisateur(idUser);
+        
+        this.userDao.modifierUserNameUtilisateur(idUser, username);
+        
+        this.authoritiesDao.modifierUserNameUtilisateur(userOld.getUsername(), username);
+        
+        return true;
+    }
+
+    /**
+     * Activier un compte utilisateur
+     * @param idUser
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean activerAuthentification(int idUser) {
+        return this.userDao.changerValidationUtilisateur(idUser, true);
+    }
+
+    /**
+     * deactivier un compte utilisateur
+     * @param idUser
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean desactiverAuthentification(int idUser) {
+        return this.userDao.changerValidationUtilisateur(idUser, false);
     }
 
 

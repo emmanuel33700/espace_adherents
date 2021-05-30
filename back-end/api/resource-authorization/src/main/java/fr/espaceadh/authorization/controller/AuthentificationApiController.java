@@ -25,25 +25,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.authorization.dto.AuthoritiesDto;
 import fr.espaceadh.authorization.dto.RolesEnum;
 import fr.espaceadh.authorization.dto.UserDto;
+import fr.espaceadh.authorization.model.ActivationAuthentification;
 import fr.espaceadh.authorization.model.ModelApiResponse;
 import fr.espaceadh.authorization.service.AuthentificationService;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-09-28T08:29:33.965Z[GMT]")
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+
+
+
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-30T09:41:12.158Z[GMT]")
 @Controller
 public class AuthentificationApiController implements AuthentificationApi {
 
@@ -65,11 +70,30 @@ public class AuthentificationApiController implements AuthentificationApi {
     }
 
     /**
-     * Ajout d'un utilisateur
+     * Activer ou désactiver un authentification utilisateur
+     * @param idadh
      * @param body
      * @return 
      */
-    public ResponseEntity<Void> addAuthentification(@ApiParam(value = "ajout de l'objet authentification" ,required=true )  @Valid @RequestBody Authentification body) {
+    @Override
+    public ResponseEntity<Void> activationAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "information d'activation ou desactivation d'un authentification", required=true, schema=@Schema()) @Valid @RequestBody ActivationAuthentification body) {
+        String accept = request.getHeader("Accept");
+        if (body.isStatutActivation()) {
+            this.authentificationService.activerAuthentification(idadh.intValue());
+        } else {
+            this.authentificationService.desactiverAuthentification(idadh.intValue());
+        }
+        
+        return new ResponseEntity<Void>(HttpStatus.OK);
+        
+    }
+
+    /**
+     * Ajout d'un compte
+     * @param body
+     * @return 
+     */
+    public ResponseEntity<Void> addAuthentification(@Parameter(in = ParameterIn.DEFAULT, description = "ajout de l'objet authentification", required=true, schema=@Schema()) @Valid @RequestBody Authentification body) {
         String accept = request.getHeader("Accept");
         
         
@@ -80,12 +104,12 @@ public class AuthentificationApiController implements AuthentificationApi {
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    public ResponseEntity<Void> deleteAuthentification(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
+    public ResponseEntity<Void> deleteAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Authentification> getAuthentification(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
+    public ResponseEntity<Authentification> getAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
@@ -99,30 +123,60 @@ public class AuthentificationApiController implements AuthentificationApi {
         return new ResponseEntity<Authentification>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> resetPassword(@ApiParam(value = "demander la réinitialisation du mot de passe"  )  @Valid @RequestBody Login body) {
+    /**
+     * R2cupération du role de la personne
+     * @param idadh
+     * @return 
+     */
+    public ResponseEntity<Roles> getRoles(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        if (accept != null && accept.contains("application/json")) {
+            AuthoritiesDto authoritiesDto = this.authentificationService.recupererAuthorities(idadh.intValue());
+        
+            return new ResponseEntity<>(this.concertModel(authoritiesDto),HttpStatus.OK);
+        }
+
+        return new ResponseEntity<Roles>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    
-    public ResponseEntity<Void> updateAuthentification(@ApiParam(value = "mise à jour de l'objet authentification" ,required=true )  @Valid @RequestBody Authentification body) {
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    public ResponseEntity<Void> updateRoles(@ApiParam(value = "mise à jour de l'objet role" ,required=true )  @Valid @RequestBody Roles body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
+    public ResponseEntity<Void> resetPassword(@Parameter(in = ParameterIn.DEFAULT, description = "demander la réinitialisation du mot de passe", schema=@Schema()) @Valid @RequestBody Login body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     /**
-     * Validation de la création d'un compte utilisateur
-     * @param body
+     * Mise à jour des informations d'authentification
      * @param idadh
+     * @param body
      * @return 
      */
-    public ResponseEntity<Void> validationAuthentification(@ApiParam(value = "Clée de validation reçu par mail au moment de la création du compte" ,required=true )  @Valid @RequestBody Validation body,@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
+    public ResponseEntity<Void> updateAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "mise à jour du login de la personne", required=true, schema=@Schema()) @Valid @RequestBody Authentification body) {
+        String accept = request.getHeader("Accept");
+        
+        if (body.getPassword() == null && body.getLogin() != null && body.getIdAdh().intValue() == idadh.intValue()) {
+            LOGGER.info("Modification du login d'un utilisateur id {} avec le username {} ", idadh.intValue(), body.getLogin());
+            this.authentificationService.modifierInformationUtilisateur(idadh.intValue(), body.getLogin());
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }
+        
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
 
+    /**
+     * Mise à jour du role
+     * @param idadh
+     * @param body
+     * @return 
+     */
+    public ResponseEntity<Void> updateRoles(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "mise à jour de l'objet role", required=true, schema=@Schema()) @Valid @RequestBody Roles body) {
+         String accept = request.getHeader("Accept");
+        
+         this.authentificationService.modifierRolesUtilisateur(idadh.intValue(), this.convertDto(body.getRoles()));
+        
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<Void> validationAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "Clée de validation reçu par mail au moment de la création du compte", required=true, schema=@Schema()) @Valid @RequestBody Validation body) {
         boolean result = authentificationService.validationCreationUser(idadh.intValue(), body.getCleeValidation());
         
         if (result) {
@@ -133,15 +187,15 @@ public class AuthentificationApiController implements AuthentificationApi {
             apiResponse.setMessage("Validation non effectué, id de l'utilisateur  ou clee de validation incorrecte");
             return new ResponseEntity<Void>(HttpStatus.NOT_MODIFIED );
         }
-            
     }
 
-    public ResponseEntity<Void> valideResetPassword(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh,@ApiParam(value = "demander la validation de la réinitialisation du mot de passe"  )  @Valid @RequestBody ReinitAuthentification body) {
+    public ResponseEntity<Void> valideResetPassword(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "demander la validation de la réinitialisation du mot de passe", schema=@Schema()) @Valid @RequestBody ReinitAuthentification body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
-    
-    
+
+
+
     
     
         /**
@@ -220,35 +274,4 @@ public class AuthentificationApiController implements AuthentificationApi {
         return roleEnumDto;
     }
     
-        
-    /**
-     * Récupérer les roles d'une personnes
-     * @param idadh
-     * @return 
-     */
-    @Override
-    public ResponseEntity<Roles> getRoles(Long idadh) {
-        String accept = request.getHeader("Accept");
-        AuthoritiesDto authoritiesDto = this.authentificationService.recupererAuthorities(idadh.intValue());
-        
-        return new ResponseEntity<>(this.concertModel(authoritiesDto),HttpStatus.OK);
-    }
-
-    /**
-     * Mise à jour du role
-     * @param idadh
-     * @param body
-     * @return 
-     */
-    @Override
-    public ResponseEntity<Void> updateRoles(Long idadh, Roles body) {
-         String accept = request.getHeader("Accept");
-        
-         this.authentificationService.modifierRolesUtilisateur(idadh.intValue(), this.convertDto(body.getRoles()));
-        
-        return new ResponseEntity<Void>(HttpStatus.OK);
-    }
-
-
-
 }
