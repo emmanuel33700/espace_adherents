@@ -219,6 +219,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         StringBuilder query = new StringBuilder();
         query.append(" UPDATE public.t_adherents ");
         query.append("	SET ");
+        query.append("	e_mail=?, ");
         query.append("	civilite=?, ");
         query.append("	nom=?, ");
         query.append("	premon=?, ");
@@ -241,6 +242,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         
         
         int nbCreation = this.getJdbcTemplate().update(query.toString() 
+            , adherentDto.getEmail()
             , adherentDto.getCivilite().toString()
             , adherentDto.getNom()
             , adherentDto.getPrenom()
