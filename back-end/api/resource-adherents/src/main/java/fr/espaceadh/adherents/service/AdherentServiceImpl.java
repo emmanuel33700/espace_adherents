@@ -23,13 +23,26 @@ import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
 import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,6 +131,16 @@ public class AdherentServiceImpl implements AdherentService{
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean updateAdherents(AdherentDto adherentDto) {
+        
+        final AdherentDto dtoAdherentOld = this.adherentsDAO.getAdherentByID(adherentDto.getId());
+        
+        if (dtoAdherentOld.getEmail() != null && adherentDto.getEmail() != null 
+                && !dtoAdherentOld.getEmail().equals(adherentDto.getEmail())){
+            LOGGER.info("Changement de username demandé  : {} => {} ", dtoAdherentOld.getEmail() , adherentDto.getEmail());
+            OAuth2AccessToken token = this.recupererToken();
+            this.changerUserName(adherentDto.getId(), adherentDto.getEmail(), token.getValue());
+        }
+        
         return this.adherentsDAO.updateAdherents(adherentDto);
     }
 
@@ -176,5 +199,96 @@ public class AdherentServiceImpl implements AdherentService{
        return adherentsDAO.getAdherentByLogin(email);
     }
     
+    
+    
+    /**
+     * Récupérer token d'accès oauth2
+     * @return 
+     */
+    private OAuth2AccessToken recupererToken() {
+        ClientCredentialsResourceDetails resourceDetails = new ClientCredentialsResourceDetails();
+        resourceDetails.setClientSecret(env.getProperty("oauth2.ress-adh.clientsecret"));
+        resourceDetails.setClientId(env.getProperty("oauth2.ress-adh.clientid"));
+        resourceDetails.setAccessTokenUri(env.getProperty("oauth2.url"));
+       // resourceDetails.setScope("ress-autorization-admin");
+
+        OAuth2RestTemplate oAuthRestTemplate = new OAuth2RestTemplate(resourceDetails);
+
+        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+        headers.setContentType( MediaType.APPLICATION_JSON );
+
+        return  oAuthRestTemplate.getAccessToken();
+    }
+    
+    
+    /**
+     * 
+     * @param idAdh
+     * @param email
+     * @param token
+     * @return 
+     */
+    private boolean changerUserName (long idAdh, String email, String token){
+        try {
+            StringBuilder bearer = new StringBuilder();
+            bearer.append("Bearer ");
+            bearer.append(token);
+
+            
+            StringBuilder urlstring = new StringBuilder();
+            urlstring.append(env.getProperty("api.ress.authorization.put.url"));
+            urlstring.append(idAdh);
+            
+            LOGGER.info("URL de la ressource {}", urlstring.toString());
+            
+            
+            URL url = new URL(urlstring.toString());
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("PUT");
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("charset", "utf-8");
+            con.setRequestProperty("Authorization", bearer.toString());
+            con.setDoOutput(true);
+            
+            
+            StringBuilder jsonInputString = new StringBuilder();
+            jsonInputString.append(" { ");
+            jsonInputString.append(" \"idAdh\":");
+            jsonInputString.append(idAdh);
+            jsonInputString.append(" , ");
+            jsonInputString.append(" \"login\":");
+            jsonInputString.append(" \"");
+            jsonInputString.append(email);
+            jsonInputString.append("\"");
+            jsonInputString.append(" } ");
+            
+             LOGGER.info("Data envoyé {}", jsonInputString.toString());
+             
+            OutputStreamWriter osw = new OutputStreamWriter(con.getOutputStream());
+            osw.write(jsonInputString.toString());
+            osw.flush();
+            osw.close();
+
+            final int status = con.getResponseCode();
+            
+            con.disconnect();
+            
+            LOGGER.info("code Statut {}",status);
+            
+            
+            if (status == 200) return true;
+            else {
+                LOGGER.error("Error de l'API de modification du username {} ", con.getResponseCode());
+            }
+            return false;
+        } catch (MalformedURLException ex) {
+            LOGGER.error("MalformedURLException ", ex);
+        } catch (IOException ex) {
+             LOGGER.error("IOException ", ex);
+        }
+        return false;
+    }
     
 }

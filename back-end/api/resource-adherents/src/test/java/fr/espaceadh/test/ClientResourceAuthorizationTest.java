@@ -18,9 +18,12 @@ package fr.espaceadh.test;
 
 import fr.espaceadh.adherents.clientapi.authorization.JSON;
 import fr.espaceadh.adherents.clientapi.authorization.Roles;
+import fr.espaceadh.adherents.service.AdherentServiceImpl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -64,11 +67,18 @@ public class ClientResourceAuthorizationTest {
     }
         
         
-    @Test
-    public void testRecupurerAuthority(){
-        recupererAutorityAdherent(24);
+        public void testRecupurerAuthority(){
+        recupererAutorityAdherent(37);
     }
-    
+
+
+    public void testChangerUserName(){
+        OAuth2AccessToken token = this.recupererToken();
+        
+        LOGGER.info(token.toString());
+        this.changerUserName(37, "toto.toto@hotmail.fr", token.getValue());
+        
+    }    
     
         /**
      * Récupérer l'autority la plus élevé de l'adhérent
@@ -152,6 +162,75 @@ public class ClientResourceAuthorizationTest {
         
     }
     
+    /**
+     * 
+     * @param idAdh
+     * @param email
+     * @param token
+     * @return 
+     */
+    private boolean changerUserName (long idAdh, String email, String token){
+        try {
+            StringBuilder bearer = new StringBuilder();
+            bearer.append("Bearer ");
+            bearer.append(token);
+
+            
+            StringBuilder urlstring = new StringBuilder();
+            urlstring.append(env.getProperty("api.ress.authorization.put.url"));
+            urlstring.append(idAdh);
+            
+            LOGGER.info("URL de la ressource {}", urlstring.toString());
+            
+            
+            URL url = new URL(urlstring.toString());
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("PUT");
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("charset", "utf-8");
+            con.setRequestProperty("Authorization", bearer.toString());
+            con.setDoOutput(true);
+            
+            
+            StringBuilder jsonInputString = new StringBuilder();
+            jsonInputString.append(" { ");
+            jsonInputString.append(" \"idAdh\":");
+            jsonInputString.append(idAdh);
+            jsonInputString.append(" , ");
+            jsonInputString.append(" \"login\":");
+            jsonInputString.append(" \"");
+            jsonInputString.append(email);
+            jsonInputString.append("\"");
+            jsonInputString.append(" } ");
+            
+             LOGGER.info("Data envoyé {}", jsonInputString.toString());
+             
+            OutputStreamWriter osw = new OutputStreamWriter(con.getOutputStream());
+            osw.write(jsonInputString.toString());
+            osw.flush();
+            osw.close();
+
+            final int status = con.getResponseCode();
+            
+            con.disconnect();
+            
+            LOGGER.info("code Statut {}",status);
+            
+            
+            if (status == 200) return true;
+            else {
+                LOGGER.error("Error de l'API de modification du username {} ", con.getResponseCode());
+            }
+            return false;
+        } catch (MalformedURLException ex) {
+            java.util.logging.Logger.getLogger(AdherentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(AdherentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
     
     
     private OAuth2AccessToken recupererToken() {
