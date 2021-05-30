@@ -113,6 +113,7 @@ public class AdherentEvenementsServiceImpl implements AdherentEvenementsService{
             con.setConnectTimeout(5000);
             con.setReadTimeout(5000);
             con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Accept", "application/json");
             con.setRequestProperty("charset", "utf-8");
             con.setRequestProperty("Authorization", bearer.toString());
             int status = con.getResponseCode();
