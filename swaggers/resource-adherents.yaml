@@ -75,11 +75,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+    get:
+      tags:
+        - adherent
+      summary: rechercher adherent via son mail
+      operationId: getAdherentByMail
+      security:
+        - oAuth:
+            - ress-adherent-read
+      parameters:
+        - in: query
+          name: mailadherent
+          required: true
+          schema:
+            type: string
+          description: mail de l'adhérent
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Adherent'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+
   '/adherent/{idadh}':
     get:
       tags:
         - adherent
-      summary: rechercher adherent
+      summary: recuperer adherent
       operationId: getAdherent
       security:
         - oAuth:

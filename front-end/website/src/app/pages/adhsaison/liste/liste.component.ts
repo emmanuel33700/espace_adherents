@@ -1,11 +1,10 @@
 import {Component, HostBinding, OnInit} from '@angular/core';
-import {  Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {ListingAdherentService} from '../../../../api/generated/adherents/services/listing-adherent.service';
 import {LoggerService} from '../../../@core/utils/logger.service';
 import {Adherent} from '../../../../api/generated/adherents/models';
 import {NbToastrService} from '@nebular/theme';
 import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
-
 
 
 @Component({
@@ -18,14 +17,15 @@ import {AdherentService} from '../../../../api/generated/adherents/services/adhe
 export class ListeComponent implements OnInit {
 
 
-
   adherents: Adherent[] = [];
+  adherentsListeComplete: Adherent[] = [];
   isAdherentSaison: boolean;
   adherentSelected: Adherent = {};
 
   // Toaster
   @HostBinding('class')
   classes = 'example-items-rows';
+
   // fin toaster
 
   constructor(
@@ -34,16 +34,17 @@ export class ListeComponent implements OnInit {
     private loggerService: LoggerService,
     private toastrService: NbToastrService,
     private adherentService: AdherentService,
-  ) {}
-
+  ) {
+  }
 
 
   ngOnInit(): void {
     this.isAdherentSaison = false;
-    this.listingAdherentService.getListeAdherents( {})
+    this.listingAdherentService.getListeAdherents({})
       .subscribe(
         (data) => {
           this.adherents = data;
+          this.adherentsListeComplete = data;
           this.loggerService.info(JSON.stringify(data));
         },
         (error) => {
@@ -75,8 +76,8 @@ export class ListeComponent implements OnInit {
         this.loggerService.error(error);
       },
       () => {
-        this.loggerService.info('adherent recupe api '  + JSON.stringify(id));
-        localStorage.setItem('adh_selected', JSON.stringify(this.adherentSelected ));
+        this.loggerService.info('adherent recupe api ' + JSON.stringify(id));
+        localStorage.setItem('adh_selected', JSON.stringify(this.adherentSelected));
         return this.router.navigateByUrl('pages/adhsaison/tabs/infosadh');
       });
   }
@@ -97,8 +98,8 @@ export class ListeComponent implements OnInit {
         this.loggerService.error(error);
       },
       () => {
-        this.loggerService.info('adherent recupe api '  + JSON.stringify(id));
-        localStorage.setItem('adh_selected', JSON.stringify(this.adherentSelected ));
+        this.loggerService.info('adherent recupe api ' + JSON.stringify(id));
+        localStorage.setItem('adh_selected', JSON.stringify(this.adherentSelected));
         return this.router.navigateByUrl('pages/adhsaison/ajouteradhesion');
       });
   }
@@ -108,14 +109,16 @@ export class ListeComponent implements OnInit {
    * @param $event
    */
   changeListe($event: Event) {
+    this.loggerService.info('TOTOOT');
     this.isAdherentSaison = !this.isAdherentSaison;
 
     if (this.isAdherentSaison) {
       this.loggerService.info('Recupérer les adherents de la saison');
-      this.listingAdherentService.getListeAdherentsSaison( {})
+      this.listingAdherentService.getListeAdherentsSaison({})
         .subscribe(
           (data) => {
             this.adherents = data;
+            this.adherentsListeComplete = data;
             this.loggerService.info(JSON.stringify(data));
           },
           (error) => {
@@ -129,10 +132,11 @@ export class ListeComponent implements OnInit {
           });
     } else {
       this.loggerService.info('Recupérer l\'ensemble des adherents');
-      this.listingAdherentService.getListeAdherents( {})
+      this.listingAdherentService.getListeAdherents({})
         .subscribe(
           (data) => {
             this.adherents = data;
+            this.adherentsListeComplete = data;
             this.loggerService.info(JSON.stringify(data));
           },
           (error) => {
@@ -145,5 +149,31 @@ export class ListeComponent implements OnInit {
             this.loggerService.debug('fini');
           });
     }
+  }
+
+  /**
+   * Rechercher les adhérents
+   * @param $event
+   */
+  rechercherAdherent($event: Event) {
+    const target = $event.target as HTMLButtonElement;
+    if (target) {
+
+      const textRecherche: string = target.value;
+      this.loggerService.info('adherent recherchés : ' + target.value);
+
+      this.adherents = [];
+      this.adherentsListeComplete.forEach((value, index) => {
+          if ((value.nom != null && value.nom.toLowerCase().includes(textRecherche.toLowerCase()))
+            || (value.prenom != null && value.prenom.toLowerCase().includes(textRecherche.toLowerCase()))
+            || (value.email != null && value.email.toLowerCase().includes(textRecherche.toLowerCase()))
+            || String(value.id).includes(textRecherche.toLowerCase())
+            || (value.ville != null && value.ville.toLowerCase().includes(textRecherche.toLowerCase()))) {
+            this.adherents.push(value);
+          }
+        },
+      );
+    }
+
   }
 }

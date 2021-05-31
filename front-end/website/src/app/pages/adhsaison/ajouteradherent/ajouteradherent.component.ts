@@ -1,8 +1,8 @@
 import {Component, HostBinding, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, NgForm} from '@angular/forms';
+import {FormBuilder, FormGroup, NgForm, NgModel} from '@angular/forms';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
-import { NbToastrService } from '@nebular/theme';
+import {NbToastrService} from '@nebular/theme';
 import {LoggerService} from '../../../@core/utils/logger.service';
 import {DateService} from '../../../@core/utils';
 
@@ -18,12 +18,14 @@ export class AjouteradherentComponent implements OnInit {
   errors: string[] = [];
   messages: string[] = [];
   submitted = false;
+  valideEmail = false;
 
   user: any = {};
 
   // Toaster
   @HostBinding('class')
   classes = 'example-items-rows';
+
   // fin toaster
 
   constructor(
@@ -32,7 +34,8 @@ export class AjouteradherentComponent implements OnInit {
     private toastrService: NbToastrService,
     private loggerService: LoggerService,
     private dateService: DateService,
-    ) {}
+  ) {
+  }
 
   ngOnInit(): void {
   }
@@ -67,7 +70,6 @@ export class AjouteradherentComponent implements OnInit {
     }
 
 
-
     this.adherentService.ajoutAdherent({body: this.adherent})
       .subscribe(
         (data) => {
@@ -89,5 +91,45 @@ export class AjouteradherentComponent implements OnInit {
           this.submitted = false;
         },
       );
+  }
+
+
+  /**
+   * Vérifie si le mail existe déjà en BD
+   * @param email
+   */
+  eMailValide(email: NgModel) {
+
+    this.loggerService.info('Validation du mail ' + email.value);
+    if (this.validateEmail(email.value)) {
+      this.adherentService.getAdherentByMail({mailadherent: email.value})
+        .subscribe(
+          (data) => {
+            if (data == null) {
+              this.loggerService.info('Le mail n existe pas en BD');
+              this.valideEmail = true;
+            } else {
+              this.valideEmail = false;
+              this.loggerService.info('Le mail existe  en BD');
+              this.loggerService.debug(JSON.stringify(data));
+            }
+          },
+          (error) => {
+            this.loggerService.error(JSON.stringify(error));
+          },
+          () => {
+          },
+        );
+    }
+  }
+
+
+  /**
+   * VAlidation du format du mail
+   * @param email
+   */
+  validateEmail(email): boolean {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
   }
 }

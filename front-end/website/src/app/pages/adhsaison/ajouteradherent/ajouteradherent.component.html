@@ -1,4 +1,3 @@
-
 <div class="row">
   <div class="col-md-12">
     <nb-card>
@@ -102,14 +101,15 @@
                      #email="ngModel"
                      id="input-email"
                      name="email"
-                     pattern=".+@.+..+"
+                     pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
                      placeholder="nom.prenom@fai.com"
                      fullWidth
-                     [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'"
+                     (change)="eMailValide(email)"
+                     [status]="email.dirty ? ((email.invalid || !valideEmail ) ? 'danger' : 'success') : 'basic'"
                      [required]="true"
                      [minlength]="5"
                      [maxlength]="40"
-                     [attr.aria-invalid]="email.invalid && email.touched ? true : null">
+                     [attr.aria-invalid]="valideEmail && email.invalid && email.touched ? true : null">
               <ng-container *ngIf="email.invalid && email.touched">
                 <p class="caption status-danger" *ngIf="email.errors?.required">
                   Email est nécésaire
@@ -119,6 +119,12 @@
                 </p>
                 <p class="caption status-danger" *ngIf="email.errors?.minlength || email.errors?.maxlength">
                   Le mail doit entre compris entre 5 et 40 caracteres
+                </p>
+
+              </ng-container>
+              <ng-container *ngIf="!valideEmail && email.touched">
+                <p class="caption status-danger">
+                  Le mail existe déjà dans le fichier des adhérents
                 </p>
               </ng-container>
             </div>
@@ -181,7 +187,7 @@
                      #codePostal="ngModel"
                      id="input-codePostal"
                      name="codePostal"
-                     placeholder="Complèment d'adresse"
+                     placeholder="33127"
                      fullWidth
                      [status]="codePostal.dirty ? (codePostal.invalid  ? 'danger' : 'success') : 'basic'"
                      [required]="false"
@@ -285,7 +291,8 @@
                      [maxlength]="10"
                      [attr.aria-invalid]="dateNaissance.invalid && dateNaissance.touched ? true : null">
               <ng-container *ngIf="dateNaissance.invalid && dateNaissance.touched">
-                <p class="caption status-danger" *ngIf="dateNaissance.errors?.minlength || dateNaissance.errors?.maxlength">
+                <p class="caption status-danger"
+                   *ngIf="dateNaissance.errors?.minlength || dateNaissance.errors?.maxlength">
                   Le date doit avoir 10 caracteres
                 </p>
                 <p class="caption status-danger" *ngIf="dateNaissance.errors?.pattern">
@@ -320,15 +327,18 @@
           </div>
 
           <div class="form-group row">
-            <label for="input-accordmail" class="label col-sm-3 col-form-label">Donne accord pour envoyer des emails</label>
+            <label for="input-accordmail" class="label col-sm-3 col-form-label">Donne accord pour envoyer des
+              emails</label>
             <nb-checkbox name="accordmail" id="input-accordmail" [(ngModel)]="user.accordMail" [required]="false">
               Accord
             </nb-checkbox>
           </div>
 
           <div class="form-group row">
-            <label for="input-publicContact" class="label col-sm-3 col-form-label">Donne accord pour apparaitre pour apparaitre sur le site</label>
-            <nb-checkbox name="publicContact" id="input-publicContact" [(ngModel)]="user.publicContact" [required]="false">
+            <label for="input-publicContact" class="label col-sm-3 col-form-label">Donne accord pour apparaitre pour
+              apparaitre sur le site</label>
+            <nb-checkbox name="publicContact" id="input-publicContact" [(ngModel)]="user.publicContact"
+                         [required]="false">
               Accord
             </nb-checkbox>
           </div>
@@ -336,7 +346,7 @@
           <button nbButton
                   fullWidth
                   status="success"
-                  [disabled]="submitted || !form.valid"
+                  [disabled]="submitted || !form.valid || !valideEmail"
                   [class.btn-pulse]="submitted">
             Valider
           </button>

@@ -1,17 +1,21 @@
 <div class="lists row">
 
-  <div class="col-md-12 col-lg-12 col-xxxl-6">
+  <div class="col-md-auto col-lg-12 col-xxxl-12">
 
     <nb-card>
       <nb-card-body>
         <nb-actions size="medium" fullWidth>
+<nb-action>
+	<nb-icon class="action-icon" icon="search-outline"></nb-icon>
+      <input nbInput (change)="rechercherAdherent($event)" type="search" id="search" class="search-input" placeholder="Rechercher adhérent">
+</nb-action>
           <nb-action>
-            <nb-toggle labelPosition="end" (change)="changeListe($event)">Afficher les adhérents de la saision
+            <nb-toggle labelPosition="end" (change)="changeListe($event)">Afficher les adhérents de la saison
             </nb-toggle>
           </nb-action>
           <nb-action routerLink="../ajouteradherent">
             <nb-icon class="action-icon" icon="file-add"></nb-icon>
-            <span>Ajouter un adhérents</span>
+            <span>Ajouter un adhérent</span>
           </nb-action>
         </nb-actions>
 
@@ -25,6 +29,8 @@
   <div class="col-md-auto col-lg-12 col-xxxl-12">
     <nb-card class="list-card" size="giant">
       <nb-card-header>Adhérents</nb-card-header>
+
+
       <nb-list>
         <nb-list-item *ngFor="let adherent of adherents">
 

@@ -26,6 +26,63 @@ export class AdherentService extends BaseService {
   }
 
   /**
+   * Path part for operation getAdherentByMail
+   */
+  static readonly GetAdherentByMailPath = '/adherent';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAdherentByMail()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAdherentByMail$Response(params: {
+
+    /**
+     * mail de l&#x27;adhérent
+     */
+    mailadherent: string;
+
+  }): Observable<StrictHttpResponse<Adherent>> {
+
+    const rb = new RequestBuilder(this.rootUrl, AdherentService.GetAdherentByMailPath, 'get');
+    if (params) {
+
+      rb.query('mailadherent', params.mailadherent);
+
+    }
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<Adherent>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `getAdherentByMail$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAdherentByMail(params: {
+
+    /**
+     * mail de l&#x27;adhérent
+     */
+    mailadherent: string;
+
+  }): Observable<Adherent> {
+
+    return this.getAdherentByMail$Response(params).pipe(
+      map((r: StrictHttpResponse<Adherent>) => r.body as Adherent)
+    );
+  }
+
+  /**
    * Path part for operation ajoutAdherent
    */
   static readonly AjoutAdherentPath = '/adherent';

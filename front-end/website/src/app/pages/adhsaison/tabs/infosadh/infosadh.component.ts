@@ -1,6 +1,6 @@
 import {Component, HostBinding, OnInit} from '@angular/core';
 import {Adherent} from '../../../../../api/generated/adherents/models/adherent';
-import {FormBuilder, FormGroup, NgForm} from '@angular/forms';
+import {FormBuilder, FormGroup, NgForm, NgModel} from '@angular/forms';
 import {AdherentService} from '../../../../../api/generated/adherents/services/adherent.service';
 import { NbToastrService } from '@nebular/theme';
 import {LoggerService} from '../../../../@core/utils/logger.service';
@@ -18,6 +18,7 @@ export class InfosadhComponent implements OnInit {
   adherent: Adherent;
   form: FormGroup ;
   public idAdherent: number = 0;
+  valideEmail = true;
 
   user: any = {};
 
@@ -119,6 +120,49 @@ export class InfosadhComponent implements OnInit {
 
   }
 
+  /**
+   * Vérifie si le mail existe déjà en BD
+   * @param email
+   */
+  eMailValide(email: NgModel) {
 
+    this.loggerService.info('Validation du mail ' + email.value);
+    if (email.value === this.adherent.email) {
+      this.loggerService.info('Mail non modifié, pas besoin de vérifier si il existe déjà en BD ' + email.value);
+      this.valideEmail = true;
+    } else if (this.validateEmail(email.value)) {
+      this.adherentService.getAdherentByMail({mailadherent: email.value})
+        .subscribe(
+          (data) => {
+            if (data == null) {
+              this.loggerService.info('Le mail n existe pas en BD');
+              alert('Attention, vous allez modifier le login de ' + this.adherent.prenom);
+              this.valideEmail = true;
+            } else {
+              this.valideEmail = false;
+              this.loggerService.info('Le mail existe  en BD');
+              this.loggerService.debug(JSON.stringify(data));
+            }
+          },
+          (error) => {
+            this.loggerService.error(JSON.stringify(error));
+          },
+          () => {
+          },
+        );
+    } else {
+      this.valideEmail = true;
+    }
+  }
+
+
+  /**
+   * VAlidation du format du mail
+   * @param email
+   */
+  validateEmail(email): boolean {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
 
 }
