@@ -64,7 +64,7 @@ public interface AuthentificationApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    @PreAuthorize("#oauth2.hasScope('ress-autorization-admin') or hasRole('ADMIN') ")          
+    @PreAuthorize("isDansGroupe('ADMIN')  or #oauth2.hasScope('ress-autorization-admin') ")          
     ResponseEntity<Void> activationAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.DEFAULT, description = "information d'activation ou desactivation d'un authentification", required=true, schema=@Schema()) @Valid @RequestBody ActivationAuthentification body);
 
 
@@ -99,7 +99,7 @@ public interface AuthentificationApi {
     @RequestMapping(value = "/authentification/{idadh}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    @PreAuthorize("hasRole('ADMIN') or (#oauth2.hasScope('ress-autorization-del') and #login == authentication.principal.username)")         
+    @PreAuthorize("isDansGroupe('ADMIN') or (#oauth2.hasScope('ress-autorization-del') and #login == authentication.principal.username)")         
     ResponseEntity<Void> deleteAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
 
         @Operation(summary = "Récupérer les informations d'authentification (login et statut)", description = "vérifier si un login existe dans la BD", security = {
@@ -119,7 +119,7 @@ public interface AuthentificationApi {
     @RequestMapping(value = "/authentification/{idadh}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize("#oauth2.hasScope('ress-autorization-admin') or hasRole('ADMIN') ")         
+    @PreAuthorize("#oauth2.hasScope('ress-autorization-admin') or isDansGroupe('ADMIN') ")         
     ResponseEntity<InfoAuthentification> getAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
     
 
@@ -176,7 +176,7 @@ public interface AuthentificationApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    @PreAuthorize("#oauth2.hasScope('ress-autorization-admin') or hasRole('ADMIN')")        
+    @PreAuthorize("#oauth2.hasScope('ress-autorization-admin') or isDansGroupe('ADMIN')")        
     ResponseEntity<Void> updateAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.DEFAULT, description = "mise à jour du login de la personne", required=true, schema=@Schema()) @Valid @RequestBody Authentification body);
 
 
