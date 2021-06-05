@@ -144,7 +144,8 @@ public class DocumentDaoImpl extends JdbcDaoSupport implements DocumentDao {
         } else {
             LOGGER.error("Erreur lors de la suppression d'un document ", idDocument);
         }
-        return false;     }
+        return false;
+    }
 
     /**
      * 

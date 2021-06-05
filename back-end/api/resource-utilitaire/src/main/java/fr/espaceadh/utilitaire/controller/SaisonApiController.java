@@ -1,48 +1,37 @@
 package fr.espaceadh.utilitaire.controller;
 
 import fr.espaceadh.utilitaire.model.ListeSaison;
-import fr.espaceadh.utilitaire.model.ModelApiResponse;
 import fr.espaceadh.utilitaire.model.Saison;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.annotations.Operation;
+import fr.espaceadh.utilitaire.dto.SaisonDto;
+import fr.espaceadh.utilitaire.service.SaisonService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-02T08:30:39.723Z[GMT]")
 @RestController
 public class SaisonApiController implements SaisonApi {
 
-    private static final Logger log = LoggerFactory.getLogger(SaisonApiController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SaisonApiController.class);
 
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
+    
+    @Autowired
+    protected SaisonService saisonService;
 
     @org.springframework.beans.factory.annotation.Autowired
     public SaisonApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -50,37 +39,62 @@ public class SaisonApiController implements SaisonApi {
         this.request = request;
     }
 
+    /**
+     * Récupérer la liste des saisons
+     * @return 
+     */
     public ResponseEntity<ListeSaison> getListeSaison() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<ListeSaison>(objectMapper.readValue("[ {\n  \"libelle\" : \"2019/2020\",\n  \"id\" : 1,\n  \"saisonActive\" : true\n}, {\n  \"libelle\" : \"2019/2020\",\n  \"id\" : 1,\n  \"saisonActive\" : true\n} ]", ListeSaison.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<ListeSaison>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+             Collection<SaisonDto> lstSaison = this.saisonService.getLstSaison();
+             
+             ListeSaison lstSaisonModel = new ListeSaison();
+             for (SaisonDto dto : lstSaison) {
+                 lstSaisonModel.add(this.translateToModel(dto));
+             }
+             return new ResponseEntity<>(lstSaisonModel, HttpStatus.OK);
         }
 
         return new ResponseEntity<ListeSaison>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    /**
+     * Récupérer la saison courante
+     * @return 
+     */
     public ResponseEntity<Saison> getSaisonCourante() {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Saison>(objectMapper.readValue("{\n  \"libelle\" : \"2019/2020\",\n  \"id\" : 1,\n  \"saisonActive\" : true\n}", Saison.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Saison>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            SaisonDto saisonDto = this.saisonService.getSaisonCourant();
+            return new ResponseEntity<>(this.translateToModel(saisonDto), HttpStatus.OK);
         }
 
         return new ResponseEntity<Saison>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> updateSaisonCourante(@Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Saison body) {
+    /**
+     * Mise à jour de la saison courante
+     * @param idSaison
+     * @return 
+     */
+    public ResponseEntity<Void> updateSaisonCourante(@Parameter(in = ParameterIn.PATH, description = "id de la saison", required=true, schema=@Schema()) @PathVariable("idSaison") Integer idSaison) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        this.saisonService.changerSaisonCourant(idSaison);
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    /**
+     * Transforme l'objet saisondto en saison model
+     * @param dto
+     * @return 
+     */
+    private Saison translateToModel(SaisonDto dto) {
+        Saison saisonModel = new Saison();
+        saisonModel.setId(dto.getId());
+        saisonModel.setLibelle(dto.getLibelle());
+        saisonModel.setSaisonActive(dto.isActive());
+        
+        return saisonModel;
     }
 
 }

@@ -13,26 +13,14 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.CookieValue;
-
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-02T08:30:39.723Z[GMT]")
 public interface SaisonApi {
@@ -55,6 +43,7 @@ public interface SaisonApi {
     @RequestMapping(value = "/saison/liste",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
+    @PreAuthorize("isDansGroupe('BUREAU')")           
     ResponseEntity<ListeSaison> getListeSaison();
 
 
@@ -76,12 +65,13 @@ public interface SaisonApi {
     @RequestMapping(value = "/saison/active",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
+    @PreAuthorize("isDansGroupe('ADHERENT')")           
     ResponseEntity<Saison> getSaisonCourante();
 
 
     @Operation(summary = "Mise à jour de la saison courante", description = "Mise à jour de la saison courante", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
-            ""        })    }, tags={ "Saison" })
+            "ress-adherent-admin"        })    }, tags={ "Saison" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "Operation réussie"),
         
@@ -91,14 +81,13 @@ public interface SaisonApi {
         
         @ApiResponse(responseCode = "404", description = "saison non trouvée"),
         
-        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))),
+        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
         
-        @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))) })
-    @RequestMapping(value = "/saison/active",
+        @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/saison/{idSaison}/active",
         produces = { "application/json" }, 
-        consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<Void> updateSaisonCourante(@Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Saison body);
-
+    @PreAuthorize("isDansGroupe('ADMIN')")          
+    ResponseEntity<Void> updateSaisonCourante(@Parameter(in = ParameterIn.PATH, description = "id de la saison", required=true, schema=@Schema()) @PathVariable("idSaison") Integer idSaison);
 }
 
