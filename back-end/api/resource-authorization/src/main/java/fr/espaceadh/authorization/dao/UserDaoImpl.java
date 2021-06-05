@@ -161,7 +161,20 @@ public class UserDaoImpl extends JdbcDaoSupport implements userDao{
      */
     @Override
     public UserDto lectureUtilisateur(String login) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StringBuilder query = new StringBuilder();
+        query.append(" SELECT username, password, enabled, idadherent, datecreation, datemodif,  ");
+        query.append(" dateconnexion, cleemodification, datemodificationclee ");
+        query.append(" 	FROM users ");
+        query.append(" 	where username = ? ");
+        
+
+        List<UserDto> userDto = this.getJdbcTemplate().query(query.toString(), new UtilisateurMapper(), login);
+        
+        if (!userDto.isEmpty()) {
+            return userDto.get(0);
+        }
+        LOGGER.warn("id {} non trouvé en BD", login);
+        return null;    
     }
     
     
@@ -247,6 +260,21 @@ public class UserDaoImpl extends JdbcDaoSupport implements userDao{
             LOGGER.error("Erreur lors de la validation du changement du statut d'activation d'un compte {} . Nb de ligne mis à jour {} ", idUser, nbMaj );
         }
         return false;
+    }
+
+    /**
+     * Désactiver l'ensemble des authentification à l'exeption des personnes qui ont le role ADMIN
+     * @return 
+     */
+    @Override
+    public boolean desactiverEnsembleAuthentification() {
+        StringBuilder query = new StringBuilder();
+                 query.append(" UPDATE users SET enabled=FALSE ");
+                 query.append("	   WHERE username not in (select a.username from authorities as a where  a.authority= 'ADMIN')  ");
+      
+        int nbMaj = this.getJdbcTemplate().update(query.toString());
+        LOGGER.info("Nombre de compte désactivé : {}", nbMaj );
+        return true;    
     }
 
     

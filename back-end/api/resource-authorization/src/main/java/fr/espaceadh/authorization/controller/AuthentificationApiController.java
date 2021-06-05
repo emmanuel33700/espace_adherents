@@ -26,6 +26,7 @@ import fr.espaceadh.authorization.dto.AuthoritiesDto;
 import fr.espaceadh.authorization.dto.RolesEnum;
 import fr.espaceadh.authorization.dto.UserDto;
 import fr.espaceadh.authorization.model.ActivationAuthentification;
+import fr.espaceadh.authorization.model.InfoAuthentification;
 import fr.espaceadh.authorization.model.ModelApiResponse;
 import fr.espaceadh.authorization.service.AuthentificationService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -103,24 +104,45 @@ public class AuthentificationApiController implements AuthentificationApi {
         
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
+    
+    /**
+     * Désactiver l'ensemble des Authentifications
+     * @return 
+     */
+    public ResponseEntity<Void> desactiverAllAuthentification() {
+        String accept = request.getHeader("Accept");
+        this.authentificationService.desactiverEnsembleAuthentification();
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
 
     public ResponseEntity<Void> deleteAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Authentification> getAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
+    /**
+     * Récupérer les informations d'authentification
+     * @param idadh
+     * @return 
+     */
+    public ResponseEntity<InfoAuthentification> getAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
+
         if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Authentification>(objectMapper.readValue("{\n  \"password\" : \"password\",\n  \"idAdh\" : 0,\n  \"login\" : \"login\"\n}", Authentification.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                LOGGER.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Authentification>(HttpStatus.INTERNAL_SERVER_ERROR);
+            UserDto dto = this.authentificationService.recupererUser(idadh.intValue());
+            
+            if (dto != null) {
+               InfoAuthentification model = new InfoAuthentification();
+               model.setLogin(dto.getUsername());
+               model.setIdAdh(idadh);
+               model.setActif(dto.isEnabled());
+               return new ResponseEntity<>(model, HttpStatus.OK);
             }
+            return new ResponseEntity<InfoAuthentification>(HttpStatus.INTERNAL_SERVER_ERROR);
+
         }
 
-        return new ResponseEntity<Authentification>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<InfoAuthentification>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     /**

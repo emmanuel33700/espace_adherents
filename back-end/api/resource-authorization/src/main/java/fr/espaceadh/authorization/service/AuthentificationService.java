@@ -51,6 +51,13 @@ public interface AuthentificationService {
     AuthoritiesDto recupererAuthorities (int idUser);
     
     /**
+     * R2cupérer les informations d'un utilisateur
+     * @param idUser
+     * @return UserDto
+     */
+    UserDto recupererUser(int idUser);
+    
+    /**
      * Modifier le username d'un utilisateur
      * @param idUser
      * @param username
@@ -72,5 +79,11 @@ public interface AuthentificationService {
      * @return 
      */
     boolean desactiverAuthentification(int idUser);
+    
+    /**
+     * Désactiver l'ensemble des authentification à l'exeption des personnes qui ont le role ADMIN
+     * @return 
+     */
+    boolean desactiverEnsembleAuthentification();
     
 }

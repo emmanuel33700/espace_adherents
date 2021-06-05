@@ -18,6 +18,7 @@ package fr.espaceadh.authorization.controller;
 
 import fr.espaceadh.authorization.model.ActivationAuthentification;
 import fr.espaceadh.authorization.model.Authentification;
+import fr.espaceadh.authorization.model.InfoAuthentification;
 import fr.espaceadh.authorization.model.Login;
 import fr.espaceadh.authorization.model.ModelApiResponse;
 import fr.espaceadh.authorization.model.ReinitAuthentification;
@@ -45,20 +46,25 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface AuthentificationApi {
 
 
-    @Operation(summary = "activation ou désactivation d'une authentification", description = "", tags={ "Authentification" })
+    @Operation(summary = "activation ou désactivation d'une authentification", description = "", security = {
+        @SecurityRequirement(name = "oAuth", scopes = {
+            "ress-autorization-admin",
+"ress-autorization-read",
+"ress-autorization-write",
+"ress-autorization-del"        })    }, tags={ "Authentification" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "201", description = "Operation réussie"),
         
-        @ApiResponse(responseCode = "403", description = "Droit insufisant", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))),
+        @ApiResponse(responseCode = "403", description = "Droit insufisant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
         
-        @ApiResponse(responseCode = "404", description = "login non trouvée", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))),
+        @ApiResponse(responseCode = "404", description = "login non trouvée", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
         
-        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))) })
+        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
     @RequestMapping(value = "/authentification/{idadh}/activation",
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("#oauth2.hasScope('ress-autorization-admin') or hasRole('ADMIN') ")          
     ResponseEntity<Void> activationAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.DEFAULT, description = "information d'activation ou desactivation d'un authentification", required=true, schema=@Schema()) @Valid @RequestBody ActivationAuthentification body);
 
 
@@ -96,27 +102,26 @@ public interface AuthentificationApi {
     @PreAuthorize("hasRole('ADMIN') or (#oauth2.hasScope('ress-autorization-del') and #login == authentication.principal.username)")         
     ResponseEntity<Void> deleteAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
 
-
-    @Operation(summary = "Récupérer les informations d'authentification", description = "vérifier si un login existe dans la BD", security = {
+        @Operation(summary = "Récupérer les informations d'authentification (login et statut)", description = "vérifier si un login existe dans la BD", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
             "ress-autorization-admin",
 "ress-autorization-read",
 "ress-autorization-write",
 "ress-autorization-del"        })    }, tags={ "Authentification" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(schema = @Schema(implementation = Authentification.class))),
+        @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(mediaType = "application/json", schema = @Schema(implementation = InfoAuthentification.class))),
         
-        @ApiResponse(responseCode = "403", description = "Droit insufisant", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))),
+        @ApiResponse(responseCode = "403", description = "Droit insufisant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
         
-        @ApiResponse(responseCode = "404", description = "login non trouvée", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))),
+        @ApiResponse(responseCode = "404", description = "login non trouvée", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
         
-        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))) })
+        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
     @RequestMapping(value = "/authentification/{idadh}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     @PreAuthorize("#oauth2.hasScope('ress-autorization-admin') or hasRole('ADMIN') ")         
-    ResponseEntity<Authentification> getAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
-
+    ResponseEntity<InfoAuthentification> getAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
+    
 
     @Operation(summary = "Recuperer les roles d'une personne", description = "Recuperer les roles d'une personne", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
@@ -227,4 +232,25 @@ public interface AuthentificationApi {
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
     ResponseEntity<Void> valideResetPassword(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.DEFAULT, description = "demander la validation de la réinitialisation du mot de passe", schema=@Schema()) @Valid @RequestBody ReinitAuthentification body);
+    
+    
+        @Operation(summary = "Désactiver l'ensemble des authentifications (hors role administrateur et représentant de l'association qui restent activé)", description = "", security = {
+        @SecurityRequirement(name = "oAuth", scopes = {
+            "ress-autorization-admin",
+"ress-autorization-read",
+"ress-autorization-write",
+"ress-autorization-del"        })    }, tags={ "Authentification" })
+    @ApiResponses(value = { 
+        @ApiResponse(responseCode = "201", description = "Operation réussie"),
+        
+        @ApiResponse(responseCode = "403", description = "Droit insufisant", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
+        
+        @ApiResponse(responseCode = "404", description = "login non trouvée", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
+        
+        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/authentification/all/desactiver",
+        produces = { "application/json" }, 
+        method = RequestMethod.PUT)
+    @PreAuthorize("#oauth2.hasScope('ress-autorization-admin') or isDansGroupe('ADMIN') ")              
+    ResponseEntity<Void> desactiverAllAuthentification();
 }

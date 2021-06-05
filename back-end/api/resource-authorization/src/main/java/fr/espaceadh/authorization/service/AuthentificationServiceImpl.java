@@ -301,6 +301,27 @@ public class AuthentificationServiceImpl implements AuthentificationService {
         return this.userDao.changerValidationUtilisateur(idUser, false);
     }
 
+    /**
+     * Récupérer les informations d'un utilisateur
+     * @param idUser
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public UserDto recupererUser(int idUser) {
+        return this.userDao.lectureUtilisateur(idUser);
+    }
+
+    /**
+     * Désactiver l'ensemble des authentification à l'exeption des personnes qui ont le role ADMIN
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean desactiverEnsembleAuthentification() {
+        return this.userDao.desactiverEnsembleAuthentification();
+    }
+
 
 
     

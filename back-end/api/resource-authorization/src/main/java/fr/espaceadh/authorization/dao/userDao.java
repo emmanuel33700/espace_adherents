@@ -79,4 +79,10 @@ public interface userDao {
      */
     boolean modifierUserNameUtilisateur (int idUser, String username);
     
+        /**
+     * Désactiver l'ensemble des authentification à l'exeption des personnes qui ont le role ADMIN
+     * @return 
+     */
+    boolean desactiverEnsembleAuthentification();
+    
 }
