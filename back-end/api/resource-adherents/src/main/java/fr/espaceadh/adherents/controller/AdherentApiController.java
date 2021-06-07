@@ -108,6 +108,12 @@ public class AdherentApiController implements AdherentApi {
 
     }
 
+    /**
+     * Ajouter une adhésion à un adhérent
+     * @param idadh
+     * @param body
+     * @return 
+     */
     public ResponseEntity<Void> ajoutAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "Objet adhesion", required=true, schema=@Schema()) @Valid @RequestBody Adhesion body) {
         String accept = request.getHeader("Accept");
 

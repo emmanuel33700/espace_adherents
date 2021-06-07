@@ -78,32 +78,7 @@ public class AdherentServiceImpl implements AdherentService{
         
         long idAdherent = adherentsDAO.creerAdherent(adherentDto);
         
-        //envoie du mail de validation du compte
-        MailInDto mailIn = new MailInDto();
-
-        
-        Collection<String> messageTo = new ArrayList<>();
-        messageTo.add(adherentDto.getEmail());
-        mailIn.setMessageTo(messageTo);
-        
-        
-        /* type de template */
-        mailIn.setTemplateMailEnum(TemplateMailEnum.INFORMATION_PRE_INSCRIPTION);
-        
-        /* variables associées au tempalte **/
-        HashMap<String, String> templateVariables = new HashMap<>();
-        templateVariables.put("adh_prenom", adherentDto.getPrenom());
-        templateVariables.put("confirmation_link", 
-                env.getProperty("validationmail.url")
-                        .concat("?mail=").concat(adherentDto.getEmail())
-                        .concat("&id=").concat(Long.toString(idAdherent))
-        );
-        mailIn.setTemplateVariables(templateVariables);
-        
-        /** Sujet du mail **/
-        mailIn.setSujetMail("Votre préinscription");
-        
-        MailOutDto mailOut = getionMail.sendMail(mailIn);
+ 
         
         return 0;
     }
@@ -144,10 +119,52 @@ public class AdherentServiceImpl implements AdherentService{
         return this.adherentsDAO.updateAdherents(adherentDto);
     }
 
+    /**
+     * Ajouter une adhésion à adhérent
+     * @param adhesionDto
+     * @return 
+     */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean creerAdhesion(AdhesionDto adhesionDto) {
-        return this.adherentsDAO.creerAdhesion(adhesionDto);
+        
+        // activier le compte
+        OAuth2AccessToken token = this.recupererToken();
+        int codehttp = this.activierCompte(adhesionDto.getIdAdherent(), token.getValue());
+        boolean resulte = this.adherentsDAO.creerAdhesion(adhesionDto);
+        
+        if (resulte && codehttp != 200) {
+            AdherentDto adhDto = this.adherentsDAO.getAdherentByID(adhesionDto.getIdAdherent());
+            LOGGER.info("Adherent {} n'a pas de compte d'acces ", adhDto.getEmail());
+            //envoie du mail de validation du compte
+             MailInDto mailIn = new MailInDto();
+
+
+             Collection<String> messageTo = new ArrayList<>();
+             messageTo.add(adhDto.getEmail());
+             mailIn.setMessageTo(messageTo);
+
+
+             /* type de template */
+             mailIn.setTemplateMailEnum(TemplateMailEnum.INFORMATION_PRE_INSCRIPTION);
+
+             /* variables associées au tempalte **/
+             HashMap<String, String> templateVariables = new HashMap<>();
+             templateVariables.put("adh_prenom", adhDto.getPrenom());
+             templateVariables.put("confirmation_link", 
+                     env.getProperty("validationmail.url")
+                             .concat("?mail=").concat(adhDto.getEmail())
+                             .concat("&id=").concat(Long.toString(adhesionDto.getIdAdherent()))
+             );
+             mailIn.setTemplateVariables(templateVariables);
+
+             /** Sujet du mail **/
+             mailIn.setSujetMail("Votre préinscription");
+
+             MailOutDto mailOut = getionMail.sendMail(mailIn);            
+        }
+        
+        return resulte;
     }
 
     @Override
@@ -289,6 +306,69 @@ public class AdherentServiceImpl implements AdherentService{
              LOGGER.error("IOException ", ex);
         }
         return false;
+    }
+
+    /**
+     * Appel de l'API d'activation d'un compte
+     * @param idAdh
+     * @param token
+     * @return 
+     */
+    private int activierCompte(Long idAdh, String token) {
+        try {
+            StringBuilder bearer = new StringBuilder();
+            bearer.append("Bearer ");
+            bearer.append(token);
+
+            
+            String urlString = env.getProperty("api.ress.authorization.activation.url");
+            String urlStringWithIdClient = urlString.replace("$", String.valueOf(idAdh));
+
+            
+            LOGGER.info("URL de la ressource {}", urlStringWithIdClient);
+            
+            
+            URL url = new URL(urlStringWithIdClient);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("PUT");
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("charset", "utf-8");
+            con.setRequestProperty("Authorization", bearer.toString());
+            con.setDoOutput(true);
+            
+            
+            StringBuilder jsonInputString = new StringBuilder();
+            jsonInputString.append(" { ");
+            jsonInputString.append(" \"statutActivation\":true");
+            jsonInputString.append(" } ");
+            
+             LOGGER.info("Data envoyé {}", jsonInputString.toString());
+             
+            OutputStreamWriter osw = new OutputStreamWriter(con.getOutputStream());
+            osw.write(jsonInputString.toString());
+            osw.flush();
+            osw.close();
+
+            final int status = con.getResponseCode();
+            
+            con.disconnect();
+            
+            LOGGER.info("code Statut {}",status);
+            
+            
+            if (status != 200) {
+                LOGGER.error("Error de l'API de modification du username {} ", con.getResponseCode());
+            }
+            return status;
+
+        } catch (MalformedURLException ex) {
+            LOGGER.error("MalformedURLException ", ex);
+        } catch (IOException ex) {
+             LOGGER.error("IOException ", ex);
+        }
+        return 500;
     }
     
 }
