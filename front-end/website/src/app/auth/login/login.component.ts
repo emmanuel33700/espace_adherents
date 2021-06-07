@@ -19,6 +19,7 @@ import {getDeepFromObject} from '../../../framework/auth/helpers';
 import {AdherentService} from '../../../api/generated/adherents/services/adherent.service';
 import {LoggerService} from '../../@core/utils';
 import {TokenService} from '../../@core/utils/token.service';
+import {SaisonService} from '../../../api/generated/utilitaire/services/saison.service';
 
 @Component({
   selector: 'ngx-playground-auth',
@@ -45,7 +46,8 @@ export class LoginComponent {
               protected router: Router,
               private adherentService: AdherentService,
               private loggerService: LoggerService,
-              private tokenService: TokenService) {
+              private tokenService: TokenService,
+              private saisonService: SaisonService) {
     this.redirectDelay = this.getConfigValue('forms.login.redirectDelay');
     this.showMessages = this.getConfigValue('forms.login.showMessages');
     this.strategy = this.getConfigValue('forms.login.strategy');
@@ -60,7 +62,7 @@ export class LoginComponent {
   }
 
   login(): void {
-localStorage.clear();
+    localStorage.clear();
     this.errors = this.messages = [];
     this.submitted = true;
 
@@ -113,7 +115,7 @@ localStorage.clear();
 
 
   logout() {
-localStorage.clear();
+    localStorage.clear();
     this.authService.logout('password')
       .subscribe(() => {
         this.token = null;
@@ -128,8 +130,18 @@ localStorage.clear();
    * récupérer la saison courante
    */
   private recupererSaisonCourant() {
-    // TODO à récupérer l'id de l'adhésion courante
-    localStorage.setItem('id_annee_adhesion', '24');
+    this.saisonService.getSaisonCourante()
+      .subscribe(
+        (data) => {
+          localStorage.setItem('id_annee_adhesion', String(data.id));
+        },
+        (error) => {
+          this.loggerService.error(error);
+        },
+        () => {
+
+        });
+
   }
 
   /**

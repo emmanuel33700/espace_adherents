@@ -52,16 +52,6 @@ export class ListecommunicationsComponent implements OnInit {
       });
   }
 
-  getColor(statut: 'unknown' | 'queued' | 'sent' | 'opened' | 'clicked' | 'bounce' | 'spam' | 'unsub' | 'blocked' | 'hardbounced' | 'softbounced' | 'deferred') {
-
-    if ((statut === 'unknown') || (statut === 'queued') || (statut === 'sent')) {
-      return 'blue';
-    } else if ((statut === 'opened') || (statut === 'clicked')) {
-      return 'green';
-    } else {
-      return 'red';
-    }
-  }
 
   dateFormat(dateArrive: string) {
     const date: Date = new Date(dateArrive);

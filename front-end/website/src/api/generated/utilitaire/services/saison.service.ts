@@ -75,7 +75,7 @@ export class SaisonService extends BaseService {
   /**
    * Path part for operation updateSaisonCourante
    */
-  static readonly UpdateSaisonCourantePath = '/saison/active';
+  static readonly UpdateSaisonCourantePath = '/saison/{idSaison}/active';
 
   /**
    * Mise à jour de la saison courante
@@ -83,21 +83,22 @@ export class SaisonService extends BaseService {
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `updateSaisonCourante()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
   updateSaisonCourante$Response(params: {
-  
+
     /**
-     * Objet adherent
+     * id de la saison
      */
-    body: Saison
+    idSaison: number;
+
   }): Observable<StrictHttpResponse<void>> {
 
     const rb = new RequestBuilder(this.rootUrl, SaisonService.UpdateSaisonCourantePath, 'put');
     if (params) {
 
+      rb.path('idSaison', params.idSaison);
 
-      rb.body(params.body, 'application/json');
     }
     return this.http.request(rb.build({
       responseType: 'text',
@@ -116,14 +117,15 @@ export class SaisonService extends BaseService {
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `updateSaisonCourante$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
   updateSaisonCourante(params: {
-  
+
     /**
-     * Objet adherent
+     * id de la saison
      */
-    body: Saison
+    idSaison: number;
+
   }): Observable<void> {
 
     return this.updateSaisonCourante$Response(params).pipe(

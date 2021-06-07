@@ -1,9 +1,11 @@
 import {Component, HostBinding, OnInit} from '@angular/core';
 import {FormBuilder, NgForm} from '@angular/forms';
 import {RolesService} from '../../../../../api/generated/authorization/services/roles.service';
+import {AuthentificationService} from '../../../../../api/generated/authorization/services/authentification.service';
 import {Roles} from '../../../../../api/generated/authorization/models/roles';
+import {ActivationAuthentification} from '../../../../../api/generated/authorization/models/activation-authentification';
 import {Adherent} from '../../../../../api/generated/adherents/models/adherent';
-import { NbToastrService } from '@nebular/theme';
+import {NbToastrService} from '@nebular/theme';
 import {LoggerService} from '../../../../@core/utils/logger.service';
 
 @Component({
@@ -35,11 +37,15 @@ export class ConnexionComponent implements OnInit {
   // Indicateur de role affecté à l'adhérent
   aRole: boolean = false;
 
+  // statut activiation compte
+  compteActive = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private rolesService: RolesService,
     private toastrService: NbToastrService,
     private loggerService: LoggerService,
+    private authentificationService: AuthentificationService,
   ) {
   }
 
@@ -53,6 +59,21 @@ export class ConnexionComponent implements OnInit {
 
     this.loggerService.info('id adh recupere ' + this.idAdherent);
 
+    // récupéraction du statut (actif / non actif de la conenxion
+    this.authentificationService.getAuthentification({idadh: this.idAdherent})
+      .subscribe(
+        (data) => {
+            this.compteActive = data.actif;
+        },
+        (error) => {
+          this.loggerService.error(error);
+        },
+        () => {
+
+
+        });
+
+    // récupération du role de la personne
     this.rolesService.getRoles({idadh: this.idAdherent}).subscribe(
       (data) => {
         this.roles = data;
@@ -153,4 +174,38 @@ export class ConnexionComponent implements OnInit {
       );
   }
 
+  /**
+   * Charger statut de l'activiation du compte
+   * @param $event
+   */
+  chargerStatutAuthentification(event: any) {
+    let activation: ActivationAuthentification;
+    activation = {};
+    if (event.target.checked) {
+      activation.statutActivation = true;
+    } else {
+      activation.statutActivation = false;
+    }
+
+    this.authentificationService.activationAuthentification({idadh: this.idAdherent, body: activation})
+      .subscribe(
+        (data) => {
+          this.loggerService.info(JSON.stringify(data));
+        },
+        (error) => {
+          this.loggerService.error(error);
+          this.toastrService.danger(
+            'Erreur technique lors de enregistrement',
+            'Erreur ');
+          this.submitted = false;
+        },
+        () => {
+          this.loggerService.info('MàJ OK');
+          this.toastrService.success(
+            'Mise à jour finalisée',
+            'Opértation réussit');
+          this.submitted = false;
+        },
+      );
+  }
 }

@@ -9,9 +9,11 @@ import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
 import { Authentification } from '../models/authentification';
+import { InfoAuthentification } from '../models/info-authentification';
 import { Login } from '../models/login';
 import { ReinitAuthentification } from '../models/reinit-authentification';
 import { Validation } from '../models/validation';
+import { ActivationAuthentification } from '../models/activation-authentification';
 
 
 /**
@@ -26,65 +28,6 @@ export class AuthentificationService extends BaseService {
     http: HttpClient
   ) {
     super(config, http);
-  }
-
-  /**
-   * Path part for operation updateAuthentification
-   */
-  static readonly UpdateAuthentificationPath = '/authentification';
-
-  /**
-   * Mise à jour de l'authentification d'une personne
-   *
-   * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `updateAuthentification()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  updateAuthentification$Response(params: {
-  
-    /**
-     * mise à jour de l'objet authentification
-     */
-    body: Authentification
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.UpdateAuthentificationPath, 'put');
-    if (params) {
-
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
-  }
-
-  /**
-   * Mise à jour de l'authentification d'une personne
-   *
-   * This method provides access to only to the response body.
-   * To access the full response (for headers, for example), `updateAuthentification$Response()` instead.
-   *
-   * This method sends `application/json` and handles request body of type `application/json`.
-   */
-  updateAuthentification(params: {
-  
-    /**
-     * mise à jour de l'objet authentification
-     */
-    body: Authentification
-  }): Observable<void> {
-
-    return this.updateAuthentification$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
-    );
   }
 
   /**
@@ -162,7 +105,7 @@ export class AuthentificationService extends BaseService {
      */
     idadh: number;
 
-  }): Observable<StrictHttpResponse<Authentification>> {
+  }): Observable<StrictHttpResponse<InfoAuthentification>> {
 
     const rb = new RequestBuilder(this.rootUrl, AuthentificationService.GetAuthentificationPath, 'get');
     if (params) {
@@ -176,7 +119,7 @@ export class AuthentificationService extends BaseService {
     })).pipe(
       filter((r: any) => r instanceof HttpResponse),
       map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Authentification>;
+        return r as StrictHttpResponse<InfoAuthentification>;
       })
     );
   }
@@ -196,10 +139,80 @@ export class AuthentificationService extends BaseService {
      */
     idadh: number;
 
-  }): Observable<Authentification> {
+  }): Observable<InfoAuthentification> {
 
     return this.getAuthentification$Response(params).pipe(
-      map((r: StrictHttpResponse<Authentification>) => r.body as Authentification)
+      map((r: StrictHttpResponse<InfoAuthentification>) => r.body as InfoAuthentification)
+    );
+  }
+
+  /**
+   * Path part for operation updateAuthentification
+   */
+  static readonly UpdateAuthentificationPath = '/authentification/{idadh}';
+
+  /**
+   * Mise à jour  info d'authentification d'une personne
+   *
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `updateAuthentification()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateAuthentification$Response(params: {
+
+    /**
+     * id de l&#x27;adherent
+     */
+    idadh: number;
+  
+    /**
+     * mise à jour du login de la personne
+     */
+    body: Authentification
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.UpdateAuthentificationPath, 'put');
+    if (params) {
+
+      rb.path('idadh', params.idadh);
+
+      rb.body(params.body, 'application/json');
+    }
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * Mise à jour  info d'authentification d'une personne
+   *
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `updateAuthentification$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  updateAuthentification(params: {
+
+    /**
+     * id de l&#x27;adherent
+     */
+    idadh: number;
+  
+    /**
+     * mise à jour du login de la personne
+     */
+    body: Authentification
+  }): Observable<void> {
+
+    return this.updateAuthentification$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
 
@@ -217,7 +230,7 @@ export class AuthentificationService extends BaseService {
   deleteAuthentification$Response(params: {
 
     /**
-     * id de la personne à modifier
+     * id de l&#x27;adherent
      */
     idadh: number;
 
@@ -249,7 +262,7 @@ export class AuthentificationService extends BaseService {
   deleteAuthentification(params: {
 
     /**
-     * id de la personne à modifier
+     * id de l&#x27;adherent
      */
     idadh: number;
 
@@ -311,6 +324,52 @@ export class AuthentificationService extends BaseService {
   }): Observable<void> {
 
     return this.resetPassword$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation desactiverAllAuthentification
+   */
+  static readonly DesactiverAllAuthentificationPath = '/authentification/all/desactiver';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `desactiverAllAuthentification()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  desactiverAllAuthentification$Response(params?: {
+
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.DesactiverAllAuthentificationPath, 'put');
+    if (params) {
+
+
+    }
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `desactiverAllAuthentification$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  desactiverAllAuthentification(params?: {
+
+  }): Observable<void> {
+
+    return this.desactiverAllAuthentification$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }
@@ -395,7 +454,7 @@ export class AuthentificationService extends BaseService {
   validationAuthentification$Response(params: {
 
     /**
-     * id de la personne à modifier
+     * id de l&#x27;adherent
      */
     idadh: number;
   
@@ -432,7 +491,7 @@ export class AuthentificationService extends BaseService {
   validationAuthentification(params: {
 
     /**
-     * id de la personne à modifier
+     * id de l&#x27;adherent
      */
     idadh: number;
   
@@ -443,6 +502,72 @@ export class AuthentificationService extends BaseService {
   }): Observable<void> {
 
     return this.validationAuthentification$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation activationAuthentification
+   */
+  static readonly ActivationAuthentificationPath = '/authentification/{idadh}/activation';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `activationAuthentification()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  activationAuthentification$Response(params: {
+
+    /**
+     * id de la personne à modifier
+     */
+    idadh: number;
+  
+    /**
+     * information d'activation ou desactivation d'un authentification
+     */
+    body: ActivationAuthentification
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.ActivationAuthentificationPath, 'put');
+    if (params) {
+
+      rb.path('idadh', params.idadh);
+
+      rb.body(params.body, 'application/json');
+    }
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `activationAuthentification$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  activationAuthentification(params: {
+
+    /**
+     * id de la personne à modifier
+     */
+    idadh: number;
+  
+    /**
+     * information d'activation ou desactivation d'un authentification
+     */
+    body: ActivationAuthentification
+  }): Observable<void> {
+
+    return this.activationAuthentification$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }

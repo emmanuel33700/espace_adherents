@@ -37,36 +37,14 @@
             #form="ngForm"
           >
 
-
-            <div class="form-group row">
-              <label for="input-email" class="label col-sm-3 col-form-label">Adresse mail</label>
-              <div class="col-sm-9">
-                <input nbInput
-                       [(ngModel)]="user.email"
-                       #email="ngModel"
-                       id="input-email"
-                       name="email"
-                       pattern=".+@.+..+"
-                       placeholder="nom.prenom@fai.com"
-                       fullWidth
-                       [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'"
-                       [required]="true"
-                       [minlength]="5"
-                       [maxlength]="40"
-                       [attr.aria-invalid]="email.invalid && email.touched ? true : null">
-                <ng-container *ngIf="email.invalid && email.touched">
-                  <p class="caption status-danger" *ngIf="email.errors?.required">
-                    Email est nécésaire
-                  </p>
-                  <p class="caption status-danger" *ngIf="email.errors?.pattern">
-                    Erreur dans le format
-                  </p>
-                  <p class="caption status-danger" *ngIf="email.errors?.minlength || email.errors?.maxlength">
-                    Le mail doit entre compris entre 5 et 40 caracteres
-                  </p>
-                </ng-container>
-              </div>
-            </div>
+<div class="form-group row">
+<label for="input-role" class="label col-sm-3 col-form-label">Activer le compte : </label>
+<div class="col-sm-9">
+            <nb-toggle labelPosition="right" [checked]="compteActive"
+                       (change)="chargerStatutAuthentification($event)"> Compte activé
+            </nb-toggle>
+</div>
+</div>
 
             <div class="form-group row">
               <label for="input-role" class="label col-sm-3 col-form-label">Civilité</label>

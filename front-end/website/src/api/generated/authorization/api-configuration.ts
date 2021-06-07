@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfiguration {
-  rootUrl: string = 'https://adherents.jalle-astro.fr/resource-authorization';
+  rootUrl: string = 'https://api.jalle-astro.fr/resource-authorization';
 }
 
 /**
