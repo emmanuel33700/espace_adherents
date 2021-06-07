@@ -262,6 +262,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+  /saison/{idSaison}/active:
     put:
       tags:
         - Saison
@@ -271,13 +272,13 @@ paths:
       security:
         - oAuth:
             - ress-utilitaire-saison-write
-      requestBody:
-        description: Objet adherent
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/saison'
-        required: true
+      parameters:
+        - name: idSaison
+          in: path
+          description: id de la saison
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: Operation réussie

@@ -130,7 +130,7 @@ paths:
     get:
       tags:
       - Authentification
-      summary: Récupérer les informations d'authentification
+      summary: Récupérer les informations d'authentification (login et statut)
       description: vérifier si un login existe dans la BD
       operationId: getAuthentification
       security: 
@@ -149,7 +149,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Authentification'
+                $ref: '#/components/schemas/InfoAuthentification'
         404:
           description: login non trouvée
           content:
@@ -201,6 +201,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+  '/authentification/all/desactiver':
+    put:
+      tags:
+      - Authentification
+      summary: Désactiver l'ensemble des authentifications (hors role administrateur et représentant de l'association qui restent activé)
+      operationId: desactiverAllAuthentification
+      security: 
+        - oAuth: [ress-autorization-admin]      
+      responses:
+        201:
+          description: Operation réussie
+        404:
+          description: login non trouvée
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        403:
+          description: Droit insufisant 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        405:
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'                       
   '/authentification/{idadh}/validerResetPassword':
     post:
       tags:
@@ -290,6 +319,8 @@ paths:
       - Authentification
       summary: activation ou désactivation d'une authentification
       operationId: activationAuthentification
+      security: 
+        - oAuth: [ress-autorization-admin]
       parameters:
       - name: idadh
         in: path
@@ -439,6 +470,21 @@ components:
           maxLength: 15
           minLength: 5
           type: string
+    InfoAuthentification:
+      type: object
+      properties:
+        idAdh:
+          description: id de la personne 
+          type: integer
+          format: int64
+        login:
+          description: Login de la personnes 
+          maxLength: 50
+          minLength: 3
+          type: string
+        actif:
+          description: Indique sur l'authentification est active
+          type: boolean
     ReinitAuthentification:
       type: object
       properties:
