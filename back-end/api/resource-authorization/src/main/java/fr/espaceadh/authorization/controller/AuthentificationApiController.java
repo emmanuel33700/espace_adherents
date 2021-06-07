@@ -79,13 +79,19 @@ public class AuthentificationApiController implements AuthentificationApi {
     @Override
     public ResponseEntity<Void> activationAuthentification(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "information d'activation ou desactivation d'un authentification", required=true, schema=@Schema()) @Valid @RequestBody ActivationAuthentification body) {
         String accept = request.getHeader("Accept");
+        boolean statut = false;
         if (body.isStatutActivation()) {
-            this.authentificationService.activerAuthentification(idadh.intValue());
+            statut = this.authentificationService.activerAuthentification(idadh.intValue());
         } else {
-            this.authentificationService.desactiverAuthentification(idadh.intValue());
+            statut = this.authentificationService.desactiverAuthentification(idadh.intValue());
         }
         
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        if (statut) {
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        }
+        
         
     }
 
