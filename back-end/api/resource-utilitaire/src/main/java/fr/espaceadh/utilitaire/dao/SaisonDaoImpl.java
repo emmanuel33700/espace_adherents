@@ -56,6 +56,7 @@ public class SaisonDaoImpl extends JdbcDaoSupport implements SaisonDao {
         
         query.append(" SELECT id_annee_adhesion, libelle_annee, annee_courante ");
         query.append(" 	FROM i_annee_adhesion ");
+        query.append(" 	ORDER BY  id_annee_adhesion ");
 
         
         List<SaisonDto> lstSaison =  this.getJdbcTemplate().query(query.toString(), new SaisonMapper());
