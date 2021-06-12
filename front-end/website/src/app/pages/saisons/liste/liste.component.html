@@ -13,14 +13,18 @@
           <div class="form-group row">
             <label class="col-sm-3 label">Saision</label>
             <div class="col-sm-9">
-              <nb-radio-group  [(ngModel)]="selectedOption">
+              <nb-radio-group name="changementSaison" [(ngModel)]="selectedOption">
                 <nb-radio *ngFor="let saison of saisons" [value]="saison.id" [checked]="saison.saisonActive"  >{{ saison.libelle }}</nb-radio>
               </nb-radio-group>
             </div>
           </div>
 
-          <button type="submit" nbButton>Valider</button>
-
+          <button nbButton
+                  fullWidth
+                  status="success"
+                  [class.btn-pulse]="submitted">
+            Valider
+          </button>
         </form>
       </nb-card-body>
     </nb-card>
