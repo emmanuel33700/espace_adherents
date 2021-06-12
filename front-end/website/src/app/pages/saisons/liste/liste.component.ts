@@ -13,6 +13,7 @@ import {FormGroup, NgForm} from '@angular/forms';
 export class ListeComponent implements OnInit {
 
   form: FormGroup ;
+  submitted = false;
 
   // Toaster
   private index: number = 0;
@@ -68,6 +69,7 @@ export class ListeComponent implements OnInit {
   submit(form: NgForm) {
 
     if (this.selectedOption !== 0) {
+      this.submitted = true;
       this.loggerService.info('Changement de saisie avec ID ' + this.selectedOption);
 
       this.saisonService.updateSaisonCourante({idSaison: this.selectedOption})
@@ -77,12 +79,14 @@ export class ListeComponent implements OnInit {
           },
           (error) => {
             this.loggerService.error(error);
+            this.submitted = false;
             this.toastrService.danger(
               'Erreur technique lors de enregistrement',
               'Erreur ');
           },
           () => {
             this.loggerService.info('MàJ OK');
+            this.submitted = false;
             localStorage.setItem('id_annee_adhesion', String(this.selectedOption));
             this.toastrService.success(
               'Mise à jour finalisée',
