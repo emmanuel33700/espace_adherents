@@ -61,9 +61,7 @@ public class SaisonServiceImpl implements SaisonService {
         Collection<SaisonDto> lstSaisonFiltre = new ArrayList<>();
         for(SaisonDto dto : lstSaisonComplete) {
             // on récupère uniquement les saisons proches de la saison courante
-            if( (dto.getId() >  saisonCourantDto.getId() -3 ) 
-                    || (dto.getId() <  saisonCourantDto.getId() +3 ) 
-                    ) {
+            if(dto.getId() >=  (saisonCourantDto.getId() -3)) {
                 lstSaisonFiltre.add(dto);
             }
         }
