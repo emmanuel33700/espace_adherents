@@ -4,15 +4,17 @@
     <nb-card>
       <nb-card-header>Les saisons</nb-card-header>
       <nb-card-body>
-        <form>
+
+        <form
+          (ngSubmit)="submit(form)"
+          #form="ngForm"
+        >
 
           <div class="form-group row">
             <label class="col-sm-3 label">Saision</label>
             <div class="col-sm-9">
-              <nb-radio-group>
-                <nb-radio>2019/2020</nb-radio>
-                <nb-radio>2020/2021</nb-radio>
-                <nb-radio >2021/2022</nb-radio>
+              <nb-radio-group  [(ngModel)]="selectedOption">
+                <nb-radio *ngFor="let saison of saisons" [value]="saison.id" [checked]="saison.saisonActive"  >{{ saison.libelle }}</nb-radio>
               </nb-radio-group>
             </div>
           </div>
