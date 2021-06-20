@@ -1,23 +1,23 @@
 <div class="row">
   <div class="col-md-12">
-    <nb-card >
+    <nb-card>
       <nb-card-header>Envoyer un email</nb-card-header>
       <nb-card-body>
 
-        <nb-radio-group name="changementSaison" >
-          <ng-container *ngIf="role==='CONSEIL' || role==='ADMIN'">
-            <nb-radio  > Envoyer un mail aux adhérent de la saison</nb-radio>
-            <nb-radio  > Envoyer un mail aux adhérent de la saison et saison d'avant</nb-radio>
-          </ng-container>
-          <nb-radio  > Envoyer un mail aux adhérent d'un groupe
-            <nb-select >
-              <nb-option value="1">Atelier Soleil</nb-option>
-              <nb-option value="2">Atelier Lune</nb-option>
-              <nb-option value="3">Atelier Cadran solaire</nb-option>
-            </nb-select>
-          </nb-radio>
+
+        <nb-radio-group name="changementSaison" *ngIf="droitcomplet">
+
+          <nb-radio> Envoyer un mail aux adhérent de la saison</nb-radio>
+          <nb-radio> Envoyer un mail aux adhérent de la saison et saison d'avant</nb-radio>
+          <nb-radio> Envoyer un mail aux adhérent d'un groupe</nb-radio>
         </nb-radio-group>
 
+        Envoyer au groupe suivant :
+        <nb-select>
+          <nb-option value="1">Atelier Soleil</nb-option>
+          <nb-option value="2">Atelier Lune</nb-option>
+          <nb-option value="3">Atelier Cadran solaire</nb-option>
+        </nb-select>
         <BR>
 
         <ngx-tiny-mce></ngx-tiny-mce>
@@ -28,8 +28,6 @@
 </div>
 
 <nb-card-body>
-
-
 
 
 </nb-card-body>

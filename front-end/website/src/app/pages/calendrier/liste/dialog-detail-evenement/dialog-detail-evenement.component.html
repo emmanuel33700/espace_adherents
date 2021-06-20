@@ -12,13 +12,10 @@
             participe à l'évènement
           </nb-toggle>
         </nb-action>
-
-        <ng-container *ngIf="role==='CONSEIL' || role==='ADMIN'">
           <nb-action>
             <nb-icon class="action-icon" icon="trash-2" (click)="supprimerEvenement()"></nb-icon>
             <span>Supprimer l'évènement</span>
           </nb-action>
-        </ng-container>
       </nb-actions>
     <HR>
 

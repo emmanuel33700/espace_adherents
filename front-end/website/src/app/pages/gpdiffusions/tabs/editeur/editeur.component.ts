@@ -15,6 +15,8 @@ export class EditeurComponent implements OnInit {
 
   role: string;
 
+  droitcomplet = false;
+
 
   constructor(
     private loggerService: LoggerService,
@@ -25,6 +27,11 @@ export class EditeurComponent implements OnInit {
 
   ngOnInit(): void {
     this.role = localStorage.getItem('ROLE');
+
+    // tester si la personne à le droit d'éditer la page
+    if ((this.role === 'ADMIN') || (this.role === 'CONSEIL') ) {
+      this.droitcomplet = true;
+    }
   }
 }
 
