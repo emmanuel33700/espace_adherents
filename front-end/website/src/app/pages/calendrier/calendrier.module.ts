@@ -16,6 +16,7 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { CalendrierRoutingModule } from './calendrier-routing.module';
 import { CalendrierComponent } from './calendrier.component';
 import { ListeComponent } from './liste/liste.component';
+import { SyntheseparticipationComponent } from './syntheseparticipation/syntheseparticipation.component';
 import { FormsModule as ngFormsModule } from '@angular/forms';
 import { FullCalendarModule } from '@fullcalendar/angular'; // the main connector. must go first
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
@@ -58,6 +59,7 @@ FullCalendarModule.registerPlugins([ // register FullCalendar plugins
     ListeComponent,
     DialogDetailEvenementComponent,
     DialogAjoutEvenementComponent,
+    SyntheseparticipationComponent,
   ],
 })
 export class CalendrierModule { }

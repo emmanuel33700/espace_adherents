@@ -100,7 +100,7 @@ export class ListeComponent implements OnInit {
 
           this.calendarVisible = true;
 
-          if (this.role.includes('ADMIN') || this.role.includes('BUREAU')) {
+          if ((this.role === 'ADMIN') || (this.role === 'CONSEIL')) {
             this.calendarOptions = {
               headerToolbar: {
                 left: 'prev,next today',
@@ -119,6 +119,26 @@ export class ListeComponent implements OnInit {
               eventsSet: this.handleEvents.bind(this),
               eventDrop: this.updateEvent.bind(this),
               eventResize: this.updateEvent.bind(this),
+              locale: frLocale,
+              events: this.initialEvent,
+            };
+          } else if (this.role === 'RES_ATELIER') {
+            this.calendarOptions = {
+              headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
+              },
+              initialView: 'timeGridWeek',
+              scrollTime: '11:00:00',
+              weekends: true,
+              editable: true,
+              selectable: true,
+              selectMirror: true,
+              dayMaxEvents: true,
+              select: this.handleDateSelect.bind(this),
+              eventClick: this.handleEventClick.bind(this),
+              eventsSet: this.handleEvents.bind(this),
               locale: frLocale,
               events: this.initialEvent,
             };

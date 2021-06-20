@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 
 
@@ -7,18 +7,30 @@ import { Component } from '@angular/core';
   styleUrls: ['./tabs.component.scss'],
   templateUrl: './tabs.component.html',
 })
-export class TabsComponent {
+export class TabsComponent implements OnInit {
 
   tabs: any[] = [
     {
       title: 'Liste groupes',
       route: '/pages/gpdiffusions/tabs/liste',
     },
-    {
-      title: 'Envoyer mail',
-      route: '/pages/gpdiffusions/tabs/editeur',
-    },
+
 
   ];
+
+  ngOnInit(): void {
+
+
+    const role = localStorage.getItem('ROLE');
+
+    if (role !== 'ADHERENT') {
+      this.tabs.push(
+        {
+          title: 'Envoyer mail',
+          route: '/pages/gpdiffusions/tabs/editeur',
+        },
+      );
+    }
+  }
 
 }

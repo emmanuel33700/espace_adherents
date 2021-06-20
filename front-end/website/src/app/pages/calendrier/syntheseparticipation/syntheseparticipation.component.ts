@@ -1,20 +1,18 @@
 import {Component, OnInit} from '@angular/core';
-import {LoggerService} from '../../../../@core/utils';
+import {LoggerService} from '../../../@core/utils/logger.service';
 import {NbToastrService} from '@nebular/theme';
+
 
 @Component({
   selector: 'ngx-form-layouts',
-  styleUrls: ['./editeur.component.scss'],
-  templateUrl: './editeur.component.html',
+  styleUrls: ['./syntheseparticipation.component.scss'],
+  templateUrl: './syntheseparticipation.component.html',
 })
-export class EditeurComponent implements OnInit {
+export class SyntheseparticipationComponent implements OnInit {
 
 
   // indicateur de chargement
   loading = true;
-
-  role: string;
-
 
   constructor(
     private loggerService: LoggerService,
@@ -23,10 +21,12 @@ export class EditeurComponent implements OnInit {
   }
 
 
+
   ngOnInit(): void {
-    this.role = localStorage.getItem('ROLE');
+
   }
+
+
+
+
 }
-
-
-

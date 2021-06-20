@@ -26,6 +26,10 @@ export class TabsComponent implements OnInit {
       route: '/pages/adhsaison/tabs/infosadh',
     },
     {
+      title: 'liens de l\'adhérent',
+      route: '/pages/adhsaison/tabs/liensadherent',
+    },
+    {
       title: 'Adhésions',
       route: '/pages/adhsaison/tabs/lstadhesions',
     },
@@ -37,16 +41,20 @@ export class TabsComponent implements OnInit {
       title: 'Communication',
       route: '/pages/adhsaison/tabs/listecommunications',
     },
-    {
-      title: 'Connexion',
-      route: '/pages/adhsaison/tabs/connexion',
-    },
   ];
 
 
   ngOnInit(): void {
     this.idAdherent = Number(localStorage.getItem('id_adh_selected'));
-   // this.adherent = JSON.parse(localStorage.getItem('adh_selected'));
+
+    const role = localStorage.getItem('ROLE');
+
+    if (role === 'ADMIN') {
+      this.tabs.push(    {
+        title: 'Connexion',
+        route: '/pages/adhsaison/tabs/connexion',
+      });
+    }
 
     this.loggerService.info('id adh recupere ' + this.idAdherent);
 

@@ -93,8 +93,8 @@ export class ConnexionComponent implements OnInit {
 
           if (this.roleStringJzon.includes('ADMIN')) {
             this.user.role = 'ADMIN';
-          } else if (this.roleStringJzon.includes('BUREAU')) {
-            this.user.role = 'BUREAU';
+          } else if (this.roleStringJzon.includes('BUREAU')) { // TODO a transformer role BUREAU en RES_ATELIER
+            this.user.role = 'RES_ATELIER';
           } else if (this.roleStringJzon.includes('CONSEIL')) {
             this.user.role = 'CONSEIL';
           } else {
@@ -143,10 +143,10 @@ export class ConnexionComponent implements OnInit {
     this.loggerService.info('role saisie ' + this.user.role);
     if (this.user.role === 'ADMIN') {
       this.roles.roles = ['ADMIN', 'CONSEIL', 'ADHERENT', 'BUREAU'];
-    } else if (this.user.role === 'BUREAU') {
-      this.roles.roles = ['CONSEIL', 'ADHERENT', 'BUREAU'];
     } else if (this.user.role === 'CONSEIL') {
-      this.roles.roles = ['CONSEIL', 'ADHERENT'];
+      this.roles.roles = ['CONSEIL', 'ADHERENT', 'BUREAU'];
+    } else if (this.user.role === 'RES_ATELIER') {
+      this.roles.roles = ['ADHERENT', 'BUREAU']; // TODO A transformer role BUREAU en RES_ATELIER
     } else {
       this.roles.roles = ['ADHERENT'];
     }

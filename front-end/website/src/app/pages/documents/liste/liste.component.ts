@@ -10,7 +10,6 @@ import {LoggerService} from '../../../@core/utils';
 import {DialogAjoutDocsComponent} from './dialog-ajout-docs/dialog-ajout-docs.component';
 import {DialogAjoutRepertoireComponent} from './dialog-ajout-repertoire/dialog-ajout-repertoire.component';
 import {DocumentationService} from '../../../../api/generated/utilitaire/services/documentation.service';
-import {ArborescenceDocumentsInit} from '../../../../api/generated/utilitaire/models/arborescence-documents-init';
 import {ArborescenceDocuments} from '../../../../api/generated/utilitaire/models/arborescence-documents';
 import {DownloadService} from '../../../@core/utils/download.service';
 
@@ -98,7 +97,7 @@ export class ListeComponent implements OnInit {
     const role = localStorage.getItem('ROLE');
 
     // tester si la personne à le droit d'éditer la page
-    if (role.includes('ADMIN') || role.includes('BUREAU')) {
+    if (role !== 'ADHERENT') {
       this.droitEditionDocument = true;
     }
 

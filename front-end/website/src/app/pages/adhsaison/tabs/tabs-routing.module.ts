@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { TabsComponent} from './tabs.component';
 import { InfosadhComponent} from './infosadh/infosadh.component';
+import { LiensadherentComponent} from './liensadherent/liensadherent.component';
 import { ListeadhesionsComponent} from './listeadhesions/listeadhesions.component';
 import { ListeparticipationsComponent} from './listeparticipations/listeparticipations.component';
 import { ListecommunicationsComponent } from './listecommunications/listecommunications.component';
@@ -15,6 +16,10 @@ const routes: Routes = [{
     {
       path: 'infosadh',
       component: InfosadhComponent,
+    },
+    {
+      path: 'liensadherent',
+      component: LiensadherentComponent,
     },
     {
       path: 'lstadhesions',

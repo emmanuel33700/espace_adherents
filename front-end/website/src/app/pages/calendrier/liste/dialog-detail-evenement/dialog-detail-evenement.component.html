@@ -4,19 +4,23 @@
 
     <ng-container *ngIf="droitEditionEvenement">
 
+
       <nb-actions fullWidth>
+
         <nb-action>
           <nb-toggle labelPosition="right" [(ngModel)]="statutToogle" (change)="participerEvenement($event)">Je
             participe à l'évènement
           </nb-toggle>
         </nb-action>
-        <nb-action>
-          <nb-icon class="action-icon" icon="trash-2" (click)="supprimerEvenement()"></nb-icon>
-          <span>Supprimer l'évènement</span>
-        </nb-action>
-      </nb-actions>
 
-      <HR>
+        <ng-container *ngIf="role==='CONSEIL' || role==='ADMIN'">
+          <nb-action>
+            <nb-icon class="action-icon" icon="trash-2" (click)="supprimerEvenement()"></nb-icon>
+            <span>Supprimer l'évènement</span>
+          </nb-action>
+        </ng-container>
+      </nb-actions>
+    <HR>
 
 
       <nb-alert *ngIf="errors?.length" outline="danger" role="alert">

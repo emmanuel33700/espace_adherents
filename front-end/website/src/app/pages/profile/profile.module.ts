@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {DialogPhotoProfilComponent} from './modifier/dialog-photo-profil/dialog-photo-profil.component';
+import { RelationsadherentComponent } from './relationsadherent/relationsadherent.component';
 
 @NgModule({
     imports: [
@@ -49,6 +50,7 @@ import {DialogPhotoProfilComponent} from './modifier/dialog-photo-profil/dialog-
     ProfileComponent,
     ModifierComponent,
     DialogPhotoProfilComponent,
+    RelationsadherentComponent,
   ],
 })
 export class ProfileModule { }

@@ -12,6 +12,7 @@ import {ListeadhesionsComponent} from './tabs/listeadhesions/listeadhesions.comp
 import { ListeparticipationsComponent} from './tabs/listeparticipations/listeparticipations.component';
 import { ListecommunicationsComponent } from './tabs/listecommunications/listecommunications.component';
 import { ConnexionComponent } from './tabs/connexion/connexion.component';
+import {LiensadherentComponent} from './tabs/liensadherent/liensadherent.component';
 
 const routes: Routes = [{
   path: '',
@@ -41,6 +42,10 @@ const routes: Routes = [{
         {
           path: 'infosadh',
           component: InfosadhComponent,
+        },
+        {
+          path: 'liensadherent',
+          component: LiensadherentComponent,
         },
         {
           path: 'lstadhesions',

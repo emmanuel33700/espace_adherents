@@ -18,6 +18,7 @@ import { ListeComponent } from './liste/liste.component';
 import { AdhsaisonService } from './adhsaison.service';
 import { TabsComponent } from './tabs/tabs.component';
 import { InfosadhComponent} from './tabs/infosadh/infosadh.component';
+import { LiensadherentComponent} from './tabs/liensadherent/liensadherent.component';
 import { ListeadhesionsComponent} from './tabs/listeadhesions/listeadhesions.component';
 import { ListeparticipationsComponent} from './tabs/listeparticipations/listeparticipations.component';
 import { ListecommunicationsComponent } from './tabs/listecommunications/listecommunications.component';
@@ -65,6 +66,7 @@ import {HttpClientModule} from '@angular/common/http';
     ListeComponent,
     TabsComponent,
     InfosadhComponent,
+    LiensadherentComponent,
     ListeadhesionsComponent,
     ListeparticipationsComponent,
     ListecommunicationsComponent,

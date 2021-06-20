@@ -29,6 +29,9 @@ export class DialogDetailEvenementComponent implements OnInit {
   // statut du toogle de confirmation de participation à la manifestation
   statutToogle = false;
 
+  // Role de la personne connecté
+  role: string;
+
   // Toaster
   @HostBinding('class')
   classes = 'example-items-rows';
@@ -57,10 +60,10 @@ export class DialogDetailEvenementComponent implements OnInit {
    */
   ngOnInit(): void {
     this.adherent = JSON.parse(localStorage.getItem('adherent'));
-    const role = localStorage.getItem('ROLE');
+    this.role = localStorage.getItem('ROLE');
 
     // tester si la personne à le droit d'éditer la page
-    if (role.includes('ADMIN') || role.includes('BUREAU')) {
+    if (this.role !== 'ADHERENT') {
       this.droitEditionEvenement = true;
     }
 
