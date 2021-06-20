@@ -61,7 +61,7 @@ export class DialogDetailEvenementComponent implements OnInit {
   ngOnInit(): void {
     this.adherent = JSON.parse(localStorage.getItem('adherent'));
     this.role = localStorage.getItem('ROLE');
-s
+
     // tester si la personne à le droit d'éditer la page
     if ((this.role === 'ADMIN') || (this.role === 'CONSEIL') ) {
       this.droitEditionEvenement = true;
