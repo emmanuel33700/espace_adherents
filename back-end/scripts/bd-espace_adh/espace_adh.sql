@@ -1,5 +1,5 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler  version: 0.9.2-beta
+-- pgModeler  version: 0.9.2
 -- PostgreSQL version: 11.0
 -- Project Site: pgmodeler.io
 -- Model Author: ---
@@ -28,9 +28,9 @@ CREATE TABLE public.i_annee_adhesion (
 
 );
 -- ddl-end --
-COMMENT ON COLUMN public.i_annee_adhesion.annee_courante IS 'indicateur de l''anne encours';
+COMMENT ON COLUMN public.i_annee_adhesion.annee_courante IS E'indicateur de l''anne encours';
 -- ddl-end --
-ALTER TABLE public.i_annee_adhesion OWNER TO postgres;
+-- ALTER TABLE public.i_annee_adhesion OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.t_adherents | type: TABLE --
@@ -50,7 +50,7 @@ CREATE TABLE public.t_adherents (
 	tel3 character varying(50),
 	date_maissance date,
 	profession character varying(60),
-	link_picture character varying(10),
+	link_picture character varying(40),
 	public_contact boolean NOT NULL DEFAULT false,
 	accord_mail boolean NOT NULL DEFAULT true,
 	token_acces character varying(12),
@@ -62,17 +62,17 @@ CREATE TABLE public.t_adherents (
 
 );
 -- ddl-end --
-COMMENT ON TABLE public.t_adherents IS 'liste des adhérents';
+COMMENT ON TABLE public.t_adherents IS E'liste des adhérents';
 -- ddl-end --
-COMMENT ON COLUMN public.t_adherents.public_contact IS 'boolean indiquant si on afficher les coordonees sur l espace public';
+COMMENT ON COLUMN public.t_adherents.public_contact IS E'boolean indiquant si on afficher les coordonees sur l espace public';
 -- ddl-end --
-COMMENT ON COLUMN public.t_adherents.accord_mail IS 'indique si l utilisateur recois tous les mails de la plateforme';
+COMMENT ON COLUMN public.t_adherents.accord_mail IS E'indique si l utilisateur recois tous les mails de la plateforme';
 -- ddl-end --
-COMMENT ON COLUMN public.t_adherents.token_acces IS 'token, permetant de faire des opérations sans authentification (exemple, indiquer la participation aux evenements)';
+COMMENT ON COLUMN public.t_adherents.token_acces IS E'token, permetant de faire des opérations sans authentification (exemple, indiquer la participation aux evenements)';
 -- ddl-end --
-COMMENT ON COLUMN public.t_adherents.fk_id_adherents_update IS 'id de la personne qui à mis à jour cette personne';
+COMMENT ON COLUMN public.t_adherents.fk_id_adherents_update IS E'id de la personne qui à mis à jour cette personne';
 -- ddl-end --
-ALTER TABLE public.t_adherents OWNER TO postgres;
+-- ALTER TABLE public.t_adherents OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.t_adhesions | type: TABLE --
@@ -92,9 +92,9 @@ CREATE TABLE public.t_adhesions (
 
 );
 -- ddl-end --
-COMMENT ON TABLE public.t_adhesions IS 'table relatif aux adhesions. Une adhésions est le lien entre une personne physique adhérent et une saison';
+COMMENT ON TABLE public.t_adhesions IS E'table relatif aux adhesions. Une adhésions est le lien entre une personne physique adhérent et une saison';
 -- ddl-end --
-ALTER TABLE public.t_adhesions OWNER TO postgres;
+-- ALTER TABLE public.t_adhesions OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.i_type_adhesion | type: TABLE --
@@ -106,9 +106,9 @@ CREATE TABLE public.i_type_adhesion (
 
 );
 -- ddl-end --
-COMMENT ON TABLE public.i_type_adhesion IS 'type d''adhésion possible';
+COMMENT ON TABLE public.i_type_adhesion IS E'type d''adhésion possible';
 -- ddl-end --
-ALTER TABLE public.i_type_adhesion OWNER TO postgres;
+-- ALTER TABLE public.i_type_adhesion OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.i_type_authority | type: TABLE --
@@ -120,9 +120,9 @@ CREATE TABLE public.i_type_authority (
 
 );
 -- ddl-end --
-COMMENT ON TABLE public.i_type_authority IS 'les types d''authority. Attention, en lien avec la base d''authentification authorities';
+COMMENT ON TABLE public.i_type_authority IS E'les types d''authority. Attention, en lien avec la base d''authentification authorities';
 -- ddl-end --
-ALTER TABLE public.i_type_authority OWNER TO postgres;
+-- ALTER TABLE public.i_type_authority OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.r_adh_evenement | type: TABLE --
@@ -130,21 +130,20 @@ ALTER TABLE public.i_type_authority OWNER TO postgres;
 CREATE TABLE public.r_adh_evenement (
 	fk_id_adherent numeric(9,0) NOT NULL,
 	fk_id_evenement numeric(20,0) NOT NULL,
-	participe_evenement boolean NOT NULL DEFAULT true,
 	date_enregistrement timestamp with time zone,
+	participe_evenement boolean NOT NULL DEFAULT true,
 	CONSTRAINT pk_r_adh_evenement PRIMARY KEY (fk_id_adherent,fk_id_evenement)
 
 );
 -- ddl-end --
-COMMENT ON TABLE public.r_adh_evenement IS 'table de participation des personnes à un evenement';
+COMMENT ON TABLE public.r_adh_evenement IS E'table de participation des personnes à un evenement';
 -- ddl-end --
-COMMENT ON COLUMN public.r_adh_evenement.date_enregistrement IS 'date d''enregistrement de la participation ';
+COMMENT ON COLUMN public.r_adh_evenement.date_enregistrement IS E'date d''enregistrement de la participation';
 -- ddl-end --
-COMMENT ON COLUMN public.r_adh_evenement.participe_evenement  IS 'indique si l adherent participe à la manifestation';
+COMMENT ON COLUMN public.r_adh_evenement.participe_evenement IS E'indique si l adherent participe à la manifestation';
 -- ddl-end --
-ALTER TABLE public.r_adh_evenement OWNER TO postgres;
+-- ALTER TABLE public.r_adh_evenement OWNER TO postgres;
 -- ddl-end --
-
 
 -- object: public.r_groupe_diffusion_adherents | type: TABLE --
 -- DROP TABLE IF EXISTS public.r_groupe_diffusion_adherents CASCADE;
@@ -156,11 +155,11 @@ CREATE TABLE public.r_groupe_diffusion_adherents (
 
 );
 -- ddl-end --
-COMMENT ON TABLE public.r_groupe_diffusion_adherents IS 'relation entre un groupe de diffusion et un adhérents';
+COMMENT ON TABLE public.r_groupe_diffusion_adherents IS E'relation entre un groupe de diffusion et un adhérents';
 -- ddl-end --
-COMMENT ON COLUMN public.r_groupe_diffusion_adherents.date_enregistrement IS 'date d''enregistrement à un groupe de diffusion';
+COMMENT ON COLUMN public.r_groupe_diffusion_adherents.date_enregistrement IS E'date d''enregistrement à un groupe de diffusion';
 -- ddl-end --
-ALTER TABLE public.r_groupe_diffusion_adherents OWNER TO postgres;
+-- ALTER TABLE public.r_groupe_diffusion_adherents OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.seq_t_adherents | type: SEQUENCE --
@@ -174,7 +173,7 @@ CREATE SEQUENCE public.seq_t_adherents
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
-ALTER SEQUENCE public.seq_t_adherents OWNER TO postgres;
+-- ALTER SEQUENCE public.seq_t_adherents OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.seq_t_adhesion | type: SEQUENCE --
@@ -188,7 +187,7 @@ CREATE SEQUENCE public.seq_t_adhesion
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
-ALTER SEQUENCE public.seq_t_adhesion OWNER TO postgres;
+-- ALTER SEQUENCE public.seq_t_adhesion OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.seq_t_detail_calendar | type: SEQUENCE --
@@ -202,7 +201,7 @@ CREATE SEQUENCE public.seq_t_detail_calendar
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
-ALTER SEQUENCE public.seq_t_detail_calendar OWNER TO postgres;
+-- ALTER SEQUENCE public.seq_t_detail_calendar OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.seq_t_evenement | type: SEQUENCE --
@@ -216,7 +215,7 @@ CREATE SEQUENCE public.seq_t_evenement
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
-ALTER SEQUENCE public.seq_t_evenement OWNER TO postgres;
+-- ALTER SEQUENCE public.seq_t_evenement OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.seq_t_groupe_diffusion | type: SEQUENCE --
@@ -230,7 +229,7 @@ CREATE SEQUENCE public.seq_t_groupe_diffusion
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
-ALTER SEQUENCE public.seq_t_groupe_diffusion OWNER TO postgres;
+-- ALTER SEQUENCE public.seq_t_groupe_diffusion OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.seq_t_share_docs | type: SEQUENCE --
@@ -244,7 +243,7 @@ CREATE SEQUENCE public.seq_t_share_docs
 	NO CYCLE
 	OWNED BY NONE;
 -- ddl-end --
-ALTER SEQUENCE public.seq_t_share_docs OWNER TO postgres;
+-- ALTER SEQUENCE public.seq_t_share_docs OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.t_evenement | type: TABLE --
@@ -257,17 +256,23 @@ CREATE TABLE public.t_evenement (
 	date_debut timestamp with time zone NOT NULL,
 	date_fin timestamp with time zone NOT NULL,
 	fk_id_type_authority numeric(2,0),
+	besoin_confirm_participation boolean NOT NULL DEFAULT false,
+	demande_communication boolean NOT NULL DEFAULT false,
 	CONSTRAINT pk_t_evenement PRIMARY KEY (id_evenement)
 
 );
 -- ddl-end --
-COMMENT ON COLUMN public.t_evenement.description_courte IS 'description courte de l''evenement';
+COMMENT ON COLUMN public.t_evenement.description_courte IS E'description courte de l''evenement';
 -- ddl-end --
-COMMENT ON COLUMN public.t_evenement.date_debut IS 'date et heure de debut de l''evenement';
+COMMENT ON COLUMN public.t_evenement.date_debut IS E'date et heure de debut de l''evenement';
 -- ddl-end --
-COMMENT ON COLUMN public.t_evenement.date_fin IS 'date de fin de l''evenement';
+COMMENT ON COLUMN public.t_evenement.date_fin IS E'date de fin de l''evenement';
 -- ddl-end --
-ALTER TABLE public.t_evenement OWNER TO postgres;
+COMMENT ON COLUMN public.t_evenement.besoin_confirm_participation IS E'indique si il y a un besoin de confirmation de participation à la manifestation';
+-- ddl-end --
+COMMENT ON COLUMN public.t_evenement.demande_communication IS E'Demande une communication de l''évènement par mail';
+-- ddl-end --
+-- ALTER TABLE public.t_evenement OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.t_groupe_diffusion | type: TABLE --
@@ -280,9 +285,9 @@ CREATE TABLE public.t_groupe_diffusion (
 
 );
 -- ddl-end --
-COMMENT ON TABLE public.t_groupe_diffusion IS 'liste des groupes de diffusion ';
+COMMENT ON TABLE public.t_groupe_diffusion IS E'liste des groupes de diffusion';
 -- ddl-end --
-ALTER TABLE public.t_groupe_diffusion OWNER TO postgres;
+-- ALTER TABLE public.t_groupe_diffusion OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.t_share_docs | type: TABLE --
@@ -302,21 +307,21 @@ CREATE TABLE public.t_share_docs (
 
 );
 -- ddl-end --
-COMMENT ON TABLE public.t_share_docs IS 'table des fichiers et dossier partagés';
+COMMENT ON TABLE public.t_share_docs IS E'table des fichiers et dossier partagés';
 -- ddl-end --
-COMMENT ON COLUMN public.t_share_docs.label_short IS 'description court du fichier ou dossier';
+COMMENT ON COLUMN public.t_share_docs.label_short IS E'description court du fichier ou dossier';
 -- ddl-end --
-COMMENT ON COLUMN public.t_share_docs.label_long IS 'description long du fichier ou dossier';
+COMMENT ON COLUMN public.t_share_docs.label_long IS E'description long du fichier ou dossier';
 -- ddl-end --
-COMMENT ON COLUMN public.t_share_docs.is_folder IS 'si c''est un dossier';
+COMMENT ON COLUMN public.t_share_docs.is_folder IS E'si c''est un dossier';
 -- ddl-end --
-COMMENT ON COLUMN public.t_share_docs.is_file IS 'su c''est un fichier';
+COMMENT ON COLUMN public.t_share_docs.is_file IS E'su c''est un fichier';
 -- ddl-end --
-COMMENT ON COLUMN public.t_share_docs.filer IS 'si c''est un dossier, pas besoins de filer';
+COMMENT ON COLUMN public.t_share_docs.filer IS E'si c''est un dossier, pas besoins de filer';
 -- ddl-end --
-COMMENT ON COLUMN public.t_share_docs.fk_id_type_authority IS 'type d''e profil qui peut accéder à ces documents partagés';
+COMMENT ON COLUMN public.t_share_docs.fk_id_type_authority IS E'type d''e profil qui peut accéder à ces documents partagés';
 -- ddl-end --
-ALTER TABLE public.t_share_docs OWNER TO postgres;
+-- ALTER TABLE public.t_share_docs OWNER TO postgres;
 -- ddl-end --
 
 -- object: index_annee_adh | type: INDEX --
@@ -349,16 +354,6 @@ CREATE INDEX index_4 ON public.r_adh_evenement
 	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: index_5 | type: INDEX --
--- DROP INDEX IF EXISTS public.index_5 CASCADE;
-CREATE INDEX index_5 ON public.r_adh_evenement
-	USING btree
-	(
-	  fk_id_evenement
-	)
-	WITH (FILLFACTOR = 90);
--- ddl-end --
-
 -- object: index_id_adherents | type: INDEX --
 -- DROP INDEX IF EXISTS public.index_id_adherents CASCADE;
 CREATE INDEX index_id_adherents ON public.t_adherents
@@ -380,16 +375,6 @@ CREATE UNIQUE INDEX index_7 ON public.t_adhesions
 	WITH (FILLFACTOR = 90);
 -- ddl-end --
 
--- object: index_pk_evenement | type: INDEX --
--- DROP INDEX IF EXISTS public.index_pk_evenement CASCADE;
-CREATE INDEX index_pk_evenement ON public.t_evenement
-	USING btree
-	(
-	  id_evenement
-	)
-	WITH (FILLFACTOR = 90);
--- ddl-end --
-
 -- object: index_unique_token_adherents | type: INDEX --
 -- DROP INDEX IF EXISTS public.index_unique_token_adherents CASCADE;
 CREATE UNIQUE INDEX index_unique_token_adherents ON public.t_adherents
@@ -406,7 +391,46 @@ CREATE UNIQUE INDEX index_unique_mail ON public.t_adherents
 	USING btree
 	(
 	  e_mail
-	);
+	)
+	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: index_pk_evenement | type: INDEX --
+-- DROP INDEX IF EXISTS public.index_pk_evenement CASCADE;
+CREATE INDEX index_pk_evenement ON public.t_evenement
+	USING btree
+	(
+	  id_evenement
+	)
+	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: index_5 | type: INDEX --
+-- DROP INDEX IF EXISTS public.index_5 CASCADE;
+CREATE INDEX index_5 ON public.r_adh_evenement
+	USING btree
+	(
+	  fk_id_evenement
+	)
+	WITH (FILLFACTOR = 90);
+-- ddl-end --
+
+-- object: public.r_relation_adherent | type: TABLE --
+-- DROP TABLE IF EXISTS public.r_relation_adherent CASCADE;
+CREATE TABLE public.r_relation_adherent (
+	fk_id_adherent_representant numeric(9,0) NOT NULL,
+	fk_id_adherent_represente numeric(9,0) NOT NULL,
+	CONSTRAINT pk_r_relation_adherent PRIMARY KEY (fk_id_adherent_representant,fk_id_adherent_represente)
+
+);
+-- ddl-end --
+COMMENT ON COLUMN public.r_relation_adherent.fk_id_adherent_representant IS E'Id de adherent représentant';
+-- ddl-end --
+COMMENT ON COLUMN public.r_relation_adherent.fk_id_adherent_represente IS E'id de adherent reprensenté';
+-- ddl-end --
+COMMENT ON CONSTRAINT pk_r_relation_adherent ON public.r_relation_adherent  IS E'clee primaire de la table r_relation_adherent';
+-- ddl-end --
+-- ALTER TABLE public.r_relation_adherent OWNER TO postgres;
 -- ddl-end --
 
 -- object: fk_t_adhesi_reference_i_annee_ | type: CONSTRAINT --
@@ -479,6 +503,13 @@ REFERENCES public.t_adherents (id_adherents) MATCH SIMPLE
 ON DELETE RESTRICT ON UPDATE RESTRICT;
 -- ddl-end --
 
+-- object: fk_i_type_authority | type: CONSTRAINT --
+-- ALTER TABLE public.t_share_docs DROP CONSTRAINT IF EXISTS fk_i_type_authority CASCADE;
+ALTER TABLE public.t_share_docs ADD CONSTRAINT fk_i_type_authority FOREIGN KEY (fk_id_type_authority)
+REFERENCES public.i_type_authority (id_type_authority) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
 -- object: fk_t_share__reference_t_share_ | type: CONSTRAINT --
 -- ALTER TABLE public.t_share_docs DROP CONSTRAINT IF EXISTS fk_t_share__reference_t_share_ CASCADE;
 ALTER TABLE public.t_share_docs ADD CONSTRAINT fk_t_share__reference_t_share_ FOREIGN KEY (fk_id_share_docs)
@@ -486,10 +517,17 @@ REFERENCES public.t_share_docs (id_share_docs) MATCH SIMPLE
 ON DELETE RESTRICT ON UPDATE RESTRICT;
 -- ddl-end --
 
--- object: fk_i_type_authority | type: CONSTRAINT --
--- ALTER TABLE public.t_share_docs DROP CONSTRAINT IF EXISTS fk_i_type_authority CASCADE;
-ALTER TABLE public.t_share_docs ADD CONSTRAINT fk_i_type_authority FOREIGN KEY (fk_id_type_authority)
-REFERENCES public.i_type_authority (id_type_authority) MATCH FULL
+-- object: fk_id_adh_representant | type: CONSTRAINT --
+-- ALTER TABLE public.r_relation_adherent DROP CONSTRAINT IF EXISTS fk_id_adh_representant CASCADE;
+ALTER TABLE public.r_relation_adherent ADD CONSTRAINT fk_id_adh_representant FOREIGN KEY (fk_id_adherent_representant)
+REFERENCES public.t_adherents (id_adherents) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: fk_id_adh_represente | type: CONSTRAINT --
+-- ALTER TABLE public.r_relation_adherent DROP CONSTRAINT IF EXISTS fk_id_adh_represente CASCADE;
+ALTER TABLE public.r_relation_adherent ADD CONSTRAINT fk_id_adh_represente FOREIGN KEY (fk_id_adherent_represente)
+REFERENCES public.t_adherents (id_adherents) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 

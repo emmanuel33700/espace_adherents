@@ -829,6 +829,10 @@ components:
           type: boolean
           example: true
           description: indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement
+        demanderConfirmationParticipation:
+          type: boolean
+          example: true
+          description: indique si il faut demander une confirmation de présence à l'adhérent          
       xml:
         name: Order
     listeSaison:

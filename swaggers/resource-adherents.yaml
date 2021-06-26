@@ -39,6 +39,11 @@ tags:
     externalDocs:
       description: Pour plus de détail
       url: 'http://plusdedétail.ht'
+  - name: liens adherents
+    description: Gestion des liens entre adherents
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'      
 paths:
   /adherent:
     post:
@@ -240,6 +245,135 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/liens':
+    get:
+      tags:
+        - liens adherents
+      summary: recuperer  les liens d'un adherent
+      operationId: getLienAdherent
+      security:
+        - oAuth:
+            - ress-adherent-read
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LiensAdherent'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/lien/{idAdhLien}':                
+    delete:
+      tags:
+        - liens adherents
+      summary: Supprimer un lien adherent
+      operationId: deleteLienAdherent
+      security:
+        - oAuth:
+            - ress-adherent-del
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent representant
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idAdhLien
+          in: path
+          description: id de l'adherent representé
+          required: true
+          schema:
+            type: integer
+            format: int64            
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    post:
+      tags:
+        - liens adherents
+      summary: Ajouter un lien entre 2 adherents
+      operationId: ajoutLienAdherent
+      security:
+        - oAuth:
+            - ress-adhesion-write
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent representant
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idAdhLien
+          in: path
+          description: id de l'adherent representé
+          required: true
+          schema:
+            type: integer
+            format: int64 
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'  
   '/adherent/{idadh}/photo':              
     put:
       tags:
@@ -894,6 +1028,38 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Adherent'
+    LiensAdherent:
+      type: array
+      items:
+        properties:
+          idAdhRepresentant:
+            description: id de l'adherent representant un autre adherent          
+            type: integer
+            format: int64
+            example: 1        
+          idAdhRepresente:
+            description: id de l'adherent représenté un autre adherent            
+            type: integer
+            format: int64
+            example: 1
+          nomAdhRepresente:
+            description: non de l'adherent représenté un autre adherent                      
+            maxLength: 20
+            minLength: 3
+            type: string
+            example: Dupont
+          prenomAdhRepresente:
+            description: prenom de l'adherent représenté un autre adherent                    
+            maxLength: 20
+            minLength: 3
+            type: string
+            example: Jean
+          emailAdhRepresente:
+            description: email de l'adherent représenté un autre adherent               
+            maxLength: 40
+            minLength: 5
+            type: string
+            example: test.test@gmail.com            
     Adherent:
       type: object
       properties:

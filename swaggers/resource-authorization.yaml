@@ -522,8 +522,8 @@ components:
             type: string
             enum:
             - ADHERENT
+            - RES_ATELIER
             - CONSEIL
-            - BUREAU
             - ADMIN
     Validation:
       type: object
