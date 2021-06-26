@@ -20,8 +20,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
@@ -34,15 +33,18 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-10-19T08:19:59.368Z[GMT]")
 public class Roles   {
+  @JsonProperty("login")
+  private String login = null;
+
   /**
    * Gets or Sets roles
    */
   public enum RolesEnum {
     ADHERENT("ADHERENT"),
     
-    CONSEIL("CONSEIL"),
+    RES_ATELIER("RES_ATELIER"),
     
-    BUREAU("BUREAU"),
+    CONSEIL("CONSEIL"),
     
     ADMIN("ADMIN");
 
@@ -72,6 +74,25 @@ public class Roles   {
   @Valid
   private List<RolesEnum> roles = null;
 
+  public Roles login(String login) {
+    this.login = login;
+    return this;
+  }
+
+  /**
+   * Get login
+   * @return login
+   **/
+  @Schema(description = "")
+  
+  @Size(min=3,max=50)   public String getLogin() {
+    return login;
+  }
+
+  public void setLogin(String login) {
+    this.login = login;
+  }
+
   public Roles roles(List<RolesEnum> roles) {
     this.roles = roles;
     return this;
@@ -88,8 +109,8 @@ public class Roles   {
   /**
    * Role de la personnes
    * @return roles
-  **/
-  @ApiModelProperty(value = "Role de la personnes")
+   **/
+  @Schema(description = "Role de la personnes")
   
     public List<RolesEnum> getRoles() {
     return roles;
@@ -109,12 +130,13 @@ public class Roles   {
       return false;
     }
     Roles roles = (Roles) o;
-    return Objects.equals(this.roles, roles.roles);
+    return Objects.equals(this.login, roles.login) &&
+        Objects.equals(this.roles, roles.roles);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(roles);
+    return Objects.hash(login, roles);
   }
 
   @Override
@@ -122,6 +144,7 @@ public class Roles   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Roles {\n");
     
+    sb.append("    login: ").append(toIndentedString(login)).append("\n");
     sb.append("    roles: ").append(toIndentedString(roles)).append("\n");
     sb.append("}");
     return sb.toString();

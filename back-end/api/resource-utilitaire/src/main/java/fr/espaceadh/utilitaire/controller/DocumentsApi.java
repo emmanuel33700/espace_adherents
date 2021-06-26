@@ -52,7 +52,7 @@ public interface DocumentsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    @PreAuthorize("isDansGroupe('BUREAU')")   
+    @PreAuthorize("isDansGroupe('CONSEIL')")   
     ResponseEntity<Void> addDossier(@Parameter(in = ParameterIn.DEFAULT, description = "Objet dossier", required=true, schema=@Schema()) @Valid @RequestBody Document body);
 
 
@@ -73,7 +73,7 @@ public interface DocumentsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    @PreAuthorize("isDansGroupe('BUREAU')")        
+    @PreAuthorize("isDansGroupe('RES_ATELIER')")        
     ResponseEntity<Void> addFichier(@Parameter(in = ParameterIn.DEFAULT, description = "Objet fichier", required=true, schema=@Schema()) @Valid @RequestBody Document body);
 
 
@@ -94,7 +94,7 @@ public interface DocumentsApi {
         produces = { "application/json" }, 
         consumes = { "multipart/form-data" }, 
         method = RequestMethod.POST)
-    @PreAuthorize("isDansGroupe('CONSEIL')")           
+    @PreAuthorize("isDansGroupe('RES_ATELIER')")           
     ResponseEntity<Void> addFichierBinaire(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="orderId", required=false)  Integer orderId, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="userId", required=false)  Integer userId, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile fileName);
 
 
@@ -114,7 +114,7 @@ public interface DocumentsApi {
     @RequestMapping(value = "/documents/dossier/{idDossier}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    @PreAuthorize("isDansGroupe('BUREAU')")           
+    @PreAuthorize("isDansGroupe('CONSEIL')")           
     ResponseEntity<Void> delDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier);
 
 
@@ -234,7 +234,7 @@ public interface DocumentsApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    @PreAuthorize("isDansGroupe('BUREAU')")             
+    @PreAuthorize("isDansGroupe('CONSEIL')")             
     ResponseEntity<Void> majDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier, @Parameter(in = ParameterIn.DEFAULT, description = "Objet dossier", required=true, schema=@Schema()) @Valid @RequestBody Document body);
 
     @Operation(summary = "Mise à jour d'un fichier", description = "", security = {

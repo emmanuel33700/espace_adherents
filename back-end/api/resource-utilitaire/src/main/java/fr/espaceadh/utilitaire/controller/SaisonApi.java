@@ -43,7 +43,7 @@ public interface SaisonApi {
     @RequestMapping(value = "/saison/liste",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize("isDansGroupe('BUREAU')")           
+    @PreAuthorize("isDansGroupe('CONSEIL')")           
     ResponseEntity<ListeSaison> getListeSaison();
 
 

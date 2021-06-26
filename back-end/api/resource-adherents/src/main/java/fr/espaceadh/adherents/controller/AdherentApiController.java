@@ -14,6 +14,7 @@ import fr.espaceadh.adherents.dto.AdhesionDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
 import fr.espaceadh.adherents.dto.TypeAdhesionEnum;
 import fr.espaceadh.adherents.model.Communication;
+import fr.espaceadh.adherents.model.LiensAdherent;
 import fr.espaceadh.adherents.model.Manifestation;
 import fr.espaceadh.adherents.service.AdherentEvenementsService;
 import fr.espaceadh.adherents.service.AdherentService;
@@ -123,6 +124,18 @@ public class AdherentApiController implements AdherentApi {
         
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
+    
+
+    /**
+     * Ajouter un lien entre 2 adherents
+     * @param idadh
+     * @param idAdhLien
+     * @return 
+     */
+    public ResponseEntity<Void> ajoutLienAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent representant", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adherent representé", required=true, schema=@Schema()) @PathVariable("idAdhLien") Long idAdhLien) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
 
     /**
      * Ajouter la participation à une manigestation
@@ -144,6 +157,17 @@ public class AdherentApiController implements AdherentApi {
     public ResponseEntity<Void> deleteAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à supprimer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion) {
         String accept = request.getHeader("Accept");
         //TODO A implémenter
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    
+    /**
+     * Supression d'un lien entre 2 adherents
+     * @param idadh
+     * @param idAdhLien
+     * @return 
+     */
+    public ResponseEntity<Void> deleteLienAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent representant", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adherent representé", required=true, schema=@Schema()) @PathVariable("idAdhLien") Long idAdhLien) {
+        String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
@@ -210,7 +234,12 @@ public class AdherentApiController implements AdherentApi {
         return new ResponseEntity<Adherent>(HttpStatus.NOT_IMPLEMENTED);
     }
     
-    
+    /**
+     * Retourner les adhésions dans adhérent
+     * @param idadh
+     * @param idAdhesion
+     * @return 
+     */
     public ResponseEntity<Adhesion> getAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à recuperer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -222,6 +251,20 @@ public class AdherentApiController implements AdherentApi {
         }
 
         return new ResponseEntity<Adhesion>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    
+    /**
+     * Rechercher la list des liens de l'adhérents
+     * @param idadh
+     * @return 
+     */
+    public ResponseEntity<LiensAdherent> getLienAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            
+        }
+
+        return new ResponseEntity<LiensAdherent>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     /**

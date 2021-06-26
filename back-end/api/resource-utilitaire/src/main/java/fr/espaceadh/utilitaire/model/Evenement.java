@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
@@ -14,7 +13,6 @@ import javax.validation.constraints.*;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-02T08:30:39.723Z[GMT]")
-
 
 public class Evenement   {
   @JsonProperty("id")
@@ -79,6 +77,9 @@ public class Evenement   {
 
   @JsonProperty("envoyerInfoAdherents")
   private Boolean envoyerInfoAdherents = null;
+
+  @JsonProperty("demanderConfirmationParticipation")
+  private Boolean demanderConfirmationParticipation = null;
 
   public Evenement id(Long id) {
     this.id = id;
@@ -213,6 +214,25 @@ public class Evenement   {
     this.envoyerInfoAdherents = envoyerInfoAdherents;
   }
 
+  public Evenement demanderConfirmationParticipation(Boolean demanderConfirmationParticipation) {
+    this.demanderConfirmationParticipation = demanderConfirmationParticipation;
+    return this;
+  }
+
+  /**
+   * indique si il faut demander une confirmation de présence à l'adhérent
+   * @return demanderConfirmationParticipation
+   **/
+  @Schema(example = "true", description = "indique si il faut demander une confirmation de présence à l'adhérent")
+  
+    public Boolean isDemanderConfirmationParticipation() {
+    return demanderConfirmationParticipation;
+  }
+
+  public void setDemanderConfirmationParticipation(Boolean demanderConfirmationParticipation) {
+    this.demanderConfirmationParticipation = demanderConfirmationParticipation;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -229,12 +249,13 @@ public class Evenement   {
         Objects.equals(this.detail, evenement.detail) &&
         Objects.equals(this.datedebut, evenement.datedebut) &&
         Objects.equals(this.datefin, evenement.datefin) &&
-        Objects.equals(this.envoyerInfoAdherents, evenement.envoyerInfoAdherents);
+        Objects.equals(this.envoyerInfoAdherents, evenement.envoyerInfoAdherents) &&
+        Objects.equals(this.demanderConfirmationParticipation, evenement.demanderConfirmationParticipation);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, description, detail, datedebut, datefin, envoyerInfoAdherents);
+    return Objects.hash(id, type, description, detail, datedebut, datefin, envoyerInfoAdherents, demanderConfirmationParticipation);
   }
 
   @Override
@@ -249,6 +270,7 @@ public class Evenement   {
     sb.append("    datedebut: ").append(toIndentedString(datedebut)).append("\n");
     sb.append("    datefin: ").append(toIndentedString(datefin)).append("\n");
     sb.append("    envoyerInfoAdherents: ").append(toIndentedString(envoyerInfoAdherents)).append("\n");
+    sb.append("    demanderConfirmationParticipation: ").append(toIndentedString(demanderConfirmationParticipation)).append("\n");
     sb.append("}");
     return sb.toString();
   }

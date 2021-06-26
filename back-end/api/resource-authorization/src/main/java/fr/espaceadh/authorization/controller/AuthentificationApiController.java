@@ -262,8 +262,8 @@ public class AuthentificationApiController implements AuthentificationApi {
                 case CONSEIL:
                     role.addRolesItem(Roles.RolesEnum.CONSEIL);
                     break;
-                case BUREAU:
-                    role.addRolesItem(Roles.RolesEnum.BUREAU);
+                case RES_ATELIER:
+                    role.addRolesItem(Roles.RolesEnum.RES_ATELIER);
                     break;
                 default:
                     role.addRolesItem(Roles.RolesEnum.ADHERENT);
@@ -291,8 +291,8 @@ public class AuthentificationApiController implements AuthentificationApi {
                 case CONSEIL:
                     roleEnumDto.add(RolesEnum.CONSEIL);
                     break;
-                case BUREAU:
-                    roleEnumDto.add(RolesEnum.BUREAU);
+                case RES_ATELIER:
+                    roleEnumDto.add(RolesEnum.RES_ATELIER);
                     break;
                 default:
                     roleEnumDto.add(RolesEnum.ADHERENT);

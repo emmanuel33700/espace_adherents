@@ -139,8 +139,8 @@ public class AuthoritiesDaoImpl extends JdbcDaoSupport implements AuthoritiesDao
                     return RolesEnum.ADMIN;
                 case "CONSEIL":
                     return RolesEnum.CONSEIL;
-                case "BUREAU":
-                    return RolesEnum.BUREAU;
+                case "RES_ATELIER":
+                    return RolesEnum.RES_ATELIER;
                 default:
                     return RolesEnum.ADHERENT;
             }  

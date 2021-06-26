@@ -23,7 +23,7 @@ package fr.espaceadh.authorization.dto;
 public enum RolesEnum {
     ADHERENT("ADHERENT"),
     CONSEIL("CONSEIL"),
-    BUREAU("BUREAU"),
+    RES_ATELIER("BUREAU"),
     ADMIN("ADMIN");
 
     private String role = "";

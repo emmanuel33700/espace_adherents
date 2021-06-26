@@ -45,7 +45,7 @@ public interface AgendaApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    @PreAuthorize("isDansGroupe('BUREAU')")         
+    @PreAuthorize("isDansGroupe('RES_ATELIER')")         
     ResponseEntity<Void> addEvenement(@Parameter(in = ParameterIn.DEFAULT, description = "Objet adhérent", required=true, schema=@Schema()) @Valid @RequestBody Evenement body);
 
 
@@ -67,7 +67,7 @@ public interface AgendaApi {
     @RequestMapping(value = "/agenda/evenement/{idevenement}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    @PreAuthorize("isDansGroupe('BUREAU')")          
+    @PreAuthorize("isDansGroupe('CONSEIL')")          
     ResponseEntity<Void> deleteEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement);
 
 
@@ -134,7 +134,7 @@ public interface AgendaApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    @PreAuthorize("isDansGroupe('BUREAU')")          
+    @PreAuthorize("isDansGroupe('CONSEIL')")          
     ResponseEntity<Void> updateEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement, @Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Evenement body);
 
 }
