@@ -128,4 +128,28 @@ public interface AdherentService {
      */
     public LienAdherentsDto getLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente); 
     
+    
+    /**
+     * recupérer la liste des personnes représenté par un adhérent
+     * @param idAdherentRepresentant
+     * @return 
+     */
+    public Collection<LienAdherentsDto> getLiensAdherent(Long idAdherentRepresentant); 
+    
+    /**
+     * Ajouter un lien entre deux adhérents
+     * @param idAdherentRepresentant
+     * @param idAdherentRepresente
+     * @return 
+     */
+    public boolean ajouterLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente);
+    
+    /**
+     * Supprimer un lien de représentation entre 2 adhérents
+     * @param idAdherentRepresentant
+     * @param idAdherentRepresente
+     * @return 
+     */
+    public boolean supprimerLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente);
+    
 }

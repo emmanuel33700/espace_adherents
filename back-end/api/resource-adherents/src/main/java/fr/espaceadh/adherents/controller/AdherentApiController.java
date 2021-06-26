@@ -12,9 +12,11 @@ import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.AdherentEvenementDto;
 import fr.espaceadh.adherents.dto.AdhesionDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
+import fr.espaceadh.adherents.dto.LienAdherentsDto;
 import fr.espaceadh.adherents.dto.TypeAdhesionEnum;
 import fr.espaceadh.adherents.model.Communication;
 import fr.espaceadh.adherents.model.LiensAdherent;
+import fr.espaceadh.adherents.model.LiensAdherentInner;
 import fr.espaceadh.adherents.model.Manifestation;
 import fr.espaceadh.adherents.service.AdherentEvenementsService;
 import fr.espaceadh.adherents.service.AdherentService;
@@ -134,7 +136,11 @@ public class AdherentApiController implements AdherentApi {
      */
     public ResponseEntity<Void> ajoutLienAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent representant", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adherent representé", required=true, schema=@Schema()) @PathVariable("idAdhLien") Long idAdhLien) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        
+        boolean result = this.adherentService.ajouterLienAdherent(idadh, idAdhLien);
+        if (result) return new ResponseEntity<Void>(HttpStatus.CREATED);
+        
+        return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -168,7 +174,11 @@ public class AdherentApiController implements AdherentApi {
      */
     public ResponseEntity<Void> deleteLienAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent representant", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adherent representé", required=true, schema=@Schema()) @PathVariable("idAdhLien") Long idAdhLien) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        
+        boolean result = this.adherentService.supprimerLienAdherent(idadh, idAdhLien);
+        if (result) return new ResponseEntity<Void>(HttpStatus.OK);
+        
+        return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -254,14 +264,21 @@ public class AdherentApiController implements AdherentApi {
     }
     
     /**
-     * Rechercher la list des liens de l'adhérents
+     * Rechercher la liste des liens de l'adhérents
      * @param idadh
      * @return 
      */
     public ResponseEntity<LiensAdherent> getLienAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            
+            Collection<LienAdherentsDto> lienDto = this.adherentService.getLiensAdherent(idadh);
+            if (lienDto == null || (lienDto != null && lienDto.isEmpty())){
+                return new ResponseEntity<LiensAdherent>(HttpStatus.NOT_FOUND);
+            }
+            else {
+                LiensAdherent liensAdherentModel = this.transformeToModel(lienDto);
+                return new ResponseEntity<LiensAdherent>(liensAdherentModel,HttpStatus.OK);
+            }
         }
 
         return new ResponseEntity<LiensAdherent>(HttpStatus.NOT_IMPLEMENTED);
@@ -891,6 +908,30 @@ public class AdherentApiController implements AdherentApi {
         LOGGER.error("Aucun username recupérer dans le jeton d'authentification");
         return 0;
     }  
+
+    /**
+     * Tranforme lienDto en LiensAdherent
+     * @param lienDto
+     * @return 
+     */
+    private LiensAdherent transformeToModel(Collection<LienAdherentsDto> lienDto) {
+        if (lienDto == null || (lienDto != null && lienDto.isEmpty())) return null;
+        
+        LiensAdherent liensAdherent = new LiensAdherent();
+        
+        for (LienAdherentsDto dto : lienDto) {
+            LiensAdherentInner lienAdherentModel = new LiensAdherentInner();
+            
+            lienAdherentModel.setIdAdhRepresentant(dto.getIdAdhRepresentant());
+            lienAdherentModel.setIdAdhRepresente(dto.getIdAdhRepresente());
+            lienAdherentModel.setNomAdhRepresente(dto.getNomAdhRepresente());
+            lienAdherentModel.setPrenomAdhRepresente(dto.getPrenomAdhRepresente());
+            lienAdherentModel.setEmailAdhRepresente(dto.getEmailAdhRepresente());
+            
+            liensAdherent.add(lienAdherentModel);
+        }
+        return liensAdherent;
+    }
 
 
 }

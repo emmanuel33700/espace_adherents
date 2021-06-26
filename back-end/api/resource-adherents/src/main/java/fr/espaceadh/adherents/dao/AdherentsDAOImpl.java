@@ -392,6 +392,84 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         return null;
       
     }
+
+            /**
+     * recupérer la liste des personnes représenté par un adhérent
+     * @param idAdherentRepresentant
+     * @return 
+     */
+    @Override
+    public Collection<LienAdherentsDto> getLiensAdherent(Long idAdherentRepresentant) {
+        
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT fk_id_adherent_representant, fk_id_adherent_represente, t_adherents.nom ");
+        query.append(" 	, t_adherents.premon, t_adherents.e_mail ");
+        query.append(" 	FROM r_relation_adherent, t_adherents ");
+        query.append(" 	where r_relation_adherent.fk_id_adherent_represente = t_adherents.id_adherents ");
+        query.append(" 	and fk_id_adherent_representant = ? ");
+
+        
+        List<LienAdherentsDto> lstLienAdherentsDto = this.getJdbcTemplate().query(query.toString(), new LienAdherentsDtoMapper()
+                , idAdherentRepresentant);
+
+        if (lstLienAdherentsDto == null) return null;
+        
+        return lstLienAdherentsDto;
+        
+    }
+
+        /**
+     * Ajouter un lien entre deux adhérents
+     * @return 
+     */
+    @Override
+    public boolean ajouterLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente) {
+
+        StringBuilder query = new StringBuilder();
+        query.append(" INSERT INTO r_relation_adherent( ");
+        query.append("   	fk_id_adherent_representant, fk_id_adherent_represente)");
+        query.append(" 	VALUES (?, ?) ");
+
+        int nbCreation;
+        nbCreation = this.getJdbcTemplate().update(query.toString(),
+                 idAdherentRepresentant,
+                 idAdherentRepresente
+        );
+
+        if (nbCreation == 1) {
+            return true;
+        } else {
+            LOGGER.error("Erreur lors de la creation d'une liaison entre adhérent : nombre de ligne crée {} ", nbCreation);
+        }
+        return false;
+    }
+    
+    /**
+     * Supprimer un lien de représentation entre 2 adhérents
+     * @param idAdherentRepresentant
+     * @param idAdherentRepresente
+     * @return 
+     */
+    @Override
+    public boolean supprimerLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente) {
+        StringBuilder query = new StringBuilder();
+        query.append(" DELETE FROM r_relation_adherent ");
+        query.append(" 	WHERE fk_id_adherent_representant = ? ");
+        query.append(" 	AND fk_id_adherent_represente = ? ");
+
+        int nbSupp;
+        nbSupp = this.getJdbcTemplate().update(query.toString(),
+                 idAdherentRepresentant,
+                 idAdherentRepresente
+        );
+
+        if (nbSupp == 1) {
+            return true;
+        } else {
+            LOGGER.error("Erreur lors de la supression d'une liaison entre adhérent : nombre de ligne supprimer {} ", nbSupp);
+        }
+        return false;
+    }
     
     
     public static final class AdherentsMapper implements RowMapper<AdherentDto> {

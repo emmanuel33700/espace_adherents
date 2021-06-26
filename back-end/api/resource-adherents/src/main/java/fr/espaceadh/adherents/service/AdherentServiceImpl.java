@@ -383,5 +383,38 @@ public class AdherentServiceImpl implements AdherentService{
     public LienAdherentsDto getLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente) {
         return adherentsDAO.getLienAdherent(idAdherentRepresentant, idAdherentRepresente);
     }
+
+        /**
+     * recupérer la liste des personnes représenté par un adhérent
+     * @param idAdherentRepresentant
+     * @return 
+     */
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public Collection<LienAdherentsDto> getLiensAdherent(Long idAdherentRepresentant) {
+        return adherentsDAO.getLiensAdherent(idAdherentRepresentant);
+    }
+
+        /**
+     * Ajouter un lien entre deux adhérents
+     * @return 
+     */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public boolean ajouterLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente) {
+        return adherentsDAO.ajouterLienAdherent(idAdherentRepresentant, idAdherentRepresente);
+    }
+
+        /**
+     * Supprimer un lien de représentation entre 2 adhérents
+     * @param idAdherentRepresentant
+     * @param idAdherentRepresente
+     * @return 
+     */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public boolean supprimerLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente) {
+        return adherentsDAO.supprimerLienAdherent(idAdherentRepresentant, idAdherentRepresente);
+    }
     
 }
