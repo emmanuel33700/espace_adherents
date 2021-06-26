@@ -18,6 +18,7 @@ package fr.espaceadh.adherents.service;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.AdhesionDto;
+import fr.espaceadh.adherents.dto.LienAdherentsDto;
 import java.util.Collection;
 
 /**
@@ -118,5 +119,13 @@ public interface AdherentService {
      * @return 
      */
     public boolean suppAdhesion(Long idAdh, Long idAnneAdhesion);
+    
+    /**
+     * Recherche d'un lien representant <=> representé entre deux adhérent
+     * @param idAdherentRepresentant
+     * @param idAdherentRepresente
+     * @return 
+     */
+    public LienAdherentsDto getLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente); 
     
 }

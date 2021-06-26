@@ -17,6 +17,7 @@
 package fr.espaceadh.adherents.config;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.adherents.dto.LienAdherentsDto;
 import fr.espaceadh.adherents.service.AdherentService;
 import java.util.Collection;
 import org.slf4j.Logger;
@@ -69,6 +70,65 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
          return false;
         
     }
+    
+    /**
+     * Vérification si une personne est propriétaire d'une donnée ou peut agir sur la donnée d'un autre personne
+     * @param idAdh
+     * @return 
+     */
+    public boolean isProprietraireOuPeutAgirSurDonnee(Long idAdh) {
+        
+        
+        /**
+         * Vérifier sur c'est le propriétaire de la donnée
+         */
+        if (this.isProprietraireDonnee(idAdh)){
+            return true;
+        }
+
+        
+        /**
+         * Sinon vérifie si il existe un liend qui donne le doit d'agir sur la donnée
+         */
+        else if (this.peutAgirSurDonnee(idAdh)){
+            return true;
+        }
+        
+        else  {
+            return false;
+        }
+
+        
+    }
+    
+    /**
+     * Vérifier si une personne peut agir sur une donnée d'une autre personne
+     * @param idAdh
+     * @return 
+     */
+    private boolean peutAgirSurDonnee(Long idAdh) {
+        Object principal = this.getAuthentication().getPrincipal();
+        String username = "";
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+        
+        LOGGER.info("username {}", username);
+        
+        
+        AdherentDto adhRepresentant = adherentService.recupererAdherent(username); 
+        
+        
+        LienAdherentsDto lienADh = adherentService.getLienAdherent(adhRepresentant.getId(), idAdh);
+        if (lienADh != null && lienADh.getIdAdhRepresentant() == adhRepresentant.getId() && lienADh.getIdAdhRepresente() == idAdh) {
+            return true;
+        }
+        
+        return false;
+    }
+    
 
     public boolean isDansGroupe(String permission) {
        
@@ -118,5 +178,7 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
     public void setAdherentService(AdherentService adherentService) {
         this.adherentService = adherentService;
     }
+
+
     
 }

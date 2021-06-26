@@ -19,6 +19,7 @@ package fr.espaceadh.adherents.service;
 import fr.espaceadh.adherents.dao.AdherentsDAO;
 import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.AdhesionDto;
+import fr.espaceadh.adherents.dto.LienAdherentsDto;
 import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
@@ -369,6 +370,18 @@ public class AdherentServiceImpl implements AdherentService{
              LOGGER.error("IOException ", ex);
         }
         return 500;
+    }
+
+    /**
+     * Recherche d'un lien representant <=> representé entre deux adhérent
+     * @param idAdherentRepresentant
+     * @param idAdherentRepresente
+     * @return 
+     */
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Override
+    public LienAdherentsDto getLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente) {
+        return adherentsDAO.getLienAdherent(idAdherentRepresentant, idAdherentRepresente);
     }
     
 }

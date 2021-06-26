@@ -143,7 +143,7 @@ public interface AdherentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')) or isProprietraireDonnee(#idadh) ")         
+    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")         
     ResponseEntity<Void> ajoutManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id l'adherent à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la manifestation à modifier", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation, @Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body);
 
     @Operation(summary = "Supression d'une adhesion pour cet adherent", description = "", security = {
@@ -231,7 +231,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/manifestion/{idManifestation}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')) or isProprietraireDonnee(#idadh) ")         
+    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")         
     ResponseEntity<Void> deleteManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la manifestation à supprimer", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation);
 
 
@@ -275,7 +275,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize("#oauth2.hasScope('ress-adherent-read-client-credentials') or  (#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('CONSEIL') or isProprietraireDonnee(#idadh) ))")          
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read-client-credentials') or  (#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('CONSEIL') or isProprietraireOuPeutAgirSurDonnee(#idadh) ))")          
     ResponseEntity<Adherent> getAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
 
     
@@ -330,7 +330,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/adhesion/{idAdhesion}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize("(#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('CONSEIL')) or isProprietraireDonnee(#idadh) ")                
+    @PreAuthorize("(#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")                
     ResponseEntity<Adhesion> getAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à recuperer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion);
 
         @Operation(summary = "recuperer  les liens d'un adherent", description = "", security = {
@@ -428,7 +428,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/adhesions",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize("(#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('CONSEIL')) or isProprietraireDonnee(#idadh) ")  
+    @PreAuthorize("(#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")  
     ResponseEntity<ListeAdhesions> getListeAdhesionsAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
 
 
@@ -484,7 +484,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/manifestions",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')) or isProprietraireDonnee(#idadh) ")           
+    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")           
     ResponseEntity<ListeManifestations> getListeManifestationsAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.QUERY, description = "date de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut, @Parameter(in = ParameterIn.QUERY, description = "date de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin);
     
     
@@ -519,7 +519,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/manifestion/{idManifestation}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')) or isProprietraireDonnee(#idadh) ")          
+    @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")          
     ResponseEntity<Manifestation> getManifestationsAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la manifestation à recuperer", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation);
     
     
@@ -577,7 +577,7 @@ public interface AdherentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    @PreAuthorize("(#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('CONSEIL')) or isProprietraireDonnee(#idadh) ")            
+    @PreAuthorize("(#oauth2.hasScope('ress-adhesion-read') and isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")            
     ResponseEntity<Void> updateManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la manifestation à modifier", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation, @Parameter(in = ParameterIn.DEFAULT, description = "mise à jour d'une adhesion", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body);
 
 
@@ -600,7 +600,7 @@ public interface AdherentApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('CONSEIL') or isProprietraireDonnee(#idadh) )")         
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('CONSEIL') or isProprietraireOuPeutAgirSurDonnee(#idadh) )")         
     ResponseEntity<Void> updateUser(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Adherent body);
 
     
@@ -635,7 +635,7 @@ public interface AdherentApi {
         produces = { "application/json" }, 
         consumes = { "multipart/form-data" }, 
         method = RequestMethod.PUT)
-    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('CONSEIL') or isProprietraireDonnee(#idadh) )")  
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and (isDansGroupe('CONSEIL') or isProprietraireOuPeutAgirSurDonnee(#idadh) )")  
     ResponseEntity<Void> updateUserPhoto(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.DEFAULT, description = "", required=true,schema=@Schema()) @RequestParam(value="fileName", required=true)  String fileName, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file);
     
 }

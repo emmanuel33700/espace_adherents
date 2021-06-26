@@ -19,6 +19,7 @@ package fr.espaceadh.adherents.dao;
 import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.AdhesionDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
+import fr.espaceadh.adherents.dto.LienAdherentsDto;
 import fr.espaceadh.adherents.dto.TypeAdhesionEnum;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -363,6 +364,34 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
     public boolean suppAdhesion(long idAdh, long idAnneAdhesion) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    /**
+     *  Recherche d'un lien representant <=> representé entre deux adhérent
+     * @param idAdherentRepresentant
+     * @param idAdherentRepresente
+     * @return 
+     */
+    @Override
+    public LienAdherentsDto getLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT fk_id_adherent_representant, fk_id_adherent_represente, t_adherents.nom ");
+        query.append(" 	, t_adherents.premon, t_adherents.e_mail ");
+        query.append(" 	FROM r_relation_adherent, t_adherents ");
+        query.append(" 	where r_relation_adherent.fk_id_adherent_represente = t_adherents.id_adherents ");
+        query.append(" 	and fk_id_adherent_representant = ? ");
+        query.append(" 	and fk_id_adherent_represente = ? ");
+
+        
+        List<LienAdherentsDto> lstLienAdherentsDto = this.getJdbcTemplate().query(query.toString(), new LienAdherentsDtoMapper()
+                , idAdherentRepresentant
+                ,idAdherentRepresente);
+
+        if (lstLienAdherentsDto == null) return null;
+        if (lstLienAdherentsDto.size() > 0) return lstLienAdherentsDto.get(0);
+        
+        return null;
+      
+    }
     
     
     public static final class AdherentsMapper implements RowMapper<AdherentDto> {
@@ -435,5 +464,21 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         }
          
      }
+
+    private static class LienAdherentsDtoMapper implements RowMapper<LienAdherentsDto>{
+
+        @Override
+        public LienAdherentsDto mapRow(ResultSet rs, int i) throws SQLException {
+            LienAdherentsDto dto = new LienAdherentsDto();
+            dto.setIdAdhRepresentant(rs.getLong("fk_id_adherent_representant"));
+            dto.setIdAdhRepresente(rs.getLong("fk_id_adherent_represente"));
+            dto.setNomAdhRepresente(rs.getString("nom"));
+            dto.setPrenomAdhRepresente(rs.getString("premon"));
+            dto.setEmailAdhRepresente(rs.getString("e_mail"));
+            
+            return dto;
+        }
+
+    }
     
 }
