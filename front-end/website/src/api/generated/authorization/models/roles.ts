@@ -5,5 +5,5 @@ export interface Roles {
   /**
    * Role de la personnes
    */
-  roles?: Array<'ADHERENT' | 'CONSEIL' | 'BUREAU' | 'ADMIN'>;
+  roles?: Array<'ADHERENT' | 'RES_ATELIER' | 'CONSEIL' | 'ADMIN'>;
 }

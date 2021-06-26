@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { AdherentService } from './services/adherent.service';
+import { LiensAdherentsService } from './services/liens-adherents.service';
 import { AdhesionService } from './services/adhesion.service';
 import { ListingAdherentService } from './services/listing-adherent.service';
 import { ManifestationService } from './services/manifestation.service';
@@ -18,6 +19,7 @@ import { CommunicationService } from './services/communication.service';
   declarations: [],
   providers: [
     AdherentService,
+    LiensAdherentsService,
     AdhesionService,
     ListingAdherentService,
     ManifestationService,

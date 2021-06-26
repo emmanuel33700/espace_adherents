@@ -45,7 +45,7 @@ export class TokenService {
       role = 'ADMIN';
     } else if (roles.includes('CONSEIL')) {
       role = 'CONSEIL';
-    } else if (roles.includes('BUREAU')) { // TODO a transformer le role BUREAU en RES_ATELIER
+    } else if (roles.includes('RES_ATELIER')) {
       role = 'RES_ATELIER';
     }  else {
       role = 'ADHERENT';

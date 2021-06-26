@@ -1,5 +1,6 @@
 export { ApiResponse } from './models/api-response';
 export { ListeAdherents } from './models/liste-adherents';
+export { LiensAdherent } from './models/liens-adherent';
 export { Adherent } from './models/adherent';
 export { ListeAdhesions } from './models/liste-adhesions';
 export { Adhesion } from './models/adhesion';

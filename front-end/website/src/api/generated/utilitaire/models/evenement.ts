@@ -10,6 +10,11 @@ export interface Evenement {
    * date de fin au format iso8601
    */
   datefin?: string;
+
+  /**
+   * indique si il faut demander une confirmation de présence à l'adhérent
+   */
+  demanderConfirmationParticipation?: boolean;
   description?: string;
   detail?: string;
 
