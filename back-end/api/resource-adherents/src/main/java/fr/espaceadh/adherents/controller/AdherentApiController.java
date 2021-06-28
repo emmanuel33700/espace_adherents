@@ -273,7 +273,7 @@ public class AdherentApiController implements AdherentApi {
         if (accept != null && accept.contains("application/json")) {
             Collection<LienAdherentsDto> lienDto = this.adherentService.getLiensAdherent(idadh);
             if (lienDto == null || (lienDto != null && lienDto.isEmpty())){
-                return new ResponseEntity<LiensAdherent>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<LiensAdherent>(HttpStatus.OK);
             }
             else {
                 LiensAdherent liensAdherentModel = this.transformeToModel(lienDto);
