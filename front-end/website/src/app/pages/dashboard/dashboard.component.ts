@@ -8,6 +8,9 @@ import {ParticipationManifestation} from '../../../api/generated/adherents/model
 import {DocumentationService} from '../../../api/generated/utilitaire/services/documentation.service';
 import {Document} from '../../../api/generated/utilitaire/models/document.js';
 import {TokenService} from '../../@core/utils/token.service';
+import {Router} from '@angular/router';
+import {LiensAdherentsService} from '../../../api/generated/adherents/services/liens-adherents.service';
+import {LiensAdherent} from '../../../api/generated/adherents/models/liens-adherent';
 
 
 interface DocumentDashboard {
@@ -18,6 +21,15 @@ interface DocumentDashboard {
   id: number;
   lienFichier: string;
 }
+
+interface ListeEvenementsAdherent {
+  adhRepresente: {
+    'idAdhRepresentant'?: number, 'idAdhRepresente'?: number, 'nomAdhRepresente'?: string,
+    'prenomAdhRepresente'?: string, 'emailAdhRepresente'?: string,
+  };
+  manifestations: Manifestation[];
+}
+
 
 @Component({
   selector: 'ngx-dashboard',
@@ -37,19 +49,89 @@ export class DashboardComponent implements OnInit {
 
   // gestion des évènements
   loadingEvenement = true;
-  manifestationsComplet: Manifestation[] = [];
-  manifestationsSaisieParticipation: Manifestation[] = [];
-  manifestationsNonSaisieParticipation: Manifestation[] = [];
+  listeEvenementsAdherent: ListeEvenementsAdherent[] = [];
+
 
   // Gestion des documents
   documentsDashboard: DocumentDashboard[] = [];
   loadingDocument = true;
 
-  constructor( private manifestationService: ManifestationService,
+  // gestion adhérent représenté
+  accesDelegue: boolean = false;
+
+
+  optionsChart = {
+    backgroundColor: echarts.bg,
+    color: ['red'],
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow',
+      },
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true,
+    },
+    xAxis: [
+      {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        axisTick: {
+          alignWithLabel: true,
+        },
+        axisLine: {
+          lineStyle: {
+            color: echarts.axisLineColor,
+          },
+        },
+        axisLabel: {
+          textStyle: {
+            color: echarts.textColor,
+          },
+        },
+      },
+    ],
+    yAxis: [
+      {
+        type: 'value',
+        axisLine: {
+          lineStyle: {
+            color: echarts.axisLineColor,
+          },
+        },
+        splitLine: {
+          lineStyle: {
+            color: echarts.splitLineColor,
+          },
+        },
+        axisLabel: {
+          textStyle: {
+            color: echarts.textColor,
+          },
+        },
+      },
+    ],
+    series: [
+      {
+        name: 'Score',
+        type: 'bar',
+        barWidth: '60%',
+        data: [10, 52, 200, 334, 390, 330, 220],
+      },
+    ],
+  };
+
+
+  constructor(private manifestationService: ManifestationService,
               private loggerService: LoggerService,
               private toastrService: NbToastrService,
               private dateService: DateService,
               private documentationService: DocumentationService,
+              protected router: Router,
+              private liensAdherentsService: LiensAdherentsService,
               private tokenService: TokenService) {
   }
 
@@ -59,10 +141,13 @@ export class DashboardComponent implements OnInit {
    */
   ngOnInit(): void {
 
+    this.adherent = JSON.parse(localStorage.getItem('adherent'));
 
-    this.idAdh = this.tokenService.getIdAdherent();
-
-    this.adherent = JSON.parse (localStorage.getItem('adherent'));
+    if (this.adherent != null) {
+      this.idAdh = this.adherent.id;
+    } else {
+      this.idAdh = this.tokenService.getIdAdherent();
+    }
 
     this.initEvenements();
 
@@ -77,18 +162,23 @@ export class DashboardComponent implements OnInit {
    * @param typeParticipation
    * @param idEvenement
    */
-  participeEvenement(premierSaisie: boolean, typeParticipation: number, idEvenement: number) {
+  indiquerParticipeEvenement(idAdh: number, typeParticipation: number, idEvenement: number) {
+    this.loadingEvenement = true;
+
+    if (idAdh === -1) {
+      idAdh = this.idAdh;
+    }
+
     const participationManifestation: ParticipationManifestation = {};
-    if (typeParticipation === 1 ) {
+    if (typeParticipation === 1) {
       participationManifestation.statutParticipation = 1;
     } else {
       participationManifestation.statutParticipation = 2;
     }
 
-    if (premierSaisie) {
-      this.loadingEvenement = true;
-    }
-    this.manifestationService.updateManifestationAdherent({idadh: this.idAdh
+
+    this.manifestationService.updateManifestationAdherent({
+      idadh: idAdh
       , idManifestation: idEvenement
       , body: participationManifestation})
       .subscribe(
@@ -100,13 +190,12 @@ export class DashboardComponent implements OnInit {
           this.toastrService.danger(
             'Erreur technique lors de la supression',
             'Erreur ');
+          this.loadingEvenement = false;
         },
         () => {
           this.loggerService.debug('Enregistrement fini');
-          if (premierSaisie) {
-            this.basculerEvenementASaisie(typeParticipation, idEvenement );
-            this.loadingEvenement = false;
-          }
+          this.basculerEvenementASaisir(idAdh, typeParticipation, idEvenement);
+          this.loadingEvenement = false;
         },
       );
   }
@@ -128,8 +217,19 @@ export class DashboardComponent implements OnInit {
     return this.dateService.heureFormatForPrint(dateDebut);
   }
 
-  participerEvenement(event: any, idManifestation: number) {
+  /**
+   * Indiquer un changement de participation à un évèneent
+   * @param idAdh
+   * @param event
+   * @param idManifestation
+   */
+  changerParticipeEvenement(idAdh: number, event: any, idManifestation: number) {
     const participationManifestation: ParticipationManifestation = {};
+
+    if (idAdh === -1) {
+      idAdh = this.idAdh;
+    }
+
 
     this.loggerService.debug('statut toogle' + event);
     // Définition du type de manifestation
@@ -143,7 +243,7 @@ export class DashboardComponent implements OnInit {
 
 
     this.manifestationService.updateManifestationAdherent({
-      idadh: this.idAdh
+      idadh: idAdh
       , idManifestation: idManifestation
       , body: participationManifestation,
     })
@@ -163,10 +263,16 @@ export class DashboardComponent implements OnInit {
       );
   }
 
+
   /**
-   * Initialisation des évènements
+   * Complete this.listeEvenementsAdherent[] avec les manifestatio des personnes représentées (Attention doit débuter
+   * avec l'index 1 du tableau
+   * @param liensAdh
    */
-  private initEvenements() {
+  private recupererEvenementsPersonneRepresente(liensAdh: LiensAdherent) {
+    this.loggerService.info('Recupere les évènement des adherents représenté ');
+
+
     // Gestion date debut et fin de recherche
     const dDebut = new Date();
 
@@ -178,23 +284,72 @@ export class DashboardComponent implements OnInit {
     const dateFinString = this.dateService.convertDateToStringIsoWithOutHour(dFin);
 
 
-    this.manifestationService.getListeManifestationsAdherent({idadh: this.idAdh
+    liensAdh.forEach((value, index) => {
+
+      // Recupérer les événement pour une personne représenté
+      this.manifestationService.getListeManifestationsAdherent({
+        idadh: value.idAdhRepresente
+        , datedebut: dateDebutString
+        , datefin: dateFinString})
+        .subscribe(
+          (data) => {
+            this.loggerService.debug(JSON.stringify(data));
+
+            this.listeEvenementsAdherent[index + 1] = {manifestations: data, adhRepresente: value};
+
+          },
+          (error) => {
+            this.loggerService.error(error);
+            this.toastrService.danger(
+              'Erreur technique lors de recuperation des données',
+              'Erreur ');
+          },
+          () => {
+            this.loggerService.debug('fini');
+
+            if (liensAdh.length === index + 1) {
+              setTimeout(() => {
+                this.loadingEvenement = false;
+              }, 1000);
+            }
+
+          });
+    });
+
+
+  }
+
+  /**
+   * récupérer les évènement d'un adhérent (Attention complete la variable this.listeEvenementsAdherent[0]
+   * @param idAdh
+   */
+  private recupererEvenementsAdherent(idAdh: number) {
+    this.loggerService.info('Recupere les évènement de l_\'adherent ' + idAdh);
+
+    // Gestion date debut et fin de recherche
+    const dDebut = new Date();
+
+
+    const dFin = new Date();
+    dFin.setMonth(dFin.getMonth() + 8);
+
+    const dateDebutString = this.dateService.convertDateToStringIsoWithOutHour(dDebut);
+    const dateFinString = this.dateService.convertDateToStringIsoWithOutHour(dFin);
+
+
+    this.manifestationService.getListeManifestationsAdherent({
+      idadh: idAdh
       , datedebut: dateDebutString
       , datefin: dateFinString})
       .subscribe(
         (data) => {
-          this.manifestationsComplet = data;
-          this.loggerService.debug(JSON.stringify(data));
-
-          this.manifestationsComplet.forEach((value, index) => {
-
-            if (String(value.statutParticipation) === '3') {
-              this.manifestationsNonSaisieParticipation.push(value);
-            } else {
-              this.manifestationsSaisieParticipation.push(value);
-            }
-          });
-
+          // La partie adhRepresente est renseigné par defaut, car il n'y a pas d'adh représenté
+          this.listeEvenementsAdherent[0] = {
+            manifestations: data, adhRepresente: {
+              idAdhRepresentant: -1, idAdhRepresente: -1, nomAdhRepresente: 'xxx',
+              prenomAdhRepresente: 'moi', emailAdhRepresente: null,
+            },
+          };
         },
         (error) => {
           this.loggerService.error(error);
@@ -204,9 +359,41 @@ export class DashboardComponent implements OnInit {
         },
         () => {
           this.loggerService.debug('fini');
-          this.loadingEvenement = false;
         });
+  }
 
+
+  /**
+   * Initialisation des évènements
+   */
+  private initEvenements() {
+
+    this.liensAdherentsService.getLienAdherent({idadh: this.idAdh})
+      .subscribe(
+        (data) => {
+          this.recupererEvenementsAdherent(this.idAdh);
+
+          /**
+           * Si la personne représente d'autre adhérent, récupération de ces évènements
+           */
+          if (data != null) {
+            this.accesDelegue = true;
+            this.recupererEvenementsPersonneRepresente(data);
+          } else {
+            setTimeout(() => {
+              this.loadingEvenement = false;
+            }, 1000);
+          }
+        },
+        (error) => {
+          this.loggerService.info('Pas de lien');
+          this.toastrService.danger(
+            'Erreur technique lors de recuperation des données',
+            'Erreur ');
+        },
+        () => {
+          this.loggerService.info('fini');
+        });
   }
 
   /**
@@ -278,20 +465,36 @@ export class DashboardComponent implements OnInit {
    * @param typeParticipation
    * @param idEvenement
    */
-  private basculerEvenementASaisie(typeParticipation: number, idEvenement: number) {
+  private basculerEvenementASaisir(idAdh: number, typeParticipation: number, idEvenement: number) {
 
-    this.manifestationsNonSaisieParticipation.forEach((value, index) => {
-      if (value.id === idEvenement) {
-        this.loggerService.debug('Bascule la manifestation ' + value.id );
+    // si modification du une manifestation relative à la personne connectée
+    if (idAdh === this.idAdh) {
+      this.listeEvenementsAdherent[0].manifestations.forEach((valueManif, indexManif) => {
         if (typeParticipation === 1) {
-          value.statutParticipation = 1;
+          valueManif.statutParticipation = 1;
         } else {
-          value.statutParticipation = 2;
+          valueManif.statutParticipation = 2;
         }
+      });
+    } else {
+      // si modification d'une manifestation relative à une personne représnetée
+      this.listeEvenementsAdherent.forEach((value, index) => {
+        if (value.adhRepresente.idAdhRepresente === idAdh) {
+          value.manifestations.forEach((valueManif, indexManif) => {
+            if (valueManif.id === idEvenement) {
+              if (typeParticipation === 1) {
+                valueManif.statutParticipation = 1;
+              } else {
+                valueManif.statutParticipation = 2;
+              }
+            }
+          });
+        }
+      });
+    }
 
-        this.manifestationsSaisieParticipation.push(value);
-        this.manifestationsNonSaisieParticipation.splice(index, 1);
-      }
-    });
+
   }
+
+
 }

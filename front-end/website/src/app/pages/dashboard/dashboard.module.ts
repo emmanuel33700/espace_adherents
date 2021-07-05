@@ -7,7 +7,7 @@ import {
   NbDatepickerModule, NbIconModule,
   NbInputModule, NbListModule,
   NbRadioModule,
-  NbSelectModule, NbSpinnerModule, NbToggleModule,
+  NbSelectModule, NbSpinnerModule, NbTabsetModule, NbToggleModule,
   NbUserModule,
 } from '@nebular/theme';
 
@@ -16,6 +16,7 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { DashboardComponent } from './dashboard.component';
 
 import {FormsModule as ngFormsModule} from '@angular/forms';
+import {NgxEchartsModule} from 'ngx-echarts';
 
 
 
@@ -37,6 +38,8 @@ import {FormsModule as ngFormsModule} from '@angular/forms';
     NbSpinnerModule,
     NbListModule,
     NbToggleModule,
+    NgxEchartsModule,
+    NbTabsetModule,
   ],
   declarations: [
     DashboardComponent,

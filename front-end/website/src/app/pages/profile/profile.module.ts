@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import {
-  NbActionsModule, NbAlertModule,
-  NbButtonModule,
-  NbCardModule,
-  NbCheckboxModule,
-  NbDatepickerModule, NbIconModule,
-  NbInputModule, NbPopoverModule,
-  NbRadioModule,
-  NbSelectModule, NbSpinnerModule,
-  NbUserModule,
+    NbActionsModule, NbAlertModule,
+    NbButtonModule,
+    NbCardModule,
+    NbCheckboxModule,
+    NbDatepickerModule, NbIconModule,
+    NbInputModule, NbListModule, NbPopoverModule,
+    NbRadioModule,
+    NbSelectModule, NbSpinnerModule,
+    NbUserModule,
 } from '@nebular/theme';
 
 import { ThemeModule } from '../../@theme/theme.module';
@@ -20,7 +20,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {ImageCropperModule} from 'ngx-image-cropper';
 import {DialogPhotoProfilComponent} from './modifier/dialog-photo-profil/dialog-photo-profil.component';
-import { RelationsadherentComponent } from './relationsadherent/relationsadherent.component';
 
 @NgModule({
     imports: [
@@ -45,12 +44,12 @@ import { RelationsadherentComponent } from './relationsadherent/relationsadheren
         NbSpinnerModule,
         ImageCropperModule,
         NbPopoverModule,
+        NbListModule,
     ],
   declarations: [
     ProfileComponent,
     ModifierComponent,
     DialogPhotoProfilComponent,
-    RelationsadherentComponent,
   ],
 })
 export class ProfileModule { }

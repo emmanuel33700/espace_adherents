@@ -1,70 +1,127 @@
 <div class="row">
 
+
+  <!-- ----------------------------------------------------------------- -->
   <!-- TDB les participations en attente de confirmation -->
+  <!-- ----------------------------------------------------------------- -->
   <div class="col-xxxl-9 col-xxl-8 col-lg-7 col-md-6">
     <nb-card size="large" class="table-card" [nbSpinner]='loadingEvenement'>
       <nb-card-header>Mes participations en attentes</nb-card-header>
       <nb-card-body>
-        <ng-container *ngIf="!manifestationsNonSaisieParticipation.length" >
-          Aucune manifestation a confirmer
-        </ng-container>
-        <nb-list-item *ngFor="let manifestation of manifestationsNonSaisieParticipation">
-          <div class="row show-grid">
-            <div class=".col-12 .col-sm-6 .col-md-8">
-              <div>{{ manifestation.descriptionCourte }} le {{ afficherDate(manifestation.dateDebut) }}
-                à  {{ afficherHeure(manifestation.dateDebut) }}</div>
-            </div>
 
-            <div style="display:flex; justify-content:flex-end; width:100%; padding:0;">
-              <button status='success' type="submit" nbButton (click)="participeEvenement(true, 1, manifestation.id)">Je
-                participe
-              </button>
-              <button status='warning' type="submit" nbButton (click)="participeEvenement(true, 2, manifestation.id)">Je ne
-                participe pas
-              </button>
-            </div>
-          </div>
-        </nb-list-item>
+        <!-- gestion pour affichages des tabs pour les accès délégues -->
+        <ng-container *ngIf="!loadingEvenement && accesDelegue">
+          <nb-tabset>
+            <nb-tab *ngFor="let evenementsAdherent of listeEvenementsAdherent"
+                    tabTitle="{{evenementsAdherent.adhRepresente.prenomAdhRepresente}}"
+            >
+              <ng-container *ngIf="!evenementsAdherent.manifestations.length">
+                Aucune manifestation a confirmer
+              </ng-container>
+              <nb-list-item *ngFor="let manifestation of evenementsAdherent.manifestations">
+
+                <label class="label col-sm-3 col-form-label">
+                  {{ manifestation.descriptionCourte }} le {{ afficherDate(manifestation.dateDebut) }}
+                  à  {{ afficherHeure(manifestation.dateDebut) }}
+                </label>
+
+                <!-- affichage si adhérent n'a jamais sa réponse -->
+                <ng-container *ngIf="manifestation.statutParticipation == 3">
+                  <div class="col-sm-9">
+                    <button status='success' type="submit" nbButton
+                            (click)="indiquerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, 1, manifestation.id)">
+                      Je
+                      participe
+                    </button>
+                    <button status='warning' type="submit" nbButton
+                            (click)="indiquerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, 2, manifestation.id)">
+                      Je ne
+                      participe pas
+                    </button>
+                  </div>
+                </ng-container>
+
+                <!-- si l'adhérent à déjà donné sa réponse -->
+                <ng-container *ngIf="manifestation.statutParticipation == 1">
+                  <div class="col-sm-9">
+                    <nb-toggle labelPosition="right" [checked]="true"
+                               (change)="changerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, $event, manifestation.id)">
+                      Je
+                      participe à l'évènement
+                    </nb-toggle>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="manifestation.statutParticipation == 2">
+                  <div class="col-sm-9">
+                    <nb-toggle labelPosition="right" [checked]="false"
+                               (change)="changerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, $event, manifestation.id)">
+                      Je
+                      participe à l'évènement
+                    </nb-toggle>
+                  </div>
+                </ng-container>
+              </nb-list-item>
+            </nb-tab>
+          </nb-tabset>
+
+        </ng-container>
+
+
+        <!-- si il n'y a pas d'accès délégues -->
+        <ng-container *ngIf="!loadingEvenement && !accesDelegue">
+          <ng-container *ngIf="!listeEvenementsAdherent[0].manifestations.length">
+            Aucune manifestation a confirmer
+          </ng-container>
+          <nb-list-item *ngFor="let manifestation of listeEvenementsAdherent[0].manifestations">
+            <label class="label col-sm-3 col-form-label">
+              {{ manifestation.descriptionCourte }} le {{ afficherDate(manifestation.dateDebut) }}
+              à  {{ afficherHeure(manifestation.dateDebut) }}
+
+
+              <!-- affichage si adhérent n'a jamais sa réponse -->
+              <ng-container *ngIf="manifestation.statutParticipation == 3">
+                <div class="col-sm-9">
+                  <button status='success' type="submit" nbButton
+                          (click)="indiquerParticipeEvenement(idAdh, 1, manifestation.id)">Je
+                    participe
+                  </button>
+                  <button status='warning' type="submit" nbButton
+                          (click)="indiquerParticipeEvenement(idAdh, 2, manifestation.id)">Je ne
+                    participe pas
+                  </button>
+                </div>
+              </ng-container>
+
+              <!-- si l'adhérent à déjà donné sa réponse -->
+              <ng-container *ngIf="!manifestation.statutParticipation != 3">
+                <ng-container *ngIf="manifestation.statutParticipation == 1">
+                  <div class="col-sm-9">
+                    <nb-toggle labelPosition="right" [checked]="true"
+                               (change)="changerParticipeEvenement(idAdh, $event, manifestation.id)">Je
+                      participe à l'évènement
+                    </nb-toggle>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="manifestation.statutParticipation == 2">
+                  <div class="col-sm-9">
+                    <nb-toggle labelPosition="right" [checked]="false"
+                               (change)="changerParticipeEvenement(idAdh, $event, manifestation.id)">Je
+                      participe à l'évènement
+                    </nb-toggle>
+                  </div>
+                </ng-container>
+              </ng-container>
+          </nb-list-item>
+        </ng-container>
+
+
       </nb-card-body>
     </nb-card>
   </div>
 
-  <!-- TDB les participations déja confirmée confirmation -->
-  <div class="col-xxxl-3 col-xxl-4 col-lg-5 col-md-6">
-    <nb-card size="large" class="table-card" [nbSpinner]='loadingEvenement'>
-      <nb-card-header>Mes participations déjà enregistrées</nb-card-header>
-      <nb-card-body>
-        <ng-container *ngIf="!manifestationsSaisieParticipation.length" >
-          Aucune participation enregistrée
-        </ng-container>
-        <nb-list-item *ngFor="let manifestation of manifestationsSaisieParticipation">
-          <div class="row show-grid">
-            <div class=".col-12 .col-sm-6 .col-md-8">
-              <div>{{ manifestation.descriptionCourte }} le {{ afficherDate(manifestation.dateDebut) }}
-                à  {{ afficherHeure(manifestation.dateDebut) }}</div>
-            </div>
-            <ng-container *ngIf="manifestation.statutParticipation == 1">
-              <nb-toggle labelPosition="right" [checked]="true"
-                         (change)="participerEvenement($event, manifestation.id)">Je
-                participe à l'évènement
-              </nb-toggle>
-            </ng-container>
-            <ng-container *ngIf="manifestation.statutParticipation == 2">
-              <nb-toggle labelPosition="right" [checked]="false"
-                         (change)="participerEvenement($event, manifestation.id)">Je
-                participe à l'évènement
-              </nb-toggle>
-            </ng-container>
-          </div>
-
-        </nb-list-item>
-
-      </nb-card-body>
-    </nb-card>
-  </div>
-
-
-  <!-- TDB les derniers documents publié -->
+  <!-- ----------------------------------------------------------------- -->
+  <!-- TDB les derniers documents publiés -->
+  <!-- ----------------------------------------------------------------- -->
   <div class="col-xxxl-3 col-xxl-4 col-lg-5 col-md-6">
     <nb-card size="large" class="table-card" [nbSpinner]='loadingDocument'>
       <nb-card-header>Mes derniers documents</nb-card-header>
@@ -86,5 +143,13 @@
   </div>
 
 
+
+
+  <div class="col-xxxl-9 col-xxl-8 col-lg-7 col-md-6">
+    <nb-card size="large" class="table-card" >
+      <nb-card-header>Participation aux évènements</nb-card-header>
+      <div echarts [options]="optionsChart" class="echart"></div>
+    </nb-card>
+  </div>
 
 </div>

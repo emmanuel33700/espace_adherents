@@ -46,13 +46,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     this.idAdherents = this.tokenService.getIdAdherent();
 
-    // vérifier si adhérent est responsable d'autre adhérent et construire le menu en conséquence
-    // TODO a compléter le menu avec condition si lien avec autres adhérents
-    this.userMenu = [
-      {title: 'Mes infos', link: '/pages/profile/modifier'}
-      , {title: 'Mes relations', link: '/pages/profile/relationsadherent'}
-      , {title: 'Déconnexion', link: '/auth/login'} ];
-
 
     // recuperation des informations de l'adhérents
     this.adherentService.getAdherent({
