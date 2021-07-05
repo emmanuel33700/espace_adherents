@@ -470,11 +470,13 @@ export class DashboardComponent implements OnInit {
     // si modification du une manifestation relative à la personne connectée
     if (idAdh === this.idAdh) {
       this.listeEvenementsAdherent[0].manifestations.forEach((valueManif, indexManif) => {
-        if (typeParticipation === 1) {
-          valueManif.statutParticipation = 1;
-        } else {
-          valueManif.statutParticipation = 2;
-        }
+            if (valueManif.id === idEvenement) {
+              if (typeParticipation === 1) {
+                valueManif.statutParticipation = 1;
+              } else {
+                valueManif.statutParticipation = 2;
+              }
+            }
       });
     } else {
       // si modification d'une manifestation relative à une personne représnetée
