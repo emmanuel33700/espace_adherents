@@ -1,8 +1,12 @@
 export { ApiResponse } from './models/api-response';
 export { ListeEvenements } from './models/liste-evenements';
 export { Evenement } from './models/evenement';
+export { ListeSyntheseEvenements } from './models/liste-synthese-evenements';
+export { SyntheseEvenement } from './models/synthese-evenement';
 export { ListeSaison } from './models/liste-saison';
 export { Saison } from './models/saison';
+export { ListeParticipantsEvenement } from './models/liste-participants-evenement';
+export { ParticipantsEvenement } from './models/participants-evenement';
 export { ListeDocuments } from './models/liste-documents';
 export { Document } from './models/document';
 export { ArborescenceDocumentsInit } from './models/arborescence-documents-init';

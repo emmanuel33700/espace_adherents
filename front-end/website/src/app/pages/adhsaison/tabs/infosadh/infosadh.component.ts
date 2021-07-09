@@ -127,7 +127,10 @@ export class InfosadhComponent implements OnInit {
   eMailValide(email: NgModel) {
 
     this.loggerService.info('Validation du mail ' + email.value);
-    if (email.value === this.adherent.email) {
+    if (this.empty(email.value)) {
+      this.loggerService.info('Mail null ');
+      this.valideEmail = true;
+    }  else if (email.value === this.adherent.email) {
       this.loggerService.info('Mail non modifié, pas besoin de vérifier si il existe déjà en BD ' + email.value);
       this.valideEmail = true;
     } else if (this.validateEmail(email.value)) {
@@ -155,6 +158,23 @@ export class InfosadhComponent implements OnInit {
     }
   }
 
+
+  /**
+   * Vérifier si valeur est null
+   */
+  empty(e): boolean {
+    switch (e) {
+      case '':
+      case 0:
+      case '0':
+      case null:
+      case false:
+      case typeof(e) === 'undefined':
+        return true;
+      default:
+        return false;
+    }
+  }
 
   /**
    * VAlidation du format du mail

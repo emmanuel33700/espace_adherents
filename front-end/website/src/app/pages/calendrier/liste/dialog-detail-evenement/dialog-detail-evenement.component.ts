@@ -82,6 +82,8 @@ export class DialogDetailEvenementComponent implements OnInit {
           this.evenementForm.description = this.manifestation.descriptionLongue;
           this.evenementForm.demandeEnvoyerMail = false;
           this.evenementForm.lieux = this.manifestation.lieux;
+          this.evenementForm.demandeEnvoyerMail = this.manifestation.envoyerInfoAdherents;
+          this.evenementForm.confirmationParticipation = this.manifestation.demanderConfirmationParticipation;
 
           this.typeParticipationEvenement = this.manifestation.statutParticipation;
           if (String(this.manifestation.statutParticipation) === '1') {
@@ -193,6 +195,8 @@ export class DialogDetailEvenementComponent implements OnInit {
     evenement.datedebut = this.dateService.convertISODate(this.evenementForm.dateDebut, this.evenementForm.heureDebut);
     evenement.datefin = this.dateService.convertISODate(this.evenementForm.dateFin, this.evenementForm.heureFin);
     evenement.type = 1;
+    evenement.envoyerInfoAdherents = this.evenementForm.demandeEnvoyerMail;
+    evenement.demanderConfirmationParticipation = this.evenementForm.confirmationParticipation;
 
     this.agendaService.updateEvenement({idevenement: this.manifestation.id, body: evenement})
       .subscribe(

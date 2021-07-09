@@ -12,6 +12,11 @@ export interface Manifestation {
   dateFin?: string;
 
   /**
+   * indique si il faut demander une confirmation de présence à l'adhérent
+   */
+  demanderConfirmationParticipation?: boolean;
+
+  /**
    * Description courte de l'évènement
    */
   descriptionCourte?: string;
@@ -20,6 +25,11 @@ export interface Manifestation {
    * Description longue de l'évènement
    */
   descriptionLongue?: string;
+
+  /**
+   * indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement
+   */
+  envoyerInfoAdherents?: boolean;
 
   /**
    * Id de la manifestation

@@ -10,6 +10,8 @@ import { map, filter } from 'rxjs/operators';
 
 import { Evenement } from '../models/evenement';
 import { ListeEvenements } from '../models/liste-evenements';
+import { ListeParticipantsEvenement } from '../models/liste-participants-evenement';
+import { ListeSyntheseEvenements } from '../models/liste-synthese-evenements';
 
 
 /**
@@ -266,6 +268,63 @@ export class AgendaService extends BaseService {
   }
 
   /**
+   * Path part for operation getSyntheseEvenement
+   */
+  static readonly GetSyntheseEvenementPath = '/agenda/evenement/{idevenement}/synthese';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getSyntheseEvenement()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getSyntheseEvenement$Response(params: {
+
+    /**
+     * id de l&#x27;evenement
+     */
+    idevenement: number;
+
+  }): Observable<StrictHttpResponse<ListeParticipantsEvenement>> {
+
+    const rb = new RequestBuilder(this.rootUrl, AgendaService.GetSyntheseEvenementPath, 'get');
+    if (params) {
+
+      rb.path('idevenement', params.idevenement);
+
+    }
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ListeParticipantsEvenement>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `getSyntheseEvenement$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getSyntheseEvenement(params: {
+
+    /**
+     * id de l&#x27;evenement
+     */
+    idevenement: number;
+
+  }): Observable<ListeParticipantsEvenement> {
+
+    return this.getSyntheseEvenement$Response(params).pipe(
+      map((r: StrictHttpResponse<ListeParticipantsEvenement>) => r.body as ListeParticipantsEvenement)
+    );
+  }
+
+  /**
    * Path part for operation getListeEvenements
    */
   static readonly GetListeEvenementsPath = '/agenda/evenements';
@@ -308,6 +367,74 @@ export class AgendaService extends BaseService {
 
     return this.getListeEvenements$Response(params).pipe(
       map((r: StrictHttpResponse<ListeEvenements>) => r.body as ListeEvenements)
+    );
+  }
+
+  /**
+   * Path part for operation getSyntheseEvenements
+   */
+  static readonly GetSyntheseEvenementsPath = '/agenda/synthese';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getSyntheseEvenements()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getSyntheseEvenements$Response(params?: {
+
+    /**
+     * date de début
+     */
+    datedebut?: string;
+
+    /**
+     * date de fin
+     */
+    datefin?: string;
+
+  }): Observable<StrictHttpResponse<ListeSyntheseEvenements>> {
+
+    const rb = new RequestBuilder(this.rootUrl, AgendaService.GetSyntheseEvenementsPath, 'get');
+    if (params) {
+
+      rb.query('datedebut', params.datedebut);
+      rb.query('datefin', params.datefin);
+
+    }
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ListeSyntheseEvenements>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `getSyntheseEvenements$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getSyntheseEvenements(params?: {
+
+    /**
+     * date de début
+     */
+    datedebut?: string;
+
+    /**
+     * date de fin
+     */
+    datefin?: string;
+
+  }): Observable<ListeSyntheseEvenements> {
+
+    return this.getSyntheseEvenements$Response(params).pipe(
+      map((r: StrictHttpResponse<ListeSyntheseEvenements>) => r.body as ListeSyntheseEvenements)
     );
   }
 

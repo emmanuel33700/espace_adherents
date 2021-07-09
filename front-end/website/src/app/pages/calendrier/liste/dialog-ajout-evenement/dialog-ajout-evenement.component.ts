@@ -67,6 +67,8 @@ export class DialogAjoutEvenementComponent implements OnInit {
     evenement.datedebut = this.dateService.convertISODate(this.evenementForm.dateDebut, this.evenementForm.heureDebut);
     evenement.datefin = this.dateService.convertISODate(this.evenementForm.dateFin, this.evenementForm.heureFin);
     evenement.type = 1;
+    evenement.envoyerInfoAdherents = this.evenementForm.demandeEnvoyerMail;
+    evenement.demanderConfirmationParticipation = this.evenementForm.confirmationParticipation;
 
     this.agendaService.addEvenement({body: evenement})
       .subscribe(

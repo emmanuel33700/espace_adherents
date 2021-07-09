@@ -18,7 +18,7 @@ export class AjouteradherentComponent implements OnInit {
   errors: string[] = [];
   messages: string[] = [];
   submitted = false;
-  valideEmail = false;
+  valideEmail = true;
 
   user: any = {};
 
@@ -101,6 +101,9 @@ export class AjouteradherentComponent implements OnInit {
   eMailValide(email: NgModel) {
 
     this.loggerService.info('Validation du mail ' + email.value);
+    if (this.empty(email.value)) {
+      this.valideEmail = true;
+    }
     if (this.validateEmail(email.value)) {
       this.adherentService.getAdherentByMail({mailadherent: email.value})
         .subscribe(
@@ -120,6 +123,24 @@ export class AjouteradherentComponent implements OnInit {
           () => {
           },
         );
+    }
+  }
+
+
+  /**
+   * Vérifier si valeur est null
+   */
+  empty(e): boolean {
+    switch (e) {
+      case '':
+      case 0:
+      case '0':
+      case null:
+      case false:
+      case typeof(e) === 'undefined':
+        return true;
+      default:
+        return false;
     }
   }
 
