@@ -106,7 +106,7 @@
                      fullWidth
                      (change)="eMailValide(email)"
                      [status]="email.dirty ? ((email.invalid || !valideEmail ) ? 'danger' : 'success') : 'basic'"
-                     [required]="true"
+                     [required]="false"
                      [minlength]="5"
                      [maxlength]="40"
                      [attr.aria-invalid]="valideEmail && email.invalid && email.touched ? true : null">

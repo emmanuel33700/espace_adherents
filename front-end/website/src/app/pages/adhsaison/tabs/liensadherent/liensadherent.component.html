@@ -1,13 +1,77 @@
-
 <div class="row">
   <div class="col-md-12">
-    <nb-card >
+    <nb-card>
       <nb-card-header>Liens entre adhérents</nb-card-header>
       <nb-card-body>
 
-      </nb-card-body>
-    </nb-card>
+        <form
+          #form="ngForm"
+          (ngSubmit)="validerAjoutLienAdherent(form)"
+        >
+
+          <div class="form-group row">
+            <label for="input-rechercher" class="label col-sm-3 col-form-label">Ajouter un lien adhérent</label>
+
+            <div class="col-sm-9">
+              <input #autoInput
+                     nbInput
+                     type="text"
+                     name="rechercher" id="input-rechercher"
+                     (input)="onChange()"
+                     placeholder="NOM Prénom"
+                     [nbAutocomplete]="auto"/>
+
+              <nb-autocomplete #auto (selectedChange)="onSelectionChange($event)">
+
+                <nb-option *ngFor="let option of filteredlisteAdherentsOptions$ | async" [value]="option.nomPrenom">
+                  {{ option.nomPrenom }}
+                </nb-option>
+
+              </nb-autocomplete>
+            </div>
+
+            <div class="col-sm-9">
+              <button nbButton
+                      fullWidth
+                      status="success"
+                      [disabled]="disabledValidateBouton"
+              >Ajouter un lien
+              </button>
+            </div>
+
+          </div>
 
 
-  </div>
+
+
+
+  </form>
+
+
+<!-- Listing lien adhérent -->
+
+
+        <nb-list>
+          <nb-list-item *ngFor="let adhRepresente of lstAdhRepresente">
+            <div class="col-sm-9">
+              <span>
+                <nb-icon icon="person-outline" pack="eva"></nb-icon>
+              </span>
+              <span class="results">
+                {{adhRepresente.nomAdhRepresente}} {{adhRepresente.prenomAdhRepresente}}
+              </span>
+            </div>
+            <div class="col-sm-3">
+              <span>
+                <nb-icon icon="trash-outline" pack="eva" (click)="supprimerLien(adhRepresente.idAdhRepresente, adhRepresente.idAdhRepresentant)"></nb-icon>
+              </span>
+            </div>
+          </nb-list-item>
+        </nb-list>
+
+  </nb-card-body>
+  </nb-card>
+
+
+</div>
 </div>

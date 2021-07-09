@@ -60,9 +60,13 @@ export class DashboardComponent implements OnInit {
   accesDelegue: boolean = false;
 
 
+  // droit acces à la synthèse participation
+  accesSynthesParticipation: boolean = false;
+
+
   optionsChart = {
     backgroundColor: echarts.bg,
-    color: ['red'],
+    color: ['blue'],
     tooltip: {
       trigger: 'axis',
       axisPointer: {
@@ -78,7 +82,7 @@ export class DashboardComponent implements OnInit {
     xAxis: [
       {
         type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        data: ['Conference 1', 'Sortie JA', 'Evenement 3', 'Evenement 4', 'Evenement 5', 'Evenement 6'],
         axisTick: {
           alignWithLabel: true,
         },
@@ -119,7 +123,7 @@ export class DashboardComponent implements OnInit {
         name: 'Score',
         type: 'bar',
         barWidth: '60%',
-        data: [10, 52, 200, 334, 390, 330, 220],
+        data: [10, 52, 200, 334, 390, 330],
       },
     ],
   };
@@ -142,6 +146,10 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
 
     this.adherent = JSON.parse(localStorage.getItem('adherent'));
+    const role = localStorage.getItem('ROLE');
+    if (role !== 'ADHERENT') {
+      this.accesSynthesParticipation = true;
+    }
 
     if (this.adherent != null) {
       this.idAdh = this.adherent.id;

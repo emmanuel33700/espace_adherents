@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-    NbAccordionModule, NbActionsModule, NbAlertModule,
+    NbAccordionModule, NbActionsModule, NbAlertModule, NbAutocompleteModule,
     NbButtonModule,
     NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule,
     NbListModule, NbPopoverModule, NbRadioModule,
@@ -60,6 +60,7 @@ import {HttpClientModule} from '@angular/common/http';
         NbAlertModule,
         NbSpinnerModule,
         NbPopoverModule,
+        NbAutocompleteModule,
     ],
   declarations: [
     AdhsaisonComponent,
