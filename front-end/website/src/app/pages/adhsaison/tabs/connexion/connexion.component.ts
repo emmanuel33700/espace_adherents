@@ -93,11 +93,11 @@ export class ConnexionComponent implements OnInit {
 
           if (this.roleStringJzon.includes('ADMIN')) {
             this.user.role = 'ADMIN';
-          } else if (this.roleStringJzon.includes('RES_ATELIER')) {
-            this.user.role = 'RES_ATELIER';
           } else if (this.roleStringJzon.includes('CONSEIL')) {
             this.user.role = 'CONSEIL';
-          } else {
+          } else if (this.roleStringJzon.includes('RES_ATELIER')) {
+            this.user.role = 'RES_ATELIER';
+          }  else {
             this.user.role = 'ADHERENT';
           }
           this.user.email = this.adherent.email;
