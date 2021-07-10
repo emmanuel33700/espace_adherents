@@ -16,7 +16,7 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-07T09:56:02.754Z[GMT]")
 
 
-public class Manifestation   {
+public class Manifestation  {
   @JsonProperty("id")
   private Long id = null;
 
@@ -37,6 +37,12 @@ public class Manifestation   {
 
   @JsonProperty("dateFin")
   private String dateFin = null;
+
+  @JsonProperty("envoyerInfoAdherents")
+  private Boolean envoyerInfoAdherents = null;
+
+  @JsonProperty("demanderConfirmationParticipation")
+  private Boolean demanderConfirmationParticipation = null;
 
   /**
    * Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS 
@@ -251,6 +257,44 @@ public class Manifestation   {
     this.dateFin = dateFin;
   }
 
+  public Manifestation envoyerInfoAdherents(Boolean envoyerInfoAdherents) {
+    this.envoyerInfoAdherents = envoyerInfoAdherents;
+    return this;
+  }
+
+  /**
+   * indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement
+   * @return envoyerInfoAdherents
+   **/
+  @Schema(example = "true", description = "indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement")
+  
+    public Boolean isEnvoyerInfoAdherents() {
+    return envoyerInfoAdherents;
+  }
+
+  public void setEnvoyerInfoAdherents(Boolean envoyerInfoAdherents) {
+    this.envoyerInfoAdherents = envoyerInfoAdherents;
+  }
+
+  public Manifestation demanderConfirmationParticipation(Boolean demanderConfirmationParticipation) {
+    this.demanderConfirmationParticipation = demanderConfirmationParticipation;
+    return this;
+  }
+
+  /**
+   * indique si il faut demander une confirmation de présence à l'adhérent
+   * @return demanderConfirmationParticipation
+   **/
+  @Schema(example = "true", description = "indique si il faut demander une confirmation de présence à l'adhérent")
+  
+    public Boolean isDemanderConfirmationParticipation() {
+    return demanderConfirmationParticipation;
+  }
+
+  public void setDemanderConfirmationParticipation(Boolean demanderConfirmationParticipation) {
+    this.demanderConfirmationParticipation = demanderConfirmationParticipation;
+  }
+
   public Manifestation type(TypeEnum type) {
     this.type = type;
     return this;
@@ -306,13 +350,15 @@ public class Manifestation   {
         Objects.equals(this.lieux, manifestation.lieux) &&
         Objects.equals(this.dateDebut, manifestation.dateDebut) &&
         Objects.equals(this.dateFin, manifestation.dateFin) &&
+        Objects.equals(this.envoyerInfoAdherents, manifestation.envoyerInfoAdherents) &&
+        Objects.equals(this.demanderConfirmationParticipation, manifestation.demanderConfirmationParticipation) &&
         Objects.equals(this.type, manifestation.type) &&
         Objects.equals(this.statutParticipation, manifestation.statutParticipation);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, idAdherent, descriptionCourte, descriptionLongue, lieux, dateDebut, dateFin, type, statutParticipation);
+    return Objects.hash(id, idAdherent, descriptionCourte, descriptionLongue, lieux, dateDebut, dateFin, envoyerInfoAdherents, demanderConfirmationParticipation, type, statutParticipation);
   }
 
   @Override
@@ -327,6 +373,8 @@ public class Manifestation   {
     sb.append("    lieux: ").append(toIndentedString(lieux)).append("\n");
     sb.append("    dateDebut: ").append(toIndentedString(dateDebut)).append("\n");
     sb.append("    dateFin: ").append(toIndentedString(dateFin)).append("\n");
+    sb.append("    envoyerInfoAdherents: ").append(toIndentedString(envoyerInfoAdherents)).append("\n");
+    sb.append("    demanderConfirmationParticipation: ").append(toIndentedString(demanderConfirmationParticipation)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    statutParticipation: ").append(toIndentedString(statutParticipation)).append("\n");
     sb.append("}");

@@ -414,6 +414,8 @@ public class AdherentApiController implements AdherentApi {
         model.setLieux(dto.getLieux());
         model.setDateDebut(this.dateToStringAvecMS(dto.getDateDebut()));
         model.setDateFin(this.dateToStringAvecMS(dto.getDateFin()));
+        model.setEnvoyerInfoAdherents(dto.isEnvoyerInfoAdherents());
+        model.setDemanderConfirmationParticipation(dto.isDemanderConfirmationParticipation());
         
         /**
          * type de participation

@@ -77,6 +77,7 @@ public class AdherentEvenementsDAOImpl extends JdbcDaoSupport implements Adheren
         query.append("	ELSE 3 ");
         query.append("	END  ");
         query.append("  ) as adh_participe ");
+        query.append("  , besoin_confirm_participation, demande_communication ");
         query.append(" FROM t_evenement ");
         query.append(" where fk_id_type_authority <= ?  ");
         
@@ -128,6 +129,7 @@ public class AdherentEvenementsDAOImpl extends JdbcDaoSupport implements Adheren
         query.append("	ELSE 3 ");
         query.append("	END  ");
         query.append("  ) as adh_participe ");
+        query.append("  , besoin_confirm_participation, demande_communication ");
         query.append(" FROM t_evenement ");
         query.append(" where fk_id_type_authority <= ?  ");
         query.append(" and  id_evenement = ?  ");
@@ -214,6 +216,9 @@ public class AdherentEvenementsDAOImpl extends JdbcDaoSupport implements Adheren
             dto.setDateFin(new Date(rs.getTimestamp("date_fin").getTime()));
             dto.setIdAuthority(rs.getInt("fk_id_type_authority"));
             dto.setTypeParticipation(rs.getInt("adh_participe"));
+            dto.setDemanderConfirmationParticipation(rs.getBoolean("besoin_confirm_participation"));
+            dto.setEnvoyerInfoAdherents(rs.getBoolean("demande_communication"));
+            
             
             return dto;
         }

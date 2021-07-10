@@ -33,6 +33,8 @@ public class AdherentEvenementDto {
     private Date dateFin;
     private int idAuthority;
     private int typeParticipation;
+    private boolean envoyerInfoAdherents;
+    private boolean demanderConfirmationParticipation;
 
     public long getIdEvenement() {
         return idEvenement;
@@ -117,6 +119,22 @@ public class AdherentEvenementDto {
      */
     public void setTypeParticipation(int typeParticipation) {
         this.typeParticipation = typeParticipation;
+    }
+
+    public boolean isEnvoyerInfoAdherents() {
+        return envoyerInfoAdherents;
+    }
+
+    public void setEnvoyerInfoAdherents(boolean envoyerInfoAdherents) {
+        this.envoyerInfoAdherents = envoyerInfoAdherents;
+    }
+
+    public boolean isDemanderConfirmationParticipation() {
+        return demanderConfirmationParticipation;
+    }
+
+    public void setDemanderConfirmationParticipation(boolean demanderConfirmationParticipation) {
+        this.demanderConfirmationParticipation = demanderConfirmationParticipation;
     }
     
 

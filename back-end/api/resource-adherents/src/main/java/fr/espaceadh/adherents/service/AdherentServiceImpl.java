@@ -110,11 +110,19 @@ public class AdherentServiceImpl implements AdherentService{
         
         final AdherentDto dtoAdherentOld = this.adherentsDAO.getAdherentByID(adherentDto.getId());
         
+        
+        
         if (dtoAdherentOld.getEmail() != null && adherentDto.getEmail() != null 
                 && !dtoAdherentOld.getEmail().equals(adherentDto.getEmail())){
             LOGGER.info("Changement de username demandé  : {} => {} ", dtoAdherentOld.getEmail() , adherentDto.getEmail());
+
+            
             OAuth2AccessToken token = this.recupererToken();
             this.changerUserName(adherentDto.getId(), adherentDto.getEmail(), token.getValue());
+        } 
+        // si l'adhérent vient de créer un mail et si l'adhérent est adhérent de la saision => Création d'un accès
+        else if (dtoAdherentOld.getEmail() == null &&  adherentDto.getEmail() != null) {
+            this.creerEtActiverCompte(adherentDto.getId());
         }
         
         return this.adherentsDAO.updateAdherents(adherentDto);
@@ -129,43 +137,61 @@ public class AdherentServiceImpl implements AdherentService{
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean creerAdhesion(AdhesionDto adhesionDto) {
         
-        // activier le compte
-        OAuth2AccessToken token = this.recupererToken();
-        int codehttp = this.activierCompte(adhesionDto.getIdAdherent(), token.getValue());
         boolean resulte = this.adherentsDAO.creerAdhesion(adhesionDto);
-        
-        if (resulte && codehttp != 200) {
-            AdherentDto adhDto = this.adherentsDAO.getAdherentByID(adhesionDto.getIdAdherent());
-            LOGGER.info("Adherent {} n'a pas de compte d'acces ", adhDto.getEmail());
-            //envoie du mail de validation du compte
-             MailInDto mailIn = new MailInDto();
 
-
-             Collection<String> messageTo = new ArrayList<>();
-             messageTo.add(adhDto.getEmail());
-             mailIn.setMessageTo(messageTo);
-
-
-             /* type de template */
-             mailIn.setTemplateMailEnum(TemplateMailEnum.INFORMATION_PRE_INSCRIPTION);
-
-             /* variables associées au tempalte **/
-             HashMap<String, String> templateVariables = new HashMap<>();
-             templateVariables.put("adh_prenom", adhDto.getPrenom());
-             templateVariables.put("confirmation_link", 
-                     env.getProperty("validationmail.url")
-                             .concat("?mail=").concat(adhDto.getEmail())
-                             .concat("&id=").concat(Long.toString(adhesionDto.getIdAdherent()))
-             );
-             mailIn.setTemplateVariables(templateVariables);
-
-             /** Sujet du mail **/
-             mailIn.setSujetMail("Votre préinscription");
-
-             MailOutDto mailOut = getionMail.sendMail(mailIn);            
-        }
+        if (resulte) this.creerEtActiverCompte(adhesionDto.getIdAdherent());
         
         return resulte;
+    }
+    
+    /**
+     * créer et activer un compte
+     * @param idAdh
+     * @return 
+     */
+    private boolean creerEtActiverCompte(long idAdh){
+        AdherentDto adhDto = this.adherentsDAO.getAdherentByID(idAdh);
+        
+        //Activiation du compte uniquement si l'adhérent à un email 
+        if (adhDto.getEmail() != null){
+            // activier le compte
+            OAuth2AccessToken token = this.recupererToken();
+            int codehttp = this.activerCompte(idAdh, token.getValue());
+
+            // Si le compte ne peut pas etre activé, c'est que l'adhérent n'a pas encore créé d'accès
+            if (codehttp != 200) {
+                LOGGER.info("Adherent {} n'a pas de compte d'acces ", adhDto.getEmail());
+                //envoie du mail de validation du compte
+                 MailInDto mailIn = new MailInDto();
+
+
+                 Collection<String> messageTo = new ArrayList<>();
+                 messageTo.add(adhDto.getEmail());
+                 mailIn.setMessageTo(messageTo);
+
+
+                 /* type de template */
+                 mailIn.setTemplateMailEnum(TemplateMailEnum.INFORMATION_PRE_INSCRIPTION);
+
+                 /* variables associées au tempalte **/
+                 HashMap<String, String> templateVariables = new HashMap<>();
+                 templateVariables.put("adh_prenom", adhDto.getPrenom());
+                 templateVariables.put("confirmation_link", 
+                         env.getProperty("validationmail.url")
+                                 .concat("?mail=").concat(adhDto.getEmail())
+                                 .concat("&id=").concat(Long.toString(idAdh))
+                 );
+                 mailIn.setTemplateVariables(templateVariables);
+
+                 /** Sujet du mail **/
+                 mailIn.setSujetMail("Votre préinscription");
+
+                 MailOutDto mailOut = getionMail.sendMail(mailIn);            
+            }            
+        }
+        
+        return true;
+        
     }
 
     @Override
@@ -315,7 +341,7 @@ public class AdherentServiceImpl implements AdherentService{
      * @param token
      * @return 
      */
-    private int activierCompte(Long idAdh, String token) {
+    private int activerCompte(Long idAdh, String token) {
         try {
             StringBuilder bearer = new StringBuilder();
             bearer.append("Bearer ");
