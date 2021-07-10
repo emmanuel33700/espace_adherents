@@ -31,6 +31,8 @@ public class EvenementDto {
     private Date dateDebut;
     private Date dateFin;
     private int idAuthority;
+    private boolean envoyerInfoAdherents;
+    private boolean demanderConfirmationParticipation;
 
     public long getIdEvenement() {
         return idEvenement;
@@ -86,6 +88,22 @@ public class EvenementDto {
 
     public void setIdAuthority(int idAuthority) {
         this.idAuthority = idAuthority;
+    }
+
+    public boolean isEnvoyerInfoAdherents() {
+        return envoyerInfoAdherents;
+    }
+
+    public void setEnvoyerInfoAdherents(boolean envoyerInfoAdherents) {
+        this.envoyerInfoAdherents = envoyerInfoAdherents;
+    }
+
+    public boolean isDemanderConfirmationParticipation() {
+        return demanderConfirmationParticipation;
+    }
+
+    public void setDemanderConfirmationParticipation(boolean demanderConfirmationParticipation) {
+        this.demanderConfirmationParticipation = demanderConfirmationParticipation;
     }
     
 

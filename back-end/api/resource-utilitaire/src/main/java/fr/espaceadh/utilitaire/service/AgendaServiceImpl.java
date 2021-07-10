@@ -17,9 +17,18 @@
 package fr.espaceadh.utilitaire.service;
 
 import fr.espaceadh.lib.mail.GestionMail;
+import fr.espaceadh.lib.mail.dto.MailInDto;
+import fr.espaceadh.lib.mail.dto.MailOutDto;
+import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
+import fr.espaceadh.utilitaire.dao.AdherentsDAO;
 import fr.espaceadh.utilitaire.dao.AgendaDao;
+import fr.espaceadh.utilitaire.dto.AdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +55,12 @@ public class AgendaServiceImpl implements AgendaService{
 
     @Autowired
     protected AgendaDao agendaDao;
+    
+    @Autowired
+    protected AdherentsDAO adherentsDAO;
+    
+    @Autowired
+    private GestionMail sendMail;
             
         
     /**
@@ -61,11 +76,79 @@ public class AgendaServiceImpl implements AgendaService{
         
         if (envoyerMailInfo) {
             LOGGER.debug("Envoyer un mail d'information au adhérent sur la création d'un évènement {}", evenement.getIdEvenement());
-            //TODO envoyer un email au adhérent
+            //envoyer un email au adhérent
+            Collection<AdherentDto> lstAdherent = this.adherentsDAO.recupererListeAdherentSaison();
+            for(AdherentDto adhDto : lstAdherent) {
+                if (adhDto.getEmail() != null) {
+                    MailInDto mailIn = new MailInDto();
+
+                    /* adresse email de destination */
+                    Collection<String> messageTo = new ArrayList<>();
+                    messageTo.add(adhDto.getEmail());
+                    mailIn.setMessageTo(messageTo);                
+                    
+                    /* type de template */
+                    mailIn.setTemplateMailEnum(TemplateMailEnum.INFORMATION_EVENEMENT_AJOUTE);
+                    
+                    /* variables associées au tempalte **/
+                    HashMap<String, String> templateVariables = new HashMap<>();
+                    templateVariables.put("adh_prenom", adhDto.getPrenom());
+                    templateVariables.put("libelle_court_manifestation", evenement.getDescriptionCourte());
+                    templateVariables.put("libelle_long_manifestation", evenement.getDescriptionLongue());
+                    templateVariables.put("date_debut_manifestation", this.dateToString(evenement.getDateDebut()));
+                    templateVariables.put("heure_debut_manifestation", this.heureToString(evenement.getDateDebut()));
+                    templateVariables.put("date_fin_manifestation", this.dateToString(evenement.getDateFin()));
+                    templateVariables.put("heure_fin_manifestation", this.heureToString(evenement.getDateFin()));                    
+                    mailIn.setTemplateVariables(templateVariables);
+
+
+                    /* demande d'envoie du mail */
+                    MailOutDto mailOut = sendMail.sendMail(mailIn);
+                }
+
+        
+
+        
+
+        
+        
+
+                
+            }
         } 
         return resultCreation;
     }
 
+    /**
+     * Convertion d'un format date en date yyy-MM-dd
+     * @param date
+     * @return 
+     */
+    private String dateToString(Date date) {
+        if (date == null) {
+            return null;
+        }
+        SimpleDateFormat sdf;
+        sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        return sdf.format(date);
+    }
+    
+    /**
+     * Convertir un format date en heure HH:mm
+     * @param date
+     * @return 
+     */
+    private String heureToString(Date date) {
+        if (date == null) {
+            return null;
+        }
+        SimpleDateFormat sdf;
+        sdf = new SimpleDateFormat("HH:mm");
+
+        return sdf.format(date);
+    }
+    
     /**
      * Recuperer la liste des évènement en fonction du type d'autority
      * @param typeAutority

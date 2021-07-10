@@ -7,6 +7,8 @@ package fr.espaceadh.utilitaire.controller;
 
 import fr.espaceadh.utilitaire.model.Evenement;
 import fr.espaceadh.utilitaire.model.ListeEvenements;
+import fr.espaceadh.utilitaire.model.ListeParticipantsEvenement;
+import fr.espaceadh.utilitaire.model.ListeSyntheseEvenements;
 import fr.espaceadh.utilitaire.model.ModelApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-02T08:30:39.723Z[GMT]")
 public interface AgendaApi {
@@ -114,6 +117,47 @@ public interface AgendaApi {
     @PreAuthorize("isDansGroupe('ADHERENT')")            
     ResponseEntity<ListeEvenements> getListeEvenements();
 
+    
+        @Operation(summary = "rechercher la synthese des participations à un évènement", description = "", security = {
+        @SecurityRequirement(name = "oAuth", scopes = {
+            "ress-adherent-admin"        })    }, tags={ "Agenda" })
+    @ApiResponses(value = { 
+        @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ListeParticipantsEvenement.class))),
+        
+        @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
+        
+        @ApiResponse(responseCode = "403", description = "Droit insufisant"),
+        
+        @ApiResponse(responseCode = "404", description = "evenement non trouvée"),
+        
+        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
+        
+        @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/agenda/evenement/{idevenement}/synthese",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<ListeParticipantsEvenement> getSyntheseEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement);
+
+
+    @Operation(summary = "rechercher la synthèse des participations aux évènement", description = "", security = {
+        @SecurityRequirement(name = "oAuth", scopes = {
+            "ress-adherent-admin"        })    }, tags={ "Agenda" })
+    @ApiResponses(value = { 
+        @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ListeSyntheseEvenements.class))),
+        
+        @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
+        
+        @ApiResponse(responseCode = "403", description = "Droit insufisant"),
+        
+        @ApiResponse(responseCode = "404", description = "evenement non trouvée"),
+        
+        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
+        
+        @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/agenda/synthese",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<ListeSyntheseEvenements> getSyntheseEvenements(@Parameter(in = ParameterIn.QUERY, description = "date de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut, @Parameter(in = ParameterIn.QUERY, description = "date de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin);
 
     @Operation(summary = "Mise à jour d'une evenement", description = "Mise à jour d'un evenement", security = {
         @SecurityRequirement(name = "oAuth", scopes = {

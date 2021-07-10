@@ -55,8 +55,8 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
         
                 StringBuilder query = new StringBuilder();
         query.append(" INSERT INTO public.t_evenement( ");
-        query.append("			id_evenement, description_courte, detail_text, lieux, date_debut, date_fin, fk_id_type_authority) ");
-        query.append("	VALUES (?, ?, ?, ?, ?, ?, ?) ");
+        query.append("			id_evenement, description_courte, detail_text, lieux, date_debut, date_fin, fk_id_type_authority, besoin_confirm_participation, demande_communication) ");
+        query.append("	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ");
 
         int nbCreation;
         nbCreation = this.getJdbcTemplate().update(query.toString(),
@@ -66,7 +66,9 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
                  evenement.getLieux(),
                  evenement.getDateDebut(),
                  evenement.getDateFin(),
-                 evenement.getIdAuthority()
+                 evenement.getIdAuthority(),
+                 evenement.isDemanderConfirmationParticipation(),
+                 evenement.isEnvoyerInfoAdherents()
         );
 
         if (nbCreation == 1) {
@@ -102,10 +104,10 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
     public Collection<EvenementDto> getLstEvenement(int typeAutority) {
         StringBuilder query = new StringBuilder();
         
-        query.append(" SELECT id_evenement, description_courte, detail_text, lieux, date_debut, date_fin, fk_id_type_authority ");
+        query.append(" SELECT id_evenement, description_courte, detail_text, lieux, date_debut, date_fin, fk_id_type_authority, besoin_confirm_participation, demande_communication ");
         query.append("	FROM t_evenement ");
         query.append(" 	WHERE fk_id_type_authority <= ? ");
-        
+
         
         List<EvenementDto> lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), typeAutority);
         
@@ -126,8 +128,9 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
                 StringBuilder query = new StringBuilder();
         query.append(" UPDATE t_evenement ");
         query.append("	   	SET description_courte=?, detail_text=?, lieux=?, date_debut=?, date_fin=?, fk_id_type_authority=? ");
+        query.append("	 	, besoin_confirm_participation=?, demande_communication=?");
         query.append("	 	WHERE id_evenement=?");
-
+       
         int nbUpdate;
         nbUpdate = this.getJdbcTemplate().update(query.toString(),
                  evenement.getDescriptionCourte(),
@@ -136,8 +139,11 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
                  evenement.getDateDebut(),
                  evenement.getDateFin(),
                  evenement.getIdAuthority(),
-                 evenement.getIdEvenement()
+                 evenement.getIdEvenement(),
+                 evenement.isDemanderConfirmationParticipation(),
+                 evenement.isEnvoyerInfoAdherents()
         );
+
 
         if (nbUpdate == 1) {
             return true;
@@ -198,9 +204,10 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
         StringBuilder query = new StringBuilder();
         
         query.append(" SELECT id_evenement, description_courte, detail_text, lieux, date_debut, date_fin, fk_id_type_authority ");
+        query.append("	, besoin_confirm_participation, demande_communication ");
         query.append("	FROM t_evenement ");
         query.append(" 	WHERE id_evenement = ? ");
-        
+
         
         List<EvenementDto> lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), idEvnement);
         
@@ -236,6 +243,8 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
             dto.setDateDebut(new Date(rs.getTimestamp("date_debut").getTime()));
             dto.setDateFin(new Date(rs.getTimestamp("date_fin").getTime()));
             dto.setIdAuthority(rs.getInt("fk_id_type_authority"));
+            dto.setEnvoyerInfoAdherents(rs.getBoolean("demande_communication"));
+            dto.setDemanderConfirmationParticipation(rs.getBoolean("besoin_confirm_participation"));
             
             return dto;
         }

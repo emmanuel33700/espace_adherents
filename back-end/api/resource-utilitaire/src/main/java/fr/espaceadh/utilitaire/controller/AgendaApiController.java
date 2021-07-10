@@ -4,6 +4,8 @@ import fr.espaceadh.utilitaire.model.Evenement;
 import fr.espaceadh.utilitaire.model.ListeEvenements;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import fr.espaceadh.utilitaire.model.ListeParticipantsEvenement;
+import fr.espaceadh.utilitaire.model.ListeSyntheseEvenements;
 import fr.espaceadh.utilitaire.service.AgendaService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -29,6 +31,7 @@ import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-02T08:30:39.723Z[GMT]")
 @RestController
@@ -139,7 +142,35 @@ public class AgendaApiController implements AgendaApi {
         return new ResponseEntity<ListeEvenements>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    
+    /**
+     * Récupérer les statuts des participations (adhérents) pour une manifestation
+     * @param idevenement
+     * @return 
+     */
+    public ResponseEntity<ListeParticipantsEvenement> getSyntheseEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+
+        }
+
+        return new ResponseEntity<ListeParticipantsEvenement>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
+     * R2cupérer la synthèse des participations aux manifestations
+     * @param datedebut
+     * @param datefin
+     * @return 
+     */
+    public ResponseEntity<ListeSyntheseEvenements> getSyntheseEvenements(@Parameter(in = ParameterIn.QUERY, description = "date de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut,@Parameter(in = ParameterIn.QUERY, description = "date de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+
+        }
+
+        return new ResponseEntity<ListeSyntheseEvenements>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
     
 
     /**
@@ -187,7 +218,8 @@ public class AgendaApiController implements AgendaApi {
         dto.setDateDebut(this.toDate(evenementModel.getDatedebut()));
         dto.setDateFin(this.toDate(evenementModel.getDatefin()));
         dto.setIdAuthority(1); //TODO a revoir le type d'authority
-        
+        dto.setDemanderConfirmationParticipation(evenementModel.isDemanderConfirmationParticipation());
+        dto.setEnvoyerInfoAdherents(evenementModel.isEnvoyerInfoAdherents());
         return dto;
     }
     
@@ -245,6 +277,8 @@ public class AgendaApiController implements AgendaApi {
         evenementModel.setDatedebut(this.dateToString(dto.getDateDebut()));
         evenementModel.setDatefin(this.dateToString(dto.getDateFin()));
         evenementModel.setType(Evenement.TypeEnum.NUMBER_1); //TODO a revoir sur le type d'évènement
+        evenementModel.setDemanderConfirmationParticipation(dto.isDemanderConfirmationParticipation());
+        evenementModel.setEnvoyerInfoAdherents(dto.isEnvoyerInfoAdherents());
         
         return evenementModel;
     }
