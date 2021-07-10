@@ -205,6 +205,8 @@ public class GestionMailImpl implements GestionMail {
                 return  env.getProperty("message.template.code.validationmail", Integer.class);
             case INFORMATION_PRE_INSCRIPTION:
                 return  env.getProperty("message.template.code.preinscription", Integer.class);
+            case INFORMATION_EVENEMENT_AJOUTE:
+                return  env.getProperty("message.template.code.evenement.ajoute", Integer.class);    
             default:
                 break;
         }
