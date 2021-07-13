@@ -17,7 +17,9 @@
 package fr.espaceadh.utilitaire.service;
 
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  *
@@ -52,8 +54,18 @@ public interface AgendaService {
     /**
      * Supression d'un évènement
      * @param idEvenement id de l'évènement à supprimer
-     * @param idAdherent id de l'adhérent
      * @return true si l'évènement est supprimé 
      */
     public boolean deleteEvenement(long idEvenement);
+    
+    
+        /**
+     * Récupérer la synthèse des participations aux manifestations
+     * @param dateDebut date min de démarage de la conférence
+     * @param dateFin date max de démarage de la conférence
+     * @param demandeConfirParticipation indique si une confirmation de la participation est nécésaire
+     * @return 
+     */
+    public Collection<EvenementSyntheseDto> recupererSyntheseParticipation(final Date dateDebut, final Date dateFin, final boolean demandeConfirParticipation);
+
 }

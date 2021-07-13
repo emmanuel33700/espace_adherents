@@ -4,8 +4,10 @@ import fr.espaceadh.utilitaire.model.Evenement;
 import fr.espaceadh.utilitaire.model.ListeEvenements;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;
 import fr.espaceadh.utilitaire.model.ListeParticipantsEvenement;
 import fr.espaceadh.utilitaire.model.ListeSyntheseEvenements;
+import fr.espaceadh.utilitaire.model.SyntheseEvenement;
 import fr.espaceadh.utilitaire.service.AgendaService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -160,12 +162,18 @@ public class AgendaApiController implements AgendaApi {
      * R2cupérer la synthèse des participations aux manifestations
      * @param datedebut
      * @param datefin
+     * @param retourParticipationAdh
      * @return 
      */
-    public ResponseEntity<ListeSyntheseEvenements> getSyntheseEvenements(@Parameter(in = ParameterIn.QUERY, description = "date de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut,@Parameter(in = ParameterIn.QUERY, description = "date de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin) {
-        String accept = request.getHeader("Accept");
+    public ResponseEntity<ListeSyntheseEvenements> getSyntheseEvenements(@Parameter(in = ParameterIn.QUERY, description = "date max de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut,@Parameter(in = ParameterIn.QUERY, description = "date max de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin,@Parameter(in = ParameterIn.QUERY, description = "indique si il faut récupérer uniquement les manifestations avec une demande de participation" ,schema=@Schema()) @Valid @RequestParam(value = "retourParticipationAdh", required = false) Boolean retourParticipationAdh) {        String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-
+            Collection<EvenementSyntheseDto> lstDto = this.agendaService.recupererSyntheseParticipation(this.toDateSansHeure(datedebut), this.toDateSansHeure(datefin), retourParticipationAdh);
+            
+            ListeSyntheseEvenements lstModel = new ListeSyntheseEvenements();
+            for (EvenementSyntheseDto dto : lstDto) {
+                lstModel.add(this.convertDto(dto));
+            }
+            return new ResponseEntity<ListeSyntheseEvenements>(lstModel, HttpStatus.OK);
         }
 
         return new ResponseEntity<ListeSyntheseEvenements>(HttpStatus.NOT_IMPLEMENTED);
@@ -223,6 +231,28 @@ public class AgendaApiController implements AgendaApi {
         return dto;
     }
     
+    /**
+     * Concert EvenementSyntheseDto to SyntheseEvenement
+     * @param dto EvenementSyntheseDto
+     * @return  SyntheseEvenement
+     */
+    private SyntheseEvenement convertDto(EvenementSyntheseDto dto) {
+        SyntheseEvenement model = new SyntheseEvenement();
+        
+        model.setId(dto.getIdEvenement());
+        model.setDescription(dto.getDescriptionCourte());
+        model.setDetail(dto.getDescriptionLongue());
+        model.setDatedebut(this.dateToStringAvecMS(dto.getDateDebut()));
+        model.setDatefin(this.dateToStringAvecMS(dto.getDateFin()));
+        model.setEnvoyerInfoAdherents(dto.isEnvoyerInfoAdherents());
+        model.setDemanderConfirmationParticipation(dto.isDemanderConfirmationParticipation());
+        
+        model.setNbAdherentEnAttente(dto.getNbAdherentsEnAttenteParticipation());
+        model.setNbAdherentParticipant(dto.getNbAherentsParticipe());
+        model.setNbAdherentParticipantPas(dto.getNbAdherentsParticipePas());
+        
+        return model;
+    }
     
     /**
      * Transform ISO 8601 string to Calendar.
@@ -236,6 +266,30 @@ public class AgendaApiController implements AgendaApi {
         }
         
         DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+
+        Date result2 = null;
+        try {
+            result2 = df2.parse(iso8601string);
+        } catch (ParseException ex) {
+            LOGGER.error("Erreur sur le formatage  de date. Date en entré {}. {}", iso8601string , ex.getMessage());
+        }
+
+
+        return result2;
+    }
+    
+    
+        /**
+     * Convertir une date iso dans les heures
+     * @param iso8601string
+     * @return 
+     */
+    public Date toDateSansHeure(final String iso8601string) {
+        if (iso8601string == null) {
+            return null;
+        }
+        
+        DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
 
         Date result2 = null;
         try {
@@ -264,6 +318,20 @@ public class AgendaApiController implements AgendaApi {
         return sdf.format(date);
     }
 
+        /**
+     * convertir date en string format ISO
+     * @param dateArrive
+     * @return 
+     */
+    private String dateToStringAvecMS(Date date) {
+        if (date == null){
+            return null;
+        }
+        SimpleDateFormat sdf;
+        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+        sdf.setTimeZone(TimeZone.getTimeZone("CET"));
+        return sdf.format(date);
+    }
     /**
      * Transforme un dto evenement en model envement
      * @param dto

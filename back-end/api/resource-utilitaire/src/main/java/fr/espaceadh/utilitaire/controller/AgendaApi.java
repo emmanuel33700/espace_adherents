@@ -157,8 +157,9 @@ public interface AgendaApi {
     @RequestMapping(value = "/agenda/synthese",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<ListeSyntheseEvenements> getSyntheseEvenements(@Parameter(in = ParameterIn.QUERY, description = "date de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut, @Parameter(in = ParameterIn.QUERY, description = "date de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin);
-
+    ResponseEntity<ListeSyntheseEvenements> getSyntheseEvenements(@Parameter(in = ParameterIn.QUERY, description = "date max de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut, @Parameter(in = ParameterIn.QUERY, description = "date max de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin, @Parameter(in = ParameterIn.QUERY, description = "indique si il faut récupérer uniquement les manifestations avec une demande de participation" ,schema=@Schema()) @Valid @RequestParam(value = "retourParticipationAdh", required = false) Boolean retourParticipationAdh);
+    
+    
     @Operation(summary = "Mise à jour d'une evenement", description = "Mise à jour d'un evenement", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
             ""        })    }, tags={ "Agenda" })

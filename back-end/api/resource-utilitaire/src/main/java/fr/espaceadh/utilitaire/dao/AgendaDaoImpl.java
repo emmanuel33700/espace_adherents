@@ -17,8 +17,10 @@
 package fr.espaceadh.utilitaire.dao;
 
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -219,6 +221,53 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
         
         return null;    
     }
+
+    @Override
+    public Collection<EvenementSyntheseDto> recupererSyntheseParticipation(Date dateDebut, Date dateFin, boolean demandeConfirParticipation) {
+        
+        Collection<EvenementSyntheseDto> lst =  new ArrayList<>();
+        
+        StringBuilder query = new StringBuilder();
+        query.append(" SELECT id_evenement, description_courte, detail_text, lieux, date_debut, date_fin ");
+        query.append(" 	, fk_id_type_authority, besoin_confirm_participation, demande_communication ");
+        query.append(" 	, (SELECT count (1)  ");
+        query.append("		FROM r_adh_evenement as participe ");
+        query.append("		where participe.participe_evenement = true ");
+        query.append("		and participe.fk_id_evenement = t_evenement.id_evenement) as participe ");
+        query.append(" 	, (SELECT count (1)  ");
+        query.append("		FROM r_adh_evenement as participepas ");
+        query.append("		where participepas.participe_evenement = false ");
+        query.append("		and participepas.fk_id_evenement = t_evenement.id_evenement) as participepas	 ");
+        query.append("	, (SELECT count (1) as nesaispas  ");
+        query.append("	   from (SELECT fk_id_adherents ");
+        query.append("			FROM t_adhesions, i_annee_adhesion ");
+        query.append("			where t_adhesions.fk_id_annee_adhesions = i_annee_adhesion.id_annee_adhesion ");
+        query.append("			and i_annee_adhesion.annee_courante = true ");
+        query.append("		EXCEPT ");
+        query.append("			SELECT b.fk_id_adherent ");
+        query.append("				FROM r_adh_evenement b ");
+        query.append("				where b.fk_id_evenement = t_evenement.id_evenement) as resulta ");
+        query.append("	  )	as nesaispas ");
+        query.append("	FROM t_evenement ");
+        query.append("	where true ");
+        if (demandeConfirParticipation) {
+            query.append("	AND besoin_confirm_participation = true ");
+        }
+        
+        if (dateDebut != null && dateFin != null) {
+            query.append("      and date_debut >=  ?	 ");
+            query.append(" 	and date_fin <= ? ");
+            
+             lst = this.getJdbcTemplate().query(query.toString(), new EvenementsSyntheseMapper(),dateDebut, dateFin);
+        } 
+        
+        else {
+             lst = this.getJdbcTemplate().query(query.toString(), new EvenementsSyntheseMapper());
+        }
+        
+        return lst;
+        
+    }
     
     /**
      * 
@@ -245,6 +294,39 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
             dto.setIdAuthority(rs.getInt("fk_id_type_authority"));
             dto.setEnvoyerInfoAdherents(rs.getBoolean("demande_communication"));
             dto.setDemanderConfirmationParticipation(rs.getBoolean("besoin_confirm_participation"));
+            
+            return dto;
+        }
+        
+    }
+    
+    
+    
+        public static final class EvenementsSyntheseMapper implements RowMapper<EvenementSyntheseDto> {
+
+        /**
+         * Mapper table t_evenement
+         * @param rs
+         * @param i
+         * @return
+         * @throws SQLException 
+         */
+        @Override
+        public EvenementSyntheseDto mapRow(ResultSet rs, int i) throws SQLException {
+            EvenementSyntheseDto dto = new EvenementSyntheseDto();
+            
+            dto.setIdEvenement(rs.getLong("id_evenement"));
+            dto.setDescriptionCourte(rs.getString("description_courte"));
+            dto.setDescriptionLongue(rs.getString("detail_text"));
+            dto.setLieux(rs.getString("lieux"));
+            dto.setDateDebut(new Date(rs.getTimestamp("date_debut").getTime()));
+            dto.setDateFin(new Date(rs.getTimestamp("date_fin").getTime()));
+            dto.setIdAuthority(rs.getInt("fk_id_type_authority"));
+            dto.setEnvoyerInfoAdherents(rs.getBoolean("demande_communication"));
+            dto.setDemanderConfirmationParticipation(rs.getBoolean("besoin_confirm_participation"));
+            dto.setNbAherentsParticipe(rs.getInt("participe"));
+            dto.setNbAdherentsParticipePas(rs.getInt("participepas"));
+            dto.setNbAdherentsEnAttenteParticipation(rs.getInt("nesaispas"));
             
             return dto;
         }

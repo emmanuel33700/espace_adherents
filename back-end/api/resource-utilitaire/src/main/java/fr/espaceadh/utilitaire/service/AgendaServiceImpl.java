@@ -24,6 +24,7 @@ import fr.espaceadh.utilitaire.dao.AdherentsDAO;
 import fr.espaceadh.utilitaire.dao.AgendaDao;
 import fr.espaceadh.utilitaire.dto.AdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -193,5 +194,22 @@ public class AgendaServiceImpl implements AgendaService{
         this.agendaDao.deleteParticipationEvenement(idEvenement);
         return this.agendaDao.deleteEvenement(idEvenement);
     }
+
+    
+    /**
+     * Récupérer la synthèse des participations aux manifestations
+     * @param dateDebut date min de démarage de la conférence
+     * @param dateFin date max de démarage de la conférence
+     * @param demandeConfirParticipation indique si une confirmation de la participation est nécésaire
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Collection<EvenementSyntheseDto> recupererSyntheseParticipation(Date dateDebut, Date dateFin, boolean demandeConfirParticipation) {
+        return this.agendaDao.recupererSyntheseParticipation(dateDebut, dateFin, demandeConfirParticipation);
+    }
+    
+    
+    
     
 }
