@@ -35,9 +35,10 @@ public interface AdherentEvenementsDAO {
      * @param idAdh
      * @param dateDebut
      * @param dateFin
+     * @param demandeConfirmationParticipation
      * @return 
      */
-    public Collection<AdherentEvenementDto> getLstEvenement(final int typeAutority, final long idAdh, final Date dateDebut, final Date dateFin);
+    public Collection<AdherentEvenementDto> getLstEvenement(final int typeAutority, final long idAdh, final Date dateDebut, final Date dateFin, final boolean demandeConfirmationParticipation);
     
     /**
      * recupérer un évènement pour un adhérent

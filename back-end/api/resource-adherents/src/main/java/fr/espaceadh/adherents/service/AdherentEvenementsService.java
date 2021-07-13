@@ -31,16 +31,18 @@ public interface AdherentEvenementsService {
      * @param idAdh id de l'adhérent
      * @param dateDebut date de début
      * @param datefin date de fin
+     * @param demandeConfirmationParticipation
      * @return 
      */
-    public Collection<AdherentEvenementDto> getLstEvenement(final long idAdh, final Date dateDebut, final Date datefin);
+    public Collection<AdherentEvenementDto> getLstEvenement(final long idAdh, final Date dateDebut, final Date datefin, final boolean demandeConfirmationParticipation);
     
     /**
      * Recupérer les évenmenets pour un adhérents en fonction des ces droits
      * @param idAdh
+     * @param demandeConfirmationParticipation
      * @return 
      */
-    public Collection<AdherentEvenementDto> getLstEvenement(final long idAdh);
+    public Collection<AdherentEvenementDto> getLstEvenement(final long idAdh, final boolean demandeConfirmationParticipation);
     
     /**
      * REcuperer le détail d'un évènement pour un adhérent

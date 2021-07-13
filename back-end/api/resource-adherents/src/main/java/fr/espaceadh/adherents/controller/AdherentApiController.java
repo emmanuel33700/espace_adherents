@@ -373,17 +373,16 @@ public class AdherentApiController implements AdherentApi {
      * @param idadh
      * @return 
      */
-    public ResponseEntity<ListeManifestations> getListeManifestationsAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.QUERY, description = "date de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut,@Parameter(in = ParameterIn.QUERY, description = "date de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin) {
-        String accept = request.getHeader("Accept");
+    public ResponseEntity<ListeManifestations> getListeManifestationsAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.QUERY, description = "date de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut,@Parameter(in = ParameterIn.QUERY, description = "date de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin,@Parameter(in = ParameterIn.QUERY, description = "indique si il faut récupérer uniquement les manifestations avec une demande de participation" ,schema=@Schema()) @Valid @RequestParam(value = "retourParticipationAdh", required = false) Boolean retourParticipationAdh) {        String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             Collection<AdherentEvenementDto>  lstAdhEvenementDto = null;
             
             if (datedebut != null && datefin != null) {
                 Date dateDebutIso = toDateSansHeure(datedebut);
                 Date dateFinIso = toDateSansHeure(datefin);
-                lstAdhEvenementDto = this.adherentEvenementsService.getLstEvenement(idadh, dateDebutIso, dateFinIso);
+                lstAdhEvenementDto = this.adherentEvenementsService.getLstEvenement(idadh, dateDebutIso, dateFinIso, retourParticipationAdh );
             } else {
-                lstAdhEvenementDto = this.adherentEvenementsService.getLstEvenement(idadh);
+                lstAdhEvenementDto = this.adherentEvenementsService.getLstEvenement(idadh, retourParticipationAdh);
             }
             
             ListeManifestations lstManifestation = new ListeManifestations();

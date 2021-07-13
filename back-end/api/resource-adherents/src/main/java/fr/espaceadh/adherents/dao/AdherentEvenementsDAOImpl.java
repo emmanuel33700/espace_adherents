@@ -54,7 +54,7 @@ public class AdherentEvenementsDAOImpl extends JdbcDaoSupport implements Adheren
      * @return 
      */
     @Override
-    public Collection<AdherentEvenementDto> getLstEvenement(final int typeAutority, final long idAdh, final Date dateDebut, final Date dateFin) {
+    public Collection<AdherentEvenementDto> getLstEvenement(final int typeAutority, final long idAdh, final Date dateDebut, final Date dateFin,  final boolean demandeConfirmationParticipation) {
         
         List<AdherentEvenementDto> lstEvenement = null;
         
@@ -80,10 +80,14 @@ public class AdherentEvenementsDAOImpl extends JdbcDaoSupport implements Adheren
         query.append("  , besoin_confirm_participation, demande_communication ");
         query.append(" FROM t_evenement ");
         query.append(" where fk_id_type_authority <= ?  ");
+        if (demandeConfirmationParticipation){
+            query.append(" AND besoin_confirm_participation = TRUE ");
+        }
+        
         
         if (dateDebut != null && dateFin != null) {
-            query.append("      and date_debut >=  ?	 ");
-            query.append(" 	and date_fin <= ? ");
+            query.append("      AND date_debut >=  ?	 ");
+            query.append(" 	AND date_fin <= ? ");
             
              lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), idAdh, idAdh, typeAutority, dateDebut, dateFin);
         } 

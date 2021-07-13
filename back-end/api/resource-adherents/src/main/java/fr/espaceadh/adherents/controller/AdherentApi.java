@@ -485,7 +485,7 @@ public interface AdherentApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")           
-    ResponseEntity<ListeManifestations> getListeManifestationsAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.QUERY, description = "date de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut, @Parameter(in = ParameterIn.QUERY, description = "date de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin);
+    ResponseEntity<ListeManifestations> getListeManifestationsAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.QUERY, description = "date de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut, @Parameter(in = ParameterIn.QUERY, description = "date de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin, @Parameter(in = ParameterIn.QUERY, description = "indique si il faut récupérer uniquement les manifestations avec une demande de participation" ,schema=@Schema()) @Valid @RequestParam(value = "retourParticipationAdh", required = false) Boolean retourParticipationAdh);
     
     
     
