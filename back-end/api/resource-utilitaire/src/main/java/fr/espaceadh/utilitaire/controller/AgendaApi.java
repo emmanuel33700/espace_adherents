@@ -136,6 +136,7 @@ public interface AgendaApi {
     @RequestMapping(value = "/agenda/evenement/{idevenement}/synthese",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
+    @PreAuthorize("isDansGroupe('RES_ATELIER')")             
     ResponseEntity<ListeParticipantsEvenement> getSyntheseEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement);
 
 
@@ -157,6 +158,7 @@ public interface AgendaApi {
     @RequestMapping(value = "/agenda/synthese",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
+    @PreAuthorize("isDansGroupe('RES_ATELIER')")             
     ResponseEntity<ListeSyntheseEvenements> getSyntheseEvenements(@Parameter(in = ParameterIn.QUERY, description = "date max de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut, @Parameter(in = ParameterIn.QUERY, description = "date max de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin, @Parameter(in = ParameterIn.QUERY, description = "indique si il faut récupérer uniquement les manifestations avec une demande de participation" ,schema=@Schema()) @Valid @RequestParam(value = "retourParticipationAdh", required = false) Boolean retourParticipationAdh);
     
     
