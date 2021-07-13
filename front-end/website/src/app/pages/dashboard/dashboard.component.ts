@@ -298,7 +298,8 @@ export class DashboardComponent implements OnInit {
       this.manifestationService.getListeManifestationsAdherent({
         idadh: value.idAdhRepresente
         , datedebut: dateDebutString
-        , datefin: dateFinString})
+        , datefin: dateFinString
+        , retourParticipationAdh: true})
         .subscribe(
           (data) => {
             this.loggerService.debug(JSON.stringify(data));
@@ -348,7 +349,8 @@ export class DashboardComponent implements OnInit {
     this.manifestationService.getListeManifestationsAdherent({
       idadh: idAdh
       , datedebut: dateDebutString
-      , datefin: dateFinString})
+      , datefin: dateFinString
+      , retourParticipationAdh: true})
       .subscribe(
         (data) => {
           // La partie adhRepresente est renseigné par defaut, car il n'y a pas d'adh représenté

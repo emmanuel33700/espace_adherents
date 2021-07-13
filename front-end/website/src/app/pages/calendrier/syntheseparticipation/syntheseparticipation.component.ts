@@ -42,7 +42,8 @@ export class SyntheseparticipationComponent implements OnInit {
 
     this.agendaService.getSyntheseEvenements({
       datedebut: dateDebutString
-      , datefin: dateFinString})
+      , datefin: dateFinString
+      , retourParticipationAdh: true})
       .subscribe(
         (data) => {
           this.loggerService.info(JSON.stringify(data));

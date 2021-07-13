@@ -55,6 +55,11 @@ export class ManifestationService extends BaseService {
      */
     datefin?: string;
 
+    /**
+     * indique si il faut récupérer uniquement les manifestations avec une demande de participation
+     */
+    retourParticipationAdh?: boolean;
+
   }): Observable<StrictHttpResponse<ListeManifestations>> {
 
     const rb = new RequestBuilder(this.rootUrl, ManifestationService.GetListeManifestationsAdherentPath, 'get');
@@ -63,6 +68,7 @@ export class ManifestationService extends BaseService {
       rb.path('idadh', params.idadh);
       rb.query('datedebut', params.datedebut);
       rb.query('datefin', params.datefin);
+      rb.query('retourParticipationAdh', params.retourParticipationAdh);
 
     }
     return this.http.request(rb.build({
@@ -98,6 +104,11 @@ export class ManifestationService extends BaseService {
      * date de fin
      */
     datefin?: string;
+
+    /**
+     * indique si il faut récupérer uniquement les manifestations avec une demande de participation
+     */
+    retourParticipationAdh?: boolean;
 
   }): Observable<ListeManifestations> {
 

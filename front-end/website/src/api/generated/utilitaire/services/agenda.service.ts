@@ -384,14 +384,19 @@ export class AgendaService extends BaseService {
   getSyntheseEvenements$Response(params?: {
 
     /**
-     * date de début
+     * date max de début
      */
     datedebut?: string;
 
     /**
-     * date de fin
+     * date max de fin
      */
     datefin?: string;
+
+    /**
+     * indique si il faut récupérer uniquement les manifestations avec une demande de participation
+     */
+    retourParticipationAdh?: boolean;
 
   }): Observable<StrictHttpResponse<ListeSyntheseEvenements>> {
 
@@ -400,6 +405,7 @@ export class AgendaService extends BaseService {
 
       rb.query('datedebut', params.datedebut);
       rb.query('datefin', params.datefin);
+      rb.query('retourParticipationAdh', params.retourParticipationAdh);
 
     }
     return this.http.request(rb.build({
@@ -422,14 +428,19 @@ export class AgendaService extends BaseService {
   getSyntheseEvenements(params?: {
 
     /**
-     * date de début
+     * date max de début
      */
     datedebut?: string;
 
     /**
-     * date de fin
+     * date max de fin
      */
     datefin?: string;
+
+    /**
+     * indique si il faut récupérer uniquement les manifestations avec une demande de participation
+     */
+    retourParticipationAdh?: boolean;
 
   }): Observable<ListeSyntheseEvenements> {
 

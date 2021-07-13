@@ -69,7 +69,8 @@ export class ListeComponent implements OnInit {
 
     this.manifestationService.getListeManifestationsAdherent({idadh: this.adherent.id
       , datedebut: dateDebutString
-      , datefin: dateFinString})
+      , datefin: dateFinString
+      , retourParticipationAdh: false})
       .subscribe(
         (data) => {
           this.manifestations = data;
