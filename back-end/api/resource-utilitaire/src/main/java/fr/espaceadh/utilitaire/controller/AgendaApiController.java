@@ -4,9 +4,11 @@ import fr.espaceadh.utilitaire.model.Evenement;
 import fr.espaceadh.utilitaire.model.ListeEvenements;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import fr.espaceadh.utilitaire.dto.EvenementParticipationAdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;
 import fr.espaceadh.utilitaire.model.ListeParticipantsEvenement;
 import fr.espaceadh.utilitaire.model.ListeSyntheseEvenements;
+import fr.espaceadh.utilitaire.model.ParticipantsEvenement;
 import fr.espaceadh.utilitaire.model.SyntheseEvenement;
 import fr.espaceadh.utilitaire.service.AgendaService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -152,6 +154,14 @@ public class AgendaApiController implements AgendaApi {
     public ResponseEntity<ListeParticipantsEvenement> getSyntheseEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
+            Collection<EvenementParticipationAdherentDto> lstDto = this.agendaService.recupererSyntheseParticipationAdherents(idevenement);
+            
+            ListeParticipantsEvenement lstModel = new ListeParticipantsEvenement();
+            for (EvenementParticipationAdherentDto dto : lstDto ) {
+                lstModel.add(this.transformeToModel(dto));
+            }
+            
+            return new ResponseEntity<ListeParticipantsEvenement>(lstModel, HttpStatus.OK);
 
         }
 
@@ -167,7 +177,7 @@ public class AgendaApiController implements AgendaApi {
      */
     public ResponseEntity<ListeSyntheseEvenements> getSyntheseEvenements(@Parameter(in = ParameterIn.QUERY, description = "date max de début" ,schema=@Schema()) @Valid @RequestParam(value = "datedebut", required = false) String datedebut,@Parameter(in = ParameterIn.QUERY, description = "date max de fin" ,schema=@Schema()) @Valid @RequestParam(value = "datefin", required = false) String datefin,@Parameter(in = ParameterIn.QUERY, description = "indique si il faut récupérer uniquement les manifestations avec une demande de participation" ,schema=@Schema()) @Valid @RequestParam(value = "retourParticipationAdh", required = false) Boolean retourParticipationAdh) {        String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            Collection<EvenementSyntheseDto> lstDto = this.agendaService.recupererSyntheseParticipation(this.toDateSansHeure(datedebut), this.toDateSansHeure(datefin), retourParticipationAdh);
+            Collection<EvenementSyntheseDto> lstDto = this.agendaService.recupererSyntheseParticipations(this.toDateSansHeure(datedebut), this.toDateSansHeure(datefin), retourParticipationAdh);
             
             ListeSyntheseEvenements lstModel = new ListeSyntheseEvenements();
             for (EvenementSyntheseDto dto : lstDto) {
@@ -349,6 +359,61 @@ public class AgendaApiController implements AgendaApi {
         evenementModel.setEnvoyerInfoAdherents(dto.isEnvoyerInfoAdherents());
         
         return evenementModel;
+    }
+
+    /**
+     * Concert EvenementParticipationAdherentDto to ParticipantsEvenement
+     * @param dto
+     * @return 
+     */
+    private ParticipantsEvenement transformeToModel(EvenementParticipationAdherentDto dto) {
+        ParticipantsEvenement model = new ParticipantsEvenement();
+        
+        model.setId(dto.getId());
+        if (dto.getCivilite() == dto.getCivilite().MADAME){
+           model.setCivilite(model.getCivilite().MME);  
+        } else {
+            model.setCivilite(model.getCivilite().MR);  
+        }
+        model.setNom(dto.getNom());
+        model.setPrenom(dto.getPrenom());
+        model.setAdresse1(dto.getAdresse1());
+        model.setAdresse2(dto.getAdresse2());
+        model.setCodePostal(dto.getCodePostal());
+        model.setVille(dto.getVille());
+        model.setTelMaison(dto.getTelMaison());
+        model.setTelPortable(dto.getTelPortable());
+        model.setTelTravail(dto.getTelTravail());
+        model.setEmail(dto.getEmail());
+        model.setProfession(dto.getProfession());
+        model.setDateNaissance(this.dateToStringAvecMS(dto.getDateNaissance()));
+        model.setLienPhotoProfil(dto.getLienPhotoProfil());
+        model.setAccordMail(dto.isAccordMail());
+        model.setPublicContact(dto.isPublicContact());
+        model.setCommentaire(dto.getCommentaire());
+        model.setDateEnregistrement(this.dateToStringAvecMS(dto.getDateEnregistrement()));
+        model.setDateMiseAJour(this.dateToStringAvecMS(dto.getDateMiseAJour()));
+        model.setAdhesionsSaisonCourante(dto.isAdhesionSaisonCourante());
+        
+        /**
+         * type de participation
+        1 : PARTICIPE
+        2 : PARTICIPE PAS
+        3 : NE SAIS PAS
+         **/
+        switch (dto.getTypeParticipation()) {
+            case 1:
+                model.setStatutParticipation(ParticipantsEvenement.StatutParticipationEnum.NUMBER_1);
+                break;
+            case 2:
+                model.setStatutParticipation(ParticipantsEvenement.StatutParticipationEnum.NUMBER_2); 
+                break;
+            default:
+                model.setStatutParticipation(ParticipantsEvenement.StatutParticipationEnum.NUMBER_3);
+                break;
+        }
+
+        return model;
     }
 
 }

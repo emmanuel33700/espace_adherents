@@ -16,7 +16,9 @@
  */
 package fr.espaceadh.utilitaire.dao;
 
+import fr.espaceadh.utilitaire.dto.CiviliteEnum;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import fr.espaceadh.utilitaire.dto.EvenementParticipationAdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -223,7 +225,7 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
     }
 
     @Override
-    public Collection<EvenementSyntheseDto> recupererSyntheseParticipation(Date dateDebut, Date dateFin, boolean demandeConfirParticipation) {
+    public Collection<EvenementSyntheseDto> recupererSyntheseParticipations(Date dateDebut, Date dateFin, boolean demandeConfirParticipation) {
         
         Collection<EvenementSyntheseDto> lst =  new ArrayList<>();
         
@@ -267,6 +269,59 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
         
         return lst;
         
+    }
+
+    /**
+     * Récupérer les participations adhérents pour un évènement
+     * @param idEvenement
+     * @return 
+     */
+    @Override
+    public Collection<EvenementParticipationAdherentDto> recupererSyntheseParticipationAdherents(long idEvenement) {
+            StringBuilder query = new StringBuilder();        
+            query.append(" SELECT id_adherents, e_mail, civilite, nom, premon, adresse1, adresse2, code_postal ");
+            query.append("	, ville, tel1, tel2, tel3, date_maissance, profession, link_picture, public_contact ");
+            query.append("	, accord_mail, token_acces, commentaire, date_enregistrement, fk_id_adherents_update, update_date ");
+            query.append("	, type_participation.type_participe ");
+            query.append("	, CASE ");
+            query.append("		WHEN (select 1 ");
+            query.append("			  from t_adhesions, i_annee_adhesion ");
+            query.append("			  where t_adhesions.fk_id_annee_adhesions =  i_annee_adhesion.id_annee_adhesion ");
+            query.append("			  and i_annee_adhesion.annee_courante = true ");
+            query.append("			  and t_adherents.id_adherents = t_adhesions.fk_id_adherents)  = 1 THEN true	 ");
+            query.append("			  ELSE false ");
+            query.append("		END as adherent_saison_courante	  ");
+            query.append(" FROM ( ");
+            query.append(" 	SELECT a.fk_id_adherent as fk_id_adherent, 1 as type_participe ");
+            query.append("		FROM r_adh_evenement a ");
+            query.append("		WHERE a.participe_evenement = true ");
+            query.append("		AND a.fk_id_evenement = ? ");
+            query.append("	UNION ");
+            query.append("	SELECT b.fk_id_adherent as fk_id_adherent, 2 as type_participe ");
+            query.append("		FROM r_adh_evenement b ");
+            query.append("		WHERE b.participe_evenement = false ");
+            query.append("		AND b.fk_id_evenement = ? ");
+            query.append("	UNION ");
+            query.append("	(SELECT fk_id_adherents as fk_id_adherent, 3 as type_participe ");
+            query.append("		FROM t_adhesions, i_annee_adhesion ");
+            query.append("		WHERE t_adhesions.fk_id_annee_adhesions = i_annee_adhesion.id_annee_adhesion ");
+            query.append("		AND i_annee_adhesion.annee_courante = true ");
+            query.append("	EXCEPT ");
+            query.append("		SELECT a.fk_id_adherent as fk_id_adherent, 3 as type_participe ");
+            query.append("		FROM r_adh_evenement a ");
+            query.append("		WHERE a.fk_id_evenement = ? ");
+            query.append("	 ) ");
+            query.append(" ) as type_participation, t_adherents ");
+            query.append(" WHERE t_adherents.id_adherents = type_participation.fk_id_adherent ");
+            query.append(" ORDER BY nom, premon ");    
+            
+            
+            Collection<EvenementParticipationAdherentDto> lst = this.getJdbcTemplate().query(query.toString(), new ParticipationAdherentsSyntheseMapper(),idEvenement, idEvenement, idEvenement);
+            
+            if (lst.isEmpty()) LOGGER.error("Erreur, la liste de récupération des participations à un évènement est vide");
+            
+            return lst;
+
     }
     
     /**
@@ -330,6 +385,52 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
             
             return dto;
         }
+        
+    }
+        
+        
+        
+    public static final class ParticipationAdherentsSyntheseMapper implements RowMapper<EvenementParticipationAdherentDto> {
+
+        @Override
+        public EvenementParticipationAdherentDto mapRow(ResultSet rs, int i) throws SQLException {            
+            
+            EvenementParticipationAdherentDto adh = new EvenementParticipationAdherentDto();
+            
+            adh.setId(rs.getLong("id_adherents"));
+            adh.setEmail(rs.getString("e_mail"));
+            if (rs.getString("civilite") == null ? CiviliteEnum.MADAME.toString() == null : rs.getString("civilite").equals(CiviliteEnum.MADAME.toString()))
+                adh.setCivilite(CiviliteEnum.MADAME);
+            else adh.setCivilite(CiviliteEnum.MONSIEUR);
+            adh.setNom(rs.getString("nom"));
+            adh.setPrenom(rs.getString("premon"));
+            adh.setAdresse1(rs.getString("adresse1"));
+            adh.setAdresse2(rs.getString("adresse2"));
+            adh.setCodePostal(rs.getString("code_postal"));
+            adh.setVille(rs.getString("ville"));
+            adh.setTelMaison(rs.getString("tel1"));
+            adh.setTelPortable(rs.getString("tel3"));
+            adh.setTelTravail(rs.getString("tel2"));
+            adh.setDateNaissance(rs.getDate("date_maissance"));
+            adh.setProfession(rs.getString("profession"));
+            adh.setLienPhotoProfil(rs.getString("link_picture"));
+            adh.setPublicContact(rs.getBoolean("public_contact"));
+            adh.setAccordMail(rs.getBoolean("accord_mail"));
+            adh.setTokenAcces(rs.getString("token_acces"));
+            adh.setCommentaire(rs.getString("commentaire"));
+            adh.setDateEnregistrement(rs.getDate("date_enregistrement"));
+            adh.setIdAdherentUpdate(rs.getLong("fk_id_adherents_update"));
+            adh.setDateMiseAJour(rs.getDate("update_date"));
+            adh.setAdhesionSaisonCourante(rs.getBoolean("adherent_saison_courante")); 
+            adh.setTypeParticipation(rs.getInt("type_participe"));
+            
+            return adh;
+        
+        
+        
+        }
+
+
         
     }
 }

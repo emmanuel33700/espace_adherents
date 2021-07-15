@@ -17,6 +17,7 @@
 package fr.espaceadh.utilitaire.dao;
 
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import fr.espaceadh.utilitaire.dto.EvenementParticipationAdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;
 import java.util.Collection;
 import java.util.Date;
@@ -79,5 +80,13 @@ public interface AgendaDao {
      * @param demandeConfirParticipation indique si une confirmation de la participation est nécésaire
      * @return 
      */
-    public Collection<EvenementSyntheseDto> recupererSyntheseParticipation(final Date dateDebut, final Date dateFin, final boolean demandeConfirParticipation);
+    public Collection<EvenementSyntheseDto> recupererSyntheseParticipations(final Date dateDebut, final Date dateFin, final boolean demandeConfirParticipation);
+    
+    /**
+     * Récupérer les participations adhérents pour un évènement
+     * @param idEvenement
+     * @return 
+     */
+    public Collection<EvenementParticipationAdherentDto> recupererSyntheseParticipationAdherents(long idEvenement);
+   
 }

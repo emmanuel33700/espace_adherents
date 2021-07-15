@@ -24,6 +24,7 @@ import fr.espaceadh.utilitaire.dao.AdherentsDAO;
 import fr.espaceadh.utilitaire.dao.AgendaDao;
 import fr.espaceadh.utilitaire.dto.AdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
+import fr.espaceadh.utilitaire.dto.EvenementParticipationAdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -205,8 +206,19 @@ public class AgendaServiceImpl implements AgendaService{
      */
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public Collection<EvenementSyntheseDto> recupererSyntheseParticipation(Date dateDebut, Date dateFin, boolean demandeConfirParticipation) {
-        return this.agendaDao.recupererSyntheseParticipation(dateDebut, dateFin, demandeConfirParticipation);
+    public Collection<EvenementSyntheseDto> recupererSyntheseParticipations(Date dateDebut, Date dateFin, boolean demandeConfirParticipation) {
+        return this.agendaDao.recupererSyntheseParticipations(dateDebut, dateFin, demandeConfirParticipation);
+    }
+
+            /**
+     * Récupérer les participations adhérents pour un évènement
+     * @param idEvenement
+     * @return 
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Collection<EvenementParticipationAdherentDto> recupererSyntheseParticipationAdherents(long idEvenement) {
+        return this.agendaDao.recupererSyntheseParticipationAdherents(idEvenement);
     }
     
     
