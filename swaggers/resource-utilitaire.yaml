@@ -194,6 +194,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+  '/agenda/evenement/{idevenement}/synthese':
+    get:
+      tags:
+        - Agenda
+      summary: rechercher la synthese des participations à un évènement
+      operationId: getSyntheseEvenement
+      security:
+        - oAuth:
+            - ress-utilitaire-agenda-read
+      parameters:
+        - name: idevenement
+          in: path
+          description: id de l'evenement
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeParticipantsEvenement'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: evenement non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   '/agenda/evenements':
     get:
       tags:
@@ -228,6 +270,56 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+  '/agenda/synthese':
+    get:
+      tags:
+        - Agenda
+      summary: rechercher la synthèse des participations aux évènement
+      operationId: getSyntheseEvenements
+      security:
+        - oAuth:
+            - ress-utilitaire-agenda-read
+      parameters:
+        - in: query
+          name: datedebut
+          schema:
+            type: string
+          description: date max de début
+        - in: query
+          name: datefin
+          schema:
+            type: string
+          description: date max de fin
+        - in: query
+          name: retourParticipationAdh
+          schema:
+            type: boolean
+          description: indique si il faut récupérer uniquement les manifestations avec une demande de participation   
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeSyntheseEvenements'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: evenement non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'                
   /saison/active:
     get:
       tags:
@@ -835,6 +927,77 @@ components:
           description: indique si il faut demander une confirmation de présence à l'adhérent          
       xml:
         name: Order
+    listeSyntheseEvenements:
+      type: array
+      items:
+        $ref: '#/components/schemas/syntheseEvenement'
+    syntheseEvenement:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        type:
+          type: integer
+          example: 1
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+            - 6
+            - 7
+            - 8
+          description: |
+            Types evenement
+            * 1 : CONFERENCE               
+            * 2 : MANIFESTATION            
+            * 3 : OBSERVATION
+            * 4 : ANIMATION
+            * 5 : REUNION
+            * 6 : SORTIE
+            * 7 : ATELIER
+            * 8 : DIVERS
+        description:
+          maxLength: 100
+          minLength: 3
+          type: string
+          example: Conférence sur le soleil
+        detail:
+          maxLength: 500
+          minLength: 3
+          type: string
+          example: Conférence sur le soleil présenté par Monsieur Dupont
+        datedebut:
+          type: string
+          example: '2020-01-18T21:00:00'
+          description: date de début au format iso8601
+        datefin:
+          type: string
+          example: '2020-01-18T21:00:00'
+          description: date de fin au format iso8601
+        envoyerInfoAdherents:
+          type: boolean
+          example: true
+          description: indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement
+        demanderConfirmationParticipation:
+          type: boolean
+          example: true
+          description: indique si il faut demander une confirmation de présence à l'adhérent          
+        nbAdherentParticipant:
+          type: integer
+          example: 50
+          description: indique le nombre de participant à l evenement
+        nbAdherentParticipantPas:
+          type: integer
+          example: 50
+          description: indique le nombre de participant pas à l evenement
+        nbAdherentEnAttente:
+          type: integer
+          example: 50
+          description: indique le nombre de participant en attente de retour         
     listeSaison:
       type: array
       items:
@@ -855,6 +1018,124 @@ components:
           description: indique si la saison est active
       xml:
         name: Order
+    listeParticipantsEvenement:
+      type: array
+      items:
+        $ref: '#/components/schemas/participantsEvenement'
+    participantsEvenement:    
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        civilite:
+          type: string
+          description: civilite de l'adhenrent
+          enum:
+            - Mr
+            - Mme
+        nom:
+          maxLength: 20
+          minLength: 3
+          type: string
+          example: Dupont
+        prenom:
+          maxLength: 20
+          minLength: 3
+          type: string
+          example: Jean
+        adresse1:
+          maxLength: 37
+          minLength: 3
+          type: string
+          example: 6 rue des adresse
+        adresse2:
+          maxLength: 37
+          minLength: 3
+          type: string
+          example: domaine des adresse
+        codePostal:
+          maxLength: 5
+          minLength: 5
+          type: string
+          example: 33127
+        ville:
+          maxLength: 50
+          minLength: 3
+          type: string
+          example: Martignas
+        telMaison:
+          maxLength: 10
+          minLength: 10
+          type: string
+          example: 0555555555
+        telTravail:
+          maxLength: 10
+          minLength: 10
+          type: string
+          example: 0555555555
+        telPortable:
+          maxLength: 10
+          minLength: 10
+          type: string
+          example: 0655555555
+        email:
+          maxLength: 40
+          minLength: 5
+          type: string
+          example: test.test@gmail.com
+        profession:
+          maxLength: 50
+          minLength: 5
+          type: string
+          example: Astronome
+        dateNaissance:
+          type: string
+          example: '2020-01-18T21:00:00'
+          description: date de naissance au format iso8601
+        lienPhotoProfil:
+          type: string
+          description: lien vers la photo de profile
+          example: photo.jpg
+        accordMail:
+          type: boolean
+          description: donne son accord pour recevoiur des mails
+          example: true
+        publicContact:
+          type: boolean
+          description: donne son accord afficher ces coordonnées dans l'espace adherents
+          example: false
+        commentaire:
+          maxLength: 100
+          minLength: 2
+          type: string
+          example: voici un commentaire
+        dateEnregistrement:
+          type: string
+          example: '2020-01-18T21:00:00'
+          description: date de'enregistrement au format iso8601
+        dateMiseAJour:
+          type: string
+          example: '2020-01-18T21:00:00'
+          description: date de mise à jour au format iso8601
+        adhesionsSaisonCourante:
+          type: boolean
+          description: Indique si l'adhérent est adhérent dans la saison courante
+          example: true    
+        statutParticipation:
+          type: integer
+          format: int64
+          description: |
+            Types de participation. Valeurs possibles :
+            * 1 : PARTICIPE               
+            * 2 : PARTICIPE PAS             
+            * 3 : NE SAIS PAS               
+          enum:
+            - 1
+            - 2
+            - 3
+          example: 1
     listeDocuments:
       type: array
       items:

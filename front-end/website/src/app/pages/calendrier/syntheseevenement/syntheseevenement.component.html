@@ -1,0 +1,83 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card [nbSpinner]='loading'>
+      <nb-card-header>Synthèse des participations à {{evenementSelectionne.description}}</nb-card-header>
+      <nb-card-body>
+        <div class="row show-grid">
+          <div class="col-sm-4">Nom prénon de l'adhérent</div>
+          <div class="col-sm-4">Participant / Participe pas</div>
+          <div class="col-sm-4">En attente</div>
+
+        </div>
+        <nb-list>
+          <nb-list-item *ngFor="let participantEvenement of participantsEvenement">
+            <div class="col-sm-4">
+              <ng-container *ngIf="participantEvenement.lienPhotoProfil != null">
+                <div class="circular--landscape">
+                  <img src="https://api.jalle-astro.fr/partage/photosprofil/{{participantEvenement.lienPhotoProfil}}"/>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="participantEvenement.lienPhotoProfil == null">
+                <div class="circular--landscape">
+                  <img src="assets/images/user-profile.png"/>
+                </div>
+              </ng-container>
+              {{participantEvenement.nom}} {{participantEvenement.prenom}}
+            </div>
+
+            <!-- si l'adhérent à déjà donné sa réponse -->
+            <div class="col-sm-4">
+
+              <!-- si la personne à le droit de modifier les statuts des participatsions -->
+              <ng-container *ngIf="modificationParticipation && !participantEvenement.statutParticipation != 3">
+                <ng-container *ngIf="modificationParticipation && participantEvenement.statutParticipation == 1">
+                  <nb-toggle labelPosition="right" [checked]="true"
+                             (change)="changerParticipeEvenement(participantEvenement.id, $event)">
+                    participe à l'évènement
+                  </nb-toggle>
+                </ng-container>
+                <ng-container *ngIf="modificationParticipation &&  participantEvenement.statutParticipation == 2">
+                  <nb-toggle labelPosition="right" [checked]="false"
+                             (change)="changerParticipeEvenement(participantEvenement.id, $event)">
+                    participe à l'évènement
+                  </nb-toggle>
+                </ng-container>
+              </ng-container>
+
+              <!-- si la personne n'a pas le droit de modifier les statuts des participatsions -->
+              <ng-container *ngIf="!modificationParticipation && !participantEvenement.statutParticipation != 3">
+                <ng-container *ngIf="!modificationParticipation && participantEvenement.statutParticipation == 1">
+                  Participe
+                </ng-container>
+                <ng-container *ngIf="!modificationParticipation && participantEvenement.statutParticipation == 2">
+                  Participe pas
+                </ng-container>
+              </ng-container>
+            </div>
+
+            <!-- affichage si adhérent n'a jamais sa réponse -->
+            <div class="col-sm-4">
+               <!-- si la personne à le droit de modifier les statuts des participatsions -->
+              <ng-container *ngIf="modificationParticipation &&  participantEvenement.statutParticipation == 3">
+                <button status='success' type="submit" nbButton
+                        (click)="indiquerParticipeEvenement(participantEvenement.id, 1)">
+                  Participe
+                </button>
+                <button status='warning' type="submit" nbButton
+                        (click)="indiquerParticipeEvenement(participantEvenement.id, 2)">
+                  Participe pas
+                </button>
+              </ng-container>
+              <!-- si la personne n'a pas le droit de modifier les statuts des participatsions -->
+              <ng-container *ngIf="!modificationParticipation &&  participantEvenement.statutParticipation == 3">
+                Aucune réponse
+              </ng-container>
+            </div>
+          </nb-list-item>
+        </nb-list>
+
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

@@ -11,6 +11,7 @@ import {TokenService} from '../../@core/utils/token.service';
 import {Router} from '@angular/router';
 import {LiensAdherentsService} from '../../../api/generated/adherents/services/liens-adherents.service';
 import {LiensAdherent} from '../../../api/generated/adherents/models/liens-adherent';
+import {AgendaService} from '../../../api/generated/utilitaire/services/agenda.service';
 
 
 interface DocumentDashboard {
@@ -63,10 +64,37 @@ export class DashboardComponent implements OnInit {
   // droit acces à la synthèse participation
   accesSynthesParticipation: boolean = false;
 
+  // gestion du graphique de participation aux évènement
+  loadingSyntheseEvenement = true;
 
   optionsChart = {
     backgroundColor: echarts.bg,
     color: ['blue'],
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow',
+      },
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'category',
+      data: [],
+    },
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+    ],
+  };
+
+  optionsChartOlf = {
+    backgroundColor: echarts.bg,
     tooltip: {
       trigger: 'axis',
       axisPointer: {
@@ -136,7 +164,8 @@ export class DashboardComponent implements OnInit {
               private documentationService: DocumentationService,
               protected router: Router,
               private liensAdherentsService: LiensAdherentsService,
-              private tokenService: TokenService) {
+              private tokenService: TokenService,
+              private agendaService: AgendaService) {
   }
 
 
@@ -160,6 +189,10 @@ export class DashboardComponent implements OnInit {
     this.initEvenements();
 
     this.initDocuments();
+
+    if (this.accesSynthesParticipation) {
+      this.initSyntheseEvenements();
+    }
 
   }
 
@@ -509,4 +542,80 @@ export class DashboardComponent implements OnInit {
   }
 
 
+  /**
+   * Initialisation de la synthèse des participations aux évènements
+   */
+  private initSyntheseEvenements() {
+
+
+
+    this.loadingSyntheseEvenement = true;
+
+    // Gestion date debut et fin de recherche
+    const dDebut = new Date();
+
+
+    const dFin = new Date();
+    dFin.setMonth(dFin.getMonth() + 8);
+
+    const dateDebutString = this.dateService.convertDateToStringIsoWithOutHour(dDebut);
+    const dateFinString = this.dateService.convertDateToStringIsoWithOutHour(dFin);
+
+
+    let seriesParticipe;
+    seriesParticipe = {
+      data: [],
+      color: ['#58d68d'],
+      type: 'bar',
+      name: 'Participe',
+    };
+    let seriesParticipePas;
+    seriesParticipePas = {
+      color: ['#ba4a00'],
+      data: [],
+      type: 'bar',
+      name: 'Participe pas',
+    };
+    let seriesEnAttente;
+    seriesEnAttente = {
+      color: ['#f9e79f'],
+      data: [],
+      type: 'bar',
+      name: 'En attente',
+    };
+
+    this.agendaService.getSyntheseEvenements({
+      datedebut: dateDebutString
+      , datefin: dateFinString
+      , retourParticipationAdh: true})
+      .subscribe(
+        (data) => {
+          this.loggerService.info(JSON.stringify(data));
+          data.forEach((value, index) => {
+            this.optionsChart.xAxis.data.push(value.description);
+            seriesParticipe.data.push(value.nbAdherentParticipant);
+            seriesParticipePas.data.push(value.nbAdherentParticipantPas);
+            seriesEnAttente.data.push(value.nbAdherentEnAttente);
+          });
+          this.optionsChart.series.push(seriesParticipe);
+          this.optionsChart.series.push(seriesParticipePas);
+          this.optionsChart.series.push(seriesEnAttente);
+
+          this.loadingSyntheseEvenement = false;
+
+          this.loggerService.info(JSON.stringify(this.optionsChart));
+        },
+        (error) => {
+          this.loggerService.error(JSON.stringify(error));
+          this.toastrService.danger(
+            'Erreur technique lors de la récupération des données',
+            'Erreur ');
+        },
+        () => {
+
+        },
+      );
+
+
+  }
 }

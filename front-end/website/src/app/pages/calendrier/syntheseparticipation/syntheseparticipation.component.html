@@ -1,8 +1,44 @@
 <div class="row">
   <div class="col-md-12">
     <nb-card [nbSpinner]='loading'>
-      <nb-card-header>SYnthèse des participations aux évènements</nb-card-header>
+      <nb-card-header>Synthèse des participations aux évènements</nb-card-header>
       <nb-card-body>
+        <div class="row show-grid">
+          <div class="col-sm-4">Evènement prévu</div>
+          <div class="col-sm-2">Participant</div>
+          <div class="col-sm-2">Participant pas</div>
+          <div class="col-sm-2">En attente</div>
+          <div class="col-sm-2">Accès détail</div>
+        </div>
+        <nb-list>
+          <nb-list-item *ngFor="let syntheseEvenement of syntheseEvenements">
+            <div class="col-sm-4">
+              <span>
+                <nb-icon icon="calendar-outline" pack="eva"></nb-icon>
+              </span>
+              <span class="results">
+                {{syntheseEvenement.description}} le {{afficherDate(syntheseEvenement.datedebut)}} à {{afficherHeure(syntheseEvenement.datedebut)}}
+              </span>
+            </div>
+            <div class="col-sm-2">
+              {{syntheseEvenement.nbAdherentParticipant}}
+            </div>
+            <div class="col-sm-2">
+              {{syntheseEvenement.nbAdherentParticipantPas}}
+            </div>
+            <div class="col-sm-2">
+              {{syntheseEvenement.nbAdherentEnAttente}}
+            </div>
+            <div class="col-sm-2">
+              <span>
+                <nb-icon icon="arrowhead-right-outline" pack="eva" (click)="accederDetailSynthese(syntheseEvenement.id)"></nb-icon>
+              </span>
+            </div>
+          </nb-list-item>
+        </nb-list>
+
+
+
       </nb-card-body>
     </nb-card>
   </div>

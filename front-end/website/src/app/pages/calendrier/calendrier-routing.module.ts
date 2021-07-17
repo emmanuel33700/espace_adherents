@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { CalendrierComponent } from './calendrier.component';
 import { ListeComponent } from './liste/liste.component';
 import { SyntheseparticipationComponent } from './syntheseparticipation/syntheseparticipation.component';
+import { SyntheseevenementComponent } from './syntheseevenement/syntheseevenement.component';
+
 
 
 const routes: Routes = [
@@ -18,6 +20,10 @@ const routes: Routes = [
       {
         path: 'syntheseparticipation',
         component: SyntheseparticipationComponent,
+      },
+      {
+        path: 'syntheseevenement',
+        component: SyntheseevenementComponent,
       },
     ],
   },

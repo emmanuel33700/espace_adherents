@@ -750,6 +750,11 @@ paths:
           schema:
             type: string
           description: date de fin
+        - in: query
+          name: retourParticipationAdh
+          schema:
+            type: boolean
+          description: indique si il faut récupérer uniquement les manifestations avec une demande de participation             
       responses:
         '200':
           description: Operation réussie
@@ -1279,6 +1284,14 @@ components:
           type: string
           description: Date de fin de l'évènement 
           example: '2020-01-18T21:00:00'
+        envoyerInfoAdherents:
+          type: boolean
+          example: true
+          description: indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement
+        demanderConfirmationParticipation:
+          type: boolean
+          example: true
+          description: indique si il faut demander une confirmation de présence à l'adhérent            
         type:
           type: integer
           example: 1

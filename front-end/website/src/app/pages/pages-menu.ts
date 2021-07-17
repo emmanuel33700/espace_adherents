@@ -71,7 +71,7 @@ export const MENU_ITEMS_EVENEMENTS: NbMenuItem[] = [
   },
   {
     title: 'Synthèse participations',
-    icon: 'clock',
+    icon: 'pantone-outline',
     link: '/pages/calendrier/syntheseparticipation',
   },
 ];
@@ -117,7 +117,7 @@ export const MENU_ITEMS_CONSEIL: NbMenuItem[]  = [
   },
   {
     title: 'Synthèse participations',
-    icon: 'clock',
+    icon: 'pantone-outline',
     link: '/pages/calendrier/syntheseparticipation',
   },
 
@@ -169,7 +169,7 @@ export const MENU_ITEMS_ADMIN: NbMenuItem[] = [
   },
   {
     title: 'Synthèse participations',
-    icon: 'clock',
+    icon: 'pantone-outline',
     link: '/pages/calendrier/syntheseparticipation',
   },
 

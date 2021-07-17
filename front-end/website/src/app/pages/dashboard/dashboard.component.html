@@ -149,9 +149,9 @@
   <!-- ----------------------------------------------------------------- -->
   <ng-container *ngIf="accesSynthesParticipation">
     <div class="col-xxxl-9 col-xxl-8 col-lg-7 col-md-6">
-      <nb-card size="large" class="table-card" >
+      <nb-card size="large" class="table-card" [nbSpinner]='loadingSyntheseEvenement'>
         <nb-card-header>Participation aux évènements</nb-card-header>
-        <div echarts [options]="optionsChart" class="echart"></div>
+        <div echarts [options]="optionsChart" class="echart" [loading]='loadingSyntheseEvenement' [autoResize]='true'></div>
       </nb-card>
     </div>
   </ng-container>
