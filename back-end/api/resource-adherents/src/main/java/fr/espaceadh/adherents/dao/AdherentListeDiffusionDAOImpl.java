@@ -124,6 +124,7 @@ public class AdherentListeDiffusionDAOImpl extends JdbcDaoSupport implements Adh
             dto.setIdGroupeDiffusion(rs.getLong("id_groupe_diffusion"));
             dto.setLibelleGroupeDiffusion(rs.getString("description"));
             dto.setParticipe(rs.getBoolean("participation"));
+
             return dto;
         }
          
