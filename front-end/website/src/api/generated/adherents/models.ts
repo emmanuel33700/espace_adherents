@@ -9,3 +9,5 @@ export { Manifestation } from './models/manifestation';
 export { ParticipationManifestation } from './models/participation-manifestation';
 export { ListeCommunications } from './models/liste-communications';
 export { Communication } from './models/communication';
+export { ListeMailingListe } from './models/liste-mailing-liste';
+export { MailingListe } from './models/mailing-liste';

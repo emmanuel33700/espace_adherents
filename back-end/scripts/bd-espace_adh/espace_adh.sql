@@ -148,7 +148,7 @@ COMMENT ON COLUMN public.r_adh_evenement.participe_evenement IS E'indique si l a
 -- object: public.r_groupe_diffusion_adherents | type: TABLE --
 -- DROP TABLE IF EXISTS public.r_groupe_diffusion_adherents CASCADE;
 CREATE TABLE public.r_groupe_diffusion_adherents (
-	pk_id_groupe_diffusion numeric(9,0) NOT NULL,
+	pk_id_groupe_diffusion numeric(20,0) NOT NULL,
 	pk_id_adherent numeric(9,0) NOT NULL,
 	date_enregistrement timestamp with time zone,
 	CONSTRAINT pk_r_groupe_diffusion_adherent PRIMARY KEY (pk_id_groupe_diffusion,pk_id_adherent)
@@ -278,7 +278,7 @@ COMMENT ON COLUMN public.t_evenement.demande_communication IS E'Demande une comm
 -- object: public.t_groupe_diffusion | type: TABLE --
 -- DROP TABLE IF EXISTS public.t_groupe_diffusion CASCADE;
 CREATE TABLE public.t_groupe_diffusion (
-	id_groupe_diffusion numeric(9,0) NOT NULL,
+	id_groupe_diffusion numeric(20,0) NOT NULL,
 	description character varying(30) NOT NULL,
 	fk_id_type_authority numeric(2,0),
 	CONSTRAINT pk_t_groupe_diffusion PRIMARY KEY (id_groupe_diffusion)
