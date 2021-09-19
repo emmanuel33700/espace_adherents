@@ -12,13 +12,18 @@ import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.AdherentEvenementDto;
 import fr.espaceadh.adherents.dto.AdhesionDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
+import fr.espaceadh.adherents.dto.GroupeDiffusionDto;
 import fr.espaceadh.adherents.dto.LienAdherentsDto;
 import fr.espaceadh.adherents.dto.TypeAdhesionEnum;
 import fr.espaceadh.adherents.model.Communication;
+import fr.espaceadh.adherents.model.InscriptionMailingListe;
 import fr.espaceadh.adherents.model.LiensAdherent;
 import fr.espaceadh.adherents.model.LiensAdherentInner;
+import fr.espaceadh.adherents.model.ListeMailingListe;
+import fr.espaceadh.adherents.model.MailingListe;
 import fr.espaceadh.adherents.model.Manifestation;
 import fr.espaceadh.adherents.service.AdherentEvenementsService;
+import fr.espaceadh.adherents.service.AdherentListeDiffusionService;
 import fr.espaceadh.adherents.service.AdherentService;
 import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.lib.mail.dto.ListeMessagesResulteDto;
@@ -82,6 +87,9 @@ public class AdherentApiController implements AdherentApi {
     private GestionMail getionMail;
     
     @Autowired
+    private AdherentListeDiffusionService adherentListeDiffusionService;
+    
+    @Autowired
     private Environment env;
 
     @org.springframework.beans.factory.annotation.Autowired
@@ -142,6 +150,21 @@ public class AdherentApiController implements AdherentApi {
         
         return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
+    /**
+     * Ajouter inscription à une liste de diffusion pour un adhérent
+     * @param idadh
+     * @param idListe
+     * @param body
+     * @return 
+     */
+    public ResponseEntity<Void> ajoutListeDiffusionAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de la liste de diffusion", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe) {
+        String accept = request.getHeader("Accept");
+        boolean result = this.adherentListeDiffusionService.ajouterParticipationGroupeDiffusion(idadh, idListe);
+        if (result) return new ResponseEntity<Void>(HttpStatus.CREATED);
+        
+        return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     /**
      * Ajouter la participation à une manigestation
@@ -159,6 +182,23 @@ public class AdherentApiController implements AdherentApi {
         
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
+    
+    /**
+     * SUpprimer une liste de diffusion d'un adhérent
+     * @param idadh
+     * @param idListe
+     * @return 
+     */
+    public ResponseEntity<Void> delListeDiffusionAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de la liste de diffusion", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe) {
+        String accept = request.getHeader("Accept");
+        boolean result = this.adherentListeDiffusionService.supprimerParticipationGroupeDiffusion(idadh, idListe);
+        
+        if (result) return new ResponseEntity<Void>(HttpStatus.OK);
+        
+        return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    
     
     public ResponseEntity<Void> deleteAdhesionAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de l'adhesion à supprimer", required=true, schema=@Schema()) @PathVariable("idAdhesion") Long idAdhesion) {
         String accept = request.getHeader("Accept");
@@ -398,6 +438,41 @@ public class AdherentApiController implements AdherentApi {
 
     }
     
+    /**
+     * Récupérer la liste des "mailling list" avec le staut de participation
+     * @param idadh
+     * @return 
+     */
+    public ResponseEntity<ListeMailingListe> getListesDiffusionAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
+        String accept = request.getHeader("Accept");
+        
+        if (accept != null && accept.contains("application/json")) {
+            ListeMailingListe lstModel = new ListeMailingListe();
+            
+            Collection<GroupeDiffusionDto> lstDto = this.adherentListeDiffusionService.getListDiffusion(idadh);
+            for (GroupeDiffusionDto dto : lstDto) {
+                lstModel.add(this.transformeDto(dto));
+            }
+            return new ResponseEntity<ListeMailingListe>(lstModel, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<ListeMailingListe>(HttpStatus.NOT_IMPLEMENTED);
+    }
+    
+    /**
+     * Transforme la liste de diffusion DTO en model
+     * @param dto
+     * @return 
+     */
+    private MailingListe transformeDto(GroupeDiffusionDto dto) {
+        MailingListe model = new MailingListe();
+        
+        model.setId(dto.getIdGroupeDiffusion());
+        model.setInscriptionListeDiffusion(dto.isParticipe());
+        model.setLibelle(dto.getLibelleGroupeDiffusion());
+        
+        return model;
+    }
     
         /**
      * Transforme un dto evenement en model envement

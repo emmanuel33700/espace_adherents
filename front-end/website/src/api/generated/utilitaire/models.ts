@@ -11,3 +11,5 @@ export { ListeDocuments } from './models/liste-documents';
 export { Document } from './models/document';
 export { ArborescenceDocumentsInit } from './models/arborescence-documents-init';
 export { ArborescenceDocuments } from './models/arborescence-documents';
+export { ListeListeDiffusion } from './models/liste-liste-diffusion';
+export { ListeDiffusion } from './models/liste-diffusion';

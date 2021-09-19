@@ -79,6 +79,7 @@ public class AdherentEvenementsServiceImpl implements AdherentEvenementsService{
      * @return 
      */
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Collection<AdherentEvenementDto> getLstEvenement(long idAdh, Date dateDebut, Date datefin,  final boolean demandeConfirmationParticipation) {
         int typeAuthority = this.recupererAutorityAdherent(idAdh);
         return this.adherentEvenementsDAO.getLstEvenement(typeAuthority, idAdh, dateDebut, datefin, demandeConfirmationParticipation); 

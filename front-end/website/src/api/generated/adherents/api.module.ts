@@ -9,6 +9,7 @@ import { AdhesionService } from './services/adhesion.service';
 import { ListingAdherentService } from './services/listing-adherent.service';
 import { ManifestationService } from './services/manifestation.service';
 import { CommunicationService } from './services/communication.service';
+import { ListeDeDiffusionService } from './services/liste-de-diffusion.service';
 
 /**
  * Module that provides all services and configuration.
@@ -24,6 +25,7 @@ import { CommunicationService } from './services/communication.service';
     ListingAdherentService,
     ManifestationService,
     CommunicationService,
+    ListeDeDiffusionService,
     ApiConfiguration
   ],
 })

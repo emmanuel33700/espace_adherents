@@ -44,6 +44,11 @@ tags:
     externalDocs:
       description: Pour plus de détail
       url: 'http://plusdedétail.ht'      
+  - name: Liste de diffusion 
+    description: inscription aux listes de diffusion
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'      
 paths:
   /adherent:
     post:
@@ -1016,7 +1021,133 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-
+  '/adherent/{idadh}/diffusion/liste/{idListe}':
+    post:
+      tags:
+        - Liste de diffusion
+      summary: Ajouter une inscrition à une liste de diffusion
+      operationId: ajoutListeDiffusionAdherent
+      security:
+        - oAuth:
+            - ress-diffusion-write
+      parameters:
+        - name: idadh
+          in: path
+          description: id d'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64      
+        - name: idListe
+          in: path
+          description: id de la liste de diffusion
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags:
+        - Liste de diffusion
+      summary: Supprimer une inscrition à une liste de diffusion
+      operationId: delListeDiffusionAdherent
+      security:
+        - oAuth:
+            - ress-diffusion-write
+      parameters:
+        - name: idadh
+          in: path
+          description: id d'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64      
+        - name: idListe
+          in: path
+          description: id de la liste de diffusion
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'              
+  '/adherent/{idadh}/diffusion/liste/':
+    get:
+      tags:
+        - Liste de diffusion
+      summary: rechercher la liste de diffusion avec le statut de participation pour cet adhérent
+      operationId: getListesDiffusionAdherent
+      security:
+        - oAuth:
+            - ress-diffusion-read
+      parameters:
+        - name: idadh
+          in: path
+          description: id d'adherent à recuperer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListeMailingListe'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
 components:
   schemas:
     ApiResponse:
@@ -1435,6 +1566,39 @@ components:
           example: 1514cfef-8334-480e-9e06-f634f564b9ac  
       xml:
         name: Order
+    inscriptionMailingListe:    
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Id de la mailing liste
+          example: 1
+        inscriptionListeDiffusion:
+          type: boolean
+          example: true
+          description: indique si l'adherent souhaite s'inscrire ou non à une liste de diffusion
+    ListeMailingListe:
+      type: array
+      items:
+        $ref: '#/components/schemas/MailingListe'
+    MailingListe:    
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Id de la mailing liste
+          example: 1
+        inscriptionListeDiffusion:
+          type: boolean
+          example: true
+          description: indique si l'adherent est scrire ou non à une liste de diffusion
+        libelle:
+          description: Libelle de la liste de diffusion
+          maxLength: 50
+          minLength: 3
+          type: string          
   securitySchemes:
     oAuth:
       type: oauth2

@@ -24,8 +24,8 @@ tags:
     externalDocs:
       description: Pour plus de détail
       url: 'http://plusdedétail.ht'
-  - name: Diffusion mail
-    description: gestion de la diffusion des mails
+  - name: Liste de diffusion 
+    description: gestion des listes de diffusions et envoi de mails
     externalDocs:
       description: Pour plus de détail
       url: 'http://plusdedétail.ht'
@@ -853,7 +853,227 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
-
+                
+  '/diffusion/liste/{idListe}':
+    post:
+      tags:
+        - Liste de diffusion
+      summary: Ajouter une liste de diffusion
+      operationId: addListe
+      security:
+        - oAuth:
+            - ress-utilitaire-liste-add
+      parameters:
+        - name: idListe
+          in: path
+          description: id de la liste de diffusion
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Objet listeDiffusion
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/listeDiffusion'
+        required: true
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    delete:
+      tags:
+        - Liste de diffusion
+      summary: Supprimer une liste de diffusion
+      operationId: delListe
+      security:
+        - oAuth:
+            - ress-utilitaire-liste-del
+      parameters:
+        - name: idListe
+          in: path
+          description: id du fichier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    put:
+      tags:
+        - Liste de diffusion
+      summary: Mise d'une liste de diffusion
+      operationId: majListe
+      security:
+        - oAuth:
+            - ress-utilitaire-liste-add
+      requestBody:
+        description: Objet listeDiffusion
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/listeDiffusion'
+        required: true
+      parameters:
+        - name: idListe
+          in: path
+          description: id du fichier
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/diffusion/listes':
+    get:
+      tags:
+        - Liste de diffusion
+      summary: Recupérer la liste des listes de diffusion 
+      operationId: getListes
+      security:
+        - oAuth:
+            - ress-utilitaire-liste-read
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeListeDiffusion'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+                
+  '/diffusion/mail':
+    post:
+      tags:
+        - Liste de diffusion
+      summary: Envoyer un email
+      operationId: sendMail
+      security:
+        - oAuth:
+            - ress-utilitaire-mail-send
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                typeMail:
+                  type: integer
+                  example: 1
+                  enum:
+                    - 1
+                    - 2
+                    - 3
+                  description: |
+                    Types evenement
+                    * 1 : ANNEE COURANTE               
+                    * 2 : ANNEE COURANTE + ANNEE -1           
+                    * 3 : MAILING LISTE
+                idListeDiffusion:
+                  type: integer
+                  format: int64
+                  description: id de la liste de diffusion
+                  example: 1    
+                titreEmail:
+                  maxLength: 200
+                  minLength: 3
+                  type: string
+                  description: Titre du mail
+                  example: Conférence sur le soleil
+                email:
+                  maxLength: 50000
+                  minLength: 3
+                  type: string
+                  example: <h1> exemple de mail</h1>
+                filename:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'                
 components:
   schemas:
     ApiResponse:
@@ -1206,6 +1426,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/arborescenceDocuments'
+      xml:
+        name: Order
+    listeListeDiffusion:
+      type: array
+      items:
+        $ref: '#/components/schemas/listeDiffusion'
+      xml:
+        name: Order        
+    listeDiffusion:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: id de la liste de diffusion
+          example: 1
+        libelle:
+          type: string
+          example: 'Atelier soleil'
+          description: Libelle de la liste de diffusion
       xml:
         name: Order        
   securitySchemes:

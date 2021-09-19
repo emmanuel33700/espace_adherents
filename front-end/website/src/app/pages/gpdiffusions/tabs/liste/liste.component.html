@@ -1,6 +1,76 @@
-      <nb-card-body class="example-items-col">
-        <nb-toggle labelPosition="end">Atelier Soleil</nb-toggle>
-        <nb-toggle labelPosition="end">Atelier Lune</nb-toggle>
-        <nb-toggle labelPosition="end">Atelier Cadran solaire</nb-toggle>
-      </nb-card-body>
+<nb-card-body [nbSpinner]='loading'>
+  <nb-list>
+    <nb-list-item *ngFor="let mailingListe of mailingListes">
+      <div class="col-sm-8">
+        <nb-toggle labelPosition="right" [checked]="mailingListe.inscriptionListeDiffusion"
+                   (change)="changerParticipeMailingList(mailingListe.id, $event)">
+          {{mailingListe.libelle}}
+        </nb-toggle>
+      </div>
+
+      <!-- si droit d'édition, affichage du bouton de suppression de la mailing list -->
+      <ng-container *ngIf="droitEdition">
+        <div class="col-sm-4">
+          <nb-actions>
+            <nb-action>
+              <nb-icon class="action-icon" icon="trash-2" (click)="supprimerMailingList(mailingListe.id)"></nb-icon>
+              <span>Supprimer la mailing list</span>
+            </nb-action>
+          </nb-actions>
+        </div>
+      </ng-container>
+    </nb-list-item>
+  </nb-list>
+
+  <!-- si droit d'édition, affichage zone d'ajout d'une mailing list -->
+  <ng-container *ngIf="droitEdition">
+    <form
+      (ngSubmit)="ajouterMailingList(form)"
+      #form="ngForm"
+    >
+      <div class="form-group row">
+        <div class="col-sm-8">
+
+          <input nbInput
+                 [(ngModel)]="libelleMailListForm"
+                 #libelle="ngModel"
+                 id="input-libelle"
+                 name="libelle"
+                 placeholder="Mailling list 1"
+                 fullWidth
+                 [status]="libelle.dirty ? (libelle.invalid  ? 'danger' : 'success') : 'basic'"
+                 [required]="true"
+                 [minlength]="3"
+                 [maxlength]="30"
+                 [attr.aria-invalid]="libelle.invalid && libelle.touched ? true : null">
+          <ng-container *ngIf="libelle.invalid && libelle.touched">
+            <p class="caption status-danger" *ngIf="libelle.errors?.required">
+              Le libellé est nécésaire
+            </p>
+            <p class="caption status-danger" *ngIf="libelle.errors?.minlength || libelle.errors?.maxlength">
+              Le libellé doit comporter entre 3 en 30 characteres
+            </p>
+          </ng-container>
+
+
+        </div>
+
+        <div class="col-sm-4">
+          <button nbButton
+                  fullWidth
+                  status="success"
+                  [disabled]="submitted || !form.valid"
+                  [class.btn-pulse]="submitted">
+            Ajouter la mailing list
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </ng-container>
+
+
+</nb-card-body>
+
+
 

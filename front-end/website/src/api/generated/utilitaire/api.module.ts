@@ -6,6 +6,7 @@ import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 import { AgendaService } from './services/agenda.service';
 import { SaisonService } from './services/saison.service';
 import { DocumentationService } from './services/documentation.service';
+import { ListeDeDiffusionService } from './services/liste-de-diffusion.service';
 
 /**
  * Module that provides all services and configuration.
@@ -18,6 +19,7 @@ import { DocumentationService } from './services/documentation.service';
     AgendaService,
     SaisonService,
     DocumentationService,
+    ListeDeDiffusionService,
     ApiConfiguration
   ],
 })
