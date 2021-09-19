@@ -17,6 +17,8 @@
 package fr.espaceadh.utilitaire.service;
 
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
+import fr.espaceadh.utilitaire.dto.MailListeDiffusionDto;
+
 import java.util.Collection;
 
 /**
@@ -52,4 +54,12 @@ public interface ListeDiffusionService {
      * @return 
      */
     public Collection<GroupeDiffusionDto> getListeListeDiffusion();
+
+
+    /**
+     * Envoyer un mail à une liste de diffusion
+     * @param mailListeDiffusionDto
+     * @return
+     */
+    public boolean envoyerMailListeDiffusion(MailListeDiffusionDto mailListeDiffusionDto);
 }

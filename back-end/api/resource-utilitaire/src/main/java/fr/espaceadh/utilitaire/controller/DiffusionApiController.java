@@ -1,5 +1,6 @@
 package fr.espaceadh.utilitaire.controller;
 
+import fr.espaceadh.utilitaire.dto.MailListeDiffusionDto;
 import org.springframework.core.io.Resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
@@ -14,16 +15,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.web.multipart.MultipartFile;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-15T13:08:44.732Z[GMT]")
 @RestController
@@ -110,17 +111,58 @@ public class DiffusionApiController implements DiffusionApi {
     }
 
     /**
-     * Envoyer un email
+     * Envoyer un mail
      * @param typeMail
      * @param idListeDiffusion
      * @param titreEmail
      * @param email
-     * @param filename
-     * @return 
+     * @param file1
+     * @param file2
+     * @param file3
+     * @param file4
+     * @param file5
+     * @param file6
+     * @return
      */
-    public ResponseEntity<Void> sendMail(@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema(allowableValues={ "1", "2", "3" }
-)) @RequestParam(value="typeMail", required=false)  Integer typeMail,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="idListeDiffusion", required=false)  Long idListeDiffusion,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="titreEmail", required=false)  String titreEmail,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="email", required=false)  String email,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="filename", required=false)  List<Resource> filename) {
+    public ResponseEntity<Void> sendMail(@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema(allowableValues={ "1", "2", "4", "10" }
+    )) @RequestParam(value="typeMail", required=false)  Integer typeMail, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="idListeDiffusion", required=false)  Long idListeDiffusion, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="titreEmail", required=false)  String titreEmail, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="email", required=false)  String email, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file1, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file2, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file3, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file4, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file5, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file6) {
         String accept = request.getHeader("Accept");
+
+        MailListeDiffusionDto dto = new MailListeDiffusionDto();
+        dto.setMessageHtml(email);
+        dto.setSujet(titreEmail);
+
+        Collection<MultipartFile> lstFile = new ArrayList<>();
+        if (file1 != null) {
+            lstFile.add(file1);
+        }
+        if (file2 != null) {
+            lstFile.add(file2);
+        }
+        if (file3 != null) {
+            lstFile.add(file3);
+        }
+        if (file4 != null) {
+            lstFile.add(file4);
+        }
+        if (file5 != null) {
+            lstFile.add(file5);
+        }
+        if (file6 != null) {
+            lstFile.add(file6);
+        }
+        dto.setLstFile(lstFile);
+
+        if (typeMail == 10) {
+            LOGGER.debug("Envoyer un mail à la mailing liste {}", idListeDiffusion);
+            dto.setIdListeDiffusion(idListeDiffusion);
+            boolean restult = listeDiffusionService.envoyerMailListeDiffusion(dto);
+            if (restult) return new ResponseEntity<Void>(HttpStatus.CREATED);
+            else return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
