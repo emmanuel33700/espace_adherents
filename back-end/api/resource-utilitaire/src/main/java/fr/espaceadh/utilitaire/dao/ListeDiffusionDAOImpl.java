@@ -154,7 +154,7 @@ public class ListeDiffusionDAOImpl extends JdbcDaoSupport implements ListeDiffus
         query.append("SELECT id_adherents, e_mail, civilite, nom, premon");
         query.append("        , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
         query.append("        , tel3, date_maissance, profession, link_picture, public_contact ");
-        query.append("        , accord_mail, token_acces, commentaire, date_enregistrement ");
+        query.append("        , accord_mail, token_acces, commentaire, t_adherents.date_enregistrement ");
         query.append("        , fk_id_adherents_update, update_date, true as adherent_saison_courante ");
         query.append("  FROM t_adherents, t_adhesions, i_annee_adhesion, r_groupe_diffusion_adherents ");
         query.append("  WHERE r_groupe_diffusion_adherents.pk_id_adherent = t_adherents.id_adherents  ");
