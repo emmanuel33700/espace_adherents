@@ -125,14 +125,16 @@ public class DiffusionApiController implements DiffusionApi {
      * @return
      */
     public ResponseEntity<Void> sendMail(@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema(allowableValues={ "1", "2", "4", "10" }
-    )) @RequestParam(value="typeMail", required=false)  Integer typeMail, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="idListeDiffusion", required=false)  Long idListeDiffusion, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="titreEmail", required=false)  String titreEmail, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="email", required=false)  String email, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file1, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file2, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file3, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file4, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file5, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file6) {
-        String accept = request.getHeader("Accept");
+    )) @RequestParam(value="typeMail", required=false)  Integer typeMail,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="idListeDiffusion", required=false)  Long idListeDiffusion,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="titreEmail", required=false)  String titreEmail,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="email", required=false)  String email,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file1,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file2,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file3,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file4,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file5,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file6) {        String accept = request.getHeader("Accept");
 
         MailListeDiffusionDto dto = new MailListeDiffusionDto();
         dto.setMessageHtml(email);
         dto.setSujet(titreEmail);
 
         Collection<MultipartFile> lstFile = new ArrayList<>();
+        if (file != null) {
+            lstFile.add(file);
+        }
         if (file1 != null) {
             lstFile.add(file1);
         }
