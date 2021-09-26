@@ -10,6 +10,7 @@ import { map, filter } from 'rxjs/operators';
 
 import { ListeDiffusion } from '../models/liste-diffusion';
 import { ListeListeDiffusion } from '../models/liste-liste-diffusion';
+import { MailAEnvoyer } from '../models/mail-a-envoyer';
 
 
 /**
@@ -264,23 +265,33 @@ export class ListeDeDiffusionService extends BaseService {
   /**
    * Path part for operation sendMail
    */
-  static readonly SendMailPath = '/diffusion/mail';
+  static readonly SendMailPath = '/diffusion/mail/{idMail}';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `sendMail()` instead.
    *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  sendMail$Response(params?: {
-      body?: { 'typeMail'?: 1 | 2 | 3, 'idListeDiffusion'?: number, 'titreEmail'?: string, 'email'?: string, 'filename'?: Array<Blob> }
+  sendMail$Response(params: {
+
+    /**
+     * id du mail à envoyer
+     */
+    idMail: number;
+  
+    /**
+     * Objet listeDiffusion
+     */
+    body?: MailAEnvoyer
   }): Observable<StrictHttpResponse<void>> {
 
     const rb = new RequestBuilder(this.rootUrl, ListeDeDiffusionService.SendMailPath, 'post');
     if (params) {
 
+      rb.path('idMail', params.idMail);
 
-      rb.body(params.body, 'multipart/form-data');
+      rb.body(params.body, 'application/json');
     }
     return this.http.request(rb.build({
       responseType: 'text',
@@ -297,13 +308,80 @@ export class ListeDeDiffusionService extends BaseService {
    * This method provides access to only to the response body.
    * To access the full response (for headers, for example), `sendMail$Response()` instead.
    *
-   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   * This method sends `application/json` and handles request body of type `application/json`.
    */
-  sendMail(params?: {
-      body?: { 'typeMail'?: 1 | 2 | 3, 'idListeDiffusion'?: number, 'titreEmail'?: string, 'email'?: string, 'filename'?: Array<Blob> }
+  sendMail(params: {
+
+    /**
+     * id du mail à envoyer
+     */
+    idMail: number;
+  
+    /**
+     * Objet listeDiffusion
+     */
+    body?: MailAEnvoyer
   }): Observable<void> {
 
     return this.sendMail$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation addBinaryToMail
+   */
+  static readonly AddBinaryToMailPath = '/diffusion/mail/{idMail}/fichier';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `addBinaryToMail()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  addBinaryToMail$Response(params: {
+
+    /**
+     * id du mail à envoyer
+     */
+    idMail: number;
+      body?: { 'file'?: Blob, 'fileName'?: string }
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ListeDeDiffusionService.AddBinaryToMailPath, 'post');
+    if (params) {
+
+      rb.path('idMail', params.idMail);
+
+      rb.body(params.body, 'multipart/form-data');
+    }
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `addBinaryToMail$Response()` instead.
+   *
+   * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
+   */
+  addBinaryToMail(params: {
+
+    /**
+     * id du mail à envoyer
+     */
+    idMail: number;
+      body?: { 'file'?: Blob, 'fileName'?: string }
+  }): Observable<void> {
+
+    return this.addBinaryToMail$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }

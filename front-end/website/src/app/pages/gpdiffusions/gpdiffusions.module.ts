@@ -18,31 +18,33 @@ import { ListeComponent } from './tabs/liste/liste.component';
 import { FormsModule as ngFormsModule } from '@angular/forms';
 import { NgToggleModule } from '@nth-cloud/ng-toggle';
 import { TabsComponent } from './tabs/tabs.component';
-import { CKEditorModule } from 'ng2-ckeditor';
 import { EditeurComponent } from './tabs/editeur/editeur.component';
+import {AngularEditorModule} from '@kolkov/angular-editor';
+import { HttpClientModule} from '@angular/common/http';
 
 @NgModule({
-  imports: [
-    ThemeModule,
-    NbInputModule,
-    NbCardModule,
-    NbButtonModule,
-    NbActionsModule,
-    NbUserModule,
-    NbCheckboxModule,
-    NbRadioModule,
-    NbDatepickerModule,
-    GpdiffusionsRoutingModule,
-    NbSelectModule,
-    NbIconModule,
-    ngFormsModule,
-    NgToggleModule,
-    NbToggleModule,
-    NbRouteTabsetModule,
-    CKEditorModule,
-    NbSpinnerModule,
-    NbListModule,
-  ],
+    imports: [
+        ThemeModule,
+        NbInputModule,
+        NbCardModule,
+        NbButtonModule,
+        NbActionsModule,
+        NbUserModule,
+        NbCheckboxModule,
+        NbRadioModule,
+        NbDatepickerModule,
+        GpdiffusionsRoutingModule,
+        NbSelectModule,
+        NbIconModule,
+        ngFormsModule,
+        NgToggleModule,
+        NbToggleModule,
+        NbRouteTabsetModule,
+        NbSpinnerModule,
+        NbListModule,
+        HttpClientModule,
+        AngularEditorModule,
+    ],
   declarations: [
     GpdiffusionsComponent,
     ListeComponent,

@@ -1,5 +1,6 @@
 export { ApiResponse } from './models/api-response';
 export { ListeEvenements } from './models/liste-evenements';
+export { MailAEnvoyer } from './models/mail-a-envoyer';
 export { Evenement } from './models/evenement';
 export { ListeSyntheseEvenements } from './models/liste-synthese-evenements';
 export { SyntheseEvenement } from './models/synthese-evenement';

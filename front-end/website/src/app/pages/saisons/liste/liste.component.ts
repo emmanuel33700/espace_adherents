@@ -40,6 +40,8 @@ export class ListeComponent implements OnInit {
    */
   ngOnInit(): void {
 
+    this.selectedOption = 15;
+
     // récupéer la liste des saisions
     this.saisonService.getListeSaison({}).subscribe(
       (data) => {

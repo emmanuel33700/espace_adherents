@@ -4,23 +4,114 @@
       <nb-card-header>Envoyer un email</nb-card-header>
       <nb-card-body>
 
+        <form
+          (ngSubmit)="envoyerMail(form)"
+          #form="ngForm"
+        >
 
-        <nb-radio-group name="changementSaison" *ngIf="droitcomplet">
 
-          <nb-radio> Envoyer un mail aux adhérent de la saison</nb-radio>
-          <nb-radio> Envoyer un mail aux adhérent de la saison et saison d'avant</nb-radio>
-          <nb-radio> Envoyer un mail aux adhérent d'un groupe</nb-radio>
-        </nb-radio-group>
+          <div class="form-group row">
+            <div class="col-sm-12">
+              <nb-radio-group name="optionEnvoyerMail"
+                              *ngIf="droitcomplet"
+                              [(ngModel)]="optionEnvoyerMail"
+                              [required]="true">
+                <nb-radio value="1"> Envoyer un mail aux adhérents de la saison</nb-radio>
+                <nb-radio value="2"> Envoyer un mail aux adhérent sde la saison et saison d'avant</nb-radio>
+                <nb-radio value="3"> Envoyer un mail aux adhérents n'ayant pas renouvelés leur adhésion</nb-radio>
+                <nb-radio value="10"> Envoyer un mail aux adhérents d'un groupe</nb-radio>
+              </nb-radio-group>
+            </div>
+          </div>
 
-        Envoyer au groupe suivant :
-        <nb-select>
-          <nb-option value="1">Atelier Soleil</nb-option>
-          <nb-option value="2">Atelier Lune</nb-option>
-          <nb-option value="3">Atelier Cadran solaire</nb-option>
-        </nb-select>
-        <BR>
+          <div class="form-group row">
+            <label for="select-MailingListe" class="label col-sm-3 col-form-label">Envoyer au groupe suivant :</label>
+            <div class="col-sm-9">
 
-        <ngx-tiny-mce></ngx-tiny-mce>
+              <nb-select [(selected)]="selectedMailingListe"
+                         id="select-MailingListe"
+                         [(ngModel)]="selectedMailingListe"
+                         name="selectedMailingListe"
+              >
+                <nb-option *ngFor="let diffusion of listeDiffusion"
+                           [value]="diffusion.id">{{diffusion.libelle}}</nb-option>
+              </nb-select>
+            </div>
+          </div>
+
+          <br/>
+          <br/>
+
+          <div class="form-group row">
+            <label for="input-objetMail" class="label col-sm-3 col-form-label">Objet du mail</label>
+            <div class="col-sm-9">
+              <input nbInput
+                     [(ngModel)]="objetMail"
+                     #objetMailHtml="ngModel"
+                     id="input-objetMail"
+                     name="objetMail"
+                     placeholder="Objet du mail"
+                     fullWidth
+                     [status]="objetMailHtml.dirty ? (objetMailHtml.invalid  ? 'danger' : 'success') : 'basic'"
+                     [required]="true"
+                     [minlength]="3"
+                     [maxlength]="50"
+                     [attr.aria-invalid]="objetMailHtml.invalid && objetMailHtml.touched ? true : null">
+              <ng-container *ngIf="objetMailHtml.invalid && objetMailHtml.touched">
+                <p class="caption status-danger" *ngIf="objetMailHtml.errors?.required">
+                  Objet du mail nécésaire
+                </p>
+                <p class="caption status-danger"
+                   *ngIf="objetMailHtml.errors?.minlength || objetMailHtml.errors?.maxlength">
+                  L'objet du mail doit etre compris entre entre 3 et 50 caracteres
+                </p>
+              </ng-container>
+            </div>
+          </div>
+
+
+          <div class="form-group row">
+            <label for="load-fichier" class="label col-sm-3 col-form-label">Télécharger un fichier :</label>
+            <div class="col-sm-9">
+              <input type="file" class="file-input"
+                     #fileUpload
+                     [required]="true"
+                     (change)="onFileSelected($event)"
+                     id="load-fichier"
+                     multiple
+              >
+            </div>
+          </div>
+
+          <ng-container *ngIf="submitted">
+            Téléchargement en cours...
+          </ng-container>
+          <ng-container *ngIf="!submitted">
+            <div class="form-group row">
+              <div class="col-sm-3">
+                <ul class="alert-message-list">
+                  <li *ngFor="let fileName of filesName" class="alert-message">{{ fileName }}</li>
+                </ul>
+              </div>
+            </div>
+          </ng-container>
+
+
+          <angular-editor [placeholder]="'Votre email...'" [(ngModel)]="mailHtml" name="mailHtml"
+                          [config]="editorConfig"></angular-editor>
+
+
+          <button nbButton
+                  fullWidth
+                  status="success"
+                  [nbSpinner]='loadingEnvoyerMail'
+                  [disabled]="!form.valid"
+                  [class.btn-pulse]="submitted"
+          >
+            Envoyer le mail
+          </button>
+
+        </form>
 
       </nb-card-body>
     </nb-card>
