@@ -29,6 +29,8 @@ public class MailInDto {
     private Collection<String> messageTo;
     HashMap<String, String> templateVariables;
     private String sujetMail;
+    private String htmlMessage;
+    private Collection<InputStreamCustom> lstFile;
 
     public Collection<String> getMessageTo() {
         return messageTo;
@@ -61,7 +63,20 @@ public class MailInDto {
     public void setSujetMail(String sujetMail) {
         this.sujetMail = sujetMail;
     }
-    
-    
-    
+
+    public String getHtmlMessage() {
+        return htmlMessage;
+    }
+
+    public void setHtmlMessage(String htmlMessage) {
+        this.htmlMessage = htmlMessage;
+    }
+
+    public Collection<InputStreamCustom> getLstFile() {
+        return lstFile;
+    }
+
+    public void setLstFile(Collection<InputStreamCustom> lstFile) {
+        this.lstFile = lstFile;
+    }
 }

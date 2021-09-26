@@ -5,11 +5,9 @@
  */
 package fr.espaceadh.lib.mail;
 
-import fr.espaceadh.lib.mail.dto.ListeMessagesResulteDto;
-import fr.espaceadh.lib.mail.dto.MailInDto;
-import fr.espaceadh.lib.mail.dto.MailOutDto;
-import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
-import java.io.StringWriter;
+import fr.espaceadh.lib.mail.dto.*;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,6 +24,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.TestPropertySource;
@@ -60,8 +59,9 @@ public class SendMailTest {
     public static class SpringConfig {
 
     }
-    
-    public void testEnvoyerMail(){
+
+
+    public void testEnvoyerMailAvecTemplate(){
         MailInDto mailIn = new MailInDto();
 
         LOGGER.info("Login {}", env.getProperty("mailjet.login"));
@@ -84,14 +84,68 @@ public class SendMailTest {
          
         /* demande d'envoie du mail */
         MailOutDto mailOut = sendMail.sendMail(mailIn);
-        
-        
-        
+
         Assert.assertEquals("success", mailOut.getStatutEnvoi());
-        
+
     }
 
     @Test
+    public void testEnvoyerMailSansTemplate(){
+
+
+        try {
+            MailInDto mailIn = new MailInDto();
+
+            LOGGER.info("Login {}", env.getProperty("mailjet.login"));
+            LOGGER.info("Password {}", env.getProperty("mailjet.password"));
+
+            /* adresse email de destination */
+            Collection<String> messageTo = new ArrayList<>();
+            messageTo.add("manu.chenais@gmail.com");
+            mailIn.setMessageTo(messageTo);
+
+            /* type de template */
+            mailIn.setTemplateMailEnum(null);
+
+            /** ajouter un message **/
+            String msgHtml = "<h1> Bonjour </h1>";
+            mailIn.setHtmlMessage(msgHtml);
+
+            /* ajouter des fichiers **/
+            InputStreamCustom iptc1 = new InputStreamCustom();
+            InputStream is1 = new ClassPathResource(
+                    "templatesmails/NSwitch.pdf").getInputStream();
+            iptc1.setInputStream(is1);
+            iptc1.setContentType( "application/pdf");
+            iptc1.setFileName( "toto1.pdf");
+
+            InputStreamCustom iptc2 = new InputStreamCustom();
+            InputStream is2 = new ClassPathResource(
+                    "templatesmails/NSwitch.pdf").getInputStream();
+            iptc2.setInputStream(is2);
+            iptc2.setContentType( "application/pdf");
+            iptc2.setFileName( "toto2.pdf");
+
+
+            Collection<InputStreamCustom> lstFile = new ArrayList<>();
+            lstFile.add(iptc1);
+            lstFile.add(iptc2);
+            mailIn.setLstFile(lstFile);
+
+            /* demande d'envoie du mail */
+            MailOutDto mailOut = sendMail.sendMail(mailIn);
+
+            Assert.assertEquals("success", mailOut.getStatutEnvoi());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
     public void testStatisticMail(){
         ListeMessagesResulteDto mailOut = sendMail.recupeHistoriqueMessage("manu.chenais@gmail.com");
         System.out.println(mailOut);

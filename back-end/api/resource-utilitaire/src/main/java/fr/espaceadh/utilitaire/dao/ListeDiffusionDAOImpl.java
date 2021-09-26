@@ -16,6 +16,8 @@
  */
 package fr.espaceadh.utilitaire.dao;
 
+import fr.espaceadh.utilitaire.dto.AdherentDto;
+import fr.espaceadh.utilitaire.dto.CiviliteEnum;
 import fr.espaceadh.utilitaire.dto.DocumentDto;
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
 import java.sql.ResultSet;
@@ -141,6 +143,34 @@ public class ListeDiffusionDAOImpl extends JdbcDaoSupport implements ListeDiffus
     }
 
     /**
+     * Recherche la liste des adhérents inscrit à une mailing liste
+     *
+     * @param idGroupeDiffusion
+     * @return
+     */
+    @Override
+    public Collection<AdherentDto> getAdherentsInscritListeDiffusion(long idGroupeDiffusion) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT id_adherents, e_mail, civilite, nom, premon");
+        query.append("        , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
+        query.append("        , tel3, date_maissance, profession, link_picture, public_contact ");
+        query.append("        , accord_mail, token_acces, commentaire, t_adherents.date_enregistrement ");
+        query.append("        , fk_id_adherents_update, update_date, true as adherent_saison_courante ");
+        query.append("  FROM t_adherents, t_adhesions, i_annee_adhesion, r_groupe_diffusion_adherents ");
+        query.append("  WHERE r_groupe_diffusion_adherents.pk_id_adherent = t_adherents.id_adherents  ");
+        query.append("  AND t_adherents.id_adherents = t_adhesions.fk_id_adherents  ");
+        query.append("  AND t_adhesions.fk_id_annee_adhesions =   i_annee_adhesion.id_annee_adhesion ");
+        query.append(" AND i_annee_adhesion.annee_courante = true  ");
+        query.append("  AND r_groupe_diffusion_adherents.pk_id_groupe_diffusion = ? ");
+        query.append(" ORDER BY nom, premon ");
+
+        List<AdherentDto> lstAdherents = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper(), idGroupeDiffusion );
+
+        LOGGER.debug("Nombre d'adherents récupéré pour la liste de diffusion {} : {} ", idGroupeDiffusion, lstAdherents.size());
+        return  lstAdherents;
+    }
+
+    /**
      * Supression des inscriptions à une liste de diffusion
      * @param idGroupeDiffusion
      * @return 
@@ -174,5 +204,41 @@ public class ListeDiffusionDAOImpl extends JdbcDaoSupport implements ListeDiffus
         }
          
      }
-    
+
+
+
+    public static final class AdherentsMapper implements RowMapper<AdherentDto> {
+
+        @Override
+        public AdherentDto mapRow(ResultSet rs, int i) throws SQLException {
+            AdherentDto adh = new AdherentDto();
+            adh.setId(rs.getLong("id_adherents"));
+            adh.setEmail(rs.getString("e_mail"));
+            if (rs.getString("civilite") == null ? CiviliteEnum.MADAME.toString() == null : rs.getString("civilite").equals(CiviliteEnum.MADAME.toString()))
+                adh.setCivilite(CiviliteEnum.MADAME);
+            else adh.setCivilite(CiviliteEnum.MONSIEUR);
+            adh.setNom(rs.getString("nom"));
+            adh.setPrenom(rs.getString("premon"));
+            adh.setAdresse1(rs.getString("adresse1"));
+            adh.setAdresse2(rs.getString("adresse2"));
+            adh.setCodePostal(rs.getString("code_postal"));
+            adh.setVille(rs.getString("ville"));
+            adh.setTelMaison(rs.getString("tel1"));
+            adh.setTelPortable(rs.getString("tel3"));
+            adh.setTelTravail(rs.getString("tel2"));
+            adh.setDateNaissance(rs.getDate("date_maissance"));
+            adh.setProfession(rs.getString("profession"));
+            adh.setLienPhotoProfil(rs.getString("link_picture"));
+            adh.setPublicContact(rs.getBoolean("public_contact"));
+            adh.setAccordMail(rs.getBoolean("accord_mail"));
+            adh.setTokenAcces(rs.getString("token_acces"));
+            adh.setCommentaire(rs.getString("commentaire"));
+            adh.setDateEnregistrement(rs.getDate("date_enregistrement"));
+            adh.setIdAdherentUpdate(rs.getLong("fk_id_adherents_update"));
+            adh.setDateMiseAJour(rs.getDate("update_date"));
+            adh.setAdhesionSaisonCourante(rs.getBoolean("adherent_saison_courante"));
+            return adh;
+        }
+
+    }
 }

@@ -16,6 +16,7 @@
  */
 package fr.espaceadh.lib.mail.impl.mailjet;
 
+import fr.espaceadh.lib.mail.dto.*;
 import fr.espaceadh.lib.mail.utilitaires.JSON;
 import com.mailjet.client.ClientOptions;
 import com.mailjet.client.MailjetClient;
@@ -24,9 +25,6 @@ import com.mailjet.client.MailjetResponse;
 import com.mailjet.client.errors.MailjetException;
 import com.mailjet.client.errors.MailjetSocketTimeoutException;
 import com.mailjet.client.resource.Emailv31;
-import com.mailjet.client.resource.Emailv31.Message;
-import fr.espaceadh.lib.mail.dto.MailInDto;
-import fr.espaceadh.lib.mail.dto.MailOutDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
@@ -34,24 +32,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import fr.espaceadh.lib.mail.GestionMail;
-import fr.espaceadh.lib.mail.dto.ListeMessagesResulteDto;
-import fr.espaceadh.lib.mail.dto.MessageResultDto;
-import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
 import fr.espaceadh.lib.mail.model.mailjet.ListeMessages;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -85,7 +76,7 @@ public class GestionMailImpl implements GestionMail {
 
         
         // Si demande d'envoie un e-mail avec template
-        if (mailIn.getTemplateMailEnum() != null || mailIn.getTemplateMailEnum() != TemplateMailEnum.SANS_TEMPLATE){
+        if (mailIn.getTemplateMailEnum() != null && mailIn.getTemplateMailEnum() != TemplateMailEnum.SANS_TEMPLATE){
             request= this.envoyerMailAvecTemplate(mailIn, emailJsonTo);
         }
         // demande d'envoie d'email sans template
@@ -150,20 +141,71 @@ public class GestionMailImpl implements GestionMail {
      */
     private MailjetRequest envoyerMailSansTemplate(MailInDto mailIn, JSONArray emailto) {
 
-        JSONObject message = new JSONObject();
-        message.put(Emailv31.Message.FROM, new JSONObject()
-                .put(Emailv31.Message.EMAIL, env.getProperty("message.from"))
-                .put(Emailv31.Message.NAME, env.getProperty("message.from.name"))
-        )
-                .put(Emailv31.Message.SUBJECT, "Your email flight plan!")
-                .put(Emailv31.Message.TEXTPART, "Dear passenger, welcome to Mailjet! May the delivery force be with you!")
-                .put(Emailv31.Message.HTMLPART, "<h3>Dear passenger, welcome to Mailjet</h3><br/>May the delivery force be with you!")
-                .put(Emailv31.Message.TO, emailto)
-                .put(Emailv31.Message.TEMPLATEID, "1")
-                .put(Emailv31.Message.TEMPLATELANGUAGE, true)
-                .put(Emailv31.Message.SUBJECT, "Your email flight plan!");
 
-        return new MailjetRequest(Emailv31.resource).property(Emailv31.MESSAGES, (new JSONArray()).put(message));
+        MailjetRequest request = null;
+        try {
+            JSONArray jSONArrayAttachement = new JSONArray();
+            if (!mailIn.getLstFile().isEmpty()) {
+                for (InputStreamCustom inptureStream : mailIn.getLstFile()) {
+                    byte[] filecontent = this.readAllBytes(inptureStream.getInputStream());
+                    String fileData = com.mailjet.client.Base64.encode(filecontent);
+                    jSONArrayAttachement.put(new JSONObject().put("ContentType", inptureStream.getContentType())
+                            .put("Filename", inptureStream.getFileName())
+                            .put("Base64Content", fileData));
+                }
+            }
+        request = new MailjetRequest(Emailv31.resource)
+                .property(Emailv31.MESSAGES, new JSONArray()
+                        .put(new JSONObject()
+                                .put(Emailv31.Message.FROM, new JSONObject()
+                                        .put("Email", env.getProperty("message.from.mail"))
+                                        .put("Name", env.getProperty("message.from.name")))
+                                .put(Emailv31.Message.TO, emailto)
+                                .put(Emailv31.Message.TEMPLATELANGUAGE, false)
+                                .put(Emailv31.Message.HTMLPART, mailIn.getHtmlMessage())
+                                .put(Emailv31.Message.SUBJECT, mailIn.getSujetMail())
+                                .put(Emailv31.Message.ATTACHMENTS,jSONArrayAttachement)
+                        ));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return request;
+
+
+    }
+
+
+    /**
+     * Transfoer un InputStream en byte
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+    private static byte[] readAllBytes(InputStream inputStream) throws IOException {
+        final int bufLen = 4 * 0x400; // 4KB
+        byte[] buf = new byte[bufLen];
+        int readLen;
+        IOException exception = null;
+
+        try {
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                while ((readLen = inputStream.read(buf, 0, bufLen)) != -1)
+                    outputStream.write(buf, 0, readLen);
+
+                return outputStream.toByteArray();
+            }
+        } catch (IOException e) {
+            exception = e;
+            throw e;
+        } finally {
+            if (exception == null) inputStream.close();
+            else try {
+                inputStream.close();
+            } catch (IOException e) {
+                exception.addSuppressed(e);
+            }
+        }
     }
 
     
@@ -212,7 +254,7 @@ public class GestionMailImpl implements GestionMail {
         }
 
         
-        LOGGER.error("Aucun template mail correspondant à  {}" ,templateMailEnum.toString() );
+        LOGGER.info("Aucun template mail récupéré"  );
         return 0;
     }
 
