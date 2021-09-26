@@ -1,6 +1,8 @@
 package fr.espaceadh.utilitaire.controller;
 
+import fr.espaceadh.lib.mail.dto.InputStreamCustom;
 import fr.espaceadh.utilitaire.dto.MailListeDiffusionDto;
+import fr.espaceadh.utilitaire.model.MailAEnvoyer;
 import org.springframework.core.io.Resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
@@ -19,6 +21,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,6 +54,49 @@ public class DiffusionApiController implements DiffusionApi {
     public DiffusionApiController(ObjectMapper objectMapper, HttpServletRequest request) {
         this.objectMapper = objectMapper;
         this.request = request;
+    }
+
+
+    public ResponseEntity<Void> addBinaryToMail(@Parameter(in = ParameterIn.PATH, description = "id du mail à envoyer", required=true, schema=@Schema()) @PathVariable("idMail") Long idMail,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="fileName", required=false)  String fileName) {
+        String accept = request.getHeader("Accept");
+        try {
+
+            this.makeDir(Long.toString(idMail));
+            StringBuilder cheminFichier = new StringBuilder();
+            cheminFichier.append("/tmp/");
+            cheminFichier.append("/");
+            cheminFichier.append(Long.toString(idMail));
+            cheminFichier.append("/");
+            cheminFichier.append(fileName);
+
+            LOGGER.info("Enregistrement du fichier : {}", cheminFichier.toString());
+
+            Files.copy(file.getInputStream(), Paths.get(cheminFichier.toString()), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException ex) {
+            LOGGER.error("Erreur copie fichier {}", ex);
+            return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
+
+
+    /**
+     * création d'un répertoire dans /tmp/
+     * @param directoryName
+     */
+    private void makeDir(String directoryName)
+    {
+        StringBuilder cheminDossier = new StringBuilder();
+        cheminDossier.append("/tmp/");
+        cheminDossier.append("/");
+        cheminDossier.append(directoryName);
+        File directory = new File(cheminDossier.toString());
+        if (directory.exists() && directory.isFile()) {
+            LOGGER.info("Le répertroire {} existe déjà " , directoryName);
+        } else {
+            directory.mkdir();
+            LOGGER.info("Creation d'un répertoire {}" , cheminDossier.toString());
+        }
     }
 
     /**
@@ -110,65 +161,69 @@ public class DiffusionApiController implements DiffusionApi {
         else return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
     /**
-     * Envoyer un mail
-     * @param typeMail
-     * @param idListeDiffusion
-     * @param titreEmail
-     * @param email
-     * @param file1
-     * @param file2
-     * @param file3
-     * @param file4
-     * @param file5
-     * @param file6
+     * Envoyer un email
+     * @param idMail
+     * @param body
      * @return
      */
-    public ResponseEntity<Void> sendMail(@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema(allowableValues={ "1", "2", "4", "10" }
-    )) @RequestParam(value="typeMail", required=false)  Integer typeMail,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="idListeDiffusion", required=false)  Long idListeDiffusion,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="titreEmail", required=false)  String titreEmail,@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="email", required=false)  String email,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file1,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file2,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file3,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file4,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file5,@Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file6) {        String accept = request.getHeader("Accept");
+    public ResponseEntity<Void> sendMail(@Parameter(in = ParameterIn.PATH, description = "id du mail à envoyer", required=true, schema=@Schema()) @PathVariable("idMail") Long idMail,@Parameter(in = ParameterIn.DEFAULT, description = "Objet listeDiffusion", schema=@Schema()) @Valid @RequestBody MailAEnvoyer body) {
 
         MailListeDiffusionDto dto = new MailListeDiffusionDto();
-        dto.setMessageHtml(email);
-        dto.setSujet(titreEmail);
+        dto.setMessageHtml(body.getEmail());
+        dto.setSujet(body.getTitreEmail());
 
-        Collection<MultipartFile> lstFile = new ArrayList<>();
-        if (file != null) {
-            lstFile.add(file);
-        }
-        if (file1 != null) {
-            lstFile.add(file1);
-        }
-        if (file2 != null) {
-            lstFile.add(file2);
-        }
-        if (file3 != null) {
-            lstFile.add(file3);
-        }
-        if (file4 != null) {
-            lstFile.add(file4);
-        }
-        if (file5 != null) {
-            lstFile.add(file5);
-        }
-        if (file6 != null) {
-            lstFile.add(file6);
-        }
-        dto.setLstFile(lstFile);
 
-        if (typeMail == 10) {
-            LOGGER.debug("Envoyer un mail à la mailing liste {}", idListeDiffusion);
-            dto.setIdListeDiffusion(idListeDiffusion);
+        dto.setLstFile(this.listFilesForFolder(Long.toString(idMail)));
+
+        if (body.getTypeMail() == MailAEnvoyer.TypeMailEnum.NUMBER_10) {
+            LOGGER.debug("Envoyer un mail à la mailing liste {}", body.getIdListeDiffusion());
+            dto.setIdListeDiffusion(body.getIdListeDiffusion());
             boolean restult = listeDiffusionService.envoyerMailListeDiffusion(dto);
             if (restult) return new ResponseEntity<Void>(HttpStatus.CREATED);
             else return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            LOGGER.error("NOT_IMPLEMENTED");
         }
-
-
-
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-        /**
+    /**
+     * Recherche les fichiers contenu dans un répertoire
+     * @param folder
+     */
+    private Collection<InputStreamCustom> listFilesForFolder(String directoryName) {
+
+        Collection<InputStreamCustom> lstFiles = new ArrayList<>();
+
+
+        final File folder = new File("/tmp/"+directoryName);
+        for (final File fileEntry : folder.listFiles()) {
+            StringBuilder cheminFichier = new StringBuilder();
+            cheminFichier.append("/tmp/");
+            cheminFichier.append("/");
+            cheminFichier.append(directoryName);
+            cheminFichier.append("/");
+            cheminFichier.append(fileEntry.getName());
+            try {
+                InputStreamCustom iptsc = new InputStreamCustom();
+                iptsc.setInputStream(Files.newInputStream(Paths.get(cheminFichier.toString())));
+                iptsc.setFileName(fileEntry.getName());
+                iptsc.setContentType(Files.probeContentType(Paths.get(cheminFichier.toString())));
+                lstFiles.add(iptsc);
+
+                LOGGER.info("Recupérer le fichier {} de type {} avec nom {}",cheminFichier.toString() , iptsc.getContentType() , iptsc.getFileName());
+            } catch (IOException e) {
+                LOGGER.error("IOException" + e.getMessage());
+            }
+        }
+
+        return lstFiles;
+    }
+
+
+    /**
      * Transforme DTO to model
      * @param model
      * @return 

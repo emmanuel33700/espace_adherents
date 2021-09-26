@@ -89,7 +89,6 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
      */
     @Override
     public boolean envoyerMailListeDiffusion(MailListeDiffusionDto mailListeDiffusionDto) {
-        try {
 
             // récupérer les adresses email de destinations
             Collection<AdherentDto> lstAdherents = listeDiffusionDAO.getAdherentsInscritListeDiffusion(mailListeDiffusionDto.getIdListeDiffusion());
@@ -119,30 +118,14 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
 
             if (mailListeDiffusionDto.getLstFile() != null && !mailListeDiffusionDto.getLstFile().isEmpty()){
                 /** ajouter des fichiers **/
-                Collection<InputStreamCustom> lstFile = new ArrayList<>();
-                for (MultipartFile file : mailListeDiffusionDto.getLstFile()) {
-                    InputStreamCustom iptc1 = new InputStreamCustom();
-                    iptc1.setInputStream(file.getInputStream());
-                    iptc1.setContentType( file.getContentType());
-                    iptc1.setFileName(file.getName());
-                    lstFile.add(iptc1);
-                }
-                mailIn.setLstFile(lstFile);
+                mailIn.setLstFile(mailListeDiffusionDto.getLstFile());
             }
 
             /* demande d'envoie du mail */
             MailOutDto mailOut = sendMail.sendMail(mailIn);
+            return mailOut.getStatutEnvoi().equalsIgnoreCase("success");
 
-            return true;
 
-
-        } catch (FileNotFoundException e) {
-            LOGGER.error("FileNotFoundException", e.getMessage());
-        } catch (IOException e) {
-            LOGGER.error("IOException", e.getMessage());
-        }
-
-        return false;
     }
 
 

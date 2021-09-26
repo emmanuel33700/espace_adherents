@@ -7,6 +7,7 @@ package fr.espaceadh.utilitaire.controller;
 
 import fr.espaceadh.utilitaire.model.ListeDiffusion;
 import fr.espaceadh.utilitaire.model.ListeListeDiffusion;
+import fr.espaceadh.utilitaire.model.MailAEnvoyer;
 import fr.espaceadh.utilitaire.model.ModelApiResponse;
 import org.springframework.core.io.Resource;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +31,26 @@ import java.util.List;
 @Validated
 public interface DiffusionApi {
 
+    @Operation(summary = "Attacher un  fichier a un mail a envoyer", description = "", security = {
+            @SecurityRequirement(name = "oAuth", scopes = {
+                    "ress-adherent-admin"        })    }, tags={ "Liste de diffusion" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Operation réussie"),
+
+            @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
+
+            @ApiResponse(responseCode = "403", description = "Droit insufisant"),
+
+            @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
+
+            @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/diffusion/mail/{idMail}/fichier",
+            produces = { "application/json" },
+            consumes = { "multipart/form-data" },
+            method = RequestMethod.POST)
+    @PreAuthorize("isDansGroupe('RES_ATELIER')")
+    ResponseEntity<Void> addBinaryToMail(@Parameter(in = ParameterIn.PATH, description = "id du mail à envoyer", required=true, schema=@Schema()) @PathVariable("idMail") Long idMail, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="fileName", required=false)  String fileName);
+
     @Operation(summary = "Ajouter une liste de diffusion", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
             "ress-adherent-admin"        })    }, tags={ "Liste de diffusion" })
@@ -47,6 +68,7 @@ public interface DiffusionApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
+    @PreAuthorize("isDansGroupe('RES_ATELIER')")
     ResponseEntity<Void> addListe(@Parameter(in = ParameterIn.PATH, description = "id de la liste de diffusion", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe, @Parameter(in = ParameterIn.DEFAULT, description = "Objet listeDiffusion", required=true, schema=@Schema()) @Valid @RequestBody ListeDiffusion body);
 
 
@@ -66,6 +88,7 @@ public interface DiffusionApi {
     @RequestMapping(value = "/diffusion/liste/{idListe}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
+    @PreAuthorize("isDansGroupe('RES_ATELIER')")
     ResponseEntity<Void> delListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe);
 
 
@@ -85,6 +108,7 @@ public interface DiffusionApi {
     @RequestMapping(value = "/diffusion/listes",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
+    @PreAuthorize("isDansGroupe('ADHERENT')")
     ResponseEntity<ListeListeDiffusion> getListes();
 
 
@@ -105,6 +129,7 @@ public interface DiffusionApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
+    @PreAuthorize("isDansGroupe('RES_ATELIER')")
     ResponseEntity<Void> majListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe, @Parameter(in = ParameterIn.DEFAULT, description = "Objet listeDiffusion", required=true, schema=@Schema()) @Valid @RequestBody ListeDiffusion body);
 
 
@@ -121,11 +146,10 @@ public interface DiffusionApi {
             @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
 
             @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
-    @RequestMapping(value = "/diffusion/mail",
+    @RequestMapping(value = "/diffusion/mail/{idMail}",
             produces = { "application/json" },
-            consumes = { "multipart/form-data" },
+            consumes = { "application/json" },
             method = RequestMethod.POST)
     @PreAuthorize("isDansGroupe('RES_ATELIER')")
-    ResponseEntity<Void> sendMail(@Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema(allowableValues={ "1", "2", "4", "10" }
-    )) @RequestParam(value="typeMail", required=false)  Integer typeMail, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="idListeDiffusion", required=false)  Long idListeDiffusion, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="titreEmail", required=false)  String titreEmail, @Parameter(in = ParameterIn.DEFAULT, description = "",schema=@Schema()) @RequestParam(value="email", required=false)  String email, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file1, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file2, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file3, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file4, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file5, @Parameter(description = "file detail") @Valid @RequestPart("file") MultipartFile file6);
+    ResponseEntity<Void> sendMail(@Parameter(in = ParameterIn.PATH, description = "id du mail à envoyer", required=true, schema=@Schema()) @PathVariable("idMail") Long idMail, @Parameter(in = ParameterIn.DEFAULT, description = "Objet listeDiffusion", schema=@Schema()) @Valid @RequestBody MailAEnvoyer body);
 }
