@@ -229,25 +229,30 @@ public class DiffusionApiController implements DiffusionApi {
 
 
         final File folder = new File("/tmp/"+directoryName);
-        for (final File fileEntry : folder.listFiles()) {
-            StringBuilder cheminFichier = new StringBuilder();
-            cheminFichier.append("/tmp/");
-            cheminFichier.append("/");
-            cheminFichier.append(directoryName);
-            cheminFichier.append("/");
-            cheminFichier.append(fileEntry.getName());
-            try {
-                InputStreamCustom iptsc = new InputStreamCustom();
-                iptsc.setInputStream(Files.newInputStream(Paths.get(cheminFichier.toString())));
-                iptsc.setFileName(fileEntry.getName());
-                iptsc.setContentType(Files.probeContentType(Paths.get(cheminFichier.toString())));
-                lstFiles.add(iptsc);
+        if(folder.exists()) {
+            for (final File fileEntry : folder.listFiles()) {
+                StringBuilder cheminFichier = new StringBuilder();
+                cheminFichier.append("/tmp/");
+                cheminFichier.append("/");
+                cheminFichier.append(directoryName);
+                cheminFichier.append("/");
+                cheminFichier.append(fileEntry.getName());
+                try {
+                    InputStreamCustom iptsc = new InputStreamCustom();
+                    iptsc.setInputStream(Files.newInputStream(Paths.get(cheminFichier.toString())));
+                    iptsc.setFileName(fileEntry.getName());
+                    iptsc.setContentType(Files.probeContentType(Paths.get(cheminFichier.toString())));
+                    lstFiles.add(iptsc);
 
-                LOGGER.info("Recupérer le fichier {} de type {} avec nom {}",cheminFichier.toString() , iptsc.getContentType() , iptsc.getFileName());
-            } catch (IOException e) {
-                LOGGER.error("IOException" + e.getMessage());
+                    LOGGER.info("Recupérer le fichier {} de type {} avec nom {}",cheminFichier.toString() , iptsc.getContentType() , iptsc.getFileName());
+                } catch (IOException e) {
+                    LOGGER.error("IOException" + e.getMessage());
+                }
             }
+        } else {
+            LOGGER.info("PAs de répertoire {}" , directoryName);
         }
+
 
         return lstFiles;
     }
