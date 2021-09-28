@@ -178,7 +178,10 @@ public class DiffusionApiController implements DiffusionApi {
 
             boolean restult = listeDiffusionService.envoyerMailListeDiffusion(dto, body.getIdListeDiffusion());
 
-            if (restult) return new ResponseEntity<Void>(HttpStatus.CREATED);
+            if (restult) {
+                this.delFolder(Long.toString(idMail));
+                return new ResponseEntity<Void>(HttpStatus.CREATED);
+            }
             else return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         // Si envoie pour une liste d'adherent
@@ -187,11 +190,33 @@ public class DiffusionApiController implements DiffusionApi {
 
             boolean restult = listeDiffusionService.envoyerMailListeAdherent(dto, Integer.parseInt(body.getTypeMail().toString()));
 
-            if (restult) return new ResponseEntity<Void>(HttpStatus.CREATED);
+            if (restult) {
+                this.delFolder(Long.toString(idMail));
+                return new ResponseEntity<Void>(HttpStatus.CREATED);
+            }
             else return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Supprimer un répertoire avec document lié
+     * @param toString
+     */
+    private void delFolder(String directoryName) {
+        StringBuilder cheminDossier = new StringBuilder();
+        cheminDossier.append("/tmp/");
+        cheminDossier.append("/");
+        cheminDossier.append(directoryName);
+
+        File directory = new File(cheminDossier.toString());
+        if (directory.exists() ) {
+            for (File f : directory.listFiles()) {
+                f.delete();
+            }
+            directory.delete();
+        }
     }
 
     /**
