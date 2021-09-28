@@ -1,14 +1,12 @@
 package fr.espaceadh.utilitaire.controller;
 
 import fr.espaceadh.lib.mail.dto.InputStreamCustom;
-import fr.espaceadh.utilitaire.dto.MailListeDiffusionDto;
+import fr.espaceadh.utilitaire.dto.EMailDto;
 import fr.espaceadh.utilitaire.model.MailAEnvoyer;
-import org.springframework.core.io.Resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
 import fr.espaceadh.utilitaire.model.ListeDiffusion;
 import fr.espaceadh.utilitaire.model.ListeListeDiffusion;
-import fr.espaceadh.utilitaire.service.DocumentService;
 import fr.espaceadh.utilitaire.service.ListeDiffusionService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -23,13 +21,12 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.multipart.MultipartFile;
@@ -170,23 +167,56 @@ public class DiffusionApiController implements DiffusionApi {
      */
     public ResponseEntity<Void> sendMail(@Parameter(in = ParameterIn.PATH, description = "id du mail à envoyer", required=true, schema=@Schema()) @PathVariable("idMail") Long idMail,@Parameter(in = ParameterIn.DEFAULT, description = "Objet listeDiffusion", schema=@Schema()) @Valid @RequestBody MailAEnvoyer body) {
 
-        MailListeDiffusionDto dto = new MailListeDiffusionDto();
+        EMailDto dto = new EMailDto();
         dto.setMessageHtml(body.getEmail());
         dto.setSujet(body.getTitreEmail());
-
-
         dto.setLstFile(this.listFilesForFolder(Long.toString(idMail)));
 
+        // Si envoi poune liste de diffusion
         if (body.getTypeMail() == MailAEnvoyer.TypeMailEnum.NUMBER_10) {
             LOGGER.debug("Envoyer un mail à la mailing liste {}", body.getIdListeDiffusion());
-            dto.setIdListeDiffusion(body.getIdListeDiffusion());
-            boolean restult = listeDiffusionService.envoyerMailListeDiffusion(dto);
-            if (restult) return new ResponseEntity<Void>(HttpStatus.CREATED);
+
+            boolean restult = listeDiffusionService.envoyerMailListeDiffusion(dto, body.getIdListeDiffusion());
+
+            if (restult) {
+                this.delFolder(Long.toString(idMail));
+                return new ResponseEntity<Void>(HttpStatus.CREATED);
+            }
             else return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } else {
-            LOGGER.error("NOT_IMPLEMENTED");
         }
+        // Si envoie pour une liste d'adherent
+        else if (body.getTypeMail() != MailAEnvoyer.TypeMailEnum.NUMBER_10){
+            LOGGER.debug("Envoyer un mail aux adhérents de type {}", Integer.parseInt(body.getTypeMail().toString()));
+
+            boolean restult = listeDiffusionService.envoyerMailListeAdherent(dto, Integer.parseInt(body.getTypeMail().toString()));
+
+            if (restult) {
+                this.delFolder(Long.toString(idMail));
+                return new ResponseEntity<Void>(HttpStatus.CREATED);
+            }
+            else return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Supprimer un répertoire avec document lié
+     * @param toString
+     */
+    private void delFolder(String directoryName) {
+        StringBuilder cheminDossier = new StringBuilder();
+        cheminDossier.append("/tmp/");
+        cheminDossier.append("/");
+        cheminDossier.append(directoryName);
+
+        File directory = new File(cheminDossier.toString());
+        if (directory.exists() ) {
+            for (File f : directory.listFiles()) {
+                f.delete();
+            }
+            directory.delete();
+        }
     }
 
     /**

@@ -17,7 +17,7 @@
 package fr.espaceadh.utilitaire.service;
 
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
-import fr.espaceadh.utilitaire.dto.MailListeDiffusionDto;
+import fr.espaceadh.utilitaire.dto.EMailDto;
 
 import java.util.Collection;
 
@@ -58,8 +58,20 @@ public interface ListeDiffusionService {
 
     /**
      * Envoyer un mail à une liste de diffusion
-     * @param mailListeDiffusionDto
+     * @param eMailDto
+     * @param idMailingListe
      * @return
      */
-    public boolean envoyerMailListeDiffusion(MailListeDiffusionDto mailListeDiffusionDto);
+    public boolean envoyerMailListeDiffusion(EMailDto eMailDto, long idMailingListe);
+
+
+    /**
+     * Envoyer un mail à une liste d'adherent
+     * @param eMailDto
+     * @param typeEnvoi  1 : ANNEE COURANTE
+     *      * 2 : ANNEE COURANTE + ANNEE -1
+     *      * 4 : NON ADHERENT
+     * @return
+     */
+    public boolean envoyerMailListeAdherent(EMailDto eMailDto, int typeEnvoi);
 }
