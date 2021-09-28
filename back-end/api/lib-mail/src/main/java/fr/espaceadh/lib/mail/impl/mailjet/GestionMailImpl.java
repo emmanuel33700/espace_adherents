@@ -145,7 +145,7 @@ public class GestionMailImpl implements GestionMail {
         MailjetRequest request = null;
         try {
             JSONArray jSONArrayAttachement = new JSONArray();
-            if (!mailIn.getLstFile().isEmpty()) {
+            if (mailIn.getLstFile() != null &&  !mailIn.getLstFile().isEmpty()) {
                 for (InputStreamCustom inptureStream : mailIn.getLstFile()) {
                     byte[] filecontent = this.readAllBytes(inptureStream.getInputStream());
                     String fileData = com.mailjet.client.Base64.encode(filecontent);
