@@ -1007,7 +1007,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
                 
-  '/diffusion/mail':
+  '/diffusion/mail/{idMail}':
     post:
       tags:
         - Liste de diffusion
@@ -1016,45 +1016,69 @@ paths:
       security:
         - oAuth:
             - ress-utilitaire-mail-send
+      parameters:
+        - name: idMail
+          in: path
+          description: id du mail à envoyer
+          required: true
+          schema:
+            type: integer
+            format: int64               
+      requestBody:
+        description: Objet listeDiffusion
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/mailAEnvoyer'
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'                
+  '/diffusion/mail/{idMail}/fichier':
+    post:
+      tags:
+        - Liste de diffusion
+      summary: Attacher un  fichier a un mail a envoyer 
+      operationId: addBinaryToMail
+      security:
+        - oAuth:
+            - ress-utilitaire-mail-send
+      parameters:
+        - name: idMail
+          in: path
+          description: id du mail à envoyer
+          required: true
+          schema:
+            type: integer
+            format: int64            
       requestBody:
         content:
           multipart/form-data:
             schema:
               type: object
               properties:
-                typeMail:
-                  type: integer
-                  example: 1
-                  enum:
-                    - 1
-                    - 2
-                    - 3
-                  description: |
-                    Types evenement
-                    * 1 : ANNEE COURANTE               
-                    * 2 : ANNEE COURANTE + ANNEE -1           
-                    * 3 : MAILING LISTE
-                idListeDiffusion:
-                  type: integer
-                  format: int64
-                  description: id de la liste de diffusion
-                  example: 1    
-                titreEmail:
+                file:
+                  type: string
+                  format: binary
+                fileName:
                   maxLength: 200
                   minLength: 3
-                  type: string
-                  description: Titre du mail
-                  example: Conférence sur le soleil
-                email:
-                  maxLength: 50000
-                  minLength: 3
-                  type: string
-                  example: <h1> exemple de mail</h1>
-                filename:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
+                  type: string                       
       responses:
         '201':
           description: Operation réussie
@@ -1090,6 +1114,39 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/evenement'
+    mailAEnvoyer:
+      type: object
+      properties:
+        typeMail:
+          type: integer
+          example: 1
+          enum:
+            - 1
+            - 2
+            - 4
+            - 10
+          description: |
+            Types evenement
+            * 1 : ADHERENT DE SAISON COURANTE               
+            * 2 : ADHERENT DE SAISON COURANTE + SAISON -1     
+            * 4 : ADHERENT NON RENOUVELE ADH POUR LA SAISION S
+            * 10 : MAILING LISTE
+        idListeDiffusion:
+          type: integer
+          format: int64
+          description: id de la liste de diffusion
+          example: 1    
+        titreEmail:
+          maxLength: 200
+          minLength: 3
+          type: string
+          description: Titre du mail
+          example: Conférence sur le soleil
+        email:
+          maxLength: 50000
+          minLength: 3
+          type: string
+          example: <h1> exemple de mail</h1>
     evenement:
       type: object
       properties:

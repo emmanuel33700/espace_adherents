@@ -143,7 +143,7 @@ this.errors = null;
 
     this.loggerService.info('Filename : ' + this.file.name);
     this.loggerService.info('Type : ' + this.file.type);
-    this.loggerService.info('Syze : ' + this.file.size);
+    this.loggerService.info('Size : ' + this.file.size);
 
     if (this.file.type !== 'application/pdf') {
       this.loggerService.info('Le fichier téléchargé n\'est pas un PDF');
