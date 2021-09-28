@@ -65,9 +65,9 @@
                    fullWidth
                    fieldSize="large"
                    [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
-                   [required]="getConfigValue('forms.validation.password.required')"
-                   [minlength]="getConfigValue('forms.validation.password.minLength')"
-                   [maxlength]="getConfigValue('forms.validation.password.maxLength')"
+                   [required]="true"
+                   [minlength]="4"
+                   [maxlength]="20"
                    [attr.aria-invalid]="password.invalid && password.touched ? true : null">
             <ng-container *ngIf="password.invalid && password.touched">
               <p class="caption status-danger" *ngIf="password.errors?.required">
@@ -75,8 +75,8 @@
               </p>
               <p class="caption status-danger" *ngIf="password.errors?.minlength || password.errors?.maxlength">
                 Le mot de passe doit contenir
-                entre {{ getConfigValue('forms.validation.password.minLength') }}
-                et {{ getConfigValue('forms.validation.password.maxLength') }}
+                entre 4
+                et 20
                 caracteres
               </p>
             </ng-container>
@@ -94,7 +94,7 @@
                    fullWidth
                    fieldSize="large"
                    [status]="rePass.dirty ? (rePass.invalid || password.value != rePass.value  ? 'danger' : 'success') : 'basic'"
-                   [required]="getConfigValue('forms.validation.password.required')"
+                   [required]="true"
                    [attr.aria-invalid]="rePass.invalid && rePass.touched ? true : null">
             <ng-container *ngIf="rePass.invalid && rePass.touched">
               <p class="caption status-danger" *ngIf="rePass.errors?.required">
@@ -106,11 +106,6 @@
             </ng-container>
           </div>
 
-          <div class="form-control-group accept-group" *ngIf="getConfigValue('forms.register.terms')">
-            <nb-checkbox name="terms" [(ngModel)]="user.terms" [required]="getConfigValue('forms.register.terms')">
-              Je suis d'accord avec les <a href="#" target="_blank"><strong>Termes & conditions</strong></a>
-            </nb-checkbox>
-          </div>
 
           <button nbButton
                   fullWidth
