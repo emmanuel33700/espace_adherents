@@ -9,9 +9,9 @@ import {
 } from '@nebular/theme';
 import {FormsModule as ngFormsModule} from '@angular/forms';
 
-import { RegisterComponent } from './register.component';
+import { ResetComponent } from './reset.component';
 import {NgModule} from '@angular/core';
-import { RegisterRoutingModule } from './register-routing.module';
+import { ResetRoutingModule } from './reset-routing.module';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -26,21 +26,7 @@ import {
     CommonModule,
     FormsModule,
     HttpClientModule,
-
-    NbAuthModule.forRoot({
-      forms: {
-        register: {
-          redirectDelay: 500,
-          strategy: 'email',
-          showMessages: {
-            success: true,
-            error: true,
-          },
-          terms: false,
-        },
-      },
-    }),
-
+    NbAuthModule,
     ThemeModule,
     NbMenuModule,
     NbLayoutModule,
@@ -54,11 +40,11 @@ import {
     NbDatepickerModule,
     NbSelectModule,
     NbIconModule,
-    ngFormsModule, RegisterRoutingModule, NbAlertModule,
+    ngFormsModule, ResetRoutingModule, NbAlertModule,
   ],
   declarations: [
-    RegisterComponent,
+    ResetComponent,
   ],
 })
-export class RegisterModule {
+export class ResetModule {
 }

@@ -6,9 +6,48 @@
 
     <nb-list-item *ngFor="let adhesion of adhesions">
 
-      <nb-user  [name]="'Saison  ' + adhesion.libelleAnneeAdhesion"
-                [title]="getTypeAdhesion(adhesion.idTypeAdhesion)"   >
-      </nb-user>
+      <div class="col-sm-2">
+      <span><nb-icon icon="person-done-outline" status="info"></nb-icon></span>
+
+      <span class="results"> <b> Saison {{adhesion.libelleAnneeAdhesion}}  </b> </span>
+      </div>
+      <div class="col-sm-2">
+      <span>
+        Type adhésion :
+
+         <ng-container *ngIf="adhesion.idTypeAdhesion == '1'">
+            ADULTE
+         </ng-container>
+        <ng-container *ngIf="adhesion.idTypeAdhesion == '2'">
+            FAMILLE
+         </ng-container>
+        <ng-container *ngIf="adhesion.idTypeAdhesion == '3'">
+            RESPONSABLE DE FAMILLE
+         </ng-container>
+        <ng-container *ngIf="adhesion.idTypeAdhesion == '4'">
+            ENFANT
+         </ng-container>
+        <ng-container *ngIf="adhesion.idTypeAdhesion == '5'">
+            BIENFAITEUR
+         </ng-container>
+        <ng-container *ngIf="adhesion.idTypeAdhesion == '6'">
+            HONNEUR
+         </ng-container>
+         <ng-container *ngIf="adhesion.idTypeAdhesion == '7'">
+            ETUDIANT
+         </ng-container>
+         </span>
+      </div>
+
+      <div class="col-sm-8">
+        {{adhesion.comptaSomme}} € -
+        <ng-container *ngIf="adhesion.cheque">
+           (Chèque : num {{adhesion.comptaNumCheque}} banque {{adhesion.comptaBanque}})
+        </ng-container>
+        <ng-container *ngIf="!adhesion.cheque">
+           (Espece)
+        </ng-container>
+      </div>
 
     </nb-list-item>
 

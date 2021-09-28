@@ -5,15 +5,41 @@
       <nb-list>
         <nb-list-item *ngFor="let adherent of adherents">
 
-          <ng-container *ngIf="adherent.lienPhotoProfil == null">
-            <nb-user [name]="adherent.nom + ' ' +adherent.prenom" [title]="adherent.email">
-            </nb-user>
-          </ng-container>
-          <ng-container *ngIf="adherent.lienPhotoProfil != null">
-            <nb-user picture="https://api.jalle-astro.fr/partage/photosprofil/{{adherent.lienPhotoProfil}}"
-                     [name]="adherent.nom + ' ' +adherent.prenom" [title]="adherent.email">
-            </nb-user>
-          </ng-container>
+
+          <!-- Photo -->
+          <div class="col-sm-2">
+            <ng-container *ngIf="adherent.lienPhotoProfil != null">
+              <div class="circular--landscape">
+                <img src="https://api.jalle-astro.fr/partage/photosprofil/{{adherent.lienPhotoProfil}}"/>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="adherent.lienPhotoProfil == null">
+              <div class="circular--landscape">
+                <img src="assets/images/user-profile.png"/>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- Non et prénom-->
+          <div class="col-sm-2">
+            {{ adherent.nom }}  {{adherent.prenom}}
+          </div>
+
+
+          <div class="col-sm-2">
+            <ng-container *ngIf="adherent.accordMail">
+              {{ adherent.email }}
+            </ng-container>
+            <ng-container *ngIf="!adherent.accordMail">
+              Diffusion du mail non accordée
+            </ng-container>
+          </div>
+
+          <div class="col-sm-2">
+            <ng-container *ngIf="adherent.accordMail">
+              {{adherent.telPortable}}
+            </ng-container>
+          </div>
 
         </nb-list-item>
       </nb-list>

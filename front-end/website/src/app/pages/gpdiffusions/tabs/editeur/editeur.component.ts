@@ -120,6 +120,9 @@ export class EditeurComponent implements OnInit {
     // Par défaut, envouer un mail aux adhérents de la saison
     this.optionEnvoyerMail = 1;
 
+
+    this.idMail = Date.now();
+
     // Récupérer les listes des mailing list
     this.listeDeDiffusionServiceUtilitaire.getListes()
       .subscribe(
@@ -233,6 +236,16 @@ export class EditeurComponent implements OnInit {
       },
       () => {
         this.loggerService.info(' fini');
+        this.mailHtml = '';
+        this.mail.email = '';
+        this.filesName = [];
+        this.idMail = Date.now(); // En change d'id de mail
+
+        this.toastrService.success(
+          'Mail envoyé',
+          'Opértation réussit');
+        form.resetForm();
+        this.submitted = false;
         this.loadingEnvoyerMail = false;
       },
     );
