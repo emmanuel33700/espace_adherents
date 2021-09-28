@@ -17,28 +17,22 @@
 package fr.espaceadh.utilitaire.service;
 
 import fr.espaceadh.lib.mail.GestionMail;
-import fr.espaceadh.lib.mail.dto.InputStreamCustom;
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
+import fr.espaceadh.utilitaire.dao.AdherentsDAO;
 import fr.espaceadh.utilitaire.dao.ListeDiffusionDAO;
-import fr.espaceadh.utilitaire.dto.AdherentDto;
-import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
+import fr.espaceadh.utilitaire.dto.*;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import fr.espaceadh.utilitaire.dto.MailListeDiffusionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -59,24 +53,31 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
 
     @Autowired
     protected ListeDiffusionDAO listeDiffusionDAO;
+
+    @Autowired
+    protected AdherentsDAO adherentsDAO;
     
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean addListeDiffusion(GroupeDiffusionDto groupeDiffusionDto) {
         return listeDiffusionDAO.addListeDiffusion(groupeDiffusionDto);
     }
 
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean updateListeDiffusion(GroupeDiffusionDto groupeDiffusionDto) {
         return listeDiffusionDAO.updateListeDiffusion(groupeDiffusionDto);
     }
 
     @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean deleteListeDiffusion(long idGroupeDiffusion) {
         this.listeDiffusionDAO.deleteInscriptionListeDiffusion(idGroupeDiffusion);
         return listeDiffusionDAO.deleteListeDiffusion(idGroupeDiffusion);
     }
 
     @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Collection<GroupeDiffusionDto> getListeListeDiffusion() {
         return listeDiffusionDAO.getListeListeDiffusion();
     }
@@ -84,46 +85,91 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
     /**
      * Envoyer un mail à une liste de diffusion
      *
-     * @param mailListeDiffusionDto
+     * @param emailDto
      * @return
      */
     @Override
-    public boolean envoyerMailListeDiffusion(MailListeDiffusionDto mailListeDiffusionDto) {
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean envoyerMailListeDiffusion(EMailDto emailDto,  long idMailingListe) {
 
             // récupérer les adresses email de destinations
-            Collection<AdherentDto> lstAdherents = listeDiffusionDAO.getAdherentsInscritListeDiffusion(mailListeDiffusionDto.getIdListeDiffusion());
+            Collection<AdherentDto> lstAdherents = listeDiffusionDAO.getAdherentsInscritListeDiffusion(idMailingListe);
 
             if (lstAdherents == null || lstAdherents.isEmpty()) {
-                LOGGER.info("Aucun mail associé à cette liste de diffusion {}", mailListeDiffusionDto.getIdListeDiffusion());
+                LOGGER.info("Aucun mail associé à cette liste de diffusion {}", idMailingListe);
                 return false;
             }
-            MailInDto mailIn = new MailInDto();
 
-            // renseigner les adresses de destination
-            Collection<String> messageTo = new ArrayList<>();
-            for (AdherentDto adh : lstAdherents) {
-                messageTo.add(adh.getEmail());
-            }
-            mailIn.setMessageTo(messageTo);
+            return this.envoyerMail(emailDto, lstAdherents);
 
-            /* type de template */
-            mailIn.setTemplateMailEnum(null);
 
-            /** ajouter un message **/
-            mailIn.setHtmlMessage(mailListeDiffusionDto.getMessageHtml());
-            /**- ajouter le sujet **/
-            mailIn.setSujetMail(mailListeDiffusionDto.getSujet());
 
-            /** ajouter les fichiers **/
+    }
 
-            if (mailListeDiffusionDto.getLstFile() != null && !mailListeDiffusionDto.getLstFile().isEmpty()){
-                /** ajouter des fichiers **/
-                mailIn.setLstFile(mailListeDiffusionDto.getLstFile());
-            }
+    /**
+     * Création et envoie du mail
+     * @param emailDto
+     * @param lstAdherents
+     * @return
+     */
+    private boolean envoyerMail(EMailDto emailDto, Collection<AdherentDto> lstAdherents) {
+        MailInDto mailIn = new MailInDto();
 
-            /* demande d'envoie du mail */
-            MailOutDto mailOut = sendMail.sendMail(mailIn);
-            return mailOut.getStatutEnvoi().equalsIgnoreCase("success");
+        // renseigner les adresses de destination
+        Collection<String> messageTo = new ArrayList<>();
+        for (AdherentDto adh : lstAdherents) {
+            messageTo.add(adh.getEmail());
+        }
+        mailIn.setMessageTo(messageTo);
+
+        /* type de template */
+        mailIn.setTemplateMailEnum(null);
+
+        /** ajouter un message **/
+        mailIn.setHtmlMessage(emailDto.getMessageHtml());
+        /**- ajouter le sujet **/
+        mailIn.setSujetMail(emailDto.getSujet());
+
+        /** ajouter les fichiers **/
+
+        if (emailDto.getLstFile() != null && !emailDto.getLstFile().isEmpty()){
+            /** ajouter des fichiers **/
+            mailIn.setLstFile(emailDto.getLstFile());
+        }
+
+        /* demande d'envoie du mail */
+        MailOutDto mailOut = sendMail.sendMail(mailIn);
+        return mailOut.getStatutEnvoi().equalsIgnoreCase("success");
+    }
+
+    /**
+     * Envoyer un mail à une liste d'adherent
+     * @param eMailDto
+     * @param typeEnvoi  1 : ANNEE COURANTE
+     *      * 2 : ANNEE COURANTE + ANNEE -1
+     *      * 4 : NON ADHERENT
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean envoyerMailListeAdherent(EMailDto eMailDto,  int typeEnvoi) {
+        // récupérer les adresses email de destinations
+        Collection<AdherentDto> lstAdherents = null;
+        if (typeEnvoi == 1) {
+            lstAdherents = adherentsDAO.recupererListeAdherentSaison();
+        }
+        else if (typeEnvoi == 2) {
+            lstAdherents = adherentsDAO.recupererListeAdherentSaisonEtAncienneSaison();
+        }
+        else if (typeEnvoi == 4) {
+            lstAdherents = adherentsDAO.recupererListeNonAdherentSaison();
+        } else {
+            LOGGER.error("Erreur de sélection du type de diffusion");
+            return false;
+        }
+
+        return this.envoyerMail(eMailDto, lstAdherents);
+
 
 
     }
