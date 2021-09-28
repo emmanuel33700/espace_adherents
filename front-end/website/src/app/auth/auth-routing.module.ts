@@ -26,6 +26,11 @@ const routes: Routes = [{
         .then(m => m.VerifyModule),
     },
     {
+      path: 'reset',
+      loadChildren: () => import('./reset/reset.module')
+        .then(m => m.ResetModule),
+    },
+    {
       path: '',
       redirectTo: 'login',
       pathMatch: 'full',

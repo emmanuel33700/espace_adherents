@@ -40,12 +40,18 @@ export class ListeComponent implements OnInit {
    */
   ngOnInit(): void {
 
-    this.selectedOption = 15;
-
     // récupéer la liste des saisions
     this.saisonService.getListeSaison({}).subscribe(
       (data) => {
         this.saisons = data;
+
+        // Initialisation de la saison active
+        this.saisons.forEach((value, index) => {
+          if (value.saisonActive) {
+            this.loggerService.debug('saision active ' + value.libelle);
+            this.selectedOption = value.id;
+          }
+        });
         this.loggerService.debug(JSON.stringify(data));
 
         this.loading = false;
