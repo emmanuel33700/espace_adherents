@@ -10,6 +10,7 @@ public class EMailDto {
     private String messageHtml;
     private String sujet;
     private Collection<InputStreamCustom> lstFile;
+    private long idMail;
 
     public String getMessageHtml() {
         return messageHtml;
@@ -33,5 +34,13 @@ public class EMailDto {
 
     public void setLstFile(Collection<InputStreamCustom> lstFile) {
         this.lstFile = lstFile;
+    }
+
+    public long getIdMail() {
+        return idMail;
+    }
+
+    public void setIdMail(long idMail) {
+        this.idMail = idMail;
     }
 }

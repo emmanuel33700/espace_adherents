@@ -186,8 +186,11 @@ public class AdherentServiceImpl implements AdherentService{
                  /** Sujet du mail **/
                  mailIn.setSujetMail("Votre préinscription");
 
-                 MailOutDto mailOut = getionMail.sendMail(mailIn);            
-            }            
+                 /** Id de mail **/
+                 mailIn.setIdMAil(env.getProperty("message.preinscription.id"));
+
+                 Collection<MailOutDto> mailOut = getionMail.sendMail(mailIn);
+            }
         }
         
         return true;

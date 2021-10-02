@@ -83,9 +83,11 @@ public class SendMailTest {
         
          
         /* demande d'envoie du mail */
-        MailOutDto mailOut = sendMail.sendMail(mailIn);
+        Collection<MailOutDto> mailsOut = sendMail.sendMail(mailIn);
 
-        Assert.assertEquals("success", mailOut.getStatutEnvoi());
+        for (MailOutDto mo : mailsOut) {
+            Assert.assertEquals("success", mo);
+        }
 
     }
 
@@ -102,13 +104,22 @@ public class SendMailTest {
             /* adresse email de destination */
             Collection<String> messageTo = new ArrayList<>();
             messageTo.add("manu.chenais@gmail.com");
+
+
             mailIn.setMessageTo(messageTo);
 
             /* type de template */
             mailIn.setTemplateMailEnum(null);
 
+            /** id du message **/
+            mailIn.setIdMAil("12345");
+
+
+             /** sujet du message **/
+            mailIn.setSujetMail("Test de manu");
+
             /** ajouter un message **/
-            String msgHtml = "<h1> Bonjour </h1>";
+            String msgHtml = "<h1> Bonjour test de main </h1>";
             mailIn.setHtmlMessage(msgHtml);
 
             /* ajouter des fichiers **/
@@ -133,9 +144,18 @@ public class SendMailTest {
             mailIn.setLstFile(lstFile);
 
             /* demande d'envoie du mail */
-            MailOutDto mailOut = sendMail.sendMail(mailIn);
+            Collection<MailOutDto> mailsOut = sendMail.sendMail(mailIn);
 
-            Assert.assertEquals("success", mailOut.getStatutEnvoi());
+            boolean result = true;
+
+            for (MailOutDto mo : mailsOut) {
+                if (!mo.getStatutEnvoi().equalsIgnoreCase("success")) {
+                    LOGGER.error("Erreor lors de l'envoi de mail");
+                    result = false;
+                }
+            }
+            Assert.assertTrue(result);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -144,6 +164,7 @@ public class SendMailTest {
 
 
     }
+
 
 
     public void testStatisticMail(){

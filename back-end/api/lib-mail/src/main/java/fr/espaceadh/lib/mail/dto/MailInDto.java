@@ -20,17 +20,17 @@ import java.util.Collection;
 import java.util.HashMap;
 
 /**
- *
  * @author emmanuel
  */
 public class MailInDto {
-    
+
     private TemplateMailEnum templateMailEnum;
     private Collection<String> messageTo;
     HashMap<String, String> templateVariables;
     private String sujetMail;
     private String htmlMessage;
     private Collection<InputStreamCustom> lstFile;
+    private String idMAil;
 
     public Collection<String> getMessageTo() {
         return messageTo;
@@ -78,5 +78,13 @@ public class MailInDto {
 
     public void setLstFile(Collection<InputStreamCustom> lstFile) {
         this.lstFile = lstFile;
+    }
+
+    public String getIdMAil() {
+        return idMAil;
+    }
+
+    public void setIdMAil(String idMAil) {
+        this.idMAil = idMAil;
     }
 }

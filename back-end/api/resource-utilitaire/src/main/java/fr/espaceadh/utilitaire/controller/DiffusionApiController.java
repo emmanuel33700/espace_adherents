@@ -171,6 +171,7 @@ public class DiffusionApiController implements DiffusionApi {
         dto.setMessageHtml(body.getEmail());
         dto.setSujet(body.getTitreEmail());
         dto.setLstFile(this.listFilesForFolder(Long.toString(idMail)));
+        dto.setIdMail(idMail);
 
         // Si envoi poune liste de diffusion
         if (body.getTypeMail() == MailAEnvoyer.TypeMailEnum.NUMBER_10) {

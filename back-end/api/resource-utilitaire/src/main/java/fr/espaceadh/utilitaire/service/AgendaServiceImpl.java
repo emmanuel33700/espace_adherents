@@ -91,6 +91,9 @@ public class AgendaServiceImpl implements AgendaService{
                     
                     /* type de template */
                     mailIn.setTemplateMailEnum(TemplateMailEnum.INFORMATION_EVENEMENT_AJOUTE);
+
+                    /* id du message**/
+                    mailIn.setIdMAil(env.getProperty("message.evenement.ajoute.id"));
                     
                     /* variables associées au tempalte **/
                     HashMap<String, String> templateVariables = new HashMap<>();
@@ -105,15 +108,9 @@ public class AgendaServiceImpl implements AgendaService{
 
 
                     /* demande d'envoie du mail */
-                    MailOutDto mailOut = sendMail.sendMail(mailIn);
+                    Collection<MailOutDto> mailOut = sendMail.sendMail(mailIn);
                 }
 
-        
-
-        
-
-        
-        
 
                 
             }

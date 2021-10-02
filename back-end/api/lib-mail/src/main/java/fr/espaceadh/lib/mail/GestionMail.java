@@ -20,6 +20,8 @@ import fr.espaceadh.lib.mail.dto.ListeMessagesResulteDto;
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
 
+import java.util.Collection;
+
 /**
  *
  * @author emmanuel
@@ -31,7 +33,7 @@ public interface GestionMail {
      * @param mailIn
      * @return 
      */
-    public MailOutDto sendMail(final MailInDto mailIn);
+    public Collection<MailOutDto> sendMail(final MailInDto mailIn);
     
     /**
      * Recuperer l'historique des messages envoyé à une personne
