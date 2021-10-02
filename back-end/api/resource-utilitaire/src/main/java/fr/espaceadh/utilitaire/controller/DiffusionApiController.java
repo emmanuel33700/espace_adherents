@@ -179,6 +179,12 @@ public class DiffusionApiController implements DiffusionApi {
 
             boolean restult = listeDiffusionService.envoyerMailListeDiffusion(dto, body.getIdListeDiffusion());
 
+
+            try {
+                this.closeFilIpts(dto.getLstFile());
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage());
+            }
             if (restult) {
                 this.delFolder(Long.toString(idMail));
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -191,6 +197,11 @@ public class DiffusionApiController implements DiffusionApi {
 
             boolean restult = listeDiffusionService.envoyerMailListeAdherent(dto, Integer.parseInt(body.getTypeMail().toString()));
 
+            try {
+                this.closeFilIpts(dto.getLstFile());
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage());
+            }
             if (restult) {
                 this.delFolder(Long.toString(idMail));
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -199,6 +210,20 @@ public class DiffusionApiController implements DiffusionApi {
         }
 
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Fermutre des InputStream
+     * @param lstFile
+     * @throws IOException
+     */
+    private void closeFilIpts(Collection<InputStreamCustom> lstFile) throws IOException {
+        if (lstFile != null){
+            for(InputStreamCustom ipts : lstFile) {
+                ipts.getInputStream().close();
+            }
+        }
+
     }
 
     /**

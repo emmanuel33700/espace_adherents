@@ -104,6 +104,7 @@ public class SendMailTest {
             /* adresse email de destination */
             Collection<String> messageTo = new ArrayList<>();
             messageTo.add("manu.chenais@gmail.com");
+            messageTo.add("charline.rhein@hotmail.fr");
 
 
             mailIn.setMessageTo(messageTo);
@@ -146,6 +147,8 @@ public class SendMailTest {
             /* demande d'envoie du mail */
             Collection<MailOutDto> mailsOut = sendMail.sendMail(mailIn);
 
+            is1.close();
+            is2.close();
             boolean result = true;
 
             for (MailOutDto mo : mailsOut) {

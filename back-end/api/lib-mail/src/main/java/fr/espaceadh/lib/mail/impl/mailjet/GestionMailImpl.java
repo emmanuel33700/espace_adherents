@@ -64,18 +64,38 @@ public class GestionMailImpl implements GestionMail {
         Collection<MailOutDto> resultMail = new ArrayList<>();
 
 
+        // traiter les fichiers a envoyer
+        JSONArray jSONArrayAttachement = new JSONArray();
+        if (mailIn.getLstFile() != null &&  !mailIn.getLstFile().isEmpty()) {
+            for (InputStreamCustom inptureStream : mailIn.getLstFile()) {
+                byte[] filecontent = new byte[0];
+                try {
+                    filecontent = this.readAllBytes(inptureStream.getInputStream());
+                    String fileData = com.mailjet.client.Base64.encode(filecontent);
+                    jSONArrayAttachement.put(new JSONObject().put("ContentType", inptureStream.getContentType())
+                            .put("Filename", inptureStream.getFileName())
+                            .put("Base64Content", fileData));
+                } catch (IOException e) {
+                    LOGGER.error(e.getMessage());
+                }
+
+            }
+        }
+
+
         JSONArray emailJsonTo = new JSONArray();
         /** si nous somme en dev, envoi de l'e-mail à une seule adresse configuré dans le fichier de properties **/
         if (env.getProperty("message.dev") != null && env.getProperty("message.dev", Boolean.class)) {
             LOGGER.info("Envoye de mail en mode dev");
-            resultMail.add(this.envoyerMail(mailIn, env.getProperty("message.to.mail")));
+            resultMail.add(this.envoyerMail(mailIn, env.getProperty("message.to.mail"), jSONArrayAttachement));
             emailJsonTo.put(new JSONObject().put(Emailv31.Message.EMAIL, env.getProperty("message.to.mail")));
         }
         /** sinon, envoie au mail indique dans le dto **/
         else {
             if (!mailIn.getMessageTo().isEmpty()) {
+
                 for (String emailit : mailIn.getMessageTo()) {
-                    resultMail.add(this.envoyerMail(mailIn, emailit));
+                    resultMail.add(this.envoyerMail(mailIn, emailit, jSONArrayAttachement));
                 }
             } else {
                 LOGGER.error("Pas d'email destinataire");
@@ -92,7 +112,7 @@ public class GestionMailImpl implements GestionMail {
      * @param mailto
      * @return
      */
-    private MailOutDto envoyerMail(final MailInDto mailIn, String mailto) {
+    private MailOutDto envoyerMail(final MailInDto mailIn, String mailto, JSONArray jSONArrayAttachement) {
         LOGGER.debug("Mail from {}", env.getProperty("message.from.mail"));
         LOGGER.debug("Mail to {}", mailto);
 
@@ -110,7 +130,7 @@ public class GestionMailImpl implements GestionMail {
         }
         // demande d'envoie d'email sans template
         else{
-            request= this.envoyerMailSansTemplate(mailIn, emailJsonTo);
+            request= this.envoyerMailSansTemplate(mailIn, emailJsonTo, jSONArrayAttachement);
         }
 
         try {
@@ -171,21 +191,11 @@ public class GestionMailImpl implements GestionMail {
      * @param emailto
      * @return 
      */
-    private MailjetRequest envoyerMailSansTemplate(MailInDto mailIn, JSONArray emailto) {
+    private MailjetRequest envoyerMailSansTemplate(MailInDto mailIn, JSONArray emailto, JSONArray jSONArrayAttachement) {
 
 
         MailjetRequest request = null;
-        try {
-            JSONArray jSONArrayAttachement = new JSONArray();
-            if (mailIn.getLstFile() != null &&  !mailIn.getLstFile().isEmpty()) {
-                for (InputStreamCustom inptureStream : mailIn.getLstFile()) {
-                    byte[] filecontent = this.readAllBytes(inptureStream.getInputStream());
-                    String fileData = com.mailjet.client.Base64.encode(filecontent);
-                    jSONArrayAttachement.put(new JSONObject().put("ContentType", inptureStream.getContentType())
-                            .put("Filename", inptureStream.getFileName())
-                            .put("Base64Content", fileData));
-                }
-            }
+
         request = new MailjetRequest(Emailv31.resource)
                 .property(Emailv31.MESSAGES, new JSONArray()
                         .put(new JSONObject()
@@ -200,9 +210,7 @@ public class GestionMailImpl implements GestionMail {
                                 .put(Emailv31.Message.ATTACHMENTS,jSONArrayAttachement)
                         ));
 
-        } catch (IOException e) {
-            LOGGER.error("IOException" , e);
-        }
+
         return request;
 
 
