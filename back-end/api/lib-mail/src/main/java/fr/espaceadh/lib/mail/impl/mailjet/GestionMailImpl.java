@@ -41,7 +41,7 @@ import java.net.URL;
 import java.util.*;
 
 /**
- *
+ *https://dev.mailjet.com/email/guides/send-api-v31/
  * @author emmanuel
  */
 @Service
@@ -311,6 +311,7 @@ public class GestionMailImpl implements GestionMail {
 
     /**
      * Recupérer l'historique des message envouyé à une personne (via son mail)
+     * https://documenter.getpostman.com/view/6592892/S1a4WS95#f776e581-d489-45a8-9a5c-669bd12911cb
      * @param mail
      * @return 
      */

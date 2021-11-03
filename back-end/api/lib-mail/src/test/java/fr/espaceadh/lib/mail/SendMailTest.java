@@ -91,7 +91,7 @@ public class SendMailTest {
 
     }
 
-    @Test
+
     public void testEnvoyerMailSansTemplate(){
 
 
@@ -169,7 +169,7 @@ public class SendMailTest {
     }
 
 
-
+    @Test
     public void testStatisticMail(){
         ListeMessagesResulteDto mailOut = sendMail.recupeHistoriqueMessage("manu.chenais@gmail.com");
         System.out.println(mailOut);
