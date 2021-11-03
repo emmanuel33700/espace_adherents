@@ -282,7 +282,9 @@ public class GestionMailImpl implements GestionMail {
             case INFORMATION_PRE_INSCRIPTION:
                 return  env.getProperty("message.template.code.preinscription", Integer.class);
             case INFORMATION_EVENEMENT_AJOUTE:
-                return  env.getProperty("message.template.code.evenement.ajoute", Integer.class);    
+                return  env.getProperty("message.template.code.evenement.ajoute", Integer.class);
+            case DEMANDE_REINIT_MOT_DE_PASSE:
+                return  env.getProperty("message.template.code.reint_password", Integer.class);
             default:
                 break;
         }
