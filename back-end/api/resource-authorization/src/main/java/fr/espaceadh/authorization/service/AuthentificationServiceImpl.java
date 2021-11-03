@@ -323,6 +323,119 @@ public class AuthentificationServiceImpl implements AuthentificationService {
     }
 
 
+    /**
+     * Demander la réinitialisation du mot de passe (Génération d'un token envoyé par mail à l'adhérent)
+     *
+     * @param username
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean demanderReinitialisationMotDePasse(String username) {
 
-    
+        UserDto userDto = this.userDao.lectureUtilisateur(username);
+
+        if (userDto == null) {
+            this.LOGGER.info("Login non dans la BD {} " , username);
+            return false;
+        }
+        else if (!userDto.getUsername().equalsIgnoreCase(username)) {
+            this.LOGGER.error("Erreur de récupération du login {} en BD " , username);
+            return false;
+        }
+
+        this.LOGGER.info("Demande de réinitialisation du mpt de passe pour le login {}", username);
+
+        // Génération de la clée de validaton à envoyer par mail
+        UUID cleeValidation = UUID.randomUUID();
+
+        //Enregistrement de la clée en BD
+        this.userDao.enregistrerCleeModification(userDto.getIdAdherent(), cleeValidation.toString());
+
+        // Envoie du mail à l'utilisateur
+        this.envoyerMailReinitMotDePasse(userDto, cleeValidation.toString() );
+
+        return true;
+
+    }
+
+    /**
+     * Envoyer un mail pour la réinit du mot de passe
+     * @param userDto
+     * @param cleeValidation
+     */
+    private void envoyerMailReinitMotDePasse(UserDto userDto, String cleeValidation) {
+        MailInDto mailIn = new MailInDto();
+
+        Collection<String> messageTo = new ArrayList<>();
+        messageTo.add(userDto.getUsername());
+        mailIn.setMessageTo(messageTo);
+
+
+        /* type de template */
+        mailIn.setTemplateMailEnum(TemplateMailEnum.DEMANDE_REINIT_MOT_DE_PASSE);
+
+        /* variables associées au tempalte **/
+        HashMap<String, String> templateVariables = new HashMap<>();
+        templateVariables.put("valid_psw_link",
+                env.getProperty("validation.password.url")
+                        .concat("?key=").concat(cleeValidation)
+                        .concat("&id=").concat(Integer.toString(userDto.getIdAdherent()))
+        );
+        mailIn.setTemplateVariables(templateVariables);
+
+        /** Sujet du mail **/
+        mailIn.setSujetMail("Réinitialisation de votre mot de passe");
+
+        /** Id de mail **/
+        mailIn.setIdMAil(env.getProperty("validation.password.id"));
+
+        Collection<MailOutDto> mailOut = getionMail.sendMail(mailIn);
+    }
+
+    /**
+     * Valider la réinitialisation du mot de passe
+     *
+     * @param idUser
+     * @param cleeValidation
+     * @param  motDePasseEncode
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public boolean validerReinitialisationMotDePasse(int idUser, String cleeValidation, String motDePasseEncode) {
+        UserDto userDto = this.userDao.lectureUtilisateur(idUser);
+
+        if (cleeValidation == null) {
+            this.LOGGER.error("Attention la clée de validation est null pour {} " , userDto.getUsername());
+            return false;
+        }
+
+        else if (cleeValidation.isEmpty()) {
+            this.LOGGER.error("Attention la clée de validation est vide pour {} " , userDto.getUsername());
+            return false;
+        }
+
+        else if (!userDto.getCleeModification().equals(cleeValidation)) {
+            this.LOGGER.error("Attention la clée de validation du changement de mot de passe pour {} est incorecte" , userDto.getUsername());
+            return false;
+        }
+
+        long curTimeInMs = userDto.getDateModif().getTime();
+        Date afterAddingMins = new Date(curTimeInMs + (10 * 60000));
+
+        if (afterAddingMins.before(new Date())) {
+            this.LOGGER.error("Attention : delais de vidité de  clée de validation du changement de mot de passe pour {} est dépassé" , userDto.getUsername());
+            return false;
+        }
+
+        // changement du mot de passe
+        this.userDao.changerMotDePasse(idUser, motDePasseEncode);
+
+        // création d'une nouvelle clée pour éviter un nouveau changement de mot de passe
+        return this.userDao.enregistrerCleeModification(userDto.getIdAdherent(), UUID.randomUUID().toString());
+
+    }
+
+
 }

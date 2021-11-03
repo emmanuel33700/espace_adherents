@@ -34,12 +34,13 @@ public interface AuthentificationService {
      *          false : compte non validé
      */
     boolean validationCreationUser(int idUser, String cleeValidation);
-    
+
+
     /**
-     * Modifier les roles d'un utilisateur 
+     * Modifier les roles d'un utilisateur
      * @param idUser
-     * @param roles
-     * @return 
+     * @param rolesEnum
+     * @return
      */
     boolean modifierRolesUtilisateur (int idUser, List<RolesEnum> rolesEnum );
     
@@ -85,5 +86,23 @@ public interface AuthentificationService {
      * @return 
      */
     boolean desactiverEnsembleAuthentification();
+
+
+    /**
+     * Demander la réinitialisation du mot de passe (Génération d'un token envoyé par mail à l'adhérent)
+     * @param username
+     * @return
+     */
+    boolean demanderReinitialisationMotDePasse(String username);
+
+
+    /**
+     * Valider la réinitialisation du mot de passe
+     * @param idUser
+     * @param cleeValidation
+     * @param motDePasseEncode mot de passe encodé
+     * @return
+     */
+    boolean validerReinitialisationMotDePasse(int idUser, String cleeValidation, String motDePasseEncode);
     
 }

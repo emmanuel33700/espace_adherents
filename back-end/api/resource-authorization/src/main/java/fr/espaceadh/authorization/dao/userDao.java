@@ -84,5 +84,22 @@ public interface userDao {
      * @return 
      */
     boolean desactiverEnsembleAuthentification();
+
+    /**
+     * Enregistrement la clée de modification
+     * @param idUser
+     * @param cleeModification
+     * @return
+     */
+    boolean enregistrerCleeModification(int idUser, String cleeModification);
+
+
+    /**
+     * Changer le mot de passe d'un utilisateur
+     * @param idUser
+     * @param passwordEncode
+     * @return
+     */
+    boolean changerMotDePasse(int idUser, String passwordEncode);
     
 }
