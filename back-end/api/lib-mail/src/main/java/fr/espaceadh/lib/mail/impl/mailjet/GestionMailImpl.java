@@ -38,14 +38,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 /**
- *
+ *https://dev.mailjet.com/email/guides/send-api-v31/
  * @author emmanuel
  */
 @Service
@@ -56,42 +52,97 @@ public class GestionMailImpl implements GestionMail {
     
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(GestionMailImpl.class);
 
+    /**
+     * Point d'entré d'envoi de mails
+     * @param mailIn
+     * @return
+     */
     @Override
-    public MailOutDto sendMail(MailInDto mailIn) {
+    public Collection<MailOutDto> sendMail(final MailInDto mailIn) {
 
+
+        Collection<MailOutDto> resultMail = new ArrayList<>();
+
+
+        // traiter les fichiers a envoyer
+        JSONArray jSONArrayAttachement = new JSONArray();
+        if (mailIn.getLstFile() != null &&  !mailIn.getLstFile().isEmpty()) {
+            for (InputStreamCustom inptureStream : mailIn.getLstFile()) {
+                byte[] filecontent = new byte[0];
+                try {
+                    filecontent = this.readAllBytes(inptureStream.getInputStream());
+                    String fileData = com.mailjet.client.Base64.encode(filecontent);
+                    jSONArrayAttachement.put(new JSONObject().put("ContentType", inptureStream.getContentType())
+                            .put("Filename", inptureStream.getFileName())
+                            .put("Base64Content", fileData));
+                } catch (IOException e) {
+                    LOGGER.error(e.getMessage());
+                }
+
+            }
+        }
+
+
+        JSONArray emailJsonTo = new JSONArray();
+        /** si nous somme en dev, envoi de l'e-mail à une seule adresse configuré dans le fichier de properties **/
+        if (env.getProperty("message.dev") != null && env.getProperty("message.dev", Boolean.class)) {
+            LOGGER.info("Envoye de mail en mode dev");
+            resultMail.add(this.envoyerMail(mailIn, env.getProperty("message.to.mail"), jSONArrayAttachement));
+            emailJsonTo.put(new JSONObject().put(Emailv31.Message.EMAIL, env.getProperty("message.to.mail")));
+        }
+        /** sinon, envoie au mail indique dans le dto **/
+        else {
+            if (!mailIn.getMessageTo().isEmpty()) {
+
+                for (String emailit : mailIn.getMessageTo()) {
+                    resultMail.add(this.envoyerMail(mailIn, emailit, jSONArrayAttachement));
+                }
+            } else {
+                LOGGER.error("Pas d'email destinataire");
+            }
+        }
+
+        return resultMail;
+
+    }
+
+    /**
+     * Fonction privé d'envoi de mail unitaire
+     * @param mailIn
+     * @param mailto
+     * @return
+     */
+    private MailOutDto envoyerMail(final MailInDto mailIn, String mailto, JSONArray jSONArrayAttachement) {
+        LOGGER.debug("Mail from {}", env.getProperty("message.from.mail"));
+        LOGGER.debug("Mail to {}", mailto);
 
         MailjetRequest request = null;
         MailjetResponse response;
         MailOutDto mailOutDto = new  MailOutDto();
-        
 
-        // transformtaiton des email en JSONArray pour préparer l'envoie mailjet
-        JSONArray emailJsonTo  = this.getEmailJsonTo(mailIn);
+        JSONArray emailJsonTo = new JSONArray();
+        emailJsonTo.put(new JSONObject().put(Emailv31.Message.EMAIL, mailto));
 
-       
-        
-        LOGGER.debug("Mail from {}", env.getProperty("message.from.mail"));
-        LOGGER.debug("Mail to {}", emailJsonTo.toString());
-        
 
-        
         // Si demande d'envoie un e-mail avec template
         if (mailIn.getTemplateMailEnum() != null && mailIn.getTemplateMailEnum() != TemplateMailEnum.SANS_TEMPLATE){
             request= this.envoyerMailAvecTemplate(mailIn, emailJsonTo);
         }
         // demande d'envoie d'email sans template
         else{
-            request= this.envoyerMailSansTemplate(mailIn, emailJsonTo);
+            request= this.envoyerMailSansTemplate(mailIn, emailJsonTo, jSONArrayAttachement);
         }
-        
+
         try {
             //Envoie du mail via mailjet
             MailjetClient client = new MailjetClient(env.getProperty("mailjet.login"), env.getProperty("mailjet.password"), new ClientOptions("v3.1"));
+
             response = client.post(request);
+
             LOGGER.info("Retour de mailjet {} ", response.getData().toString());
             LOGGER.info( "statut maijet {}", response.getStatus());
 
-            
+
             if (response.getStatus() == 200) {
                 mailOutDto.setStatutEnvoi(response.getData().getJSONObject(0).getString("Status"));
             }
@@ -105,7 +156,7 @@ public class GestionMailImpl implements GestionMail {
 
         return  mailOutDto;
     }
-    
+
     /**
      * demande d'envoie d'un email géré par mailjet
      * @param mailIn
@@ -124,6 +175,7 @@ public class GestionMailImpl implements GestionMail {
                                         .put("Email", env.getProperty("message.from.mail"))
                                         .put("Name", env.getProperty("message.from.name")))
                                 .put(Emailv31.Message.TO, emailto)
+                                .put(Emailv31.Message.CUSTOMID, mailIn.getIdMAil())
                                 .put(Emailv31.Message.TEMPLATEID, codeTemplateMailjet)
                                 .put(Emailv31.Message.TEMPLATELANGUAGE, true)
                                 .put(Emailv31.Message.SUBJECT, mailIn.getSujetMail())
@@ -139,21 +191,11 @@ public class GestionMailImpl implements GestionMail {
      * @param emailto
      * @return 
      */
-    private MailjetRequest envoyerMailSansTemplate(MailInDto mailIn, JSONArray emailto) {
+    private MailjetRequest envoyerMailSansTemplate(MailInDto mailIn, JSONArray emailto, JSONArray jSONArrayAttachement) {
 
 
         MailjetRequest request = null;
-        try {
-            JSONArray jSONArrayAttachement = new JSONArray();
-            if (!mailIn.getLstFile().isEmpty()) {
-                for (InputStreamCustom inptureStream : mailIn.getLstFile()) {
-                    byte[] filecontent = this.readAllBytes(inptureStream.getInputStream());
-                    String fileData = com.mailjet.client.Base64.encode(filecontent);
-                    jSONArrayAttachement.put(new JSONObject().put("ContentType", inptureStream.getContentType())
-                            .put("Filename", inptureStream.getFileName())
-                            .put("Base64Content", fileData));
-                }
-            }
+
         request = new MailjetRequest(Emailv31.resource)
                 .property(Emailv31.MESSAGES, new JSONArray()
                         .put(new JSONObject()
@@ -161,15 +203,14 @@ public class GestionMailImpl implements GestionMail {
                                         .put("Email", env.getProperty("message.from.mail"))
                                         .put("Name", env.getProperty("message.from.name")))
                                 .put(Emailv31.Message.TO, emailto)
+                                .put(Emailv31.Message.CUSTOMID, mailIn.getIdMAil())
                                 .put(Emailv31.Message.TEMPLATELANGUAGE, false)
                                 .put(Emailv31.Message.HTMLPART, mailIn.getHtmlMessage())
                                 .put(Emailv31.Message.SUBJECT, mailIn.getSujetMail())
                                 .put(Emailv31.Message.ATTACHMENTS,jSONArrayAttachement)
                         ));
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         return request;
 
 
@@ -182,7 +223,7 @@ public class GestionMailImpl implements GestionMail {
      * @return
      * @throws IOException
      */
-    private static byte[] readAllBytes(InputStream inputStream) throws IOException {
+    private  byte[] readAllBytes(InputStream inputStream) throws IOException {
         final int bufLen = 4 * 0x400; // 4KB
         byte[] buf = new byte[bufLen];
         int readLen;
@@ -198,13 +239,6 @@ public class GestionMailImpl implements GestionMail {
         } catch (IOException e) {
             exception = e;
             throw e;
-        } finally {
-            if (exception == null) inputStream.close();
-            else try {
-                inputStream.close();
-            } catch (IOException e) {
-                exception.addSuppressed(e);
-            }
         }
     }
 
@@ -248,7 +282,9 @@ public class GestionMailImpl implements GestionMail {
             case INFORMATION_PRE_INSCRIPTION:
                 return  env.getProperty("message.template.code.preinscription", Integer.class);
             case INFORMATION_EVENEMENT_AJOUTE:
-                return  env.getProperty("message.template.code.evenement.ajoute", Integer.class);    
+                return  env.getProperty("message.template.code.evenement.ajoute", Integer.class);
+            case DEMANDE_REINIT_MOT_DE_PASSE:
+                return  env.getProperty("message.template.code.reint_password", Integer.class);
             default:
                 break;
         }
@@ -277,6 +313,7 @@ public class GestionMailImpl implements GestionMail {
 
     /**
      * Recupérer l'historique des message envouyé à une personne (via son mail)
+     * https://documenter.getpostman.com/view/6592892/S1a4WS95#f776e581-d489-45a8-9a5c-669bd12911cb
      * @param mail
      * @return 
      */
@@ -287,6 +324,8 @@ public class GestionMailImpl implements GestionMail {
            StringBuilder urlString = new StringBuilder("https://api.mailjet.com/v3/REST/message?ContactAlt=");
            urlString.append(mail);
            urlString.append("&ShowSubject=true");
+            urlString.append("&Limit=500");
+            urlString.append("Sort=dateArrive+DESC");
            
            /** encodage basic authentitication **/
            StringBuilder authBasic = new StringBuilder( env.getProperty("mailjet.login"));
@@ -345,7 +384,7 @@ public class GestionMailImpl implements GestionMail {
      */
     private ListeMessagesResulteDto convertDto(ListeMessages lstMessages) {
         ListeMessagesResulteDto listeDto = new ListeMessagesResulteDto();
-        Collection<MessageResultDto> lstMessageResultDto = new ArrayList<>();
+        List<MessageResultDto> lstMessageResultDto = new ArrayList<>();
         
         for (fr.espaceadh.lib.mail.model.mailjet.Message msg : lstMessages.getData()){
             MessageResultDto msgDto = new MessageResultDto();
@@ -367,6 +406,8 @@ public class GestionMailImpl implements GestionMail {
             lstMessageResultDto.add(msgDto);
         }
         listeDto.setLstMessageResulteDto(lstMessageResultDto);
+
+        lstMessageResultDto.sort(Comparator.comparing(MessageResultDto::getDateArrive));
         return listeDto;
     }
 

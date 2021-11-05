@@ -171,6 +171,7 @@ public class DiffusionApiController implements DiffusionApi {
         dto.setMessageHtml(body.getEmail());
         dto.setSujet(body.getTitreEmail());
         dto.setLstFile(this.listFilesForFolder(Long.toString(idMail)));
+        dto.setIdMail(idMail);
 
         // Si envoi poune liste de diffusion
         if (body.getTypeMail() == MailAEnvoyer.TypeMailEnum.NUMBER_10) {
@@ -178,6 +179,12 @@ public class DiffusionApiController implements DiffusionApi {
 
             boolean restult = listeDiffusionService.envoyerMailListeDiffusion(dto, body.getIdListeDiffusion());
 
+
+            try {
+                this.closeFilIpts(dto.getLstFile());
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage());
+            }
             if (restult) {
                 this.delFolder(Long.toString(idMail));
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -190,6 +197,11 @@ public class DiffusionApiController implements DiffusionApi {
 
             boolean restult = listeDiffusionService.envoyerMailListeAdherent(dto, Integer.parseInt(body.getTypeMail().toString()));
 
+            try {
+                this.closeFilIpts(dto.getLstFile());
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage());
+            }
             if (restult) {
                 this.delFolder(Long.toString(idMail));
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
@@ -198,6 +210,20 @@ public class DiffusionApiController implements DiffusionApi {
         }
 
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Fermutre des InputStream
+     * @param lstFile
+     * @throws IOException
+     */
+    private void closeFilIpts(Collection<InputStreamCustom> lstFile) throws IOException {
+        if (lstFile != null){
+            for(InputStreamCustom ipts : lstFile) {
+                ipts.getInputStream().close();
+            }
+        }
+
     }
 
     /**
@@ -229,25 +255,30 @@ public class DiffusionApiController implements DiffusionApi {
 
 
         final File folder = new File("/tmp/"+directoryName);
-        for (final File fileEntry : folder.listFiles()) {
-            StringBuilder cheminFichier = new StringBuilder();
-            cheminFichier.append("/tmp/");
-            cheminFichier.append("/");
-            cheminFichier.append(directoryName);
-            cheminFichier.append("/");
-            cheminFichier.append(fileEntry.getName());
-            try {
-                InputStreamCustom iptsc = new InputStreamCustom();
-                iptsc.setInputStream(Files.newInputStream(Paths.get(cheminFichier.toString())));
-                iptsc.setFileName(fileEntry.getName());
-                iptsc.setContentType(Files.probeContentType(Paths.get(cheminFichier.toString())));
-                lstFiles.add(iptsc);
+        if(folder.exists()) {
+            for (final File fileEntry : folder.listFiles()) {
+                StringBuilder cheminFichier = new StringBuilder();
+                cheminFichier.append("/tmp/");
+                cheminFichier.append("/");
+                cheminFichier.append(directoryName);
+                cheminFichier.append("/");
+                cheminFichier.append(fileEntry.getName());
+                try {
+                    InputStreamCustom iptsc = new InputStreamCustom();
+                    iptsc.setInputStream(Files.newInputStream(Paths.get(cheminFichier.toString())));
+                    iptsc.setFileName(fileEntry.getName());
+                    iptsc.setContentType(Files.probeContentType(Paths.get(cheminFichier.toString())));
+                    lstFiles.add(iptsc);
 
-                LOGGER.info("Recupérer le fichier {} de type {} avec nom {}",cheminFichier.toString() , iptsc.getContentType() , iptsc.getFileName());
-            } catch (IOException e) {
-                LOGGER.error("IOException" + e.getMessage());
+                    LOGGER.info("Recupérer le fichier {} de type {} avec nom {}",cheminFichier.toString() , iptsc.getContentType() , iptsc.getFileName());
+                } catch (IOException e) {
+                    LOGGER.error("IOException" + e.getMessage());
+                }
             }
+        } else {
+            LOGGER.info("PAs de répertoire {}" , directoryName);
         }
+
 
         return lstFiles;
     }

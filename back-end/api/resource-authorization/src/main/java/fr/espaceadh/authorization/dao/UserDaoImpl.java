@@ -277,7 +277,47 @@ public class UserDaoImpl extends JdbcDaoSupport implements userDao{
         return true;    
     }
 
-    
+    /**
+     * Enregistrement la clée de modification
+     *
+     * @param idUser
+     * @param cleeModification
+     * @return
+     */
+    @Override
+    public boolean enregistrerCleeModification(int idUser, String cleeModification) {
+        StringBuilder query = new StringBuilder();
+        query.append(" UPDATE users ");
+        query.append("     SET cleemodification = ?, datemodificationclee = now() ");
+        query.append("     WHERE idadherent = ? ");
+
+
+        int nbMaj = this.getJdbcTemplate().update(query.toString(), cleeModification, idUser);
+        LOGGER.info("Nombre d'enregistrement : {}", nbMaj );
+        return true;
+    }
+
+    /**
+     * Changer le mot de passe d'un utilisateur
+     *
+     * @param idUser
+     * @param passwordEncode
+     * @return
+     */
+    @Override
+    public boolean changerMotDePasse(int idUser, String passwordEncode) {
+        StringBuilder query = new StringBuilder();
+        query.append(" UPDATE users ");
+        query.append(" SET password = ? ");
+        query.append(" WHERE idadherent = ? ");
+
+
+        int nbMaj = this.getJdbcTemplate().update(query.toString(), passwordEncode, idUser);
+        LOGGER.info("Nombre d'enregistrement : {}", nbMaj );
+        return true;
+    }
+
+
     /**
      * 
      */

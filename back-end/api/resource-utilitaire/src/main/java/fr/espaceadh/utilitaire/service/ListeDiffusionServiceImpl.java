@@ -130,6 +130,9 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
         /**- ajouter le sujet **/
         mailIn.setSujetMail(emailDto.getSujet());
 
+        /** ajouter l'id de mail **/
+        mailIn.setIdMAil(Long.toString(emailDto.getIdMail()));
+
         /** ajouter les fichiers **/
 
         if (emailDto.getLstFile() != null && !emailDto.getLstFile().isEmpty()){
@@ -138,8 +141,16 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
         }
 
         /* demande d'envoie du mail */
-        MailOutDto mailOut = sendMail.sendMail(mailIn);
-        return mailOut.getStatutEnvoi().equalsIgnoreCase("success");
+        Collection<MailOutDto> mailsOut = sendMail.sendMail(mailIn);
+
+        boolean result  = true;
+        for (MailOutDto mo : mailsOut) {
+            if (!mo.getStatutEnvoi().equalsIgnoreCase("success")) {
+                LOGGER.error("Erreor lors de l'envoi de mail");
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

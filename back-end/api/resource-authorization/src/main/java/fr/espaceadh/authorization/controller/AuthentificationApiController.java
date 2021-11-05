@@ -167,9 +167,21 @@ public class AuthentificationApiController implements AuthentificationApi {
         return new ResponseEntity<Roles>(HttpStatus.NOT_IMPLEMENTED);
     }
 
+    /**
+     * Demander la mise à jour du mot de passe
+     * @param body
+     * @return
+     */
     public ResponseEntity<Void> resetPassword(@Parameter(in = ParameterIn.DEFAULT, description = "demander la réinitialisation du mot de passe", schema=@Schema()) @Valid @RequestBody Login body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+
+        boolean result =  this.authentificationService.demanderReinitialisationMotDePasse(body.getLogin());
+        if (!result)  {
+            this.LOGGER.warn("Demande en erreur  de modification du mot de passe du compte {} ", body.getLogin());
+        }
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
+
     }
 
     /**
@@ -217,9 +229,20 @@ public class AuthentificationApiController implements AuthentificationApi {
         }
     }
 
+    /**
+     * Demander la validation de la réinitialisation du mot de passe
+     * @param idadh
+     * @param body
+     * @return
+     */
     public ResponseEntity<Void> valideResetPassword(@Parameter(in = ParameterIn.PATH, description = "id de la personne à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.DEFAULT, description = "demander la validation de la réinitialisation du mot de passe", schema=@Schema()) @Valid @RequestBody ReinitAuthentification body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        boolean result =  this.authentificationService.validerReinitialisationMotDePasse(idadh.intValue(), body.getCleeValidation(), passwordEncoder().encode(body.getPassword()));
+        if (!result)  {
+            this.LOGGER.warn("Demande en erreur  de validation  du mot de passe du compte {} ",idadh);
+        }
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
 
