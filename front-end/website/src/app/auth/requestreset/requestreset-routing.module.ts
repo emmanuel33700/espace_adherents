@@ -6,12 +6,12 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Route} from '@angular/router';
-import { VerifyComponent } from './verify.component';
+import { RequestresetComponent } from './requestreset.component';
 
 const routes: Route[] = [
   {
     path: '',
-    component: VerifyComponent,
+    component: RequestresetComponent,
   },
 ];
 
@@ -19,4 +19,4 @@ const routes: Route[] = [
   imports: [ RouterModule.forChild(routes) ],
   exports: [ RouterModule ],
 })
-export class VerifyRoutingModule {}
+export class RequestresetRoutingModule {}

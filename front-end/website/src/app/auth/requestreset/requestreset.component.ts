@@ -1,18 +1,19 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
+
 import {
   NB_AUTH_OPTIONS,
 } from '@nebular/auth';
 import {AuthentificationService} from '../../../api/generated/authorization/services/authentification.service';
-import {ReinitAuthentification} from '../../../api/generated/authorization/models/reinit-authentification';
+import {Login} from '../../../api/generated/authorization/models/login';
 
 
 @Component({
   selector: 'ngx-register',
-  styleUrls: ['./reset.component.scss'],
-  templateUrl: './reset.component.html',
+  styleUrls: ['./requestreset.component.scss'],
+  templateUrl: './requestreset.component.html',
 })
-export class ResetComponent implements OnInit {
+export class RequestresetComponent implements OnInit {
 
   showMessages: any = {};
 
@@ -20,12 +21,10 @@ export class ResetComponent implements OnInit {
   submitted = false;
   errors: string[] = [];
   messages: string[] = [];
-
-
-  private reinitAuthentification: ReinitAuthentification = {};
-  idAdh: number = 0;
-
   user: any = {};
+
+
+  private login: Login = {};
 
   constructor(@Inject(NB_AUTH_OPTIONS) protected options = {},
               protected router: Router,
@@ -35,17 +34,17 @@ export class ResetComponent implements OnInit {
   }
 
   /**
-   * Valider la demande de changement de mot de passe
+   * demander la réinit du mpt de passe
    */
-  register(): void {
+  requestreset(): void {
+
     localStorage.clear();
     this.errors = this.messages = [];
     this.submitted = true;
 
-    this.reinitAuthentification.password =  this.user.password;
+    this.login.login = this.user.email;
 
-
-    this.authentificationService.valideResetPassword({idadh: this.idAdh, body: this.reinitAuthentification})
+    this.authentificationService.resetPassword({body: this.login})
       .subscribe(
         (data) => {
           console.info(data);
@@ -54,7 +53,7 @@ export class ResetComponent implements OnInit {
           console.info(error);
         },
         () => {
-          console.info('fini');
+          console.info('demande de réinit du mot de passe OK');
           return this.router.navigateByUrl('/auth/login');
         },
       );
@@ -63,14 +62,6 @@ export class ResetComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.reinitAuthentification.cleeValidation = this.route.snapshot.queryParamMap.get('key');
-    if (!isNaN(Number(this.route.snapshot.queryParamMap.get('id')))) {
-      this.idAdh = Number(this.route.snapshot.queryParamMap.get('id'));
-      console.info('idadh ' + this.idAdh);
-    } else {
-      this.idAdh = -1;
-      console.error('Erreur de récupération de id adherent ');
-    }
   }
 
 

@@ -21,12 +21,12 @@ const routes: Routes = [{
         .then(m => m.RegisterModule),
     },
     {
-      path: 'verify',
-      loadChildren: () => import('./verify/verify.module')
-        .then(m => m.VerifyModule),
+      path: 'requestreset',
+      loadChildren: () => import('./requestreset/requestreset.module')
+        .then(m => m.RequestresetModule),
     },
     {
-      path: 'reset',
+      path: 'validreinitpwd',
       loadChildren: () => import('./reset/reset.module')
         .then(m => m.ResetModule),
     },
