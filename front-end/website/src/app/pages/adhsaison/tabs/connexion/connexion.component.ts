@@ -168,7 +168,7 @@ export class ConnexionComponent implements OnInit {
           this.loggerService.info('MàJ OK');
           this.toastrService.success(
             'Mise à jour finalisée',
-            'Opértation réussit');
+            'Opération réussie');
           this.submitted = false;
         },
       );
@@ -203,7 +203,7 @@ export class ConnexionComponent implements OnInit {
           this.loggerService.info('MàJ OK');
           this.toastrService.success(
             'Mise à jour finalisée',
-            'Opértation réussit');
+            'Opération réussie');
           this.submitted = false;
         },
       );

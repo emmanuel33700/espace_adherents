@@ -76,9 +76,9 @@
             </ng-container>
           </div>
 
-          <div class="form-control-group accept-group" *ngIf="getConfigValue('forms.register.terms')">
-            <nb-checkbox name="terms" [(ngModel)]="user.terms" [required]="getConfigValue('forms.register.terms')">
-              Je suis d'accord avec les <a href="#" target="_blank"><strong>Termes & conditions</strong></a>
+          <div class="form-control-group accept-group" >
+            <nb-checkbox name="terms" [(ngModel)]="user.terms" [required]="true">
+              Je suis d'accord avec les <a href="#" target="_blank" [routerLink]="['/pages/cgu']"><strong>Termes & conditions</strong></a>
             </nb-checkbox>
           </div>
 
@@ -86,7 +86,7 @@
                   fullWidth
                   status="primary"
                   size="large"
-                  [disabled]="submitted || !form.valid"
+                  [disabled]="submitted || !form.valid || password.value != rePass.value"
                   [class.btn-pulse]="submitted">
             Enregistrer
           </button>

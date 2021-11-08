@@ -243,7 +243,7 @@ export class EditeurComponent implements OnInit {
 
         this.toastrService.success(
           'Mail envoyé',
-          'Opértation réussit');
+          'Opération réussie');
         form.resetForm();
         this.submitted = false;
         this.loadingEnvoyerMail = false;

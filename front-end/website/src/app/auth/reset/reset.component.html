@@ -81,7 +81,7 @@
                   fullWidth
                   status="primary"
                   size="large"
-                  [disabled]="submitted || !form.valid"
+                  [disabled]="submitted || !form.valid || password.value != rePass.value"
                   [class.btn-pulse]="submitted">
             Valider le changement de mot de passe
           </button>

@@ -98,7 +98,7 @@ export class ListeComponent implements OnInit {
             localStorage.setItem('id_annee_adhesion', String(this.selectedOption));
             this.toastrService.success(
               'Mise à jour finalisée',
-              'Opértation réussit');
+              'Opération réussie');
           },
         );
     }
