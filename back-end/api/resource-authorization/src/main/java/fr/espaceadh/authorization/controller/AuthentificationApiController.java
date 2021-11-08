@@ -240,6 +240,7 @@ public class AuthentificationApiController implements AuthentificationApi {
         boolean result =  this.authentificationService.validerReinitialisationMotDePasse(idadh.intValue(), body.getCleeValidation(), passwordEncoder().encode(body.getPassword()));
         if (!result)  {
             this.LOGGER.warn("Demande en erreur  de validation  du mot de passe du compte {} ",idadh);
+            return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<Void>(HttpStatus.OK);
