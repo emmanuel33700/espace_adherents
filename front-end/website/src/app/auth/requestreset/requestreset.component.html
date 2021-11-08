@@ -1,0 +1,70 @@
+<nb-layout>
+  <nb-layout-column>
+
+    <nb-card>
+      <nb-card-body>
+        <h1 id="title" class="title">JALLE ASTRONOMIE</h1>
+        <p class="sub-title">Mot de passe oublié</p>
+
+        <nb-alert *ngIf="showMessages.error && errors?.length && !submitted" outline="danger" role="alert">
+          <p class="alert-title"><b>Erreur</b></p>
+          <ul class="alert-message-list">
+            <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
+            showMessages
+          </ul>
+        </nb-alert>
+
+        <nb-alert *ngIf="showMessages.success && messages?.length && !submitted" outline="success" role="alert">
+          <p class="alert-title"><b>Hooray!</b></p>
+          <ul class="alert-message-list">
+            <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
+          </ul>
+        </nb-alert>
+
+        <form (ngSubmit)="requestreset()" #form="ngForm" aria-labelledby="title" >
+
+          <div class="form-group row">
+            <label for="input-email" class="label col-sm-3 col-form-label">Votre adresse mail</label>
+              <input nbInput
+                     [(ngModel)]="user.email"
+                     #email="ngModel"
+                     id="input-email"
+                     name="email"
+                     pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                     placeholder="nom.prenom@fai.com"
+                     fullWidth
+                     [status]="email.dirty ? ((email.invalid  ) ? 'danger' : 'success') : 'basic'"
+                     [required]="true"
+                     [minlength]="5"
+                     [maxlength]="40"
+                     [attr.aria-invalid]=" email.invalid && email.touched ? true : null">
+              <ng-container *ngIf="email.invalid && email.touched">
+                <p class="caption status-danger" *ngIf="email.errors?.required">
+                  Email est nécésaire
+                </p>
+                <p class="caption status-danger" *ngIf="email.errors?.pattern">
+                  Erreur dans le format
+                </p>
+                <p class="caption status-danger" *ngIf="email.errors?.minlength || email.errors?.maxlength">
+                  Le mail doit entre compris entre 5 et 40 caracteres
+                </p>
+              </ng-container>
+
+          </div>
+
+
+          <button nbButton
+                  fullWidth
+                  status="primary"
+                  size="large"
+                  [disabled]="submitted || !form.valid"
+                  [class.btn-pulse]="submitted">
+            Demander la réinitialisation du mot de passe
+          </button>
+        </form>
+
+
+      </nb-card-body>
+    </nb-card>
+  </nb-layout-column>
+</nb-layout>

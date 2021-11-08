@@ -9,14 +9,16 @@ import {
 } from '@nebular/theme';
 import {FormsModule as ngFormsModule} from '@angular/forms';
 
-import { VerifyComponent } from './verify.component';
+import { RequestresetComponent } from './requestreset.component';
 import {NgModule} from '@angular/core';
-import { VerifyRoutingModule } from './verify-routing.module';
+import { RequestresetRoutingModule } from './requestreset-routing.module';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import {
+  NbAuthModule,
+} from '@nebular/auth';
 
 
 @NgModule({
@@ -24,6 +26,7 @@ import { HttpClientModule } from '@angular/common/http';
     CommonModule,
     FormsModule,
     HttpClientModule,
+    NbAuthModule,
     ThemeModule,
     NbMenuModule,
     NbLayoutModule,
@@ -37,11 +40,11 @@ import { HttpClientModule } from '@angular/common/http';
     NbDatepickerModule,
     NbSelectModule,
     NbIconModule,
-    ngFormsModule, VerifyRoutingModule, NbAlertModule,
+    ngFormsModule, RequestresetRoutingModule, NbAlertModule,
   ],
   declarations: [
-    VerifyComponent,
+    RequestresetComponent,
   ],
 })
-export class VerifyModule {
+export class RequestresetModule {
 }
