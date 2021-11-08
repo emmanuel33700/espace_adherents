@@ -1,10 +1,11 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, HostBinding, Inject, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
   NB_AUTH_OPTIONS,
 } from '@nebular/auth';
 import {AuthentificationService} from '../../../api/generated/authorization/services/authentification.service';
 import {ReinitAuthentification} from '../../../api/generated/authorization/models/reinit-authentification';
+import {NbToastrService} from '@nebular/theme';
 
 
 @Component({
@@ -15,6 +16,10 @@ import {ReinitAuthentification} from '../../../api/generated/authorization/model
 export class ResetComponent implements OnInit {
 
   showMessages: any = {};
+
+  // Toaster
+  @HostBinding('class')
+  classes = 'example-items-rows';
 
 
   submitted = false;
@@ -30,7 +35,8 @@ export class ResetComponent implements OnInit {
   constructor(@Inject(NB_AUTH_OPTIONS) protected options = {},
               protected router: Router,
               private route: ActivatedRoute,
-              private authentificationService: AuthentificationService) {
+              private authentificationService: AuthentificationService,
+              private toastrService: NbToastrService) {
 
   }
 
@@ -52,6 +58,10 @@ export class ResetComponent implements OnInit {
         },
         (error) => {
           console.info(error);
+          this.toastrService.danger(
+            'Erreur technique lors de enregistrement',
+            'Erreur ');
+          this.submitted = false;
         },
         () => {
           console.info('fini');
