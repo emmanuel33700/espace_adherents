@@ -421,10 +421,10 @@ public class AuthentificationServiceImpl implements AuthentificationService {
             return false;
         }
 
-        long curTimeInMs = userDto.getDateModif().getTime();
-        Date afterAddingMins = new Date(curTimeInMs + (10 * 60000));
+        long curTimeInMs = userDto.getDateModifcationClee().getTime();
+        Date afterAddingMins = new Date(curTimeInMs + (10 * 60000)); // Ajout de 10 min
 
-        if (afterAddingMins.after(new Date())) {
+        if (afterAddingMins.before(new Date())) {
             this.LOGGER.error("Attention : delais de vidité de  clée de validation du changement de mot de passe pour {} est dépassé" , userDto.getUsername());
             return false;
         }
