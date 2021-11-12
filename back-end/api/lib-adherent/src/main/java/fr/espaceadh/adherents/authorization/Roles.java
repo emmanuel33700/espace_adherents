@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.espaceadh.adherents.clientapi.authorization;
+package fr.espaceadh.adherents.authorization;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;

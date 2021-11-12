@@ -28,11 +28,11 @@ public class Document   {
    */
   public enum IdAuthorityEnum {
     NUMBER_1(1),
-    
+
     NUMBER_2(2),
-    
+
     NUMBER_3(3),
-    
+
     NUMBER_4(4);
 
     private Integer value;
@@ -72,6 +72,12 @@ public class Document   {
   @JsonProperty("nomFichier")
   private String nomFichier = null;
 
+  @JsonProperty("idAuteur")
+  private Long idAuteur = null;
+
+  @JsonProperty("prenomNomAuteur")
+  private String prenomNomAuteur = null;
+
   public Document id(Long id) {
     this.id = id;
     return this;
@@ -82,8 +88,8 @@ public class Document   {
    * @return id
    **/
   @Schema(example = "1225668", description = "id du document")
-  
-    public Long getId() {
+
+  public Long getId() {
     return id;
   }
 
@@ -101,8 +107,8 @@ public class Document   {
    * @return idDossierRattachement
    **/
   @Schema(example = "1225668", description = "id du dossier de rattachement")
-  
-    public Long getIdDossierRattachement() {
+
+  public Long getIdDossierRattachement() {
     return idDossierRattachement;
   }
 
@@ -116,12 +122,12 @@ public class Document   {
   }
 
   /**
-   * Types d'adhersions. Valeurs possibles : * 1 : ADHERENT                * 2 : CONSEIL ADMINISTRATON              * 3 : BUREAU                * 4 : ADMIN 
+   * Types d'adhersions. Valeurs possibles : * 1 : ADHERENT                * 2 : CONSEIL ADMINISTRATON              * 3 : BUREAU                * 4 : ADMIN
    * @return idAuthority
    **/
   @Schema(example = "1", description = "Types d'adhersions. Valeurs possibles : * 1 : ADHERENT                * 2 : CONSEIL ADMINISTRATON              * 3 : BUREAU                * 4 : ADMIN ")
-  
-    public IdAuthorityEnum getIdAuthority() {
+
+  public IdAuthorityEnum getIdAuthority() {
     return idAuthority;
   }
 
@@ -139,7 +145,7 @@ public class Document   {
    * @return libelleCourt
    **/
   @Schema(example = "Etoiles", description = "libelle du document")
-  
+
   @Size(min=3,max=30)   public String getLibelleCourt() {
     return libelleCourt;
   }
@@ -158,7 +164,7 @@ public class Document   {
    * @return libelleLong
    **/
   @Schema(example = "document sur les étoiles", description = "libelle du document")
-  
+
   @Size(min=3,max=50)   public String getLibelleLong() {
     return libelleLong;
   }
@@ -177,8 +183,8 @@ public class Document   {
    * @return dateCreation
    **/
   @Schema(example = "2020-01-18T21:00:00", description = "Date de création (format ISO8601)")
-  
-    public String getDateCreation() {
+
+  public String getDateCreation() {
     return dateCreation;
   }
 
@@ -196,13 +202,51 @@ public class Document   {
    * @return nomFichier
    **/
   @Schema(example = "055555884.pdf", description = "nom du fichier")
-  
+
   @Size(min=3,max=50)   public String getNomFichier() {
     return nomFichier;
   }
 
   public void setNomFichier(String nomFichier) {
     this.nomFichier = nomFichier;
+  }
+
+  public Document idAuteur(Long idAuteur) {
+    this.idAuteur = idAuteur;
+    return this;
+  }
+
+  /**
+   * id de l'auteur
+   * @return idAuteur
+   **/
+  @Schema(example = "1225668", description = "id de l'auteur")
+
+  public Long getIdAuteur() {
+    return idAuteur;
+  }
+
+  public void setIdAuteur(Long idAuteur) {
+    this.idAuteur = idAuteur;
+  }
+
+  public Document prenomNomAuteur(String prenomNomAuteur) {
+    this.prenomNomAuteur = prenomNomAuteur;
+    return this;
+  }
+
+  /**
+   * nom du fichier
+   * @return prenomNomAuteur
+   **/
+  @Schema(example = "Emmanuel C", description = "nom du fichier")
+
+  @Size(min=3,max=50)   public String getPrenomNomAuteur() {
+    return prenomNomAuteur;
+  }
+
+  public void setPrenomNomAuteur(String prenomNomAuteur) {
+    this.prenomNomAuteur = prenomNomAuteur;
   }
 
 
@@ -216,24 +260,26 @@ public class Document   {
     }
     Document document = (Document) o;
     return Objects.equals(this.id, document.id) &&
-        Objects.equals(this.idDossierRattachement, document.idDossierRattachement) &&
-        Objects.equals(this.idAuthority, document.idAuthority) &&
-        Objects.equals(this.libelleCourt, document.libelleCourt) &&
-        Objects.equals(this.libelleLong, document.libelleLong) &&
-        Objects.equals(this.dateCreation, document.dateCreation) &&
-        Objects.equals(this.nomFichier, document.nomFichier);
+            Objects.equals(this.idDossierRattachement, document.idDossierRattachement) &&
+            Objects.equals(this.idAuthority, document.idAuthority) &&
+            Objects.equals(this.libelleCourt, document.libelleCourt) &&
+            Objects.equals(this.libelleLong, document.libelleLong) &&
+            Objects.equals(this.dateCreation, document.dateCreation) &&
+            Objects.equals(this.nomFichier, document.nomFichier) &&
+            Objects.equals(this.idAuteur, document.idAuteur) &&
+            Objects.equals(this.prenomNomAuteur, document.prenomNomAuteur);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, idDossierRattachement, idAuthority, libelleCourt, libelleLong, dateCreation, nomFichier);
+    return Objects.hash(id, idDossierRattachement, idAuthority, libelleCourt, libelleLong, dateCreation, nomFichier, idAuteur, prenomNomAuteur);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Document {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    idDossierRattachement: ").append(toIndentedString(idDossierRattachement)).append("\n");
     sb.append("    idAuthority: ").append(toIndentedString(idAuthority)).append("\n");
@@ -241,6 +287,8 @@ public class Document   {
     sb.append("    libelleLong: ").append(toIndentedString(libelleLong)).append("\n");
     sb.append("    dateCreation: ").append(toIndentedString(dateCreation)).append("\n");
     sb.append("    nomFichier: ").append(toIndentedString(nomFichier)).append("\n");
+    sb.append("    idAuteur: ").append(toIndentedString(idAuteur)).append("\n");
+    sb.append("    prenomNomAuteur: ").append(toIndentedString(prenomNomAuteur)).append("\n");
     sb.append("}");
     return sb.toString();
   }

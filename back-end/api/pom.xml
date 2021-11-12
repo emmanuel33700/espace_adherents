@@ -84,11 +84,12 @@
 
 
 	<modules>
-		<module>lib-mail</module>		
+		<module>lib-mail</module>
+		<module>lib-adherent</module>
 		<module>authorization-server</module>
 		<module>resource-authorization</module>
 		<module>resource-adherents</module>
-                <module>resource-utilitaire</module>
+        <module>resource-utilitaire</module>
 	</modules>
 
 	<profiles>

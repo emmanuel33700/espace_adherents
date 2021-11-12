@@ -151,5 +151,13 @@ public interface AdherentService {
      * @return 
      */
     public boolean supprimerLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente);
+
+
+    /**
+     * Créer et activer un compte
+     * @param idAdh
+     * @return
+     */
+    boolean creerEtActiverCompte(long idAdh);
     
 }

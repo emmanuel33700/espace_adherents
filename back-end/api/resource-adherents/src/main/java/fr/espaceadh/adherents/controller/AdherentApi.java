@@ -64,6 +64,37 @@ public interface AdherentApi {
     ResponseEntity<Void> ajoutAdherent(@Parameter(in = ParameterIn.DEFAULT, description = "Objet adhérent", required=true, schema=@Schema()) @Valid @RequestBody Adherent body);
 
 
+    @Operation(summary = "Activer le compte d'un adhérent", description = "", security = {
+            @SecurityRequirement(name = "oAuth", scopes = {
+                    "ress-adherent-admin",
+                    "ress-adherent-read",
+                    "ress-adherent-write",
+                    "ress-adherent-del",
+                    "ress-adhesion-admin",
+                    "ress-adhesion-read",
+                    "ress-adhesion-write",
+                    "ress-adhesion-del",
+                    "ress-manifestation-admin",
+                    "ress-manifestation-read",
+                    "ress-manifestation-write",
+                    "ress-manifestation-del",
+                    "ress-communication-read"        })    }, tags={ "adherent" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Operation réussie"),
+
+            @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
+
+            @ApiResponse(responseCode = "403", description = "Droit insufisant"),
+
+            @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
+
+            @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/adherent/{idadh}/activerCompte",
+            produces = { "application/json" },
+            method = RequestMethod.POST)
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')")
+    ResponseEntity<Void> activerCompteAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
+
     @Operation(summary = "Ajouter une adhesions pour un adherent", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
             ""        })    }, tags={ "adhesion" })

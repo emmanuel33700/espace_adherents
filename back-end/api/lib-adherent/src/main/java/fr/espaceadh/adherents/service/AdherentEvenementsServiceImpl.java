@@ -16,8 +16,8 @@
  */
 package fr.espaceadh.adherents.service;
 
-import fr.espaceadh.adherents.clientapi.authorization.JSON;
-import fr.espaceadh.adherents.clientapi.authorization.Roles;
+import fr.espaceadh.adherents.authorization.JSON;
+import fr.espaceadh.adherents.authorization.Roles;
 import fr.espaceadh.adherents.dao.AdherentEvenementsDAO;
 import fr.espaceadh.adherents.dao.AdherentsDAO;
 import fr.espaceadh.adherents.dto.AdherentEvenementDto;

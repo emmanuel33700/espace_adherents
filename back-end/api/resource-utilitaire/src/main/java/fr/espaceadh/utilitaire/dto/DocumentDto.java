@@ -35,6 +35,8 @@ public class DocumentDto {
     private String nonFichier;
     private int idAuthority;
     private long idAuteur;
+    private String nomAuteur;
+    private String prenomAuteur;
 
     private int niveau;
     private boolean aEnfant;
@@ -144,7 +146,20 @@ public class DocumentDto {
         this.documentsFils = documentsFils;
     }
 
- 
-    
-    
+
+    public String getNomAuteur() {
+        return nomAuteur;
+    }
+
+    public void setNomAuteur(String nomAuteur) {
+        this.nomAuteur = nomAuteur;
+    }
+
+    public String getPrenomAuteur() {
+        return prenomAuteur;
+    }
+
+    public void setPrenomAuteur(String prenomAuteur) {
+        this.prenomAuteur = prenomAuteur;
+    }
 }

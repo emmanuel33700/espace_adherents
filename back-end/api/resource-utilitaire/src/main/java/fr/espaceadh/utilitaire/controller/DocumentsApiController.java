@@ -1,5 +1,7 @@
 package fr.espaceadh.utilitaire.controller;
 
+import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.adherents.service.AdherentService;
 import fr.espaceadh.utilitaire.model.ArborescenceDocuments;
 import fr.espaceadh.utilitaire.model.Document;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,6 +59,9 @@ public class DocumentsApiController implements DocumentsApi {
 
     @Autowired
     protected DocumentService documentService;
+
+    @Autowired
+    protected AdherentService adherentService;
 
     @Autowired
     private Environment env;
@@ -394,9 +400,31 @@ public class DocumentsApiController implements DocumentsApi {
         dto.setLablelCourt(body.getLibelleCourt());
         dto.setLabelLong(body.getLibelleLong());
         dto.setNonFichier(body.getNomFichier());
-        dto.setIdAuteur(24); // TODO a revoir la création de ducoument avec le bon id autheur. Pour l'instant forcé pour manu
+        dto.setIdAuteur(this.getIdAdherentConnecte());
 
         return dto;
+    }
+
+    /**
+     * R2cupérer l'id de l'adhérent connecté
+     * @return
+     */
+    private long getIdAdherentConnecte() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username = null;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        if (username != null) {
+           AdherentDto dto = this.adherentService.recupererAdherent(username);
+            return dto.getId();
+        }
+        LOGGER.error("Aucun username recupérer dans le jeton d'authentification");
+        return 0;
     }
 
     /**
@@ -478,6 +506,8 @@ public class DocumentsApiController implements DocumentsApi {
         documentModel.setLibelleLong(dto.getLabelLong());
         documentModel.setNomFichier(dto.getNonFichier());
         documentModel.setIdDossierRattachement(dto.getIdDocumentParent());
+        documentModel.setIdAuteur(dto.getIdAuteur());
+        documentModel.setPrenomNomAuteur(dto.getPrenomAuteur() + ' ' + dto.getNomAuteur());
 
         return documentModel;
     }
