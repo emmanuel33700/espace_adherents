@@ -107,7 +107,7 @@ public class AdherentApiController implements AdherentApi {
     public ResponseEntity<Void> activerCompteAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         boolean result = this.adherentService.creerEtActiverCompte(idadh);
-        if (result) new ResponseEntity<Void>(HttpStatus.CREATED);
+        if (result) return new ResponseEntity<Void>(HttpStatus.CREATED);
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
 
