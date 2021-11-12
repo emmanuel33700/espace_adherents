@@ -12,7 +12,7 @@ import {DialogAjoutRepertoireComponent} from './dialog-ajout-repertoire/dialog-a
 import {DocumentationService} from '../../../../api/generated/utilitaire/services/documentation.service';
 import {ArborescenceDocuments} from '../../../../api/generated/utilitaire/models/arborescence-documents';
 import {DownloadService} from '../../../@core/utils/download.service';
-import {Adherent} from "../../../../api/generated/adherents/models/adherent";
+import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 
 
 interface TreeNode<T> {
