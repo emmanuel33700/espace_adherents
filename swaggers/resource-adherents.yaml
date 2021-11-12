@@ -250,6 +250,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+  '/adherent/{idadh}/activerCompte':
+    post:
+      tags:
+        - adherent
+      summary: Activer le compte d'un adhérent
+      operationId: activerCompteAdherent
+      security:
+        - oAuth:
+            - ress-adherent-admin
+      parameters:
+        - name: idadh
+          in: path
+          description: id de l'adherent
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+                
   '/adherent/{idadh}/liens':
     get:
       tags:

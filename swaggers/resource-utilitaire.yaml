@@ -1466,6 +1466,17 @@ components:
           description: nom du fichier
           maxLength: 50
           minLength: 3
+        idAuteur:
+          type: integer
+          format: int64
+          description: id de l'auteur
+          example: 1225668
+        prenomNomAuteur:
+          type: string
+          example: 'Emmanuel C'
+          description: nom du fichier
+          maxLength: 50
+          minLength: 3
       xml:
         name: Order
     arborescenceDocumentsInit:
