@@ -16,13 +16,13 @@
  */
 package fr.espaceadh.utilitaire.service;
 
+import fr.espaceadh.adherents.dao.AdherentsDAO;
+import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
 import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
-import fr.espaceadh.utilitaire.dao.AdherentsDAO;
 import fr.espaceadh.utilitaire.dao.AgendaDao;
-import fr.espaceadh.utilitaire.dto.AdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
 import fr.espaceadh.utilitaire.dto.EvenementParticipationAdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;

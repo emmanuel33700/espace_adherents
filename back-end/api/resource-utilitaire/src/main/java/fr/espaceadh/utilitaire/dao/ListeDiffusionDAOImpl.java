@@ -16,9 +16,8 @@
  */
 package fr.espaceadh.utilitaire.dao;
 
-import fr.espaceadh.utilitaire.dto.AdherentDto;
-import fr.espaceadh.utilitaire.dto.CiviliteEnum;
-import fr.espaceadh.utilitaire.dto.DocumentDto;
+import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.adherents.dto.CiviliteEnum;
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
