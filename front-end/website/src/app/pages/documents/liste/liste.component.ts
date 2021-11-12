@@ -12,6 +12,7 @@ import {DialogAjoutRepertoireComponent} from './dialog-ajout-repertoire/dialog-a
 import {DocumentationService} from '../../../../api/generated/utilitaire/services/documentation.service';
 import {ArborescenceDocuments} from '../../../../api/generated/utilitaire/models/arborescence-documents';
 import {DownloadService} from '../../../@core/utils/download.service';
+import {Adherent} from "../../../../api/generated/adherents/models/adherent";
 
 
 interface TreeNode<T> {
@@ -57,6 +58,9 @@ export class ListeComponent implements OnInit {
 
   // Formulaire de création du document
   documentForm: any = {};
+
+  // Information de l'adhérent courant (Qui utilise l'IHM)
+  adherent: Adherent = JSON.parse(localStorage.getItem('adherent'));
 
 
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
@@ -168,7 +172,7 @@ export class ListeComponent implements OnInit {
     const valueTreeNodeAdd: TreeNode<FSEntry> = {
       data: {
         nom: value.parent.libelleCourt,
-        auteur: 'MANU',
+        auteur: value.parent.prenomNomAuteur,
         items: nbElntEnfant,
         description: value.parent.libelleLong,
         kind: kind,
@@ -198,7 +202,8 @@ export class ListeComponent implements OnInit {
       this.loggerService.debug('Non du repertoire ajout ' + repertoireForm.repertoire);
       this.loggerService.debug('Détail du repertoire ajout ' + repertoireForm.repertoireDetail);
 
-      this.ajouterElement(this.data, idRepertoireParent, 'dir', repertoireForm.repertoire, 'MANU'
+      this.ajouterElement(this.data, idRepertoireParent, 'dir', repertoireForm.repertoire,
+        this.adherent.prenom + ' ' + this.adherent.nom
         , repertoireForm.repertoireDetail, repertoireForm.id, null);
       this.dataSource = this.dataSourceBuilder.create(this.data);
 
@@ -294,7 +299,8 @@ export class ListeComponent implements OnInit {
       this.loggerService.debug('Non du document ajout ' + documentForm.fichier);
       this.loggerService.debug('Détail du document ajout ' + documentForm.fichierDetail);
 
-      this.ajouterElement(this.data, idRepertoireParent, 'doc', documentForm.fichier, 'MANU'
+      this.ajouterElement(this.data, idRepertoireParent, 'doc', documentForm.fichier,
+        this.adherent.prenom + ' ' + this.adherent.nom
         , documentForm.fichierDetail, documentForm.id, documentForm.nomFichier);
       this.dataSource = this.dataSourceBuilder.create(this.data);
 

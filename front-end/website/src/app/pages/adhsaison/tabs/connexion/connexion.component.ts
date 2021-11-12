@@ -7,6 +7,7 @@ import {ActivationAuthentification} from '../../../../../api/generated/authoriza
 import {Adherent} from '../../../../../api/generated/adherents/models/adherent';
 import {NbToastrService} from '@nebular/theme';
 import {LoggerService} from '../../../../@core/utils/logger.service';
+import {AdherentService} from '../../../../../api/generated/adherents/services/adherent.service';
 
 @Component({
   selector: 'ngx-tab2',
@@ -46,6 +47,7 @@ export class ConnexionComponent implements OnInit {
     private toastrService: NbToastrService,
     private loggerService: LoggerService,
     private authentificationService: AuthentificationService,
+    private adherentService: AdherentService,
   ) {
   }
 
@@ -129,7 +131,7 @@ export class ConnexionComponent implements OnInit {
   }
 
   /**
-   *
+   * Changer de role
    * @param form
    */
   submit(form: NgForm) {
@@ -207,5 +209,33 @@ export class ConnexionComponent implements OnInit {
           this.submitted = false;
         },
       );
+  }
+
+  /**
+   * Demander l'envoi d'un nouveau mail pour la pré inscription
+   */
+  demanderEnvoiNailPreInscription() {
+
+    this.adherentService.activerCompteAdherent({idadh: this.idAdherent})
+      .subscribe(
+        (data) => {
+          this.loggerService.info(JSON.stringify(data));
+        },
+        (error) => {
+          this.loggerService.error(error);
+          this.toastrService.danger(
+            'Erreur technique lors de enregistrement',
+            'Erreur ');
+          this.submitted = false;
+        },
+        () => {
+          this.loggerService.info('MàJ OK');
+          this.toastrService.success(
+            'Mail envoyé',
+            'Opération réussie');
+          this.submitted = false;
+        },
+      );
+
   }
 }

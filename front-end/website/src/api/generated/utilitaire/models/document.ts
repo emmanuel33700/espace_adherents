@@ -12,6 +12,11 @@ export interface Document {
   id?: number;
 
   /**
+   * id de l'auteur
+   */
+  idAuteur?: number;
+
+  /**
    * Types d'adhersions. Valeurs possibles :
    * * 1 : ADHERENT               
    * * 2 : CONSEIL ADMINISTRATON             
@@ -39,4 +44,9 @@ export interface Document {
    * nom du fichier
    */
   nomFichier?: string;
+
+  /**
+   * nom du fichier
+   */
+  prenomNomAuteur?: string;
 }

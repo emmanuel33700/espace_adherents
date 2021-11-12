@@ -48,6 +48,7 @@ export class DialogAjoutEvenementComponent implements OnInit {
     this.evenementForm.titre = '';
     this.evenementForm.description = '';
     this.evenementForm.demandeEnvoyerMail = false;
+    this.evenementForm.confirmationParticipation = false;
   }
 
 

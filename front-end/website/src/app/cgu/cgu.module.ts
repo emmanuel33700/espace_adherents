@@ -1,4 +1,4 @@
-import {ThemeModule} from '../../@theme/theme.module';
+import {ThemeModule} from '../@theme/theme.module';
 import {
   NbActionsModule, NbAlertModule,
   NbButtonModule,

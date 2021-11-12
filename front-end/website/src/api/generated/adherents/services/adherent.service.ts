@@ -322,6 +322,63 @@ export class AdherentService extends BaseService {
   }
 
   /**
+   * Path part for operation activerCompteAdherent
+   */
+  static readonly ActiverCompteAdherentPath = '/adherent/{idadh}/activerCompte';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `activerCompteAdherent()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  activerCompteAdherent$Response(params: {
+
+    /**
+     * id de l&#x27;adherent
+     */
+    idadh: number;
+
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, AdherentService.ActiverCompteAdherentPath, 'post');
+    if (params) {
+
+      rb.path('idadh', params.idadh);
+
+    }
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `activerCompteAdherent$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  activerCompteAdherent(params: {
+
+    /**
+     * id de l&#x27;adherent
+     */
+    idadh: number;
+
+  }): Observable<void> {
+
+    return this.activerCompteAdherent$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
    * Path part for operation updateUserPhoto
    */
   static readonly UpdateUserPhotoPath = '/adherent/{idadh}/photo';

@@ -50,11 +50,6 @@ const routes: Routes = [{
         .then(m => m.ProfileModule),
     },
     {
-      path: 'cgu',
-      loadChildren: () => import('./cgu/cgu-routing.module')
-        .then(m => m.CguRoutingModule),
-    },
-    {
       path: '',
       redirectTo: 'dashboard',
       pathMatch: 'full',
