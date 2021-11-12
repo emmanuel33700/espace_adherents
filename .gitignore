@@ -12,6 +12,7 @@
 .springBeans
 target/
 */target/**
+*/${project.build.directory}/**
 
 *.iml
 .idea
