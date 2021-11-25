@@ -136,4 +136,17 @@ public interface AdherentsDAO {
      * @return 
      */
     public boolean supprimerLienAdherent(Long idAdherentRepresentant, Long idAdherentRepresente);
+
+    /**
+     * Récupérer la liste des adhérents de la saison courant et saison précédente
+     * @return
+     */
+    public Collection<AdherentDto> recupererListeAdherentSaisonEtAncienneSaison();
+
+
+    /**
+     * Récupérer les adhérents qui n'ont pas renouvelles leur adhésion
+     * @return
+     */
+    public Collection<AdherentDto> recupererListeNonAdherentSaison();
 }

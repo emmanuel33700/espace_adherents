@@ -98,6 +98,19 @@ public class AdherentApiController implements AdherentApi {
         this.request = request;
     }
 
+
+    /**
+     * renvoyer le mail de préinscription à un adhérent
+     * @param idadh
+     * @return
+     */
+    public ResponseEntity<Void> activerCompteAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
+        String accept = request.getHeader("Accept");
+        boolean result = this.adherentService.creerEtActiverCompte(idadh);
+        if (result) return new ResponseEntity<Void>(HttpStatus.CREATED);
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+    }
+
     /**
      * Ajouter un adhérents
      * @param body

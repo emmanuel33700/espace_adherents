@@ -149,7 +149,7 @@ public class AdherentServiceImpl implements AdherentService{
      * @param idAdh
      * @return 
      */
-    private boolean creerEtActiverCompte(long idAdh){
+    public boolean creerEtActiverCompte(long idAdh){
         AdherentDto adhDto = this.adherentsDAO.getAdherentByID(idAdh);
         
         //Activiation du compte uniquement si l'adhérent à un email 

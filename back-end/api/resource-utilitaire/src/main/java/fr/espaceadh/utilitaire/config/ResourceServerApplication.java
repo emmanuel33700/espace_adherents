@@ -11,7 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @SpringBootApplication
-@ComponentScan ({"fr.espaceadh.utilitaire", "fr.espaceadh.lib.mail.impl.mailjet"})
+@ComponentScan ({"fr.espaceadh.utilitaire", "fr.espaceadh.adherents", "fr.espaceadh.lib.mail.impl.mailjet"})
 public class ResourceServerApplication extends SpringBootServletInitializer {
 
     @Autowired

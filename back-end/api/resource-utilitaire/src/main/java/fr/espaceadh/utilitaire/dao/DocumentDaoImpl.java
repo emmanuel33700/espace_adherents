@@ -59,8 +59,10 @@ public class DocumentDaoImpl extends JdbcDaoSupport implements DocumentDao {
         query.append("  SELECT id_share_docs, fk_id_share_docs, label_short, label_long, date_save, ");
         query.append("  	is_folder, is_file, filer, fk_id_user_created, fk_id_type_authority, ");
         query.append("  	(select distinct 1 from t_share_docs t_share_docsBis where t_share_docsBis.fk_id_share_docs = t_share_docs.id_share_docs) as aEnfant ");
-        query.append("  FROM t_share_docs ");
+        query.append("         , nom, premon ");
+        query.append("  FROM t_share_docs, t_adherents ");
         query.append("  where fk_id_share_docs = ? ");
+        query.append("   AND t_share_docs.fk_id_user_created = t_adherents.id_adherents ");
         
         List<DocumentDto> lstEvenement =  this.getJdbcTemplate().query(query.toString(), new DocumentMapper(), idDossierParent);
         
@@ -112,9 +114,13 @@ public class DocumentDaoImpl extends JdbcDaoSupport implements DocumentDao {
         query.append("  SELECT id_share_docs, fk_id_share_docs, label_short, label_long, date_save, ");
         query.append("  	is_folder, is_file, filer, fk_id_user_created, fk_id_type_authority, ");
         query.append("  	(select distinct 1 from t_share_docs t_share_docsBis where t_share_docsBis.fk_id_share_docs = t_share_docs.id_share_docs) as aEnfant ");
-        query.append("  FROM t_share_docs ");
+        query.append("         , nom, premon ");
+        query.append("  FROM t_share_docs, t_adherents ");
         query.append("  where id_share_docs = ? ");
-        
+        query.append("   AND t_share_docs.fk_id_user_created = t_adherents.id_adherents ");
+
+
+
         List<DocumentDto> lstEvenement =  this.getJdbcTemplate().query(query.toString(), new DocumentMapper(), idDocument);
         
         if (lstEvenement != null && !lstEvenement.isEmpty()) return lstEvenement.get(0);
@@ -170,8 +176,10 @@ public class DocumentDaoImpl extends JdbcDaoSupport implements DocumentDao {
         query.append("  SELECT id_share_docs, fk_id_share_docs, label_short, label_long, date_save, ");
         query.append("  	is_folder, is_file, filer, fk_id_user_created, fk_id_type_authority, ");
         query.append("  	(select distinct 1 from t_share_docs t_share_docsBis where t_share_docsBis.fk_id_share_docs = t_share_docs.id_share_docs) as aEnfant ");
-        query.append("  FROM t_share_docs ");
+        query.append("         , nom, premon ");
+        query.append("  FROM t_share_docs, t_adherents ");
         query.append("  where id_share_docs != -1 ");
+        query.append("   AND t_share_docs.fk_id_user_created = t_adherents.id_adherents ");
 
         List<DocumentDto> lstEvenement = null;
         if (minDateCreation != null && maxDateCreation != null){
@@ -209,6 +217,8 @@ public class DocumentDaoImpl extends JdbcDaoSupport implements DocumentDao {
             dto.setIdAuteur(rs.getLong("fk_id_user_created"));
             dto.setIdAuthority(rs.getInt("fk_id_type_authority"));
             dto.setaEnfant((rs.getInt("aEnfant") == 1));
+            dto.setNomAuteur(rs.getString("nom"));
+            dto.setPrenomAuteur(rs.getString("premon"));
             
             return dto;
         }

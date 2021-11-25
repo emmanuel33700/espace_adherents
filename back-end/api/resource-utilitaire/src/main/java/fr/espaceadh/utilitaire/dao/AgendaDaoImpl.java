@@ -16,7 +16,7 @@
  */
 package fr.espaceadh.utilitaire.dao;
 
-import fr.espaceadh.utilitaire.dto.CiviliteEnum;
+import fr.espaceadh.adherents.dto.CiviliteEnum;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
 import fr.espaceadh.utilitaire.dto.EvenementParticipationAdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;

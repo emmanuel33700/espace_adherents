@@ -405,9 +405,11 @@ public class GestionMailImpl implements GestionMail {
 
             lstMessageResultDto.add(msgDto);
         }
-        listeDto.setLstMessageResulteDto(lstMessageResultDto);
 
         lstMessageResultDto.sort(Comparator.comparing(MessageResultDto::getDateArrive));
+
+        listeDto.setLstMessageResulteDto(lstMessageResultDto);
+
         return listeDto;
     }
 

@@ -10,7 +10,7 @@
  * Do not edit the class manually.
  */
 
-package fr.espaceadh.adherents.clientapi.authorization;
+package fr.espaceadh.adherents.authorization;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

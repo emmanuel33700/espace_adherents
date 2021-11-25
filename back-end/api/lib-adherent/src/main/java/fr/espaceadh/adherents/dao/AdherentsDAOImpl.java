@@ -169,6 +169,86 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         return idAdherent;
     }
 
+    /**
+     * Récupérer la liste des adhérents de la saison courant et saison précédente
+     *
+     * @return
+     */
+    @Override
+    public Collection<AdherentDto> recupererListeAdherentSaisonEtAncienneSaison() {
+        StringBuilder query = new StringBuilder();
+        query.append(" select distinct * from ( ");
+        query.append("      SELECT id_adherents, e_mail, civilite, nom, premon ");
+        query.append("      , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
+        query.append("      , adresse1, adresse2, code_postal, ville, tel1, tel2  ");
+        query.append("      , tel3, date_maissance, profession, link_picture, public_contact ");
+        query.append("      , accord_mail, token_acces, commentaire, date_enregistrement ");
+        query.append("      , fk_id_adherents_update, update_date, true as adherent_saison_courante  ");
+        query.append("  FROM t_adherents, t_adhesions, i_annee_adhesion ");
+        query.append("  WHERE t_adherents.id_adherents = t_adhesions.fk_id_adherents ");
+        query.append("  AND t_adhesions.fk_id_annee_adhesions =   i_annee_adhesion.id_annee_adhesion");
+        query.append("  AND i_annee_adhesion.annee_courante = true  ");
+        query.append(" UNION ");
+        query.append("      SELECT id_adherents, e_mail, civilite, nom, premon ");
+        query.append("      , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
+        query.append("      , adresse1, adresse2, code_postal, ville, tel1, tel2  ");
+        query.append("      , tel3, date_maissance, profession, link_picture, public_contact ");
+        query.append("      , accord_mail, token_acces, commentaire, date_enregistrement ");
+        query.append("      , fk_id_adherents_update, update_date, true as adherent_saison_courante  ");
+        query.append("  FROM t_adherents, t_adhesions, i_annee_adhesion ");
+        query.append("  WHERE t_adherents.id_adherents = t_adhesions.fk_id_adherents ");
+        query.append("  AND t_adhesions.fk_id_annee_adhesions =   ( i_annee_adhesion.id_annee_adhesion - 1) ");
+        query.append("  AND i_annee_adhesion.annee_courante = true  ");
+        query.append(" ) as resultat ");
+        query.append(" order by nom, premon ");
+
+
+        List<AdherentDto> lstAdherents = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper());
+
+        LOGGER.debug("Nombre d'adherents récupéré  {} ", lstAdherents.size());
+        return  lstAdherents;
+    }
+
+    /**
+     * Récupérer les adhérents qui n'ont pas renouvelles leur adhésion
+     *
+     * @return
+     */
+    @Override
+    public Collection<AdherentDto> recupererListeNonAdherentSaison() {
+        StringBuilder query = new StringBuilder();
+        query.append(" select distinct * from ( ");
+        query.append("      SELECT id_adherents, e_mail, civilite, nom, premon ");
+        query.append("      , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
+        query.append("      , adresse1, adresse2, code_postal, ville, tel1, tel2  ");
+        query.append("      , tel3, date_maissance, profession, link_picture, public_contact ");
+        query.append("      , accord_mail, token_acces, commentaire, date_enregistrement ");
+        query.append("      , fk_id_adherents_update, update_date, true as adherent_saison_courante  ");
+        query.append("  FROM t_adherents, t_adhesions, i_annee_adhesion ");
+        query.append("  WHERE t_adherents.id_adherents = t_adhesions.fk_id_adherents ");
+        query.append("  AND t_adhesions.fk_id_annee_adhesions =  ( i_annee_adhesion.id_annee_adhesion - 1)");
+        query.append("  AND i_annee_adhesion.annee_courante = true  ");
+        query.append(" EXCEPT ");
+        query.append("      SELECT id_adherents, e_mail, civilite, nom, premon ");
+        query.append("      , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
+        query.append("      , adresse1, adresse2, code_postal, ville, tel1, tel2  ");
+        query.append("      , tel3, date_maissance, profession, link_picture, public_contact ");
+        query.append("      , accord_mail, token_acces, commentaire, date_enregistrement ");
+        query.append("      , fk_id_adherents_update, update_date, true as adherent_saison_courante  ");
+        query.append("  FROM t_adherents, t_adhesions, i_annee_adhesion ");
+        query.append("  WHERE t_adherents.id_adherents = t_adhesions.fk_id_adherents ");
+        query.append("  AND t_adhesions.fk_id_annee_adhesions =   i_annee_adhesion.id_annee_adhesion  ");
+        query.append("  AND i_annee_adhesion.annee_courante = true  ");
+        query.append(" ) as resultat ");
+        query.append(" order by nom, premon ");
+
+
+        List<AdherentDto> lstAdherents = this.getJdbcTemplate().query(query.toString(), new AdherentsMapper());
+
+        LOGGER.debug("Nombre d'adherents récupéré  {} ", lstAdherents.size());
+        return  lstAdherents;
+    }
+
     @Override
     public Collection<AdherentDto> recupererListeCompletAdherent() {
         StringBuilder query = new StringBuilder();

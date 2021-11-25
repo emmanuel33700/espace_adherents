@@ -16,8 +16,8 @@
  */
 package fr.espaceadh.test;
 
-import fr.espaceadh.adherents.clientapi.authorization.JSON;
-import fr.espaceadh.adherents.clientapi.authorization.Roles;
+import fr.espaceadh.adherents.authorization.JSON;
+import fr.espaceadh.adherents.authorization.Roles;
 import fr.espaceadh.adherents.service.AdherentServiceImpl;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -61,7 +61,6 @@ public class ClientResourceAuthorizationTest {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ClientResourceAuthorizationTest.class);
     
         @Configuration
-    @ComponentScan({"",})
     public static class SpringConfig {
 
     }

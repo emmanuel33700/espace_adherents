@@ -121,6 +121,15 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
+
+
+        <!--service adherent -->
+        <dependency>
+            <groupId>fr.espaceadh</groupId>
+            <artifactId>lib-adherent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

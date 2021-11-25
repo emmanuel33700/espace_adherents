@@ -16,7 +16,7 @@
  */
 package fr.espaceadh.utilitaire.dao;
 
-import fr.espaceadh.utilitaire.dto.AdherentDto;
+import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
 import java.util.Collection;
 

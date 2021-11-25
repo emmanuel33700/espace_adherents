@@ -16,11 +16,13 @@
  */
 package fr.espaceadh.utilitaire.dto;
 
+import fr.espaceadh.adherents.dto.AdherentDto;
+
 /**
  *
  * @author emmanuel
  */
-public class EvenementParticipationAdherentDto extends AdherentDto{
+public class EvenementParticipationAdherentDto extends AdherentDto {
     private int typeParticipation;
 
     /**
@@ -33,7 +35,7 @@ public class EvenementParticipationAdherentDto extends AdherentDto{
 
     /**
      *  1 => Participe; 2 => Participe pas; 3 => Ne sais pas
-     * @param typePArtiipation 
+     * @param typeParticipation
      */
     public void setTypeParticipation(int typeParticipation) {
         this.typeParticipation = typeParticipation;
