@@ -356,6 +356,23 @@ public class AdherentApiController implements AdherentApi {
 
     }
 
+    public ResponseEntity<ListeAdherents> getListeAdherentsFiltreSaison() {
+        String accept = request.getHeader("Accept");
+        ListeAdherents lstAdh =  new ListeAdherents();
+
+
+        Collection<AdherentDto> lstAdherentDto =  this.adherentService.recupererListeAdherentSaison();
+
+        for (AdherentDto adhDto : lstAdherentDto){
+            if (adhDto.isPublicContact()) {
+                lstAdh.add(this.translateDto(adhDto));
+            }
+
+        }
+
+        return new ResponseEntity<>(lstAdh,HttpStatus.OK);
+    }
+
     /**
      * recuperer les adherents de la saison
      * @return 

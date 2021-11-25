@@ -98,7 +98,7 @@ public interface AdherentApi {
     @Operation(summary = "Ajouter une adhesions pour un adherent", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
             ""        })    }, tags={ "adhesion" })
-    @ApiResponses(value = { 
+    @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Operation réussie"),
         
         @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
@@ -484,6 +484,39 @@ public interface AdherentApi {
     @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')")          
     ResponseEntity<ListeAdherents> getListeAdherents();
 
+    @Operation(summary = "Récupérer les  adhérents de la saison ayant accepté d'apparaitre sur le site", description = "", security = {
+            @SecurityRequirement(name = "oAuth", scopes = {
+                    "ress-adherent-admin",
+                    "ress-adherent-read",
+                    "ress-adherent-write",
+                    "ress-adherent-del",
+                    "ress-adhesion-admin",
+                    "ress-adhesion-read",
+                    "ress-adhesion-write",
+                    "ress-adhesion-del",
+                    "ress-manifestation-admin",
+                    "ress-manifestation-read",
+                    "ress-manifestation-write",
+                    "ress-manifestation-del",
+                    "ress-communication-read"        })    }, tags={ "listing adherent" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ListeAdherents.class))),
+
+            @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
+
+            @ApiResponse(responseCode = "403", description = "Droit insufisant"),
+
+            @ApiResponse(responseCode = "404", description = "username non trouvée"),
+
+            @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
+
+            @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/adherent/listeSaisonFiltre",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read')")
+    ResponseEntity<ListeAdherents> getListeAdherentsFiltreSaison();
+
 
     @Operation(summary = "Récupérer l'ensemble des adhérents de la saison", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
@@ -503,7 +536,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/listeSaison",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') ") //TODO pour test => a compélter avec   and isDansGroupe('CONSEIL')        
+    @PreAuthorize("#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')")
     ResponseEntity<ListeAdherents> getListeAdherentsSaison();
 
 
