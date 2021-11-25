@@ -160,9 +160,11 @@ export class ListeComponent implements OnInit {
    */
   private transformeModelToFsEntry(value: ArborescenceDocuments): TreeNode<FSEntry> {
     let kind = 'dir';
+    let nomPrenomAuteur = '-';
     let nbElntEnfant: number = 0;
     if (value.parent.nomFichier != null) {
       kind = 'doc';
+      nomPrenomAuteur = value.parent.prenomNomAuteur;
     } else {
       if (value.enfants != null && !this.isEmptyUnderkill(value.enfants)) {
         nbElntEnfant = value.enfants.length;
@@ -172,7 +174,7 @@ export class ListeComponent implements OnInit {
     const valueTreeNodeAdd: TreeNode<FSEntry> = {
       data: {
         nom: value.parent.libelleCourt,
-        auteur: value.parent.prenomNomAuteur,
+        auteur: nomPrenomAuteur,
         items: nbElntEnfant,
         description: value.parent.libelleLong,
         kind: kind,
@@ -203,7 +205,7 @@ export class ListeComponent implements OnInit {
       this.loggerService.debug('Détail du repertoire ajout ' + repertoireForm.repertoireDetail);
 
       this.ajouterElement(this.data, idRepertoireParent, 'dir', repertoireForm.repertoire,
-        this.adherent.prenom + ' ' + this.adherent.nom
+        '-'
         , repertoireForm.repertoireDetail, repertoireForm.id, null);
       this.dataSource = this.dataSourceBuilder.create(this.data);
 

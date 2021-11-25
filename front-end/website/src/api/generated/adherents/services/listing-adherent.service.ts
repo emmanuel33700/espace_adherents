@@ -117,4 +117,50 @@ export class ListingAdherentService extends BaseService {
     );
   }
 
+  /**
+   * Path part for operation getListeAdherentsFiltreSaison
+   */
+  static readonly GetListeAdherentsFiltreSaisonPath = '/adherent/listeSaisonFiltre';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getListeAdherentsFiltreSaison()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getListeAdherentsFiltreSaison$Response(params?: {
+
+  }): Observable<StrictHttpResponse<ListeAdherents>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ListingAdherentService.GetListeAdherentsFiltreSaisonPath, 'get');
+    if (params) {
+
+
+    }
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ListeAdherents>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `getListeAdherentsFiltreSaison$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getListeAdherentsFiltreSaison(params?: {
+
+  }): Observable<ListeAdherents> {
+
+    return this.getListeAdherentsFiltreSaison$Response(params).pipe(
+      map((r: StrictHttpResponse<ListeAdherents>) => r.body as ListeAdherents)
+    );
+  }
+
 }

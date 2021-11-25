@@ -219,6 +219,7 @@
               <input nbInput
                      [(ngModel)]="user.telPortable"
                      #telPortable="ngModel"
+                     type="tel"
                      id="input-telPortable"
                      name="telPortable"
                      placeholder="0606060606"
@@ -241,6 +242,7 @@
             <div class="col-sm-9">
               <input nbInput
                      [(ngModel)]="user.telFixe"
+                     type="tel"
                      #telFixe="ngModel"
                      id="input-telFixe"
                      name="telFixe"
@@ -296,11 +298,19 @@
           </div>
 
           <div class="form-group row">
-            <label for="input-publicContact" class="label col-sm-3 col-form-label">Donne accord pour apparaitre pour apparaitre sur le site</label>
+            <label for="input-publicContact" class="label col-sm-3 col-form-label">Donne accord pour apparaitre sur le site</label>
             <nb-checkbox name="publicContact" id="input-publicContact" [(ngModel)]="user.publicContact" [required]="false">
               Accord
             </nb-checkbox>
           </div>
+
+	<div class="form-group row">
+            <label for="input-mail" class="label col-sm-3 col-form-label">Email</label>
+            <div class="col-sm-9">
+             	Pour modifier votre e-mail, demander au bureau de l'association
+            </div>
+          </div>
+
 
           <button nbButton
                   fullWidth

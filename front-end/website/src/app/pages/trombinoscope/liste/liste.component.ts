@@ -18,7 +18,7 @@ export class ListeComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.listingAdherentService.getListeAdherentsSaison( {})
+    this.listingAdherentService.getListeAdherentsFiltreSaison( {})
       .subscribe(
         (data) => {
           this.adherents = data;
