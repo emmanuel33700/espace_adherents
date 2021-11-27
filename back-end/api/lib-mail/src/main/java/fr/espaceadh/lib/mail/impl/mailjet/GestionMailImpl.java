@@ -378,7 +378,7 @@ public class GestionMailImpl implements GestionMail {
 
         if (dto.getLstMessageResulteDto() != null) {
             List<MessageResultDto> msgResultDto = (List) dto.getLstMessageResulteDto();
-            Collections.sort(msgResultDto);
+            Collections.sort(msgResultDto, Collections.reverseOrder());
             dto.setLstMessageResulteDto(msgResultDto);
         }
 
