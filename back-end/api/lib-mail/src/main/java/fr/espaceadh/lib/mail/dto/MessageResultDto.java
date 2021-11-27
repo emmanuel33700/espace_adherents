@@ -22,7 +22,7 @@ import java.util.Date;
  *
  * @author emmanuel
  */
-public class MessageResultDto {
+public class MessageResultDto implements Comparable<MessageResultDto> {
     
     private long id = 0;
     private String statut = null;
@@ -136,8 +136,10 @@ public class MessageResultDto {
     public void setDateArrive(Date dateArrive) {
         this.dateArrive = dateArrive;
     }
-    
-    
-    
-    
+
+
+    @Override
+    public int compareTo(MessageResultDto messageResultDto) {
+        return getDateArrive().compareTo(messageResultDto.getDateArrive());
+    }
 }

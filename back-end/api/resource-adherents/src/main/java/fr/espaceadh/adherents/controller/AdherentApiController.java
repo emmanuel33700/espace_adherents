@@ -356,6 +356,10 @@ public class AdherentApiController implements AdherentApi {
 
     }
 
+    /**
+     * Recuperer la liste des adhérents da la saison (qui ont accepter d'apparaitre dans la partie adhérents)
+     * @return
+     */
     public ResponseEntity<ListeAdherents> getListeAdherentsFiltreSaison() {
         String accept = request.getHeader("Accept");
         ListeAdherents lstAdh =  new ListeAdherents();
@@ -405,7 +409,7 @@ public class AdherentApiController implements AdherentApi {
     }
 
     /**
-     * 
+     *  récupérer la liste des communications envoyé pour un adhérent
      * @param idadh
      * @return 
      */

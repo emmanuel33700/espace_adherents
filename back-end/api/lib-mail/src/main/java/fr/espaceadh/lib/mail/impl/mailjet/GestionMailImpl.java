@@ -374,7 +374,16 @@ public class GestionMailImpl implements GestionMail {
             LOGGER.error("IOException" + ex.getMessage());
         }
 
-       return this.convertDto(lstMessages);
+        ListeMessagesResulteDto dto =  this.convertDto(lstMessages);
+
+        if (dto.getLstMessageResulteDto() != null) {
+            List<MessageResultDto> msgResultDto = (List) dto.getLstMessageResulteDto();
+            Collections.sort(msgResultDto);
+            dto.setLstMessageResulteDto(msgResultDto);
+        }
+
+
+       return dto;
     }
 
     /**
@@ -405,8 +414,6 @@ public class GestionMailImpl implements GestionMail {
 
             lstMessageResultDto.add(msgDto);
         }
-
-        lstMessageResultDto.sort(Comparator.comparing(MessageResultDto::getDateArrive));
 
         listeDto.setLstMessageResulteDto(lstMessageResultDto);
 

@@ -407,6 +407,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("	FROM t_adhesions as A, i_annee_adhesion as B ");
         query.append("	where B.id_annee_adhesion = A.fk_id_annee_adhesions ");
         query.append("	and A.fk_id_adherents = ? ");
+        query.append("	ORDER BY A.fk_id_annee_adhesions DESC ");
         
         List<AdhesionDto> lstAdhesions = this.getJdbcTemplate().query(query.toString(), new AdhesionsMapper(), idAdh);
 
