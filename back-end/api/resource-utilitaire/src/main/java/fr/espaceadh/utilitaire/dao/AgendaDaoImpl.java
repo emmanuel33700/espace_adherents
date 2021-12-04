@@ -143,9 +143,9 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
                  evenement.getDateDebut(),
                  evenement.getDateFin(),
                  evenement.getIdAuthority(),
-                 evenement.getIdEvenement(),
                  evenement.isDemanderConfirmationParticipation(),
-                 evenement.isEnvoyerInfoAdherents()
+                 evenement.isEnvoyerInfoAdherents(),
+                evenement.getIdEvenement()
         );
 
 
