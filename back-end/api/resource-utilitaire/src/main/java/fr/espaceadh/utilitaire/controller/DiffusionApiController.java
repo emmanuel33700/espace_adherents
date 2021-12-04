@@ -2,6 +2,7 @@ package fr.espaceadh.utilitaire.controller;
 
 import fr.espaceadh.lib.mail.dto.InputStreamCustom;
 import fr.espaceadh.utilitaire.dto.EMailDto;
+import fr.espaceadh.utilitaire.model.ListInscritsMailingListe;
 import fr.espaceadh.utilitaire.model.MailAEnvoyer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
@@ -121,6 +122,22 @@ public class DiffusionApiController implements DiffusionApi {
         if (result) return new ResponseEntity<Void>(HttpStatus.OK);
         else return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+    /**
+     * Recupérer les adhérents insrit à une mailing liste
+     * @param idListe
+     * @return
+     */
+    public ResponseEntity<ListInscritsMailingListe> getAdherentsInscritListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && accept.contains("application/json")) {
+            //TODO à compléter
+        }
+
+        return new ResponseEntity<ListInscritsMailingListe>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
 
     /**
      * Récupérer l'ensemble des listes de diffusion

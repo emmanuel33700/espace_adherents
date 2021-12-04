@@ -5,10 +5,7 @@
  */
 package fr.espaceadh.utilitaire.controller;
 
-import fr.espaceadh.utilitaire.model.ListeDiffusion;
-import fr.espaceadh.utilitaire.model.ListeListeDiffusion;
-import fr.espaceadh.utilitaire.model.MailAEnvoyer;
-import fr.espaceadh.utilitaire.model.ModelApiResponse;
+import fr.espaceadh.utilitaire.model.*;
 import org.springframework.core.io.Resource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -91,6 +88,26 @@ public interface DiffusionApi {
     @PreAuthorize("isDansGroupe('RES_ATELIER')")
     ResponseEntity<Void> delListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe);
 
+
+
+    @Operation(summary = "Recupérer les adhérents inscrits à une liste de diffusion", description = "", security = {
+            @SecurityRequirement(name = "oAuth", scopes = {
+                    "ress-adherent-admin"        })    }, tags={ "Liste de diffusion" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ListInscritsMailingListe.class))),
+
+            @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
+
+            @ApiResponse(responseCode = "403", description = "Droit insufisant"),
+
+            @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
+
+            @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/diffusion/liste/{idListe}/inscrits",
+            produces = { "application/json" },
+            method = RequestMethod.GET)
+    @PreAuthorize("isDansGroupe('RES_ATELIER')")
+    ResponseEntity<ListInscritsMailingListe> getAdherentsInscritListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe);
 
     @Operation(summary = "Recupérer la liste des listes de diffusion", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {
