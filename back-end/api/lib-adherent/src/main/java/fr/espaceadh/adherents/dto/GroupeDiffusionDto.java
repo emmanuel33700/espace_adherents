@@ -25,6 +25,7 @@ public class GroupeDiffusionDto {
     private String libelleGroupeDiffusion;
     private long fkIdAdherent;
     private boolean participe;
+    private int typeAuthority;
 
     public long getIdGroupeDiffusion() {
         return idGroupeDiffusion;
@@ -57,6 +58,12 @@ public class GroupeDiffusionDto {
     public void setParticipe(boolean participe) {
         this.participe = participe;
     }
-    
-    
+
+    public int getTypeAuthority() {
+        return typeAuthority;
+    }
+
+    public void setTypeAuthority(int typeAuthority) {
+        this.typeAuthority = typeAuthority;
+    }
 }

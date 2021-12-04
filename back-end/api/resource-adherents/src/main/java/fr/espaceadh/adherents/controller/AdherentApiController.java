@@ -485,7 +485,11 @@ public class AdherentApiController implements AdherentApi {
             
             Collection<GroupeDiffusionDto> lstDto = this.adherentListeDiffusionService.getListDiffusion(idadh);
             for (GroupeDiffusionDto dto : lstDto) {
-                lstModel.add(this.transformeDto(dto));
+                //filtre uniquement sur les mailing liste visibilté pour un adhérent
+                if (dto.getTypeAuthority() == 2) {
+                    lstModel.add(this.transformeDto(dto));
+                }
+
             }
             return new ResponseEntity<ListeMailingListe>(lstModel, HttpStatus.OK);
         }

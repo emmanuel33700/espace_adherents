@@ -43,7 +43,7 @@ public class AdherentListeDiffusionDAOImpl extends JdbcDaoSupport implements Adh
     }
 
     /**
-     * Récupéer la liste complete des mailing liste avec le statut de participation de l'adhérent
+     * Récupéer la liste  des mailing liste avec le statut de participation de l'adhérent
      * @param idAdh
      * @return 
      */
@@ -124,6 +124,7 @@ public class AdherentListeDiffusionDAOImpl extends JdbcDaoSupport implements Adh
             dto.setIdGroupeDiffusion(rs.getLong("id_groupe_diffusion"));
             dto.setLibelleGroupeDiffusion(rs.getString("description"));
             dto.setParticipe(rs.getBoolean("participation"));
+            dto.setTypeAuthority(rs.getInt("fk_id_type_authority"));
 
             return dto;
         }
