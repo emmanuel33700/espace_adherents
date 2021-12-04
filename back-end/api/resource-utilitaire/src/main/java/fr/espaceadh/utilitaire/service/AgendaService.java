@@ -50,7 +50,13 @@ public interface AgendaService {
      * @return  true si l'évènement est modifié
      */
     public boolean updateEvenement(EvenementDto evenement);
-    
+
+    /**
+     * Récupérer le détail d'un évènement
+     * @param idEvenement
+     * @return
+     */
+    public EvenementDto getEvenement(long idEvenement);
 
     /**
      * Supression d'un évènement

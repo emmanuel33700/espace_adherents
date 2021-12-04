@@ -181,7 +181,18 @@ public class AgendaServiceImpl implements AgendaService{
         return this.agendaDao.updateEvenement(evenement);
     }
 
-        /**
+    /**
+     * Récupérer le détail d'un évènement
+     *
+     * @param idEvenement
+     * @return
+     */
+    @Override
+    public EvenementDto getEvenement(long idEvenement) {
+        return this.agendaDao.getEvenement(idEvenement);
+    }
+
+    /**
      * Supression d'un évènement
      * @param idEvenement id de l'évènement à supprimer
      * @return true si l'évènement est supprimé 

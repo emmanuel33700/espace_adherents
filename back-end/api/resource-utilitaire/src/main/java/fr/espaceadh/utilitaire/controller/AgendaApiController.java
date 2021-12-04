@@ -219,8 +219,21 @@ public class AgendaApiController implements AgendaApi {
     public ResponseEntity<Void> updateEvenement(@Parameter(in = ParameterIn.PATH, description = "id de l'evenement", required=true, schema=@Schema()) @PathVariable("idevenement") Long idevenement,@Parameter(in = ParameterIn.DEFAULT, description = "Objet adherent", required=true, schema=@Schema()) @Valid @RequestBody Evenement body) {
         
         body.setId(idevenement);
-        
-        boolean result = agendaService.updateEvenement(this.convertDto(body));
+
+        EvenementDto dtoEvenement = null;
+
+        // Il s'agit d'une demande de modification "rapide"  (en drag en drop) => Modification uniquement des dates
+        if (body.isDemanderConfirmationParticipation() == null) {
+            dtoEvenement = agendaService.getEvenement(idevenement);
+            dtoEvenement.setDateDebut(this.toDate(body.getDatedebut()));
+            dtoEvenement.setDateFin(this.toDate(body.getDatefin()));
+        }
+        // Sinon, il s'agit d'une demande de modification "complete"
+        else {
+            dtoEvenement = this.convertDto(body);
+        }
+
+        boolean result = agendaService.updateEvenement(dtoEvenement);
         
         if(result) return  new ResponseEntity<Void>(HttpStatus.OK);
         
