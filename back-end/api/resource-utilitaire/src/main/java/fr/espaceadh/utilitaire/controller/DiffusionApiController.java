@@ -140,7 +140,7 @@ public class DiffusionApiController implements DiffusionApi {
                InscritsMailingListe model = this.convertDto(dto);
                listInscritsMailingListe.addLstAdherentsItem(model);
            }
-            new ResponseEntity<ListInscritsMailingListe>(listInscritsMailingListe, HttpStatus.OK);
+            return new ResponseEntity<ListInscritsMailingListe>(listInscritsMailingListe, HttpStatus.OK);
 
         }
 
