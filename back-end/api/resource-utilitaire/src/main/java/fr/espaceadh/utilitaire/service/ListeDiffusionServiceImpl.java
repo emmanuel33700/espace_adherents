@@ -26,6 +26,7 @@ import fr.espaceadh.utilitaire.dto.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -195,7 +196,11 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
     @Override
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Collection<AdherentMailingListeDto> getListeAdherentsListDiffusion(long idListeDiffusion) {
-        return this.listeDiffusionDAO.getListeAdherentsListDiffusion(idListeDiffusion);
+
+        Collection<AdherentMailingListeDto> lst =  this.listeDiffusionDAO.getListeAdherentsListDiffusion(idListeDiffusion);
+        Collections.sort((ArrayList)lst);
+
+        return lst;
     }
 
 
