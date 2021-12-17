@@ -6,6 +6,7 @@ import {GpdiffusionsComponent} from './gpdiffusions.component';
 import {TabsComponent} from './tabs/tabs.component';
 import {ListeComponent} from './tabs/liste/liste.component';
 import {EditeurComponent} from './tabs/editeur/editeur.component';
+import { AdminComponent} from './tabs/admin/admin.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
           {
             path: 'editeur',
             component: EditeurComponent,
+          },
+          {
+            path: 'admin',
+            component: AdminComponent,
           },
         ],
       },

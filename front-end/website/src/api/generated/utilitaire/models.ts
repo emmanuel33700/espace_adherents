@@ -8,6 +8,8 @@ export { ListeSaison } from './models/liste-saison';
 export { Saison } from './models/saison';
 export { ListeParticipantsEvenement } from './models/liste-participants-evenement';
 export { ParticipantsEvenement } from './models/participants-evenement';
+export { ListInscritsMailingListe } from './models/list-inscrits-mailing-liste';
+export { InscritsMailingListe } from './models/inscrits-mailing-liste';
 export { ListeDocuments } from './models/liste-documents';
 export { Document } from './models/document';
 export { ArborescenceDocumentsInit } from './models/arborescence-documents-init';

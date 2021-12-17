@@ -19,6 +19,7 @@ import { FormsModule as ngFormsModule } from '@angular/forms';
 import { NgToggleModule } from '@nth-cloud/ng-toggle';
 import { TabsComponent } from './tabs/tabs.component';
 import { EditeurComponent } from './tabs/editeur/editeur.component';
+import { AdminComponent } from './tabs/admin/admin.component';
 import {AngularEditorModule} from '@kolkov/angular-editor';
 import { HttpClientModule} from '@angular/common/http';
 
@@ -50,6 +51,7 @@ import { HttpClientModule} from '@angular/common/http';
     ListeComponent,
     TabsComponent,
     EditeurComponent,
+    AdminComponent,
   ],
 })
 export class GpdiffusionsModule { }

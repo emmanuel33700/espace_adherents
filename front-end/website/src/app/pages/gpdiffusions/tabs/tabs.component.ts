@@ -29,6 +29,10 @@ export class TabsComponent implements OnInit {
           title: 'Envoyer mail',
           route: '/pages/gpdiffusions/tabs/editeur',
         },
+        {
+          title: 'Administration',
+          route: '/pages/gpdiffusions/tabs/admin',
+        },
       );
     }
   }

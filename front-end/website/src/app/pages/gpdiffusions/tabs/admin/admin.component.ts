@@ -11,10 +11,10 @@ import {ListeDiffusion as MailingListeUtilitaire} from '../../../../../api/gener
 
 @Component({
   selector: 'ngx-form-layouts',
-  styleUrls: ['./liste.component.scss'],
-  templateUrl: './liste.component.html',
+  styleUrls: ['./admin.component.scss'],
+  templateUrl: './admin.component.html',
 })
-export class ListeComponent implements OnInit {
+export class AdminComponent implements OnInit {
 
   // indicateur de chargement
   loading = true;
@@ -26,7 +26,8 @@ export class ListeComponent implements OnInit {
 
 
   adherent: Adherent;
-  mailingListes: MailingListeAdherent[] = [];
+
+  listeDiffusion: MailingListeUtilitaire[];
 
   // Role de la personne connecté
   role: string;
@@ -59,11 +60,11 @@ export class ListeComponent implements OnInit {
       this.droitEdition = true;
     }
 
-    this.listeDeDiffusionServiceAdherent.getListesDiffusionAdherent({idadh: this.adherent.id})
+    this.listeDeDiffusionServiceUtilitaire.getListes()
       .subscribe(
         (data) => {
           this.loggerService.info(JSON.stringify(data));
-          this.mailingListes = data;
+          this.listeDiffusion = data;
         },
         (error) => {
           this.loggerService.error(JSON.stringify(error));
@@ -77,53 +78,83 @@ export class ListeComponent implements OnInit {
       );
   }
 
+
   /**
-   *
-   * @param id
-   * @param event
+   * Ajouter une mailing liste
+   * @param form
    */
-  changerParticipeMailingList(id: number,  event: any) {
-    this.loggerService.info('Changer de participation mailing list ' + this.adherent.id + ' id mailing list : ' + id );
+  ajouterMailingList(form: NgForm) {
+    this.loggerService.info('Ajouter une mailing liste ');
+    this.submitted = true;
 
-    if (event.target.checked) {
-      // Ajouter d'un abonnement
-      this.listeDeDiffusionServiceAdherent.ajoutListeDiffusionAdherent({idadh: this.adherent.id, idListe: id})
-        .subscribe(
-          (data) => {
-            this.loggerService.debug(JSON.stringify(data));
-          },
-          (error) => {
-            this.loggerService.error(JSON.stringify(error));
-            this.toastrService.danger(
-              'Erreur technique lors de la màj des données',
-              'Erreur ');
-          },
-          () => {
+    const mailingListeUtilitaire: MailingListeUtilitaire = {};
+    mailingListeUtilitaire.id = Date.now();
+    mailingListeUtilitaire.libelle = this.libelleMailListForm;
+    mailingListeUtilitaire.idAuthority = 2;
 
-          },
-        );
+    this.listeDeDiffusionServiceUtilitaire.addListe({idListe: mailingListeUtilitaire.id, body: mailingListeUtilitaire})
+      .subscribe(
+        (data) => {
+          this.loggerService.debug(JSON.stringify(data));
+        },
+        (error) => {
+          this.loggerService.error(JSON.stringify(error));
+          this.submitted = false;
+          this.toastrService.danger(
+            'Erreur technique lors de ajout de la mailing liste',
+            'Erreur ');
+        },
+        () => {
+          this.submitted = false;
+        },
+      );
 
-    } else {
-      // Suppression de l'abonnement
-      this.listeDeDiffusionServiceAdherent.delListeDiffusionAdherent({idadh: this.adherent.id, idListe: id})
-        .subscribe(
-          (data) => {
-            this.loggerService.debug(JSON.stringify(data));
-          },
-          (error) => {
-            this.loggerService.error(JSON.stringify(error));
-            this.toastrService.danger(
-              'Erreur technique lors de la màj des données',
-              'Erreur ');
-          },
-          () => {
+    this.listeDiffusion.push(mailingListeUtilitaire);
 
-          },
-        );
-
-    }
+    this.libelleMailListForm = null;
   }
 
+  /**
+   * Supprimer une mailing list
+   * @param id
+   */
+  supprimerMailingList(id: number) {
+    this.loggerService.info('Suppression de la mailing liste ' + id);
+
+    this.listeDeDiffusionServiceUtilitaire.delListe({idListe: id})
+      .subscribe(
+        (data) => {
+          this.loggerService.debug(JSON.stringify(data));
+        },
+        (error) => {
+          this.loggerService.error(JSON.stringify(error));
+          this.toastrService.danger(
+            'Erreur technique lors de la suppression da la liste',
+            'Erreur ');
+        },
+        () => {
+
+        },
+      );
+
+    // Supression de la mailing liste pour affichage
+    this.listeDiffusion.forEach((value, index, array) => {
+        if (value.id === id) {
+          this.listeDiffusion.splice(index, 1);
+        }
+    });
+
+  }
+
+  /**
+   * Naviger vers la page des inscrits
+   * @param id
+   */
+  goVoirInscrit(id: number) {
+    this.toastrService.danger(
+      'La page arrive bientôt',
+      'Erreur ');
+  }
 }
 
 

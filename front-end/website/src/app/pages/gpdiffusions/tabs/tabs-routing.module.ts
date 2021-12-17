@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { TabsComponent} from './tabs.component';
 import { ListeComponent} from './liste/liste.component';
 import { EditeurComponent} from './editeur/editeur.component';
+import { AdminComponent} from './admin/admin.component';
 
 const routes: Routes = [{
   path: '',
@@ -16,6 +17,10 @@ const routes: Routes = [{
     {
       path: 'editeur',
       component: EditeurComponent,
+    },
+    {
+      path: 'admin',
+      component: AdminComponent,
     },
   ],
 }];

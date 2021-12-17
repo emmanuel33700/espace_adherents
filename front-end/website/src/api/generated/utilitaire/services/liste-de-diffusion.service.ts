@@ -8,6 +8,7 @@ import { RequestBuilder } from '../request-builder';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 
+import { ListInscritsMailingListe } from '../models/list-inscrits-mailing-liste';
 import { ListeDiffusion } from '../models/liste-diffusion';
 import { ListeListeDiffusion } from '../models/liste-liste-diffusion';
 import { MailAEnvoyer } from '../models/mail-a-envoyer';
@@ -213,6 +214,63 @@ export class ListeDeDiffusionService extends BaseService {
 
     return this.delListe$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation getAdherentsInscritListe
+   */
+  static readonly GetAdherentsInscritListePath = '/diffusion/liste/{idListe}/inscrits';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `getAdherentsInscritListe()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAdherentsInscritListe$Response(params: {
+
+    /**
+     * id du fichier
+     */
+    idListe: number;
+
+  }): Observable<StrictHttpResponse<ListInscritsMailingListe>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ListeDeDiffusionService.GetAdherentsInscritListePath, 'get');
+    if (params) {
+
+      rb.path('idListe', params.idListe);
+
+    }
+    return this.http.request(rb.build({
+      responseType: 'json',
+      accept: 'application/json'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return r as StrictHttpResponse<ListInscritsMailingListe>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `getAdherentsInscritListe$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  getAdherentsInscritListe(params: {
+
+    /**
+     * id du fichier
+     */
+    idListe: number;
+
+  }): Observable<ListInscritsMailingListe> {
+
+    return this.getAdherentsInscritListe$Response(params).pipe(
+      map((r: StrictHttpResponse<ListInscritsMailingListe>) => r.body as ListInscritsMailingListe)
     );
   }
 
