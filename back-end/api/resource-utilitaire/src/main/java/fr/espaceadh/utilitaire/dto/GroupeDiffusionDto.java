@@ -23,6 +23,7 @@ package fr.espaceadh.utilitaire.dto;
 public class GroupeDiffusionDto {
     private long idGroupeDiffusion;
     private String libelleGroupeDiffusion;
+    private int idAuthority;
     private long fkIdAdherent;
 
     public long getIdGroupeDiffusion() {
@@ -48,6 +49,12 @@ public class GroupeDiffusionDto {
     public void setFkIdAdherent(long fkIdAdherent) {
         this.fkIdAdherent = fkIdAdherent;
     }
-    
-    
+
+    public int getIdAuthority() {
+        return idAuthority;
+    }
+
+    public void setIdAuthority(int idAuthority) {
+        this.idAuthority = idAuthority;
+    }
 }

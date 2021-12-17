@@ -17,6 +17,7 @@
 package fr.espaceadh.utilitaire.dao;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.utilitaire.dto.AdherentMailingListeDto;
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
 import java.util.Collection;
 
@@ -68,5 +69,13 @@ public interface ListeDiffusionDAO {
      * @return
      */
     public Collection<AdherentDto> getAdherentsInscritListeDiffusion(long idGroupeDiffusion);
+
+
+    /**
+     * recherche la liste des adhérents avec le statut d'inscription à la mailing liste
+     * @param idListeDiffusion
+     * @return
+     */
+    public Collection<AdherentMailingListeDto> getListeAdherentsListDiffusion(long idListeDiffusion);
     
 }

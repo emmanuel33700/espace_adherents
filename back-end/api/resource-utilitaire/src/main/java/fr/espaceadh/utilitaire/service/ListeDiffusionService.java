@@ -16,6 +16,8 @@
  */
 package fr.espaceadh.utilitaire.service;
 
+import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.utilitaire.dto.AdherentMailingListeDto;
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
 import fr.espaceadh.utilitaire.dto.EMailDto;
 
@@ -74,4 +76,11 @@ public interface ListeDiffusionService {
      * @return
      */
     public boolean envoyerMailListeAdherent(EMailDto eMailDto, int typeEnvoi);
+
+    /**
+     * recherche la liste des adhérents avec le statut d'inscription à la mailing liste
+     * @param idListeDiffusion
+     * @return
+     */
+    public Collection<AdherentMailingListeDto> getListeAdherentsListDiffusion(long idListeDiffusion);
 }

@@ -1,13 +1,13 @@
 package fr.espaceadh.utilitaire.controller;
 
+import fr.espaceadh.adherents.dto.AdherentDto;
+import fr.espaceadh.adherents.dto.CiviliteEnum;
 import fr.espaceadh.lib.mail.dto.InputStreamCustom;
+import fr.espaceadh.utilitaire.dto.AdherentMailingListeDto;
 import fr.espaceadh.utilitaire.dto.EMailDto;
-import fr.espaceadh.utilitaire.model.ListInscritsMailingListe;
-import fr.espaceadh.utilitaire.model.MailAEnvoyer;
+import fr.espaceadh.utilitaire.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.utilitaire.dto.GroupeDiffusionDto;
-import fr.espaceadh.utilitaire.model.ListeDiffusion;
-import fr.espaceadh.utilitaire.model.ListeListeDiffusion;
 import fr.espaceadh.utilitaire.service.ListeDiffusionService;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -27,6 +27,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -132,10 +133,46 @@ public class DiffusionApiController implements DiffusionApi {
     public ResponseEntity<ListInscritsMailingListe> getAdherentsInscritListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            //TODO à compléter
+           Collection<AdherentMailingListeDto> lstADh = this.listeDiffusionService.getListeAdherentsListDiffusion(idListe);
+            ListInscritsMailingListe listInscritsMailingListe = new ListInscritsMailingListe();
+            listInscritsMailingListe.setId(idListe);
+           for (AdherentMailingListeDto dto : lstADh)  {
+               InscritsMailingListe model = this.convertDto(dto);
+               listInscritsMailingListe.addLstAdherentsItem(model);
+           }
+            new ResponseEntity<ListInscritsMailingListe>(listInscritsMailingListe, HttpStatus.OK);
+
         }
 
         return new ResponseEntity<ListInscritsMailingListe>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Transforme AdherentMailingListeDto to InscritsMailingListe;
+     * @param dto
+     * @return
+     */
+    private InscritsMailingListe convertDto(AdherentMailingListeDto dto) {
+
+        InscritsMailingListe inscritsMailingListe = new InscritsMailingListe();
+        inscritsMailingListe.setId(dto.getIdMailingListe());
+        inscritsMailingListe.setStatutParticipation(dto.isInscriptionMailingList());
+
+        if (dto.getCivilite() == dto.getCivilite().MADAME){
+            inscritsMailingListe.setCivilite(InscritsMailingListe.CiviliteEnum.MME);
+        } else {
+            inscritsMailingListe.setCivilite(InscritsMailingListe.CiviliteEnum.MR);
+        }
+        inscritsMailingListe.setNom(dto.getNom());
+        inscritsMailingListe.setPrenom(dto.getPrenom());
+        inscritsMailingListe.setEmail(dto.getEmail());
+        inscritsMailingListe.setAccordMail(dto.isAccordMail());
+        inscritsMailingListe.setPublicContact(dto.isPublicContact());
+        inscritsMailingListe.adhesionsSaisonCourante(dto.isAdhesionSaisonCourante());
+        inscritsMailingListe.setLienPhotoProfil(dto.getLienPhotoProfil());
+
+        return inscritsMailingListe;
+
     }
 
 
@@ -311,6 +348,7 @@ public class DiffusionApiController implements DiffusionApi {
         
         model.setId(dto.getIdGroupeDiffusion());
         model.setLibelle(dto.getLibelleGroupeDiffusion());
+        model.setIdAuthority(dto.getIdAuthority());
         
         return model;
     }
@@ -325,7 +363,8 @@ public class DiffusionApiController implements DiffusionApi {
         
         dto.setIdGroupeDiffusion(model.getId());
         dto.setLibelleGroupeDiffusion(model.getLibelle());
-        
+        dto.setIdAuthority(model.getIdAuthority());
+
         return dto;
     }
 

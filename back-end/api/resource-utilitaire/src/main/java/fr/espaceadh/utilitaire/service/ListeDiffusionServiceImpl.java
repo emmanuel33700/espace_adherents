@@ -186,5 +186,17 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
 
     }
 
+    /**
+     * recherche la liste des adhérents avec le statut d'inscription à la mailing liste
+     *
+     * @param idListeDiffusion
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Collection<AdherentMailingListeDto> getListeAdherentsListDiffusion(long idListeDiffusion) {
+        return this.listeDiffusionDAO.getListeAdherentsListDiffusion(idListeDiffusion);
+    }
+
 
 }
