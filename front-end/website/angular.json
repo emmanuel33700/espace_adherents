@@ -76,6 +76,29 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
+            },
+            "preprod": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.preprod.ts"
+                }
+              ]
             }
           }
         },
@@ -87,6 +110,9 @@
           "configurations": {
             "production": {
               "browserTarget": "ngx-admin-demo:build:production"
+            },
+            "preprod": {
+              "browserTarget": "ngx-admin-demo:build:preprod"
             }
           }
         },

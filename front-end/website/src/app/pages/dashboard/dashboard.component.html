@@ -134,7 +134,7 @@
               <nb-icon icon="file-outline" pack="eva"></nb-icon>
             </span>
             <span class="results">
-              <a href="https://api.jalle-astro.fr/partage/documents/{{ document.lienFichier }}"  target="_blank"> {{ document.nom }} </a><span class="caption">{{ document.description }}</span>
+              <a href="{{url_documents}}{{ document.lienFichier }}"  target="_blank"> {{ document.nom }} </a><span class="caption">{{ document.description }}</span>
             </span>
           </nb-list-item>
         </nb-list>

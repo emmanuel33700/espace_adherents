@@ -61,7 +61,7 @@
 
           <!-- Boiton d'action pour l'ensemble des adhérents-->
           <ng-container *ngIf="row.data.kind == 'doc'">
-            <a href="https://api.jalle-astro.fr/partage/documents/{{ row.data.lienFichier }}"  target="_blank">
+            <a href="{{url_documents}}{{ row.data.lienFichier }}"  target="_blank">
               <nb-icon  icon="download" nbPopover="Télécharger le document" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
             </a>
           </ng-container>

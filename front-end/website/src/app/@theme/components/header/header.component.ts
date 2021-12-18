@@ -9,6 +9,7 @@ import {AdherentService} from '../../../../api/generated/adherents/services/adhe
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 import {NbAuthService, NbAuthToken} from '@nebular/auth';
 import {TokenService} from '../../../@core/utils/token.service';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'ngx-header',
@@ -64,7 +65,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         if (this.adherent.lienPhotoProfil != null) {
 
           // TODO variabiliser le lien de la photo de profil
-          this.user.picture = 'https://api.jalle-astro.fr/partage/photosprofil/' + this.adherent.lienPhotoProfil;
+          this.user.picture = environment.url_photo_profil + this.adherent.lienPhotoProfil;
         } else {
           this.user.picture = null;
         }

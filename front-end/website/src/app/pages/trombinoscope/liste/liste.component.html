@@ -9,7 +9,7 @@
           <div class="col-sm-2">
             <ng-container *ngIf="adherent.lienPhotoProfil != null">
               <div class="circular--landscape">
-                <img src="https://api.jalle-astro.fr/partage/photosprofil/{{adherent.lienPhotoProfil}}"/>
+                <img src="{{url_photo_profil}}{{adherent.lienPhotoProfil}}"/>
               </div>
             </ng-container>
             <ng-container *ngIf="adherent.lienPhotoProfil == null">

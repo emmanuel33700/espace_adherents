@@ -7,7 +7,7 @@ import {DateService} from '../../../@core/utils';
 import {ParticipationManifestation} from '../../../../api/generated/adherents/models/participation-manifestation';
 import {ManifestationService} from '../../../../api/generated/adherents/services/manifestation.service';
 import {SyntheseEvenement} from '../../../../api/generated/utilitaire/models/synthese-evenement';
-
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -31,6 +31,8 @@ export class SyntheseevenementComponent implements OnInit {
   evenementSelectionne: SyntheseEvenement = {};
 
   modificationParticipation = false;
+
+  url_photo_profil: string = environment.url_photo_profil;
 
   constructor(
     private manifestationService: ManifestationService,

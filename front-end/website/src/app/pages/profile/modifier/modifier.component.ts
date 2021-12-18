@@ -6,6 +6,7 @@ import {NbDialogService, NbToastrService} from '@nebular/theme';
 import {LoggerService} from '../../../@core/utils/logger.service';
 import {DateService} from '../../../@core/utils';
 import {DialogPhotoProfilComponent} from './dialog-photo-profil/dialog-photo-profil.component';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -71,7 +72,7 @@ export class ModifierComponent implements OnInit {
     this.user.lienPhotoProfil = this.adherent.lienPhotoProfil;
 
     if (this.adherent.lienPhotoProfil != null) {
-      this.lienPhotoProfil = 'https://api.jalle-astro.fr/partage/photosprofil/' + this.adherent.lienPhotoProfil;
+      this.lienPhotoProfil = environment.url_photo_profil + this.adherent.lienPhotoProfil;
     } else {
       this.lienPhotoProfil = null;
     }
@@ -148,7 +149,7 @@ export class ModifierComponent implements OnInit {
       this.adherent = JSON.parse(localStorage.getItem('adherent'));
 
       if (this.adherent.lienPhotoProfil != null) {
-        this.lienPhotoProfil = 'https://api.jalle-astro.fr/partage/photosprofil/'
+        this.lienPhotoProfil = environment.url_photo_profil
           + this.adherent.lienPhotoProfil + '?' + (new Date()).getTime();
       } else {
         this.lienPhotoProfil = null;

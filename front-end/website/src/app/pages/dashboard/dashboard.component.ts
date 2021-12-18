@@ -12,6 +12,7 @@ import {Router} from '@angular/router';
 import {LiensAdherentsService} from '../../../api/generated/adherents/services/liens-adherents.service';
 import {LiensAdherent} from '../../../api/generated/adherents/models/liens-adherent';
 import {AgendaService} from '../../../api/generated/utilitaire/services/agenda.service';
+import {environment} from '../../../environments/environment';
 
 
 interface DocumentDashboard {
@@ -66,6 +67,9 @@ export class DashboardComponent implements OnInit {
 
   // gestion du graphique de participation aux évènement
   loadingSyntheseEvenement = true;
+
+
+  url_documents: string = environment.url_document;
 
   optionsChart = {
     backgroundColor: echarts.bg,

@@ -17,6 +17,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
+import {environment} from '../../../environments/environment';
+
 import {
   NbAuthModule,
   NbAuthOAuth2JWTToken,
@@ -46,10 +48,10 @@ import {
       strategies: [
         NbOAuth2AuthStrategy.setup({
           name: 'password',
-          clientId: 'espaceAdh',
-          clientSecret: 'secret',
+          clientId: environment.as_clientId,
+          clientSecret: environment.as_clientSecret,
           clientAuthMethod: NbOAuth2ClientAuthMethod.BASIC,
-          baseEndpoint: 'https://api.jalle-astro.fr/authorization-server/oauth/',
+          baseEndpoint: environment.endpoint_authorisation_serveur,
           token: {
             endpoint: 'token',
             grantType: NbOAuth2GrantType.PASSWORD,

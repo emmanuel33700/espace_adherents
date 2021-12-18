@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
 import {LoggerService} from '../../../@core/utils/logger.service';
-
+import {environment} from '../../../../environments/environment';
 
 
 @Component({
@@ -14,6 +14,7 @@ export class TabsComponent implements OnInit {
 
   adherent: Adherent = JSON.parse(localStorage.getItem('adh_selected'));
   public idAdherent: number = 0;
+  url_photo_profil: string = environment.url_photo_profil;
 
   constructor(
     private adherentService: AdherentService,

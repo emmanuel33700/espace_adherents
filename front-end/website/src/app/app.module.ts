@@ -24,6 +24,7 @@ import {TokenInterceptor} from './@core/utils/token.interceptor';
 import {ApiModule as ApiModuleAdherents} from '../api/generated/adherents/api.module';
 import {ApiModule as ApiModuleAuthorization} from '../api/generated/authorization/api.module';
 import {ApiModule as ApiModuleUtilitaire} from '../api/generated/utilitaire/api.module';
+import {environment} from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -43,9 +44,9 @@ import {ApiModule as ApiModuleUtilitaire} from '../api/generated/utilitaire/api.
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
-    ApiModuleAdherents.forRoot({ rootUrl: 'https://api.jalle-astro.fr/resource-adherents' }),
-    ApiModuleAuthorization.forRoot({ rootUrl: 'https://api.jalle-astro.fr/resource-authorization' }),
-    ApiModuleUtilitaire.forRoot({ rootUrl: 'https://api.jalle-astro.fr/resource-utilitaire' }),
+    ApiModuleAdherents.forRoot({ rootUrl: environment.resource_adherents }),
+    ApiModuleAuthorization.forRoot({ rootUrl: environment.resource_authorization }),
+    ApiModuleUtilitaire.forRoot({ rootUrl: environment.resource_utilitaire }),
   ],
   bootstrap: [AppComponent],
   providers: [

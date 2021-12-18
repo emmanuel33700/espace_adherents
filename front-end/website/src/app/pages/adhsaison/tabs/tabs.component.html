@@ -5,7 +5,7 @@
     <h1>
       <ng-container *ngIf="adherent.lienPhotoProfil != null">
         <div class="circular--landscape">
-          <img src="https://api.jalle-astro.fr/partage/photosprofil/{{adherent.lienPhotoProfil}}" width="50"/>
+          <img src="{{url_photo_profil}}{{adherent.lienPhotoProfil}}" width="50"/>
 
         </div>
       </ng-container>

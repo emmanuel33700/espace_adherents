@@ -5,7 +5,7 @@ import {LoggerService} from '../../../@core/utils/logger.service';
 import {Adherent} from '../../../../api/generated/adherents/models';
 import {NbToastrService} from '@nebular/theme';
 import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
-
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -21,6 +21,7 @@ export class ListeComponent implements OnInit {
   adherentsListeComplete: Adherent[] = [];
   isAdherentSaison: boolean;
   adherentSelected: Adherent = {};
+  url_photo_profil: string = environment.url_photo_profil;
 
   // Toaster
   @HostBinding('class')

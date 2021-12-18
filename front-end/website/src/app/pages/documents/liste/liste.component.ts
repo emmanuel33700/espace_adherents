@@ -13,7 +13,7 @@ import {DocumentationService} from '../../../../api/generated/utilitaire/service
 import {ArborescenceDocuments} from '../../../../api/generated/utilitaire/models/arborescence-documents';
 import {DownloadService} from '../../../@core/utils/download.service';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
-
+import {environment} from '../../../../environments/environment';
 
 interface TreeNode<T> {
   data: T;
@@ -62,6 +62,7 @@ export class ListeComponent implements OnInit {
   // Information de l'adhérent courant (Qui utilise l'IHM)
   adherent: Adherent = JSON.parse(localStorage.getItem('adherent'));
 
+  url_documents: string = environment.url_document;
 
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               private loggerService: LoggerService,
@@ -360,27 +361,6 @@ export class ListeComponent implements OnInit {
     this.loggerService.info('editerFichier ' + idFichier);
 
   }
-
-  /**
-   * Télécharger un fichier
-   * @param idFichier
-   */
-  telechargerFichier(lienFichier: string) {
-    this.loggerService.info('telechargerFichier ' + lienFichier);
-
-    this.downloads
-      .download('https://api.jalle-astro.fr/partage/documents/' + lienFichier)
-      .subscribe(blob => {
-        const a = document.createElement('a');
-        const objectUrl = URL.createObjectURL(blob);
-        a.href = objectUrl;
-        a.download = lienFichier;
-        a.click();
-        URL.revokeObjectURL(objectUrl);
-      });
-  }
-
-
   /**
    * Ajouter un élément dans l'arboresence
    * @param valueTreeNode
