@@ -31,23 +31,24 @@
                    type="password"
                    id="input-password"
                    name="password"
+                   pattern="^[a-zA-Z0-9._%!?#\\u00e1\\u00e0\\u00e2\\u00e4\\u00e3\\u00e5\\u00e7\\u00e9\\u00e8\\u00ea\\u00eb\\u00ed\\u00ec\\u00ee\\u00ef\\u00f1\\u00f3\\u00f2\\u00f4\\u00f6\\u00f5\\u00fa\\u00f9\\u00fb\\u00fc\\u00fd\\u00ff\\u00e6\\u0153\\u00c1\\u00c0\\u00c2\\u00c4\\u00c3\\u00c5\\u00c7\\u00c9\\u00c8\\u00ca\\u00cb\\u00cd\\u00cc\\u00ce\\u00cf\\u00d1\\u00d3\\u00d2\\u00d4\\u00d6\\u00d5\\u00da\\u00d9\\u00db\\u00dc\\u00dd\\u0178-]{5,15}$"
                    placeholder="Mot de passe"
                    fullWidth
                    fieldSize="large"
                    [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
                    [required]="true"
-                   [minlength]="4"
-                   [maxlength]="20"
+                   [minlength]="5"
+                   [maxlength]="15"
                    [attr.aria-invalid]="password.invalid && password.touched ? true : null">
             <ng-container *ngIf="password.invalid && password.touched">
               <p class="caption status-danger" *ngIf="password.errors?.required">
                 Mot de passe nécésaire
               </p>
               <p class="caption status-danger" *ngIf="password.errors?.minlength || password.errors?.maxlength">
-                Le mot de passe doit contenir
-                entre 4
-                et 20
-                caracteres
+                Le mot de passe doit contenir entre 5 et 15 caracteres
+              </p>
+              <p class="caption status-danger" *ngIf="password.errors?.pattern">
+                Erreur dans le format. Le mot de passe peut contenir uniquement les caractères spéciaux  suivants :  ._%!?#
               </p>
             </ng-container>
           </div>
