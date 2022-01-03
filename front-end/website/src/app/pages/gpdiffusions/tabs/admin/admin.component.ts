@@ -6,7 +6,7 @@ import {NbToastrService} from '@nebular/theme';
 import {Router} from '@angular/router';
 import {Adherent} from '../../../../../api/generated/adherents/models/adherent';
 import {NgForm} from '@angular/forms';
-import {ListeDeDiffusionService as  ListeDeDiffusionServiceUtilitaire} from '../../../../../api/generated/utilitaire/services/liste-de-diffusion.service';
+import {ListeDeDiffusionService as ListeDeDiffusionServiceUtilitaire} from '../../../../../api/generated/utilitaire/services/liste-de-diffusion.service';
 import {ListeDiffusion as MailingListeUtilitaire} from '../../../../../api/generated/utilitaire/models/liste-diffusion';
 
 @Component({
@@ -127,28 +127,32 @@ export class AdminComponent implements OnInit {
   supprimerMailingList(id: number) {
     this.loggerService.info('Suppression de la mailing liste ' + id);
 
-    this.listeDeDiffusionServiceUtilitaire.delListe({idListe: id})
-      .subscribe(
-        (data) => {
-          this.loggerService.debug(JSON.stringify(data));
-        },
-        (error) => {
-          this.loggerService.error(JSON.stringify(error));
-          this.toastrService.danger(
-            'Erreur technique lors de la suppression da la liste',
-            'Erreur ');
-        },
-        () => {
+    if (confirm('Etes vous sur de supprimer la mailing liste : ' + this.receputerNomMailingListe(id))) {
 
-        },
-      );
+      this.listeDeDiffusionServiceUtilitaire.delListe({idListe: id})
+        .subscribe(
+          (data) => {
+            this.loggerService.debug(JSON.stringify(data));
+          },
+          (error) => {
+            this.loggerService.error(JSON.stringify(error));
+            this.toastrService.danger(
+              'Erreur technique lors de la suppression da la liste',
+              'Erreur ');
+          },
+          () => {
 
-    // Supression de la mailing liste pour affichage
-    this.listeDiffusion.forEach((value, index, array) => {
-      if (value.id === id) {
-        this.listeDiffusion.splice(index, 1);
-      }
-    });
+          },
+        );
+
+      // Supression de la mailing liste pour affichage
+      this.listeDiffusion.forEach((value, index, array) => {
+        if (value.id === id) {
+          this.listeDiffusion.splice(index, 1);
+        }
+      });
+    }
+
 
   }
 
@@ -172,5 +176,17 @@ export class AdminComponent implements OnInit {
       this.visibilitePublicMailList = false;
     }
 
+  }
+
+  /**
+   * recupérer le nom d'un mailing lsite via son id
+   * @param id
+   */
+  private receputerNomMailingListe(id: number) {
+    this.listeDiffusion.forEach((value, index, array) => {
+      if (value.id === id) {
+        return value.libelle;
+      }
+    });
   }
 }
