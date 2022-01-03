@@ -99,6 +99,8 @@ export class EditeurComponent implements OnInit {
   // Fichier à envoyer
   filesName: string[] = [];
 
+  // nombre de fichier en cours de téléchargement
+  nbFichierEnCourTelechargement: number = 0;
 
 
   constructor(
@@ -145,16 +147,18 @@ export class EditeurComponent implements OnInit {
   }
 
 
-
-
-
-
+  /**
+   * Telechargement d'un fichier
+   * @param event
+   */
   async onFileSelected(event) {
 
     const nbFile: number =  event.target.files.length;
     this.loggerService.info('Nombre de fichier à télécharger: ' + nbFile);
 
     this.submitted = true;
+
+
 
     if (nbFile > 0) {
 
@@ -167,6 +171,8 @@ export class EditeurComponent implements OnInit {
          const fileToBlob = async (file2) => new Blob([new Uint8Array(await file2.arrayBuffer())], {type: file2.type});
          const fileBlob: Blob = await fileToBlob( fichier);
 
+        this.nbFichierEnCourTelechargement++;
+
         this.listeDeDiffusionServiceUtilitaire.addBinaryToMail({idMail: this.idMail
           , body: {fileName: fichier.name, file: fileBlob}})
           .subscribe(
@@ -175,11 +181,13 @@ export class EditeurComponent implements OnInit {
             },
             (error) => {
               this.loggerService.error(JSON.stringify(error));
+              this.nbFichierEnCourTelechargement--;
               this.toastrService.danger(
                 'Erreur technique lors de l\'envoie du fichier',
                 'Erreur ');
             },
             () => {
+              this.nbFichierEnCourTelechargement--;
               this.loggerService.info(' fini');
             },
           );

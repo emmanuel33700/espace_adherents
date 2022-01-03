@@ -1,21 +1,25 @@
 <nb-card-body [nbSpinner]='loading'>
   <nb-list>
     <nb-list-item *ngFor="let mailingListe of listeDiffusion">
-      <div class="col-sm-8">
+      <div class="col-sm-2">
+        <ng-container *ngIf="mailingListe.idAuthority == 4">
+          <nb-icon icon="eye-off-outline"></nb-icon>
+        </ng-container>
+      </div>
+      <div class="col-sm-6">
           {{mailingListe.libelle}}
-	<ng-container *ngIf="mailingListe.idAuthority == 4">
-		<nb-icon icon="eye-off-outline"></nb-icon>
-	</ng-container>
-
+      </div>
+      <div class="col-sm-2">
+        {{mailingListe.nbInscrit}} inscrit(s)
       </div>
 
       <!-- si droit d'édition, affichage du bouton de suppression de la mailing list -->
-      <div class="col-sm-4">
-	<nb-icon class="action-icon" icon="settings-2-outline" (click)="goVoirInscrit(mailingListe.id)"></nb-icon>
-      	<ng-container *ngIf="droitEdition">
-              <nb-icon class="action-icon" icon="trash-2" (click)="supprimerMailingList(mailingListe.id)"></nb-icon>
-      	</ng-container>
-	</div>
+      <div class="col-sm-2">
+        <nb-icon class="action-icon" icon="settings-2-outline" (click)="goVoirInscrit(mailingListe.id)"></nb-icon>
+        <ng-container *ngIf="droitEdition">
+          <nb-icon class="action-icon" icon="trash-2" (click)="supprimerMailingList(mailingListe.id)"></nb-icon>
+        </ng-container>
+      </div>
     </nb-list-item>
   </nb-list>
 
@@ -26,7 +30,14 @@
       #form="ngForm"
     >
       <div class="form-group row">
-        <div class="col-sm-8">
+
+        <div class="col-sm-2">
+          <nb-toggle labelPosition="left" [checked]="false"   (change)="changerVisibiliteMailingList( $event)">
+                     Public
+          </nb-toggle>
+        </div>
+
+        <div class="col-sm-6">
 
           <input nbInput
                  [(ngModel)]="libelleMailListForm"

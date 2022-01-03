@@ -37,6 +37,7 @@ export class AdminComponent implements OnInit {
 
 
   libelleMailListForm: string;
+  visibilitePublicMailList: boolean;
 
   constructor(
     private listeDeDiffusionServiceAdherent: ListeDeDiffusionServiceAdherent,
@@ -56,7 +57,7 @@ export class AdminComponent implements OnInit {
     this.role = localStorage.getItem('ROLE');
 
     // tester si la personne à le droit d'éditer la page
-    if ((this.role === 'ADMIN') || (this.role === 'CONSEIL') ) {
+    if ((this.role === 'ADMIN') || (this.role === 'CONSEIL')) {
       this.droitEdition = true;
     }
 
@@ -90,7 +91,12 @@ export class AdminComponent implements OnInit {
     const mailingListeUtilitaire: MailingListeUtilitaire = {};
     mailingListeUtilitaire.id = Date.now();
     mailingListeUtilitaire.libelle = this.libelleMailListForm;
-    mailingListeUtilitaire.idAuthority = 2;
+    if (this.visibilitePublicMailList) {
+      mailingListeUtilitaire.idAuthority = 2;
+    } else {
+      mailingListeUtilitaire.idAuthority = 4;
+    }
+    mailingListeUtilitaire.nbInscrit = 0;
 
     this.listeDeDiffusionServiceUtilitaire.addListe({idListe: mailingListeUtilitaire.id, body: mailingListeUtilitaire})
       .subscribe(
@@ -139,9 +145,9 @@ export class AdminComponent implements OnInit {
 
     // Supression de la mailing liste pour affichage
     this.listeDiffusion.forEach((value, index, array) => {
-        if (value.id === id) {
-          this.listeDiffusion.splice(index, 1);
-        }
+      if (value.id === id) {
+        this.listeDiffusion.splice(index, 1);
+      }
     });
 
   }
@@ -151,11 +157,20 @@ export class AdminComponent implements OnInit {
    * @param id
    */
   goVoirInscrit(id: number) {
-    this.toastrService.danger(
-      'La page arrive bientôt',
-      'Erreur ');
+    localStorage.setItem('id_mailinglist_selected', String(id));
+    return this.router.navigateByUrl('pages/gpdiffusions/tabs/lstinscrit');
+  }
+
+  /**
+   * CHanger la visibilité de la mailing liste
+   * @param $event
+   */
+  changerVisibiliteMailingList(event: any) {
+    if (event.target.checked) {
+      this.visibilitePublicMailList = true;
+    } else {
+      this.visibilitePublicMailList = false;
+    }
+
   }
 }
-
-
-

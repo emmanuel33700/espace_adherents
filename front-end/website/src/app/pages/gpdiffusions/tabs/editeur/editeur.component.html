@@ -32,6 +32,7 @@
                          id="select-MailingListe"
                          [(ngModel)]="selectedMailingListe"
                          name="selectedMailingListe"
+ placeholder="Nom du groupe de diffusion"
               >
                 <nb-option *ngFor="let diffusion of listeDiffusion"
                            [value]="diffusion.id">{{diffusion.libelle}}</nb-option>
@@ -83,10 +84,10 @@
             </div>
           </div>
 
-          <ng-container *ngIf="submitted">
+          <ng-container *ngIf="nbFichierEnCourTelechargement > 0">
             Téléchargement en cours...
           </ng-container>
-          <ng-container *ngIf="!submitted">
+          <ng-container *ngIf="nbFichierEnCourTelechargement == 0">
             <div class="form-group row">
               <div class="col-sm-3">
                 <ul class="alert-message-list">
@@ -105,7 +106,7 @@
                   fullWidth
                   status="success"
                   [nbSpinner]='loadingEnvoyerMail'
-                  [disabled]="!form.valid"
+                  [disabled]="!form.valid || nbFichierEnCourTelechargement > 0"
                   [class.btn-pulse]="submitted"
           >
             Envoyer le mail

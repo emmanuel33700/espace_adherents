@@ -19,4 +19,9 @@ export interface ListeDiffusion {
    * Libelle de la liste de diffusion
    */
   libelle?: string;
+
+  /**
+   * Nombre d'inscrit
+   */
+  nbInscrit?: number;
 }

@@ -7,6 +7,7 @@ import {TabsComponent} from './tabs/tabs.component';
 import {ListeComponent} from './tabs/liste/liste.component';
 import {EditeurComponent} from './tabs/editeur/editeur.component';
 import { AdminComponent} from './tabs/admin/admin.component';
+import {InscritgpdiffusionsComponent} from './tabs/inscritgpdiffusions/inscritgpdiffusions.component';
 
 const routes: Routes = [
   {
@@ -33,6 +34,10 @@ const routes: Routes = [
           {
             path: 'admin',
             component: AdminComponent,
+          },
+          {
+            path: 'lstinscrit',
+            component: InscritgpdiffusionsComponent,
           },
         ],
       },

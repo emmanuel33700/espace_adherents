@@ -1,0 +1,33 @@
+<nb-card-body [nbSpinner]='loading'>
+  <nb-list>
+    <nb-list-item *ngFor="let lstAdherents of listInscritsMailingListe.lstAdherents">
+      <div class="col-sm-4">
+        <ng-container *ngIf="lstAdherents.lienPhotoProfil != null">
+          <div class="circular--landscape">
+            <img src="{{url_photo_profil}}{{lstAdherents.lienPhotoProfil}}"/>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="lstAdherents.lienPhotoProfil == null">
+          <div class="circular--landscape">
+            <img src="assets/images/user-profile.png"/>
+          </div>
+        </ng-container>
+        {{lstAdherents.nom}} {{lstAdherents.prenom}}
+      </div>
+
+      <div class="col-sm-4">
+        <nb-toggle labelPosition="right" [checked]="lstAdherents.statutParticipation"
+                   (change)="changerParticipeMailingList(lstAdherents.id, $event)">
+        </nb-toggle>
+      </div>
+
+
+    </nb-list-item>
+  </nb-list>
+
+
+
+</nb-card-body>
+
+
+
