@@ -682,7 +682,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/diffusion/liste/",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    @PreAuthorize(" (#oauth2.hasScope('ress-diffusion-read') and isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")          
+    @PreAuthorize(" (isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")
     ResponseEntity<ListeMailingListe> getListesDiffusionAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh);
     
     
