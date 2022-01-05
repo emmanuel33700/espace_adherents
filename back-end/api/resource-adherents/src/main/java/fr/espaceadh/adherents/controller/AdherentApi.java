@@ -238,7 +238,7 @@ public interface AdherentApi {
     @RequestMapping(value = "/adherent/{idadh}/diffusion/liste/{idListe}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    @PreAuthorize(" (#oauth2.hasScope('ress-diffusion-write') and isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")         
+    @PreAuthorize(" (isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")
     ResponseEntity<Void> delListeDiffusionAdherent(@Parameter(in = ParameterIn.PATH, description = "id d'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la liste de diffusion", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe);
     
     
