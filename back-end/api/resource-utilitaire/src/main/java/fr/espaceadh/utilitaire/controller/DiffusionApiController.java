@@ -349,7 +349,8 @@ public class DiffusionApiController implements DiffusionApi {
         model.setId(dto.getIdGroupeDiffusion());
         model.setLibelle(dto.getLibelleGroupeDiffusion());
         model.setIdAuthority(dto.getIdAuthority());
-        
+        model.setNbInscrit(Long.valueOf(dto.getNbInscrit()));
+
         return model;
     }
     

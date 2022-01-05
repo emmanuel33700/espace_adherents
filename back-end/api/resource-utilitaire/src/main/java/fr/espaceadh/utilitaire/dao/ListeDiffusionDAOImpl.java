@@ -133,6 +133,7 @@ public class ListeDiffusionDAOImpl extends JdbcDaoSupport implements ListeDiffus
         StringBuilder query = new StringBuilder();
         
         query.append(" SELECT id_groupe_diffusion, description, fk_id_type_authority ");
+        query.append("   , (select count(1) from r_groupe_diffusion_adherents where r_groupe_diffusion_adherents.pk_id_groupe_diffusion = t_groupe_diffusion.id_groupe_diffusion) as nbinscrit");
         query.append(" 	  FROM t_groupe_diffusion ");
         
         List<GroupeDiffusionDto> lstGroupeDiffusionDto =  this.getJdbcTemplate().query(query.toString(), new GroupeDiffusionMapper());
@@ -260,6 +261,7 @@ public class ListeDiffusionDAOImpl extends JdbcDaoSupport implements ListeDiffus
             dto.setIdGroupeDiffusion(rs.getLong("id_groupe_diffusion"));
             dto.setLibelleGroupeDiffusion(rs.getString("description"));
             dto.setIdAuthority(rs.getInt("fk_id_type_authority"));
+            dto.setNbInscrit(rs.getInt("nbinscrit"));
             
             return dto;
         }

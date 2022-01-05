@@ -25,6 +25,7 @@ public class GroupeDiffusionDto {
     private String libelleGroupeDiffusion;
     private int idAuthority;
     private long fkIdAdherent;
+    private int nbInscrit;
 
     public long getIdGroupeDiffusion() {
         return idGroupeDiffusion;
@@ -56,5 +57,13 @@ public class GroupeDiffusionDto {
 
     public void setIdAuthority(int idAuthority) {
         this.idAuthority = idAuthority;
+    }
+
+    public int getNbInscrit() {
+        return nbInscrit;
+    }
+
+    public void setNbInscrit(int nbInscrit) {
+        this.nbInscrit = nbInscrit;
     }
 }

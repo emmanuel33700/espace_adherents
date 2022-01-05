@@ -16,6 +16,9 @@ public class ListeDiffusion   {
   @JsonProperty("id")
   private Long id = null;
 
+  @JsonProperty("nbInscrit")
+  private Long nbInscrit = null;
+
   @JsonProperty("libelle")
   private String libelle = null;
 
@@ -39,6 +42,25 @@ public class ListeDiffusion   {
 
   public void setId(Long id) {
     this.id = id;
+  }
+
+  public ListeDiffusion nbInscrit(Long nbInscrit) {
+    this.nbInscrit = nbInscrit;
+    return this;
+  }
+
+  /**
+   * Nombre d'inscrit
+   * @return nbInscrit
+   **/
+  @Schema(example = "1", description = "Nombre d'inscrit")
+
+  public Long getNbInscrit() {
+    return nbInscrit;
+  }
+
+  public void setNbInscrit(Long nbInscrit) {
+    this.nbInscrit = nbInscrit;
   }
 
   public ListeDiffusion libelle(String libelle) {
@@ -90,13 +112,14 @@ public class ListeDiffusion   {
     }
     ListeDiffusion listeDiffusion = (ListeDiffusion) o;
     return Objects.equals(this.id, listeDiffusion.id) &&
+            Objects.equals(this.nbInscrit, listeDiffusion.nbInscrit) &&
             Objects.equals(this.libelle, listeDiffusion.libelle) &&
             Objects.equals(this.idAuthority, listeDiffusion.idAuthority);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, libelle, idAuthority);
+    return Objects.hash(id, nbInscrit, libelle, idAuthority);
   }
 
   @Override
@@ -105,6 +128,7 @@ public class ListeDiffusion   {
     sb.append("class ListeDiffusion {\n");
 
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    nbInscrit: ").append(toIndentedString(nbInscrit)).append("\n");
     sb.append("    libelle: ").append(toIndentedString(libelle)).append("\n");
     sb.append("    idAuthority: ").append(toIndentedString(idAuthority)).append("\n");
     sb.append("}");
