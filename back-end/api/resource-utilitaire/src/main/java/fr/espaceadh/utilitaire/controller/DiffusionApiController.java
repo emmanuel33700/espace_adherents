@@ -155,7 +155,7 @@ public class DiffusionApiController implements DiffusionApi {
     private InscritsMailingListe convertDto(AdherentMailingListeDto dto) {
 
         InscritsMailingListe inscritsMailingListe = new InscritsMailingListe();
-        inscritsMailingListe.setId(dto.getIdMailingListe());
+        inscritsMailingListe.setId(dto.getId());
         inscritsMailingListe.setStatutParticipation(dto.isInscriptionMailingList());
 
         if (dto.getCivilite() == dto.getCivilite().MADAME){
