@@ -12,6 +12,7 @@ import {
   StateService,
   LoggerService,
   DateService,
+  CsvdataService,
   TokenService,
 } from './utils';
 import { UserData } from './data/users';
@@ -146,6 +147,7 @@ export const NB_CORE_PROVIDERS = [
   StateService,
   LoggerService,
   DateService,
+  CsvdataService,
   TokenService,
 ];
 

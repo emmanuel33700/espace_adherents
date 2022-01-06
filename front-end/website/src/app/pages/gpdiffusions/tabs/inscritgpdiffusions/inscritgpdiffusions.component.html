@@ -16,9 +16,30 @@
       </div>
 
       <div class="col-sm-4">
-        <nb-toggle labelPosition="right" [checked]="lstAdherents.statutParticipation"
-                   (change)="changerParticipeMailingList(lstAdherents.id, $event)">
-        </nb-toggle>
+
+        <!-- si l'utilisateur à le droit de changer les participations -->
+        <ng-container *ngIf="droitEdition">
+            <!-- si l'adhérent a une adhésion à jour -->
+            <ng-container *ngIf="lstAdherents.adhesionsSaisonCourante">
+              <nb-toggle labelPosition="right" [checked]="lstAdherents.statutParticipation"
+                         (change)="changerParticipeMailingList(lstAdherents.id, $event)" status="primary">
+              </nb-toggle>
+            </ng-container>
+          <!-- si l'adhérent a une adhésion non à jour -->
+          <ng-container *ngIf="!lstAdherents.adhesionsSaisonCourante">
+            <nb-toggle labelPosition="right" [checked]="lstAdherents.statutParticipation" status="danger"
+                       (change)="changerParticipeMailingList(lstAdherents.id, $event)">
+            </nb-toggle>
+          </ng-container>
+        </ng-container>
+
+        <!-- si l'utilisateur n'a pas le droit de changer les participations -->
+        <ng-container *ngIf="!droitEdition">
+          <nb-toggle labelPosition="right" [checked]="lstAdherents.statutParticipation"
+                     disabled>
+          </nb-toggle>
+        </ng-container>
+
       </div>
 
 

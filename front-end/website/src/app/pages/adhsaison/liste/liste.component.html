@@ -5,18 +5,26 @@
     <nb-card>
       <nb-card-body>
         <nb-actions size="medium" fullWidth>
-<nb-action>
-	<nb-icon class="action-icon" icon="search-outline"></nb-icon>
-      <input nbInput (change)="rechercherAdherent($event)" type="search" id="search" class="search-input" placeholder="Rechercher adhérent">
-</nb-action>
           <nb-action>
-            <nb-toggle labelPosition="end" (change)="changeListe($event)">Afficher les adhérents de la saison
+            <nb-icon class="action-icon" icon="search-outline"></nb-icon>
+            <input nbInput (change)="rechercherAdherent($event)" type="search" id="search" class="search-input"
+                   placeholder="Rechercher adhérent">
+          </nb-action>
+          <nb-action>
+            <nb-toggle labelPosition="end" (change)="changeListe($event)" [checked]="true">Afficher les adhérents de la
+              saison
             </nb-toggle>
           </nb-action>
           <nb-action routerLink="../ajouteradherent">
             <nb-icon class="action-icon" icon="file-add"></nb-icon>
             <span>Ajouter un adhérent</span>
           </nb-action>
+          <nb-action>
+              <nb-icon icon="download-outline" pack="eva" (click)="recupererCSV()"></nb-icon>
+            <span>Exporter la liste</span>
+          </nb-action>
+
+
         </nb-actions>
 
       </nb-card-body>

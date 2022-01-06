@@ -216,9 +216,9 @@ export class EditeurComponent implements OnInit {
     this.mail.email = this.mailHtml;
     this.mail.titreEmail = this.objetMail;
     this.mail.idListeDiffusion = this.selectedMailingListe;
-    if (String(this.optionEnvoyerMail) === '1') this.mail.typeMail = 1;
-    else if (String(this.optionEnvoyerMail) === '2') this.mail.typeMail = 2;
-    else if (String(this.optionEnvoyerMail) === '4') this.mail.typeMail = 4;
+    if (this.role === 'ADMIN' && String(this.optionEnvoyerMail) === '1') this.mail.typeMail = 1;
+    else if (this.role === 'ADMIN' &&  String(this.optionEnvoyerMail) === '2') this.mail.typeMail = 2;
+    else if (this.role === 'ADMIN' &&  String(this.optionEnvoyerMail) === '4') this.mail.typeMail = 4;
     else {
       this.mail.typeMail = 10;
       if (this.selectedMailingListe === 0 ) {

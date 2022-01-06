@@ -6,6 +6,7 @@ import {Adherent} from '../../../../api/generated/adherents/models';
 import {NbToastrService} from '@nebular/theme';
 import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
 import {environment} from '../../../../environments/environment';
+import {CsvdataService} from '../../../@core/utils/csvdata.service';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -35,13 +36,14 @@ export class ListeComponent implements OnInit {
     private loggerService: LoggerService,
     private toastrService: NbToastrService,
     private adherentService: AdherentService,
+    private csvdataService: CsvdataService,
   ) {
   }
 
 
   ngOnInit(): void {
-    this.isAdherentSaison = false;
-    this.listingAdherentService.getListeAdherents({})
+    this.isAdherentSaison = true;
+    this.listingAdherentService.getListeAdherentsSaison({})
       .subscribe(
         (data) => {
           this.adherents = data;
@@ -110,7 +112,7 @@ export class ListeComponent implements OnInit {
    * @param $event
    */
   changeListe($event: Event) {
-    this.loggerService.info('TOTOOT');
+
     this.isAdherentSaison = !this.isAdherentSaison;
 
     if (this.isAdherentSaison) {
@@ -176,5 +178,19 @@ export class ListeComponent implements OnInit {
       );
     }
 
+  }
+
+  /**
+   * Récupérer le fichier CSV
+   */
+  recupererCSV() {
+
+    let nomFichier: string;
+    if (this.isAdherentSaison) {
+      nomFichier = 'export_adherent_de_la_saison';
+    } else {
+      nomFichier = 'export_complet_adherent';
+    }
+    this.csvdataService.exportToCsv(nomFichier, this.adherentsListeComplete);
   }
 }
