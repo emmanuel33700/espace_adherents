@@ -95,7 +95,9 @@ public class GestionMailImpl implements GestionMail {
             if (!mailIn.getMessageTo().isEmpty()) {
 
                 for (String emailit : mailIn.getMessageTo()) {
-                    resultMail.add(this.envoyerMail(mailIn, emailit, jSONArrayAttachement));
+                    if (emailit != null && !emailit.isEmpty()) {
+                        resultMail.add(this.envoyerMail(mailIn, emailit, jSONArrayAttachement));
+                    }
                 }
             } else {
                 LOGGER.error("Pas d'email destinataire");
