@@ -143,14 +143,13 @@ public class DiffusionApiController implements DiffusionApi {
                InscritsMailingListe model = null;
 
                if (this.hasRole("ADMIN")) {
-                   model = this.convertDto(dto);
+                   listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
                } else if (this.hasRole("CONSEIL") && (dto.isAdhesionSaisonCourante() || dto.isInscriptionMailingList())){
-                   model = this.convertDto(dto);
+                   listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
                } else  if( this.hasRole("RES_ATELIER") && dto.isInscriptionMailingList()){
-                   model = this.convertDto(dto);
+                   listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
                }
 
-               listInscritsMailingListe.addLstAdherentsItem(model);
            }
             return new ResponseEntity<ListInscritsMailingListe>(listInscritsMailingListe, HttpStatus.OK);
 

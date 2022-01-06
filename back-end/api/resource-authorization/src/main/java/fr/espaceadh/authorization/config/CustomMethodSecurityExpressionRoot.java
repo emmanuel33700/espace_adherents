@@ -48,7 +48,7 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
        Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>) this.getAuthentication().getAuthorities();
        
        for(GrantedAuthority authoritie : authorities) {
-           LOGGER.info("authoritie {}", authoritie.toString());
+           LOGGER.debug("authoritie {}", authoritie.toString());
             if (authoritie.getAuthority().contains(permission)) {
                 return true;
             }

@@ -15,7 +15,7 @@ public class CustomAccessTokenConverter extends DefaultAccessTokenConverter {
     
     @Override
     public OAuth2Authentication extractAuthentication(Map<String, ?> claims) {
-        LOGGER.info("********************* claims {}", claims);
+        LOGGER.debug("********************* claims {}", claims);
         
         OAuth2Authentication authentication = super.extractAuthentication(claims);
         authentication.setDetails(claims);
