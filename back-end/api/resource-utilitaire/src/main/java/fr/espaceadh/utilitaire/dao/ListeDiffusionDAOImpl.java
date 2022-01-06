@@ -182,50 +182,30 @@ public class ListeDiffusionDAOImpl extends JdbcDaoSupport implements ListeDiffus
 
         StringBuilder query = new StringBuilder();
 
-        // On recherche les adhérents inscript (dans regarder si il est adhérents de la saison
-        query.append("(");
         query.append(" SELECT id_adherents, e_mail, civilite, nom, premon ");
         query.append("       , adresse1, adresse2, code_postal, ville, tel1, tel2 ");
         query.append("       , tel3, date_maissance, profession, link_picture, public_contact ");
         query.append("       , accord_mail, token_acces, commentaire, t_adherents.date_enregistrement ");
-        query.append("       , fk_id_adherents_update, update_date, true as adherent_saison_courante, true as inscrit_mailing_list ");
-        query.append("  FROM t_adherents, r_groupe_diffusion_adherents ");
-        query.append("  WHERE  r_groupe_diffusion_adherents.pk_id_adherent = t_adherents.id_adherents ");
-        query.append("  AND r_groupe_diffusion_adherents.pk_id_groupe_diffusion = ? ");
+        query.append("       , fk_id_adherents_update, update_date ");
+        query.append("       , CASE ");
+        query.append("             WHEN (select 1 from r_groupe_diffusion_adherents ");
+        query.append("                 WHERE r_groupe_diffusion_adherents.pk_id_adherent = t_adherents.id_adherents ");
+        query.append("                 AND r_groupe_diffusion_adherents.pk_id_groupe_diffusion = ?)  = 1 THEN TRUE ");
+        query.append("             ELSE FALSE ");
+        query.append("       END as inscrit_mailing_list ");
+        query.append("       , CASE ");
+        query.append("             WHEN (select 1 from t_adhesions, i_annee_adhesion ");
+        query.append("                 WHERE t_adherents.id_adherents = t_adhesions.fk_id_adherents ");
+        query.append("                 AND t_adhesions.fk_id_annee_adhesions =   i_annee_adhesion.id_annee_adhesion ");
+        query.append("                 AND i_annee_adhesion.annee_courante = true ");
+        query.append("                 AND t_adherents.id_adherents = t_adhesions.fk_id_adherents )  = 1 THEN TRUE ");
+        query.append("             ELSE FALSE ");
+        query.append("       END as adherent_saison_courante ");
+        query.append("  FROM t_adherents ");
         query.append("  ORDER BY  nom, premon ");
-        query.append(") ");
-
-        // On ajouts les adhérents non iscrit de la saison
-        query.append("UNION ");
-        query.append("( ");
-        query.append("   ( ");
-        query.append("       SELECT id_adherents, e_mail, civilite, nom, premon ");
-        query.append("            , adresse1, adresse2, code_postal, ville, tel1, tel2  ");
-        query.append("            , tel3, date_maissance, profession, link_picture, public_contact  ");
-        query.append("            , accord_mail, token_acces, commentaire, t_adherents.date_enregistrement  ");
-        query.append("            , fk_id_adherents_update, update_date, true as adherent_saison_courante, false as inscrit_mailing_list   ");
-        query.append("       FROM t_adherents, t_adhesions, i_annee_adhesion ");
-        query.append("       WHERE t_adherents.id_adherents = t_adhesions.fk_id_adherents  ");
-        query.append("       AND t_adhesions.fk_id_annee_adhesions =   i_annee_adhesion.id_annee_adhesion ");
-        query.append("       AND i_annee_adhesion.annee_courante = true  ");
-        query.append("       ORDER BY  nom, premon ");
-        query.append("  ) ");
-        // on enleve au adhérent inscrit de la saion les adhérents qui sont inscrit à la mailing liste
-        query.append("  EXCEPT ");
-        query.append("  ( ");
-        query.append("       SELECT id_adherents, e_mail, civilite, nom, premon ");
-        query.append("            , adresse1, adresse2, code_postal, ville, tel1, tel2  ");
-        query.append("            , tel3, date_maissance, profession, link_picture, public_contact  ");
-        query.append("            , accord_mail, token_acces, commentaire, t_adherents.date_enregistrement  ");
-        query.append("            , fk_id_adherents_update, update_date, true as adherent_saison_courante, false as inscrit_mailing_list   ");
-        query.append("       FROM t_adherents, r_groupe_diffusion_adherents ");
-        query.append("       WHERE  r_groupe_diffusion_adherents.pk_id_adherent = t_adherents.id_adherents ");
-        query.append("       AND r_groupe_diffusion_adherents.pk_id_groupe_diffusion = ? ");
-        query.append("  ) ");
-        query.append(") ");
 
 
-        List<AdherentMailingListeDto> lstAdherents = this.getJdbcTemplate().query(query.toString(), new AdherentsMailingListMapper(), idListeDiffusion, idListeDiffusion );
+        List<AdherentMailingListeDto> lstAdherents = this.getJdbcTemplate().query(query.toString(), new AdherentsMailingListMapper(), idListeDiffusion );
 
         LOGGER.debug("Nombre d'adherents récupéré pour la liste de diffusion {} : {} ", idListeDiffusion, lstAdherents.size());
         return  lstAdherents;

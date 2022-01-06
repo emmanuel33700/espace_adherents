@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -137,7 +139,17 @@ public class DiffusionApiController implements DiffusionApi {
             ListInscritsMailingListe listInscritsMailingListe = new ListInscritsMailingListe();
             listInscritsMailingListe.setId(idListe);
            for (AdherentMailingListeDto dto : lstADh)  {
-               InscritsMailingListe model = this.convertDto(dto);
+
+               InscritsMailingListe model = null;
+
+               if (this.hasRole("ADMIN")) {
+                   model = this.convertDto(dto);
+               } else if (this.hasRole("CONSEIL") && (dto.isAdhesionSaisonCourante() || dto.isInscriptionMailingList())){
+                   model = this.convertDto(dto);
+               } else  if( this.hasRole("RES_ATELIER") && dto.isInscriptionMailingList()){
+                   model = this.convertDto(dto);
+               }
+
                listInscritsMailingListe.addLstAdherentsItem(model);
            }
             return new ResponseEntity<ListInscritsMailingListe>(listInscritsMailingListe, HttpStatus.OK);
@@ -188,7 +200,14 @@ public class DiffusionApiController implements DiffusionApi {
             if (lstGroupe != null && !lstGroupe.isEmpty()){
                 
                 for (GroupeDiffusionDto dto : lstGroupe){
-                    lst.add(this.transformeToModel(dto));
+
+                    if(dto.getIdAuthority() == 4 && (this.hasRole("ADMIN") || this.hasRole("CONSEIL") )) {
+                        lst.add(this.transformeToModel(dto));
+                    }
+                    if (dto.getIdAuthority() == 2) {
+                        lst.add(this.transformeToModel(dto));
+                    }
+
                 }
             } 
             return new ResponseEntity<ListeListeDiffusion>(lst, HttpStatus.OK);
@@ -245,8 +264,8 @@ public class DiffusionApiController implements DiffusionApi {
             }
             else return new ResponseEntity<Void>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        // Si envoie pour une liste d'adherent
-        else if (body.getTypeMail() != MailAEnvoyer.TypeMailEnum.NUMBER_10){
+        // Si envoie pour une liste d'adherent, option uniquement pour le conseil et l'admin
+        else if ((body.getTypeMail() != MailAEnvoyer.TypeMailEnum.NUMBER_10) && (this.hasRole("CONSEIL") || this.hasRole("ADMIN") )){
             LOGGER.debug("Envoyer un mail aux adhérents de type {}", Integer.parseInt(body.getTypeMail().toString()));
 
             boolean restult = listeDiffusionService.envoyerMailListeAdherent(dto, Integer.parseInt(body.getTypeMail().toString()));
@@ -367,6 +386,25 @@ public class DiffusionApiController implements DiffusionApi {
         dto.setIdAuthority(model.getIdAuthority());
 
         return dto;
+    }
+
+
+    /**
+     * Vérifier le type de role de l'utilisateur
+     * @param role
+     * @return
+     */
+    private boolean hasRole(String role) {
+        Collection<GrantedAuthority> authorities = (Collection<GrantedAuthority>)
+                SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+
+        for (GrantedAuthority authority : authorities) {
+            if (authority.getAuthority().contains(role)) {
+                return true;
+            }
+
+        }
+        return false;
     }
 
 }

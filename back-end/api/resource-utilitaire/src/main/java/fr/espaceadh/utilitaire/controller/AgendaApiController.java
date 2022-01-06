@@ -120,9 +120,9 @@ public class AgendaApiController implements AgendaApi {
             int typeAutority = 1;
             if (this.hasRole("ADHERENT")) {
                 typeAutority = 2;
-            } else if (this.hasRole("CONSEIL")) {
+            } else if (this.hasRole("RES_ATELIER")) {
                 typeAutority = 3;
-            } else if (this.hasRole("BUREAU")) {
+            } else if (this.hasRole("CONSEIL")) {
                 typeAutority = 4;
             } else if (this.hasRole("ADMIN")) {
                 typeAutority = 5;

@@ -65,7 +65,7 @@ public interface DiffusionApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    @PreAuthorize("isDansGroupe('RES_ATELIER')")
+    @PreAuthorize("isDansGroupe('CONSEIL')")
     ResponseEntity<Void> addListe(@Parameter(in = ParameterIn.PATH, description = "id de la liste de diffusion", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe, @Parameter(in = ParameterIn.DEFAULT, description = "Objet listeDiffusion", required=true, schema=@Schema()) @Valid @RequestBody ListeDiffusion body);
 
 
@@ -85,7 +85,7 @@ public interface DiffusionApi {
     @RequestMapping(value = "/diffusion/liste/{idListe}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    @PreAuthorize("isDansGroupe('RES_ATELIER')")
+    @PreAuthorize("isDansGroupe('CONSEIL')")
     ResponseEntity<Void> delListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe);
 
 
