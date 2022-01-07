@@ -32,7 +32,6 @@ export class InscritgpdiffusionsComponent implements OnInit {
   droitEdition = false;
   submitted: boolean;
 
-  idMailingList: number;
   listeDiffusion: ListeDiffusion;
 
   url_photo_profil: string = environment.url_photo_profil;
@@ -88,11 +87,12 @@ export class InscritgpdiffusionsComponent implements OnInit {
    * @param event
    */
   changerParticipeMailingList(idAdherent: number,  event: any) {
-    this.loggerService.info('Changer de participation mailing list ' + idAdherent + ' id mailing list : ' + this.idMailingList );
+    this.loggerService.info('Changer de participation mailing list ' + idAdherent + ' id mailing list : '
+      + this.listeDiffusion.id);
 
     if (event.target.checked) {
       // Ajouter d'un abonnement
-      this.listeDeDiffusionServiceAdherent.ajoutListeDiffusionAdherent({idadh: idAdherent, idListe: this.idMailingList})
+      this.listeDeDiffusionServiceAdherent.ajoutListeDiffusionAdherent({idadh: idAdherent, idListe: this.listeDiffusion.id})
         .subscribe(
           (data) => {
             this.loggerService.debug(JSON.stringify(data));
@@ -110,7 +110,7 @@ export class InscritgpdiffusionsComponent implements OnInit {
 
     } else {
       // Suppression de l'abonnement
-      this.listeDeDiffusionServiceAdherent.delListeDiffusionAdherent({idadh: idAdherent, idListe: this.idMailingList})
+      this.listeDeDiffusionServiceAdherent.delListeDiffusionAdherent({idadh: idAdherent, idListe: this.listeDiffusion.id})
         .subscribe(
           (data) => {
             this.loggerService.debug(JSON.stringify(data));
