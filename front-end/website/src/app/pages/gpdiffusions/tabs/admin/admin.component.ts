@@ -127,7 +127,7 @@ export class AdminComponent implements OnInit {
   supprimerMailingList(id: number) {
     this.loggerService.info('Suppression de la mailing liste ' + id);
 
-    if (confirm('Etes vous sur de supprimer la mailing liste : ' + this.receputerNomMailingListe(id))) {
+    if (confirm('Etes vous sur de supprimer la mailing liste : ' + this.receputerNomMailingListe(id).libelle)) {
 
       this.listeDeDiffusionServiceUtilitaire.delListe({idListe: id})
         .subscribe(
@@ -162,6 +162,7 @@ export class AdminComponent implements OnInit {
    */
   goVoirInscrit(id: number) {
     localStorage.setItem('id_mailinglist_selected', String(id));
+    localStorage.setItem('mailinglist_selected', JSON.stringify(this.receputerNomMailingListe(id)));
     return this.router.navigateByUrl('pages/gpdiffusions/tabs/lstinscrit');
   }
 
@@ -182,11 +183,13 @@ export class AdminComponent implements OnInit {
    * recupérer le nom d'un mailing lsite via son id
    * @param id
    */
-  private receputerNomMailingListe(id: number) {
-    this.listeDiffusion.forEach((value, index, array) => {
+  private receputerNomMailingListe(id: number): MailingListeUtilitaire {
+
+    for (const value of this.listeDiffusion) {
       if (value.id === id) {
-        return value.libelle;
+        return value;
       }
-    });
+    }
+
   }
 }

@@ -1,11 +1,12 @@
 import {Component, HostBinding, OnInit} from '@angular/core';
 import {ListeDeDiffusionService as ListeDeDiffusionServiceAdherent} from '../../../../../api/generated/adherents/services/liste-de-diffusion.service';
-import {DateService, LoggerService} from '../../../../@core/utils';
+import {CsvdataService, DateService, LoggerService} from '../../../../@core/utils';
 import {NbToastrService} from '@nebular/theme';
 import {Router} from '@angular/router';
 import {ListeDeDiffusionService as  ListeDeDiffusionServiceUtilitaire} from '../../../../../api/generated/utilitaire/services/liste-de-diffusion.service';
 import {ListInscritsMailingListe} from '../../../../../api/generated/utilitaire/models/list-inscrits-mailing-liste';
 import {environment} from '../../../../../environments/environment';
+import {ListeDiffusion } from '../../../../../api/generated/utilitaire/models/liste-diffusion';
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -32,6 +33,7 @@ export class InscritgpdiffusionsComponent implements OnInit {
   submitted: boolean;
 
   idMailingList: number;
+  listeDiffusion: ListeDiffusion;
 
   url_photo_profil: string = environment.url_photo_profil;
 
@@ -43,6 +45,7 @@ export class InscritgpdiffusionsComponent implements OnInit {
     private loggerService: LoggerService,
     private toastrService: NbToastrService,
     private router: Router,
+    private csvdataService: CsvdataService,
   ) {
   }
 
@@ -50,7 +53,8 @@ export class InscritgpdiffusionsComponent implements OnInit {
    * Init
    */
   ngOnInit(): void {
-    this.idMailingList = Number(localStorage.getItem('id_mailinglist_selected'));
+    this.listeDiffusion =  JSON.parse(localStorage.getItem('mailinglist_selected'));
+
 
     this.role = localStorage.getItem('ROLE');
 
@@ -59,11 +63,12 @@ export class InscritgpdiffusionsComponent implements OnInit {
       this.droitEdition = true;
     }
 
-    this.listeDeDiffusionServiceUtilitaire.getAdherentsInscritListe({idListe: this.idMailingList})
+    this.listeDeDiffusionServiceUtilitaire.getAdherentsInscritListe({idListe: this.listeDiffusion.id})
       .subscribe(
         (data) => {
           this.loggerService.info(JSON.stringify(data));
           this.listInscritsMailingListe = data;
+          this.listInscritsMailingListe.libelle = this.listeDiffusion.libelle;
         },
         (error) => {
           this.loggerService.error(JSON.stringify(error));
@@ -124,6 +129,13 @@ export class InscritgpdiffusionsComponent implements OnInit {
     }
   }
 
+  /**
+   * Récupérer le fichier CSV
+   */
+  recupererCSV() {
+    const nomFichier = 'export_' + this.listInscritsMailingListe.id + '.csv';
+    this.csvdataService.exportToCsv(nomFichier, this.listInscritsMailingListe.lstAdherents);
+  }
 }
 
 
