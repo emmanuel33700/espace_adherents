@@ -87,7 +87,9 @@ public class AgendaServiceImpl implements AgendaService{
                     /* adresse email de destination */
                     Collection<String> messageTo = new ArrayList<>();
                     messageTo.add(adhDto.getEmail());
-                    mailIn.setMessageTo(messageTo);                
+                    mailIn.setMessageTo(messageTo);
+
+                    mailIn.setSujetMail(evenement.getDescriptionCourte());
                     
                     /* type de template */
                     mailIn.setTemplateMailEnum(TemplateMailEnum.INFORMATION_EVENEMENT_AJOUTE);
