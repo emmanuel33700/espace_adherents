@@ -1,12 +1,6 @@
 package fr.espaceadh.adherents.controller;
 
-import fr.espaceadh.adherents.model.Adherent;
-import fr.espaceadh.adherents.model.Adhesion;
-import fr.espaceadh.adherents.model.ListeAdherents;
-import fr.espaceadh.adherents.model.ListeAdhesions;
-import fr.espaceadh.adherents.model.ListeManifestations;
-import fr.espaceadh.adherents.model.ListeCommunications;
-import fr.espaceadh.adherents.model.ParticipationManifestation;
+import fr.espaceadh.adherents.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.AdherentEvenementDto;
@@ -15,13 +9,6 @@ import fr.espaceadh.adherents.dto.CiviliteEnum;
 import fr.espaceadh.adherents.dto.GroupeDiffusionDto;
 import fr.espaceadh.adherents.dto.LienAdherentsDto;
 import fr.espaceadh.adherents.dto.TypeAdhesionEnum;
-import fr.espaceadh.adherents.model.Communication;
-import fr.espaceadh.adherents.model.InscriptionMailingListe;
-import fr.espaceadh.adherents.model.LiensAdherent;
-import fr.espaceadh.adherents.model.LiensAdherentInner;
-import fr.espaceadh.adherents.model.ListeMailingListe;
-import fr.espaceadh.adherents.model.MailingListe;
-import fr.espaceadh.adherents.model.Manifestation;
 import fr.espaceadh.adherents.service.AdherentEvenementsService;
 import fr.espaceadh.adherents.service.AdherentListeDiffusionService;
 import fr.espaceadh.adherents.service.AdherentService;
@@ -195,7 +182,31 @@ public class AdherentApiController implements AdherentApi {
         
         return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
     }
-    
+
+
+    /**
+     * Ajouter une manifestation a un adhérent (dasn etre authentifié)
+     * @param idadh
+     * @param idManifestation
+     * @param body
+     * @return
+     */
+    public ResponseEntity<Void> ajoutManifestationAdherentAccesDirect(@Parameter(in = ParameterIn.PATH, description = "id l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh,@Parameter(in = ParameterIn.PATH, description = "id de la manifestation", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation,@Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestationAccesDirect body) {
+        String accept = request.getHeader("Accept");
+
+        AdherentDto adh = this.adherentService.recupererAdherent(idadh);
+        if (!adh.getEmail().equalsIgnoreCase(body.getEmailadherent())) {
+            LOGGER.info("Attention, tentative de piratage pour l'ajout d'une participation à une manifestation pour l'adh {} et la manifestation {}", idadh, idManifestation);
+            return  new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
+        }
+
+        boolean ok = this.adherentEvenementsService.updateParticipationEvenement(idadh, idManifestation, this.statutParticipationManifestation(body.getStatutParticipation()));
+        if (ok) return  new ResponseEntity<Void>(HttpStatus.CREATED);
+
+        return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+    }
+
+
     /**
      * SUpprimer une liste de diffusion d'un adhérent
      * @param idadh
@@ -983,6 +994,22 @@ public class AdherentApiController implements AdherentApi {
             return null;
         }
 
+    }
+
+    private int statutParticipationManifestation(ParticipationManifestationAccesDirect.StatutParticipationEnum statutParticipation) {
+        /**
+         * type de participation
+         1 : PARTICIPE
+         2 : PARTICIPE PAS
+         3 : NE SAIS PAS
+         **/
+        if (statutParticipation ==  ParticipationManifestationAccesDirect.StatutParticipationEnum.NUMBER_1){
+            return 1;
+        } else if (statutParticipation ==  ParticipationManifestationAccesDirect.StatutParticipationEnum.NUMBER_2){
+            return 2;
+        } else {
+            return 3;
+        }
     }
 
     private int statutParticipationManifestation(ParticipationManifestation.StatutParticipationEnum statutParticipation) {

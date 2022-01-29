@@ -5,18 +5,7 @@
  */
 package fr.espaceadh.adherents.controller;
 
-import fr.espaceadh.adherents.model.Adherent;
-import fr.espaceadh.adherents.model.Adhesion;
-import fr.espaceadh.adherents.model.InscriptionMailingListe;
-import fr.espaceadh.adherents.model.LiensAdherent;
-import fr.espaceadh.adherents.model.ListeAdherents;
-import fr.espaceadh.adherents.model.ListeAdhesions;
-import fr.espaceadh.adherents.model.ListeManifestations;
-import fr.espaceadh.adherents.model.ListeCommunications;
-import fr.espaceadh.adherents.model.ListeMailingListe;
-import fr.espaceadh.adherents.model.Manifestation;
-import fr.espaceadh.adherents.model.ModelApiResponse;
-import fr.espaceadh.adherents.model.ParticipationManifestation;
+import fr.espaceadh.adherents.model.*;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -209,6 +198,23 @@ public interface AdherentApi {
     @PreAuthorize(" (#oauth2.hasScope('ress-adherent-read') and isDansGroupe('CONSEIL')) or isProprietraireOuPeutAgirSurDonnee(#idadh) ")         
     ResponseEntity<Void> ajoutManifestationAdherent(@Parameter(in = ParameterIn.PATH, description = "id l'adherent à modifier", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la manifestation à modifier", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation, @Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestation body);
 
+
+    @Operation(summary = "Ajouter la participation à une manifestation pour un adherent", description = "", tags={ "Manifestation" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Operation réussie"),
+
+            @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
+
+            @ApiResponse(responseCode = "403", description = "Droit insufisant"),
+
+            @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
+
+            @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/adherent/{idadh}/manifestion/{idManifestation}/accesdirect",
+            produces = { "application/json" },
+            consumes = { "application/json" },
+            method = RequestMethod.POST)
+    ResponseEntity<Void> ajoutManifestationAdherentAccesDirect(@Parameter(in = ParameterIn.PATH, description = "id l'adherent", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh, @Parameter(in = ParameterIn.PATH, description = "id de la manifestation", required=true, schema=@Schema()) @PathVariable("idManifestation") Long idManifestation, @Parameter(in = ParameterIn.DEFAULT, description = "Besoin de l'objet manifestation le lier à un adherents", required=true, schema=@Schema()) @Valid @RequestBody ParticipationManifestationAccesDirect body);
     
         @Operation(summary = "Supprimer une inscrition à une liste de diffusion", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {

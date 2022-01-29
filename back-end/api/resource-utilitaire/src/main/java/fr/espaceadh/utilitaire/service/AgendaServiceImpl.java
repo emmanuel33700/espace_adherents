@@ -103,7 +103,38 @@ public class AgendaServiceImpl implements AgendaService{
                     templateVariables.put("date_debut_manifestation", this.dateToString(evenement.getDateDebut()));
                     templateVariables.put("heure_debut_manifestation", this.heureToString(evenement.getDateDebut()));
                     templateVariables.put("date_fin_manifestation", this.dateToString(evenement.getDateFin()));
-                    templateVariables.put("heure_fin_manifestation", this.heureToString(evenement.getDateFin()));                    
+                    templateVariables.put("heure_fin_manifestation", this.heureToString(evenement.getDateFin()));
+
+                    // construction d'une partie du mail uniquement si il y a besoin de confirmer la participation
+                    if (evenement.isDemanderConfirmationParticipation()) {
+                        templateVariables.put("demande_reponse", "O");
+
+                        templateVariables.put("url_lien_participe_evnt",
+                                env.getProperty("confirmparticipationevenement.url")
+                                        .concat("?mailadh=").concat(adhDto.getEmail())
+                                        .concat("?idadh=").concat(adhDto.getId().toString())
+                                        .concat("?idevt=").concat(String.valueOf(evenement.getIdEvenement()))
+                                        .concat("?participation=").concat("TRUE")
+                        );
+
+                        templateVariables.put("url_lien_participe_pas_evnt",
+                                env.getProperty("validationmail.url")
+                                        .concat("?mailadh=").concat(adhDto.getEmail())
+                                        .concat("?idadh=").concat(adhDto.getId().toString())
+                                        .concat("?idevt=").concat(String.valueOf(evenement.getIdEvenement()))
+                                        .concat("?participation=").concat("FALSE")
+                        );
+
+
+                    } else {
+                        templateVariables.put("demande_reponse", "N");
+                    }
+
+
+
+
+
+
                     mailIn.setTemplateVariables(templateVariables);
 
 
@@ -128,7 +159,7 @@ public class AgendaServiceImpl implements AgendaService{
             return null;
         }
         SimpleDateFormat sdf;
-        sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf = new SimpleDateFormat("EEE d MMM yyyy ");
 
         return sdf.format(date);
     }
