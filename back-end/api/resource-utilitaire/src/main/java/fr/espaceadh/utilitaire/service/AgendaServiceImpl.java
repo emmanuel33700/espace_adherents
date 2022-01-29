@@ -114,17 +114,17 @@ public class AgendaServiceImpl implements AgendaService{
                         templateVariables.put("url_lien_participe_evnt",
                                 env.getProperty("confirmparticipationevenement.url")
                                         .concat("?mailadh=").concat(adhDto.getEmail())
-                                        .concat("?idadh=").concat(adhDto.getId().toString())
-                                        .concat("?idevt=").concat(String.valueOf(evenement.getIdEvenement()))
-                                        .concat("?participation=").concat("TRUE")
+                                        .concat("&idadh=").concat(adhDto.getId().toString())
+                                        .concat("&idevt=").concat(String.valueOf(evenement.getIdEvenement()))
+                                        .concat("&participation=").concat("TRUE")
                         );
 
                         templateVariables.put("url_lien_participe_pas_evnt",
-                                env.getProperty("validationmail.url")
+                                env.getProperty("confirmparticipationevenement.url")
                                         .concat("?mailadh=").concat(adhDto.getEmail())
-                                        .concat("?idadh=").concat(adhDto.getId().toString())
-                                        .concat("?idevt=").concat(String.valueOf(evenement.getIdEvenement()))
-                                        .concat("?participation=").concat("FALSE")
+                                        .concat("&idadh=").concat(adhDto.getId().toString())
+                                        .concat("&idevt=").concat(String.valueOf(evenement.getIdEvenement()))
+                                        .concat("&participation=").concat("FALSE")
                         );
 
 
