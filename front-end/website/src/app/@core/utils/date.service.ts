@@ -80,11 +80,11 @@ export class DateService {
       + (date.getHours().toString()).padStart(2, '0')
       + ':' + (date.getMinutes().toString()).padStart(2, '0')
       + ':' + (date.getSeconds().toString()).padStart(2, '0')
-      + this.getTimeZone();
+      + this.getTimeZone(date);
   }
 
-  getTimeZone() {
-    const offset = new Date().getTimezoneOffset(), o = Math.abs(offset);
+  getTimeZone(date: Date) {
+    const offset = date.getTimezoneOffset(), o = Math.abs(offset);
     return (offset < 0 ? '+' : '-') + ('00' + Math.floor(o / 60)).slice(-2) + ':' + ('00' + (o % 60)).slice(-2);
   }
 

@@ -161,7 +161,7 @@ export class ListeComponent implements OnInit {
               events: this.initialEvent,
             };
           }
-          // Le calendrier peut-etre affiché
+          // Le evenementcalendrier peut-etre affiché
           this.loading = false;
 
         },

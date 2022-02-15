@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {
   NbAuthResult,
@@ -21,7 +21,7 @@ import {SaisonService} from '../../../api/generated/utilitaire/services/saison.s
 })
 
 
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
 
   token: NbAuthToken;
@@ -54,8 +54,12 @@ export class LoginComponent {
       });
   }
 
-  login(): void {
+
+  ngOnInit(): void {
     localStorage.clear();
+  }
+
+  login(): void {
     this.errors = this.messages = [];
     this.submitted = true;
 
@@ -80,7 +84,7 @@ export class LoginComponent {
 
         setTimeout(() => {
           return this.router.navigateByUrl(redirect);
-        }, this.redirectDelay);
+        }, 1000);
       }
     });
   }
@@ -144,4 +148,5 @@ export class LoginComponent {
     const role: string = this.tokenService.getRoleAdherent();
     localStorage.setItem('ROLE', role);
   }
+
 }

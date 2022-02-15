@@ -25,6 +25,11 @@ export const routes: Routes = [
     loadChildren: () => import('./cgu/cgu-routing.module')
       .then(m => m.CguRoutingModule),
   },
+  {
+    path: 'evenement',
+    loadChildren: () => import('./evenement/evenement.module')
+      .then(m => m.EvenementModule),
+  },
   { path: '', redirectTo: 'auth', pathMatch: 'full' },
   { path: '**', redirectTo: 'auth' },
 ];

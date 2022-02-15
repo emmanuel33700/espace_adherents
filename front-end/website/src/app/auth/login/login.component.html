@@ -1,13 +1,6 @@
 <nb-layout>
   <nb-layout-column>
-    <nb-card *ngIf="token">
-      <nb-card-body>
-        <h1 id="title" class="title">JALLE ASTRONOMIE</h1>
-        <p class="sub-title">Chargement...</p>
-        <button nbButton status="warning" *ngIf="token" (click)="logout()">Se déconnecter</button>
-      </nb-card-body>
-    </nb-card>
-    <nb-card *ngIf="!token">
+    <nb-card >
       <nb-card-body>
         <nb-auth-block aria-labelledby="title">
           <h1 id="title" class="title">JALLE ASTRONOMIE</h1>

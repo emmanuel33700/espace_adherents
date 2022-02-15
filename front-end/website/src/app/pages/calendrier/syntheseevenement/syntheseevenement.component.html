@@ -3,6 +3,10 @@
     <nb-card [nbSpinner]='loading'>
       <nb-card-header>Synthèse des participations à {{evenementSelectionne.description}}</nb-card-header>
       <nb-card-body>
+
+        <nb-icon icon="download-outline" pack="eva" (click)="recupererCSV()"></nb-icon>
+        <span>Exporter la liste</span>
+
         <div class="row show-grid">
           <div class="col-sm-4">Nom prénon de l'adhérent</div>
           <div class="col-sm-4">Participant / Participe pas</div>

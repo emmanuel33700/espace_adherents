@@ -3,7 +3,7 @@ import {LoggerService} from '../../../@core/utils/logger.service';
 import {NbToastrService} from '@nebular/theme';
 import {AgendaService} from '../../../../api/generated/utilitaire/services/agenda.service';
 import {ParticipantsEvenement} from '../../../../api/generated/utilitaire/models/participants-evenement';
-import {DateService} from '../../../@core/utils';
+import {CsvdataService, DateService} from '../../../@core/utils';
 import {ParticipationManifestation} from '../../../../api/generated/adherents/models/participation-manifestation';
 import {ManifestationService} from '../../../../api/generated/adherents/services/manifestation.service';
 import {SyntheseEvenement} from '../../../../api/generated/utilitaire/models/synthese-evenement';
@@ -40,6 +40,7 @@ export class SyntheseevenementComponent implements OnInit {
     private dateService: DateService,
     private loggerService: LoggerService,
     private toastrService: NbToastrService,
+    private csvdataService: CsvdataService,
   ) {
   }
 
@@ -165,5 +166,13 @@ export class SyntheseevenementComponent implements OnInit {
         },
       );
 
+  }
+
+  /**
+   * Exporter la liste
+   */
+  recupererCSV() {
+    const nomFichier = 'export_' + this.idEvenement + '.csv';
+    this.csvdataService.exportToCsv(nomFichier, this.participantsEvenement);
   }
 }

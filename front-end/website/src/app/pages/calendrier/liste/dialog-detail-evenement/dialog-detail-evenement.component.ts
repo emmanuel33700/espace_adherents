@@ -157,24 +157,25 @@ export class DialogDetailEvenementComponent implements OnInit {
    */
   supprimerEvenement() {
 
-    this.agendaService.deleteEvenement({idevenement: this.manifestation.id})
-      .subscribe(
-        (data) => {
-          this.loggerService.debug(JSON.stringify(data));
-        },
-        (error) => {
-          this.loggerService.error(JSON.stringify(error));
-          this.toastrService.danger(
-            'Erreur technique lors de la supression',
-            'Erreur ');
-        },
-        () => {
-          this.loggerService.debug('Suppression fini');
-        },
-      );
-
-    this.clickInfo.event.remove();
-    this.ref.close();
+    if (confirm('Etes vous sur de supprimer cet évènement :')) {
+      this.agendaService.deleteEvenement({idevenement: this.manifestation.id})
+        .subscribe(
+          (data) => {
+            this.loggerService.debug(JSON.stringify(data));
+          },
+          (error) => {
+            this.loggerService.error(JSON.stringify(error));
+            this.toastrService.danger(
+              'Erreur technique lors de la supression',
+              'Erreur ');
+          },
+          () => {
+            this.loggerService.debug('Suppression fini');
+          },
+        );
+      this.clickInfo.event.remove();
+      this.ref.close();
+    }
   }
 
 
