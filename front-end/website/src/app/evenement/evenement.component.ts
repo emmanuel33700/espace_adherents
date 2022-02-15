@@ -21,6 +21,8 @@ export class EvenementComponent  implements OnInit {
   errors: string[] = [];
   messages: string[] = [];
 
+  participeEvt: boolean;
+
   // Toaster
   @HostBinding('class')
   classes = 'example-items-rows';
@@ -44,14 +46,16 @@ export class EvenementComponent  implements OnInit {
     const mailAdh = this.route.snapshot.queryParamMap.get('mailadh');
     const idAdh = Number(this.route.snapshot.queryParamMap.get('idadh'));
     const idManif = Number(this.route.snapshot.queryParamMap.get('idevt'));
-    const participeEvt = this.route.snapshot.queryParamMap.get('participation');
+    const participeEvtStr = this.route.snapshot.queryParamMap.get('participation');
 
 
     const participationManifestation: ParticipationManifestationAccesDirect = {};
-    if (participeEvt === 'TRUE') {
+    if (participeEvtStr === 'TRUE') {
       participationManifestation.statutParticipation = 1;
+      this.participeEvt = true;
     } else {
       participationManifestation.statutParticipation = 2;
+      this.participeEvt = false;
 
     }
     participationManifestation.emailadherent = mailAdh;
