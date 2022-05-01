@@ -27,10 +27,8 @@ import fr.espaceadh.utilitaire.dto.EvenementDto;
 import fr.espaceadh.utilitaire.dto.EvenementParticipationAdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,77 +76,79 @@ public class AgendaServiceImpl implements AgendaService{
         
         if (envoyerMailInfo) {
             LOGGER.debug("Envoyer un mail d'information au adhérent sur la création d'un évènement {}", evenement.getIdEvenement());
-            //envoyer un email au adhérent
-            Collection<AdherentDto> lstAdherent = this.adherentsDAO.recupererListeAdherentSaison();
-            for(AdherentDto adhDto : lstAdherent) {
-                if (adhDto.getEmail() != null) {
-                    MailInDto mailIn = new MailInDto();
+            this.envoyerMailAdherents(evenement);
+            }
+        return resultCreation;
+    }
 
-                    /* adresse email de destination */
-                    Collection<String> messageTo = new ArrayList<>();
-                    messageTo.add(adhDto.getEmail());
-                    mailIn.setMessageTo(messageTo);
+    /**
+     * Envoyer un mail aux adhérents
+     * @param evenement
+     */
+    private void envoyerMailAdherents(EvenementDto evenement) {
+        //envoyer un email au adhérent
+        Collection<AdherentDto> lstAdherent = this.adherentsDAO.recupererListeAdherentSaison();
+        for (AdherentDto adhDto : lstAdherent) {
+            if (adhDto.getEmail() != null) {
+                MailInDto mailIn = new MailInDto();
 
-                    mailIn.setSujetMail(evenement.getDescriptionCourte());
-                    
-                    /* type de template */
-                    mailIn.setTemplateMailEnum(TemplateMailEnum.INFORMATION_EVENEMENT_AJOUTE);
+                /* adresse email de destination */
+                Collection<String> messageTo = new ArrayList<>();
+                messageTo.add(adhDto.getEmail());
+                mailIn.setMessageTo(messageTo);
 
-                    /* id du message**/
-                    mailIn.setIdMAil(env.getProperty("message.evenement.ajoute.id"));
-                    
-                    /* variables associées au tempalte **/
-                    HashMap<String, String> templateVariables = new HashMap<>();
-                    templateVariables.put("adh_prenom", adhDto.getPrenom());
-                    templateVariables.put("libelle_court_manifestation", evenement.getDescriptionCourte());
-                    templateVariables.put("libelle_long_manifestation", evenement.getDescriptionLongue());
-                    templateVariables.put("date_debut_manifestation", this.dateToString(evenement.getDateDebut()));
-                    templateVariables.put("heure_debut_manifestation", this.heureToString(evenement.getDateDebut()));
-                    templateVariables.put("date_fin_manifestation", this.dateToString(evenement.getDateFin()));
-                    templateVariables.put("heure_fin_manifestation", this.heureToString(evenement.getDateFin()));
+                mailIn.setSujetMail(evenement.getDescriptionCourte());
 
-                    // construction d'une partie du mail uniquement si il y a besoin de confirmer la participation
-                    if (evenement.isDemanderConfirmationParticipation()) {
-                        templateVariables.put("demande_reponse", "O");
+                /* type de template */
+                mailIn.setTemplateMailEnum(TemplateMailEnum.INFORMATION_EVENEMENT_AJOUTE);
 
-                        templateVariables.put("url_lien_participe_evnt",
-                                env.getProperty("confirmparticipationevenement.url")
-                                        .concat("?mailadh=").concat(adhDto.getEmail())
-                                        .concat("&idadh=").concat(adhDto.getId().toString())
-                                        .concat("&idevt=").concat(String.valueOf(evenement.getIdEvenement()))
-                                        .concat("&participation=").concat("TRUE")
-                        );
+                /* id du message**/
+                mailIn.setIdMAil(env.getProperty("message.evenement.ajoute.id"));
 
-                        templateVariables.put("url_lien_participe_pas_evnt",
-                                env.getProperty("confirmparticipationevenement.url")
-                                        .concat("?mailadh=").concat(adhDto.getEmail())
-                                        .concat("&idadh=").concat(adhDto.getId().toString())
-                                        .concat("&idevt=").concat(String.valueOf(evenement.getIdEvenement()))
-                                        .concat("&participation=").concat("FALSE")
-                        );
+                /* variables associées au tempalte **/
+                HashMap<String, String> templateVariables = new HashMap<>();
+                templateVariables.put("adh_prenom", adhDto.getPrenom());
+                templateVariables.put("libelle_court_manifestation", evenement.getDescriptionCourte());
+                templateVariables.put("libelle_long_manifestation", evenement.getDescriptionLongue());
+                templateVariables.put("date_debut_manifestation", this.dateToString(evenement.getDateDebut()));
+                templateVariables.put("heure_debut_manifestation", this.heureToString(evenement.getDateDebut()));
+                templateVariables.put("date_fin_manifestation", this.dateToString(evenement.getDateFin()));
+                templateVariables.put("heure_fin_manifestation", this.heureToString(evenement.getDateFin()));
 
+                // construction d'une partie du mail uniquement si il y a besoin de confirmer la participation
+                if (evenement.isDemanderConfirmationParticipation()) {
+                    templateVariables.put("demande_reponse", "O");
 
-                    } else {
-                        templateVariables.put("demande_reponse", "N");
-                    }
+                    templateVariables.put("url_lien_participe_evnt",
+                            env.getProperty("confirmparticipationevenement.url")
+                                    .concat("?mailadh=").concat(adhDto.getEmail())
+                                    .concat("&idadh=").concat(adhDto.getId().toString())
+                                    .concat("&idevt=").concat(String.valueOf(evenement.getIdEvenement()))
+                                    .concat("&participation=").concat("TRUE")
+                    );
 
-
-
-
-
-
-                    mailIn.setTemplateVariables(templateVariables);
+                    templateVariables.put("url_lien_participe_pas_evnt",
+                            env.getProperty("confirmparticipationevenement.url")
+                                    .concat("?mailadh=").concat(adhDto.getEmail())
+                                    .concat("&idadh=").concat(adhDto.getId().toString())
+                                    .concat("&idevt=").concat(String.valueOf(evenement.getIdEvenement()))
+                                    .concat("&participation=").concat("FALSE")
+                    );
 
 
-                    /* demande d'envoie du mail */
-                    Collection<MailOutDto> mailOut = sendMail.sendMail(mailIn);
+                } else {
+                    templateVariables.put("demande_reponse", "N");
                 }
 
 
-                
+                mailIn.setTemplateVariables(templateVariables);
+
+
+                /* demande d'envoie du mail */
+                Collection<MailOutDto> mailOut = sendMail.sendMail(mailIn);
             }
-        } 
-        return resultCreation;
+        }
+
     }
 
     /**
@@ -161,7 +161,7 @@ public class AgendaServiceImpl implements AgendaService{
             return null;
         }
         SimpleDateFormat sdf;
-        sdf = new SimpleDateFormat("EEE d MMM yyyy ");
+        sdf = new SimpleDateFormat("EEE d MMM yyyy ", Locale.FRANCE);
 
         return sdf.format(date);
     }
@@ -209,9 +209,17 @@ public class AgendaServiceImpl implements AgendaService{
         if (evenement.getDescriptionLongue()== null) evenement.setDescriptionLongue(evenementtmp.getDescriptionLongue());
         if (evenement.getIdAuthority() == 0) evenement.setIdAuthority(evenementtmp.getIdAuthority());
         if (evenement.getLieux()== null) evenement.setLieux(evenementtmp.getLieux());
+
+        boolean resultCreation = this.agendaDao.updateEvenement(evenement);
+        // si la demande d'envoie un mail avec demande de création d'une demande de confirmation est nouvelle
+        if (evenement.isEnvoyerInfoAdherents()
+                && evenement.isDemanderConfirmationParticipation()
+                && !evenementtmp.isDemanderConfirmationParticipation()) {
+            LOGGER.debug("Envoyer un mail d'information au adhérent sur la màj d'un évènement {}", evenement.getIdEvenement());
+            this.envoyerMailAdherents(evenement);
+        }
         
-        
-        return this.agendaDao.updateEvenement(evenement);
+        return resultCreation;
     }
 
     /**
