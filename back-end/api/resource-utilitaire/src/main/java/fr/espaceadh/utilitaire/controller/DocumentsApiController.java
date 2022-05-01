@@ -292,11 +292,13 @@ public class DocumentsApiController implements DocumentsApi {
              Collection<DocumentDto> lstDto = this.documentService.getDocuments(dMinDateCreation, dMaxDateCreation, typeAutority); 
              
              ListeDocuments lstModel = new ListeDocuments();
-             for (DocumentDto dto : lstDto) {
-                 Document model = this.transformeToModel(dto);
-                 lstModel.add(model);
+             if (lstDto != null) {
+                 for (DocumentDto dto : lstDto) {
+                     Document model = this.transformeToModel(dto);
+                     lstModel.add(model);
+                 }
              }
-             
+
              return new ResponseEntity<>(lstModel, HttpStatus.OK);
 
         }
