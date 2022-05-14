@@ -211,10 +211,11 @@ public class AgendaServiceImpl implements AgendaService{
         if (evenement.getLieux()== null) evenement.setLieux(evenementtmp.getLieux());
 
         boolean resultCreation = this.agendaDao.updateEvenement(evenement);
-        // si la demande d'envoie un mail avec demande de création d'une demande de confirmation est nouvelle
-        if (evenement.isEnvoyerInfoAdherents()
-                && evenement.isDemanderConfirmationParticipation()
-                && !evenementtmp.isDemanderConfirmationParticipation()) {
+        // Si modification avec demande d'envoie un mail
+        // Ou si demande d'envoie de mail avec demande confirmation est nouvelle
+        if ((evenement.isEnvoyerInfoAdherents() && !evenementtmp.isEnvoyerInfoAdherents()) ||
+                (evenement.isEnvoyerInfoAdherents()  && evenement.isDemanderConfirmationParticipation()
+                && !evenementtmp.isDemanderConfirmationParticipation())) {
             LOGGER.debug("Envoyer un mail d'information au adhérent sur la màj d'un évènement {}", evenement.getIdEvenement());
             this.envoyerMailAdherents(evenement);
         }
