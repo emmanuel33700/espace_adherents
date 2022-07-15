@@ -57,10 +57,10 @@ export class InfosadhComponent implements OnInit {
     this.user.adresse2 = this.adherent.adresse2;
     this.user.codePostal = this.adherent.codePostal;
     this.user.ville = this.adherent.ville;
-    if (!this.adherent.telPortable) {
+    if (this.adherent.telPortable) {
       this.user.telPortable = this.adherent.telPortable.replace(/\s/g, '');
     }
-    if (!this.adherent.telMaison) {
+    if (this.adherent.telMaison) {
       this.user.telFixe = this.adherent.telMaison.replace(/\s/g, '');
     }
     this.user.dateNaissance = this.dateService.dateFormatForPrint(this.adherent.dateNaissance);
@@ -90,10 +90,10 @@ export class InfosadhComponent implements OnInit {
     this.adherent.adresse2 = this.user.adresse2;
     this.adherent.codePostal = this.user.codePostal;
     this.adherent.ville = this.user.ville;
-    if (!this.user.telPortable) {
+    if (this.user.telPortable) {
       this.adherent.telPortable = this.user.telPortable.replace(/\s/g, '');
     }
-    if (!this.user.telFixe) {
+    if (this.user.telFixe) {
       this.adherent.telMaison = this.user.telFixe.replace(/\s/g, '');
     }
     this.adherent.dateNaissance = this.dateService.convertIsoDate(this.user.dateNaissance);

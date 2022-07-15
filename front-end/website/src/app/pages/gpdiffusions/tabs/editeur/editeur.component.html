@@ -15,6 +15,7 @@
               <nb-radio-group name="optionEnvoyerMail"
                               *ngIf="droitcomplet"
                               [(ngModel)]="optionEnvoyerMail"
+                              #selectTypeEnvoi="ngModel"
                               [required]="true">
                 <nb-radio value="1"> Envoyer un mail aux adhérents de la saison</nb-radio>
                 <nb-radio value="2"> Envoyer un mail aux adhérents de la saison et saison d'avant</nb-radio>
