@@ -243,7 +243,8 @@
                      [required]="false"
                      [minlength]="10"
                      [maxlength]="10"
-                     [attr.aria-invalid]="telPortable.invalid && telPortable.touched ? true : null">
+                     [attr.aria-invalid]="telPortable.invalid && telPortable.touched ? true : null"
+                     >
               <ng-container *ngIf="telPortable.invalid && telPortable.touched">
                 <p class="caption status-danger" *ngIf="ville.errors?.minlength || ville.errors?.maxlength">
                   Le tel doit avoir 10 caracteres
