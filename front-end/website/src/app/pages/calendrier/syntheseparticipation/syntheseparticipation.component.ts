@@ -41,7 +41,7 @@ export class SyntheseparticipationComponent implements OnInit {
 
     // Gestion date debut et fin de recherche
     const dDebut = new Date();
-    dDebut.setMonth(dDebut.getMonth() - 2);
+    dDebut.setMonth(dDebut.getMonth() - 1);
 
     const dFin = new Date();
     dFin.setMonth(dFin.getMonth() + 12);
