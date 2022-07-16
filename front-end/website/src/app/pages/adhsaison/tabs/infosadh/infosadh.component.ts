@@ -193,4 +193,6 @@ export class InfosadhComponent implements OnInit {
     return re.test(email);
   }
 
+
+
 }

@@ -25,6 +25,7 @@ import {ApiModule as ApiModuleAdherents} from '../api/generated/adherents/api.mo
 import {ApiModule as ApiModuleAuthorization} from '../api/generated/authorization/api.module';
 import {ApiModule as ApiModuleUtilitaire} from '../api/generated/utilitaire/api.module';
 import {environment} from '../environments/environment';
+import { NgxMaskModule } from 'ngx-mask';
 
 @NgModule({
   declarations: [AppComponent],
@@ -47,6 +48,10 @@ import {environment} from '../environments/environment';
     ApiModuleAdherents.forRoot({ rootUrl: environment.resource_adherents }),
     ApiModuleAuthorization.forRoot({ rootUrl: environment.resource_authorization }),
     ApiModuleUtilitaire.forRoot({ rootUrl: environment.resource_utilitaire }),
+    NgxMaskModule.forRoot({
+      showMaskTyped : true,
+      // clearIfNotMatch : true
+    }),
   ],
   bootstrap: [AppComponent],
   providers: [
