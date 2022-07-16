@@ -88,7 +88,7 @@ export class EditeurComponent implements OnInit {
   selectedMailingListe: number = 0;
 
   // id de l'option d'nevoi de mail
-  optionEnvoyerMail: number = 1;
+  optionEnvoyerMail: string = '1';
 
   // mail en envoyé
   mailHtml: string = '';
@@ -120,7 +120,7 @@ export class EditeurComponent implements OnInit {
     }
 
     // Par défaut, envouer un mail aux adhérents de la saison
-    this.optionEnvoyerMail = 1;
+    this.optionEnvoyerMail = '1';
 
 
     this.idMail = Date.now();
