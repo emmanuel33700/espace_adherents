@@ -64,11 +64,15 @@ export class ModifierComponent implements OnInit {
     this.user.codePostal = this.adherent.codePostal;
     this.user.ville = this.adherent.ville;
 
-    if (this.adherent.telPortable) {
-      this.user.telPortable = this.adherent.telPortable.replace(/\s/g, '');
+    if (this.user.telPortable) {
+      this.adherent.telPortable = this.user.telPortable.replace(/\s/g, '');
+    } else {
+      this.adherent.telPortable = '';
     }
-    if (this.adherent.telMaison) {
-      this.user.telFixe = this.adherent.telMaison.replace(/\s/g, '');
+    if (this.user.telFixe) {
+      this.adherent.telMaison = this.user.telFixe.replace(/\s/g, '');
+    } else {
+      this.adherent.telMaison = '';
     }
     this.user.dateNaissance = this.dateService.dateFormatForPrint(this.adherent.dateNaissance);
     this.user.commentaire = this.adherent.commentaire;

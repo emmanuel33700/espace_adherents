@@ -22,8 +22,8 @@ export const routes: Routes = [
   },
   {
     path: 'cgu',
-    loadChildren: () => import('./cgu/cgu-routing.module')
-      .then(m => m.CguRoutingModule),
+    loadChildren: () => import('./cgu/cgu.module')
+      .then(m => m.CguModule),
   },
   {
     path: 'evenement',

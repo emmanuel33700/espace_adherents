@@ -74,6 +74,8 @@ export class InfosadhComponent implements OnInit {
 
   submit(form: NgForm) {
 
+    this.loggerService.info('tel portable' + this.user.telPortable);
+    this.loggerService.info('tel fixe' + this.user.telFixe);
     // Initialisation des variables
     this.submitted = true;
     this.errors = [];
@@ -92,9 +94,13 @@ export class InfosadhComponent implements OnInit {
     this.adherent.ville = this.user.ville;
     if (this.user.telPortable) {
       this.adherent.telPortable = this.user.telPortable.replace(/\s/g, '');
+    } else {
+      this.adherent.telPortable = '';
     }
     if (this.user.telFixe) {
       this.adherent.telMaison = this.user.telFixe.replace(/\s/g, '');
+    } else {
+      this.adherent.telMaison = '';
     }
     this.adherent.dateNaissance = this.dateService.convertIsoDate(this.user.dateNaissance);
     this.adherent.commentaire = this.user.commentaire;
