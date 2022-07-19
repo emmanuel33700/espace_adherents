@@ -95,12 +95,12 @@ export class InfosadhComponent implements OnInit {
     if (this.user.telPortable) {
       this.adherent.telPortable = this.user.telPortable.replace(/\s/g, '');
     } else {
-      this.adherent.telPortable = '';
+      this.adherent.telPortable = null;
     }
     if (this.user.telFixe) {
       this.adherent.telMaison = this.user.telFixe.replace(/\s/g, '');
     } else {
-      this.adherent.telMaison = '';
+      this.adherent.telMaison = null;
     }
     this.adherent.dateNaissance = this.dateService.convertIsoDate(this.user.dateNaissance);
     this.adherent.commentaire = this.user.commentaire;

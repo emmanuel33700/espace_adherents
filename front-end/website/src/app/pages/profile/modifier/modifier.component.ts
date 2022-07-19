@@ -67,12 +67,12 @@ export class ModifierComponent implements OnInit {
     if (this.user.telPortable) {
       this.adherent.telPortable = this.user.telPortable.replace(/\s/g, '');
     } else {
-      this.adherent.telPortable = '';
+      this.adherent.telPortable = null;
     }
     if (this.user.telFixe) {
       this.adherent.telMaison = this.user.telFixe.replace(/\s/g, '');
     } else {
-      this.adherent.telMaison = '';
+      this.adherent.telMaison = null;
     }
     this.user.dateNaissance = this.dateService.dateFormatForPrint(this.adherent.dateNaissance);
     this.user.commentaire = this.adherent.commentaire;
