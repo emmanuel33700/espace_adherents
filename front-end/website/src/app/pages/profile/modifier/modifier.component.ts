@@ -63,16 +63,11 @@ export class ModifierComponent implements OnInit {
     this.user.adresse2 = this.adherent.adresse2;
     this.user.codePostal = this.adherent.codePostal;
     this.user.ville = this.adherent.ville;
-
-    if (this.user.telPortable) {
-      this.adherent.telPortable = this.user.telPortable.replace(/\s/g, '');
-    } else {
-      this.adherent.telPortable = null;
+    if (this.adherent.telPortable) {
+      this.user.telPortable = this.adherent.telPortable.replace(/\s/g, '');
     }
-    if (this.user.telFixe) {
-      this.adherent.telMaison = this.user.telFixe.replace(/\s/g, '');
-    } else {
-      this.adherent.telMaison = null;
+    if (this.adherent.telMaison) {
+      this.user.telFixe = this.adherent.telMaison.replace(/\s/g, '');
     }
     this.user.dateNaissance = this.dateService.dateFormatForPrint(this.adherent.dateNaissance);
     this.user.commentaire = this.adherent.commentaire;
@@ -112,9 +107,13 @@ export class ModifierComponent implements OnInit {
     this.adherent.ville = this.user.ville;
     if (this.user.telPortable) {
       this.adherent.telPortable = this.user.telPortable.replace(/\s/g, '');
+    } else {
+      this.adherent.telPortable = null;
     }
     if (this.user.telFixe) {
       this.adherent.telMaison = this.user.telFixe.replace(/\s/g, '');
+    } else {
+      this.adherent.telMaison = null;
     }
     this.adherent.dateNaissance = this.dateService.convertIsoDate(this.user.dateNaissance);
     this.adherent.commentaire = this.user.commentaire;
