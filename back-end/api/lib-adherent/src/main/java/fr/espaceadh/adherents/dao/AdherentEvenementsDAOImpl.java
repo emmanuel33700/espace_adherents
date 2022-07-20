@@ -88,12 +88,14 @@ public class AdherentEvenementsDAOImpl extends JdbcDaoSupport implements Adheren
         if (dateDebut != null && dateFin != null) {
             query.append("      AND date_debut >=  ?	 ");
             query.append(" 	AND date_fin <= ? ");
+            query.append(" 	ORDER BY  date_debut, date_fin ");
             
              lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), idAdh, idAdh, typeAutority, dateDebut, dateFin);
         } 
         
         else {
-             lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), idAdh, idAdh,  typeAutority);
+            query.append(" 	ORDER BY  date_debut, date_fin ");
+            lstEvenement = this.getJdbcTemplate().query(query.toString(), new EvenementsMapper(), idAdh, idAdh,  typeAutority);
         }
         
         
