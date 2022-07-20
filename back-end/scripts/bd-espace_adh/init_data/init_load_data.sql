@@ -50,8 +50,14 @@ INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_cou
 INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_courante) VALUES (30, '2026/2027', false);
 INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_courante) VALUES (23, '2019/2020', false);
 INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_courante) VALUES (24, '2020/2021', true);
-
-
+INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_courante) VALUES (25, '2021/2022', false);
+INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_courante) VALUES (26, '2022/2023', false);
+INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_courante) VALUES (27, '2023/2024', false);
+INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_courante) VALUES (28, '2024/2025', false);
+INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_courante) VALUES (29, '2025/2026', false);
+INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_courante) VALUES (30, '2026/2027', false);
+INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_courante) VALUES (31, '2028/2029', false);
+INSERT INTO public.i_annee_adhesion (id_annee_adhesion, libelle_annee, annee_courante) VALUES (31, '2030/2031', false);
 
 --
 -- Data for Name: i_type_adhesion; Type: TABLE DATA; Schema: public; Owner: postgres
