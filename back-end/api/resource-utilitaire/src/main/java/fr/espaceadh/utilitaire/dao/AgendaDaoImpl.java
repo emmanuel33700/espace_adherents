@@ -259,12 +259,14 @@ public class AgendaDaoImpl extends JdbcDaoSupport implements AgendaDao{
         if (dateDebut != null && dateFin != null) {
             query.append("      and date_debut >=  ?	 ");
             query.append(" 	and date_fin <= ? ");
+            query.append("	ORDER BY date_debut, date_fin ");
             
              lst = this.getJdbcTemplate().query(query.toString(), new EvenementsSyntheseMapper(),dateDebut, dateFin);
         } 
         
         else {
-             lst = this.getJdbcTemplate().query(query.toString(), new EvenementsSyntheseMapper());
+            query.append("	ORDER BY date_debut, date_fin ");
+            lst = this.getJdbcTemplate().query(query.toString(), new EvenementsSyntheseMapper());
         }
         
         return lst;
