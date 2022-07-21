@@ -16,10 +16,10 @@
                               *ngIf="droitcomplet"
                               [(ngModel)]="optionEnvoyerMail"
                               [required]="true">
-                <nb-radio value="1" checked="true" (change)="desactiverSelectionGroupe()"> Envoyer un mail aux adhérents de la saison</nb-radio>
-                <nb-radio value="2" (change)="desactiverSelectionGroupe()"> Envoyer un mail aux adhérents de la saison et saison d'avant</nb-radio>
-                <nb-radio value="4" (change)="desactiverSelectionGroupe()" > Envoyer un mail aux adhérents n'ayant pas renouvelés leur adhésion</nb-radio>
-                <nb-radio value="10" (change)="activerSelectionGroupe()"> Envoyer un mail aux adhérents d'un groupe</nb-radio>
+                <nb-radio value="1" checked="true" (valueChange)="desactiverSelectionGroupe()"> Envoyer un mail aux adhérents de la saison</nb-radio>
+                <nb-radio value="2" (valueChange)="desactiverSelectionGroupe()"> Envoyer un mail aux adhérents de la saison et saison d'avant</nb-radio>
+                <nb-radio value="4" (valueChange)="desactiverSelectionGroupe()" > Envoyer un mail aux adhérents n'ayant pas renouvelés leur adhésion</nb-radio>
+                <nb-radio value="10" (valueChange)="activerSelectionGroupe()"> Envoyer un mail aux adhérents d'un groupe</nb-radio>
               </nb-radio-group>
             </div>
           </div>
