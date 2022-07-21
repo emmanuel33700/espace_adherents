@@ -102,6 +102,9 @@ export class EditeurComponent implements OnInit {
   // nombre de fichier en cours de téléchargement
   nbFichierEnCourTelechargement: number = 0;
 
+  // indicateur de désactivation du selction des groupe
+  selectionGroupeActive: boolean = false;
+
 
   constructor(
     private loggerService: LoggerService,
@@ -143,6 +146,12 @@ export class EditeurComponent implements OnInit {
         },
       );
 
+    // gestion de l'activation de la sélection du groupe.
+    if ((this.role === 'ADMIN' || this.role === 'CONSEIL' ) ) {
+      this.selectionGroupeActive = false;
+    } else {
+      this.selectionGroupeActive = true; // le responsable d'atelier 'a acces qu'au groupe de dif=>. activé par defaut
+    }
 
   }
 
@@ -263,6 +272,20 @@ export class EditeurComponent implements OnInit {
 }
 
 
+  /**
+   * Permet de désactiver la sélection d'un groupe
+   */
+  desactiverSelectionGroupe() {
+    this.selectionGroupeActive = false;
+  }
+
+
+  /**
+   * Permet d'activer la sélection d'un groupe
+   */
+  activerSelectionGroupe() {
+    this.selectionGroupeActive = true;
+  }
 }
 
 
