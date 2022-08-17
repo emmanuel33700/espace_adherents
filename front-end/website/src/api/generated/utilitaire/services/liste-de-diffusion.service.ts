@@ -235,12 +235,18 @@ export class ListeDeDiffusionService extends BaseService {
      */
     idListe: number;
 
+    /**
+     * type de filtre
+     */
+    filter?: 'ALL' | 'ONLYADH' | 'ONLYINSCRIT';
+
   }): Observable<StrictHttpResponse<ListInscritsMailingListe>> {
 
     const rb = new RequestBuilder(this.rootUrl, ListeDeDiffusionService.GetAdherentsInscritListePath, 'get');
     if (params) {
 
       rb.path('idListe', params.idListe);
+      rb.query('filter', params.filter);
 
     }
     return this.http.request(rb.build({
@@ -266,6 +272,11 @@ export class ListeDeDiffusionService extends BaseService {
      * id du fichier
      */
     idListe: number;
+
+    /**
+     * type de filtre
+     */
+    filter?: 'ALL' | 'ONLYADH' | 'ONLYINSCRIT';
 
   }): Observable<ListInscritsMailingListe> {
 
@@ -440,6 +451,63 @@ export class ListeDeDiffusionService extends BaseService {
   }): Observable<void> {
 
     return this.addBinaryToMail$Response(params).pipe(
+      map((r: StrictHttpResponse<void>) => r.body as void)
+    );
+  }
+
+  /**
+   * Path part for operation delBinarysToMail
+   */
+  static readonly DelBinarysToMailPath = '/diffusion/mail/{idMail}/fichier';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `delBinarysToMail()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  delBinarysToMail$Response(params: {
+
+    /**
+     * id du mail à envoyer
+     */
+    idMail: number;
+
+  }): Observable<StrictHttpResponse<void>> {
+
+    const rb = new RequestBuilder(this.rootUrl, ListeDeDiffusionService.DelBinarysToMailPath, 'delete');
+    if (params) {
+
+      rb.path('idMail', params.idMail);
+
+    }
+    return this.http.request(rb.build({
+      responseType: 'text',
+      accept: '*/*'
+    })).pipe(
+      filter((r: any) => r instanceof HttpResponse),
+      map((r: HttpResponse<any>) => {
+        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      })
+    );
+  }
+
+  /**
+   * This method provides access to only to the response body.
+   * To access the full response (for headers, for example), `delBinarysToMail$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  delBinarysToMail(params: {
+
+    /**
+     * id du mail à envoyer
+     */
+    idMail: number;
+
+  }): Observable<void> {
+
+    return this.delBinarysToMail$Response(params).pipe(
       map((r: StrictHttpResponse<void>) => r.body as void)
     );
   }

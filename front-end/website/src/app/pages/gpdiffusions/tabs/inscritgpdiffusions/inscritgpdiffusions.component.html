@@ -1,59 +1,86 @@
-<nb-card-body [nbSpinner]='loading'>
-  <div class="col-sm-10">  <h2>{{listeDiffusion.libelle}}</h2> </div>
-  <div class="col-sm-2">
-    <nb-icon icon="download-outline" pack="eva" (click)="recupererCSV()"></nb-icon>
-    <span>Exporter la liste</span>
-  </div>
-  <nb-list>
-    <nb-list-item *ngFor="let lstAdherents of listInscritsMailingListe.lstAdherents">
-      <div class="col-sm-4">
-        <ng-container *ngIf="lstAdherents.lienPhotoProfil != null">
-          <div class="circular--landscape">
-            <img src="{{url_photo_profil}}{{lstAdherents.lienPhotoProfil}}"/>
-          </div>
-        </ng-container>
-        <ng-container *ngIf="lstAdherents.lienPhotoProfil == null">
-          <div class="circular--landscape">
-            <img src="assets/images/user-profile.png"/>
-          </div>
-        </ng-container>
-        {{lstAdherents.nom}} {{lstAdherents.prenom}}
+<div class="row">
+  <div class="col-md-12">
+
+    <nb-card-body [nbSpinner]='loading'>
+      <div class="form-group row">
+        <div class="col-sm-10"><h2>{{listeDiffusion.libelle}}</h2></div>
+        <div class="col-sm-2">
+          <nb-icon icon="download-outline" pack="eva" (click)="recupererCSV()"></nb-icon>
+          <span>Exporter la liste</span>
+        </div>
       </div>
 
-      <div class="col-sm-4">
 
-        <!-- si l'utilisateur à le droit de changer les participations -->
-        <ng-container *ngIf="droitEdition">
-            <!-- si l'adhérent a une adhésion à jour -->
-            <ng-container *ngIf="lstAdherents.adhesionsSaisonCourante">
+      <div class="form-group row">
+        <ng-container *ngIf="role === 'ADMIN' || role === 'CONSEIL'">
+          <div class="col-sm-8"></div>
+          <label for="input-typeFiltre" class="label col-sm-2 col-form-label">Filtre sur les adhérents</label>
+          <div class="col-sm-2">
+            <nb-select
+              id="input-typeFiltre"
+              name="typeFiltre"
+              fullWidth
+              (selectedChange)="changeFiltre($event)">
+              <nb-option value="ALL" *ngIf="role === 'ADMIN'">Ensemble des adhérents</nb-option>
+              <nb-option value="ONLYADH">Adhérents de la saison</nb-option>
+              <nb-option value="ONLYINSCRIT">Adhérents inscrits</nb-option>
+            </nb-select>
+          </div>
+
+        </ng-container>
+      </div>
+      <nb-list>
+        <nb-list-item *ngFor="let lstAdherents of listInscritsMailingListe.lstAdherents">
+          <div class="col-sm-4">
+            <ng-container *ngIf="lstAdherents.lienPhotoProfil != null">
+              <div class="circular--landscape">
+                <img src="{{url_photo_profil}}{{lstAdherents.lienPhotoProfil}}"/>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="lstAdherents.lienPhotoProfil == null">
+              <div class="circular--landscape">
+                <img src="assets/images/user-profile.png"/>
+              </div>
+            </ng-container>
+            {{lstAdherents.nom}} {{lstAdherents.prenom}}
+          </div>
+
+          <div class="col-sm-4">
+
+            <!-- si l'utilisateur à le droit de changer les participations -->
+            <ng-container *ngIf="droitEdition">
+              <!-- si l'adhérent a une adhésion à jour -->
+              <ng-container *ngIf="lstAdherents.adhesionsSaisonCourante">
+                <nb-toggle labelPosition="right" [checked]="lstAdherents.statutParticipation"
+                           (change)="changerParticipeMailingList(lstAdherents.id, $event)" status="primary">
+                </nb-toggle>
+              </ng-container>
+              <!-- si l'adhérent a une adhésion non à jour -->
+              <ng-container *ngIf="!lstAdherents.adhesionsSaisonCourante">
+                <nb-toggle labelPosition="right" [checked]="lstAdherents.statutParticipation" status="danger"
+                           (change)="changerParticipeMailingList(lstAdherents.id, $event)">
+                </nb-toggle>
+              </ng-container>
+            </ng-container>
+
+            <!-- si l'utilisateur n'a pas le droit de changer les participations -->
+            <ng-container *ngIf="!droitEdition">
               <nb-toggle labelPosition="right" [checked]="lstAdherents.statutParticipation"
-                         (change)="changerParticipeMailingList(lstAdherents.id, $event)" status="primary">
+                         disabled>
               </nb-toggle>
             </ng-container>
-          <!-- si l'adhérent a une adhésion non à jour -->
-          <ng-container *ngIf="!lstAdherents.adhesionsSaisonCourante">
-            <nb-toggle labelPosition="right" [checked]="lstAdherents.statutParticipation" status="danger"
-                       (change)="changerParticipeMailingList(lstAdherents.id, $event)">
-            </nb-toggle>
-          </ng-container>
-        </ng-container>
 
-        <!-- si l'utilisateur n'a pas le droit de changer les participations -->
-        <ng-container *ngIf="!droitEdition">
-          <nb-toggle labelPosition="right" [checked]="lstAdherents.statutParticipation"
-                     disabled>
-          </nb-toggle>
-        </ng-container>
-
-      </div>
+          </div>
 
 
-    </nb-list-item>
-  </nb-list>
+        </nb-list-item>
+      </nb-list>
 
 
+    </nb-card-body>
 
-</nb-card-body>
 
+  </div>
+</div>
 
 

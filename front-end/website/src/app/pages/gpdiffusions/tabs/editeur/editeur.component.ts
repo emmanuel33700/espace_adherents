@@ -286,6 +286,30 @@ export class EditeurComponent implements OnInit {
   activerSelectionGroupe() {
     this.selectionGroupeActive = true;
   }
+
+  /**
+   * supprimer les fichiers téléchargé
+   */
+  supprimerFichiersJoints() {
+
+    this.listeDeDiffusionServiceUtilitaire.delBinarysToMail({idMail: this.idMail})
+      .subscribe(
+        (data) => {
+          this.loggerService.info(JSON.stringify(data));
+        },
+        (error) => {
+          this.loggerService.error(JSON.stringify(error));
+          this.toastrService.danger(
+            'Erreur technique lors de la suppression des fichiers',
+            'Erreur ');
+        },
+        () => {
+          this.loggerService.info(' fini');
+          this.filesName = [];
+        },
+      );
+
+  }
 }
 
 

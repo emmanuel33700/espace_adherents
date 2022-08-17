@@ -85,18 +85,23 @@
             </div>
           </div>
 
-          <ng-container *ngIf="nbFichierEnCourTelechargement > 0">
-            Téléchargement des fichiers en cours...
-          </ng-container>
-          <ng-container *ngIf="nbFichierEnCourTelechargement == 0">
-            <div class="form-group row">
-              <div class="col-sm-3">
-                <ul class="alert-message-list">
-                  <li *ngFor="let fileName of filesName" class="alert-message">{{ fileName }}</li>
-                </ul>
-              </div>
-            </div>
-          </ng-container>
+
+          <div class="form-group row">
+            <ng-container *ngIf="nbFichierEnCourTelechargement > 0">
+              <label class="label col-sm-3 col-form-label">Téléchargement des fichiers en cours...</label>
+            </ng-container>
+            <ng-container *ngIf="nbFichierEnCourTelechargement == 0 && filesName?.length">
+
+              <label class="label col-sm-3 col-form-label">Fichier(s) joint(s) :
+                <nb-icon class="action-icon" icon="trash-2" (click)="supprimerFichiersJoints()"></nb-icon>
+              </label>
+              <ul>
+                <li *ngFor="let fileName of filesName" class="label col-sm-9 col-form-label">{{ fileName }}</li>
+              </ul>
+
+            </ng-container>
+          </div>
+
 
 
           <angular-editor [placeholder]="'Votre email...'" [(ngModel)]="mailHtml" name="mailHtml"

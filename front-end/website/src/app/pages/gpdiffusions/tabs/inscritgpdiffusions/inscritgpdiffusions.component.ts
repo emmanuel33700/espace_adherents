@@ -37,6 +37,9 @@ export class InscritgpdiffusionsComponent implements OnInit {
   url_photo_profil: string = environment.url_photo_profil;
 
 
+
+
+
   constructor(
     private listeDeDiffusionServiceAdherent: ListeDeDiffusionServiceAdherent,
     private listeDeDiffusionServiceUtilitaire: ListeDeDiffusionServiceUtilitaire,
@@ -62,7 +65,7 @@ export class InscritgpdiffusionsComponent implements OnInit {
       this.droitEdition = true;
     }
 
-    this.listeDeDiffusionServiceUtilitaire.getAdherentsInscritListe({idListe: this.listeDiffusion.id})
+    this.listeDeDiffusionServiceUtilitaire.getAdherentsInscritListe({idListe: this.listeDiffusion.id, filter: 'ALL'})
       .subscribe(
         (data) => {
           this.loggerService.info(JSON.stringify(data));
@@ -80,6 +83,44 @@ export class InscritgpdiffusionsComponent implements OnInit {
         },
       );
   }
+
+
+
+  /**
+   * Changer le type de filtre
+   * @param event
+   */
+  changeFiltre(event: string) {
+    this.loggerService.info('Evenement : ' + event);
+
+    // Type de filtre pour l'affichange des adhérents
+    type typeFiltre = 'ALL' | 'ONLYADH' | 'ONLYINSCRIT';
+
+    const choixFiltre: typeFiltre = event as typeFiltre;
+
+    this.loggerService.info('choixFiltre : ' + choixFiltre);
+
+    this.loading = true;
+
+    this.listeDeDiffusionServiceUtilitaire.getAdherentsInscritListe({idListe: this.listeDiffusion.id, filter: choixFiltre})
+      .subscribe(
+        (data) => {
+          this.loggerService.info(JSON.stringify(data));
+          this.listInscritsMailingListe = data;
+          this.listInscritsMailingListe.libelle = this.listeDiffusion.libelle;
+        },
+        (error) => {
+          this.loggerService.error(JSON.stringify(error));
+          this.toastrService.danger(
+            'Erreur technique lors de la récupération des données',
+            'Erreur ');
+        },
+        () => {
+          this.loading = false;
+        },
+      );
+  }
+
 
   /**
    *
