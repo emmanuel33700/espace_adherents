@@ -68,6 +68,25 @@ public interface DiffusionApi {
     @PreAuthorize("isDansGroupe('CONSEIL')")
     ResponseEntity<Void> addListe(@Parameter(in = ParameterIn.PATH, description = "id de la liste de diffusion", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe, @Parameter(in = ParameterIn.DEFAULT, description = "Objet listeDiffusion", required=true, schema=@Schema()) @Valid @RequestBody ListeDiffusion body);
 
+    @Operation(summary = "Supprimer l'ensemble des fichiers attaché à un mail", description = "", security = {
+            @SecurityRequirement(name = "oAuth", scopes = {
+                    "ress-adherent-admin"        })    }, tags={ "Liste de diffusion" })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation réussie"),
+
+            @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
+
+            @ApiResponse(responseCode = "403", description = "Droit insufisant"),
+
+            @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))),
+
+            @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ModelApiResponse.class))) })
+    @RequestMapping(value = "/diffusion/mail/{idMail}/fichier",
+            produces = { "application/json" },
+            method = RequestMethod.DELETE)
+    @PreAuthorize("isDansGroupe('RES_ATELIER')")
+    ResponseEntity<Void> delBinarysToMail(@Parameter(in = ParameterIn.PATH, description = "id du mail à envoyer", required=true, schema=@Schema()) @PathVariable("idMail") Long idMail);
+
 
     @Operation(summary = "Supprimer une liste de diffusion", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {

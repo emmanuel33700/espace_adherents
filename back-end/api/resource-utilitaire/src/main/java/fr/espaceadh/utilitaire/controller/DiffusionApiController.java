@@ -115,6 +115,19 @@ public class DiffusionApiController implements DiffusionApi {
     }
 
     /**
+     * Supression de l'ensemble des pieces jointes d'un mail en cours d'écriture
+     * @param idMail
+     * @return
+     */
+    public ResponseEntity<Void> delBinarysToMail(@Parameter(in = ParameterIn.PATH, description = "id du mail à envoyer", required=true, schema=@Schema()) @PathVariable("idMail") Long idMail) {
+        String accept = request.getHeader("Accept");
+
+        this.delFolder(Long.toString(idMail));
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+
+    /**
      * Supprimer une liste de diffusion
      * @param idListe
      * @return 
