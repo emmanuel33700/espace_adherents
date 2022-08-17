@@ -162,9 +162,6 @@ public class DiffusionApiController implements DiffusionApi {
 
                InscritsMailingListe model = null;
 
-               LOGGER.info("Saision courante  {}, inscriptionML {} ", dto.isAdhesionSaisonCourante() , dto.isInscriptionMailingList());
-
-
                if (this.hasRole("ADMIN") ) {
                    if (filter.equalsIgnoreCase("ALL")) {
                        listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
