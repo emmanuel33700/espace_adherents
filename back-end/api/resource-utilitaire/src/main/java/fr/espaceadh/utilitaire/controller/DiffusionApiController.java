@@ -161,27 +161,37 @@ public class DiffusionApiController implements DiffusionApi {
 
                LOGGER.info("Saision courante  {}, inscriptionML {} ", dto.isAdhesionSaisonCourante() , dto.isInscriptionMailingList());
 
-               // si l'admin veut voir l'ensemble des adhérents
-               if (this.hasRole("ADMIN") && filter.equalsIgnoreCase("ALL")) {
-                   LOGGER.info("ENSEMBLE DES ADH ");
-                   listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
-               }
-               // SI l'admin veut voir uniquement les adhérents de la saison conrante
-               // ou si role conseil d'admin
-               // Restitution uniquement des adhérents de la saison ++ personnes inscrit sur la liste
-               else if (((this.hasRole("ADMIN") && filter.equalsIgnoreCase("ONLYADH")) || this.hasRole("CONSEIL"))
-                       && (dto.isAdhesionSaisonCourante() || dto.isInscriptionMailingList())){
 
-                   LOGGER.info("ENSEMBLE DES ADH A JOUR de la COTISATION");
-                   listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
+               if (this.hasRole("ADMIN") ) {
+                   if (filter.equalsIgnoreCase("ALL")) {
+                       listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
+                   }
+                   // Restitution uniquementpersonnes inscrit sur la liste
+                   else if (filter.equalsIgnoreCase("ONLYINSCRIT") && dto.isInscriptionMailingList()) {
+                       listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
+                   }
+                   // Restitution uniquement des adhérents de la saison ++ personnes inscrit sur la liste
+                   else if (filter.equalsIgnoreCase("ONLYADH") && (dto.isAdhesionSaisonCourante() || dto.isInscriptionMailingList())) {
+                       listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
+                   }
+
                }
-               // SI l'admin veut voir uniquement les adhérents inscrits
-               // ou si role conseil d'admin
+
+
+               else if (this.hasRole("CONSEIL")) {
+                   // Restitution uniquementpersonnes inscrit sur la liste
+                   if (filter.equalsIgnoreCase("ONLYINSCRIT") && dto.isInscriptionMailingList()) {
+                       listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
+                   }
+                   // Restitution uniquement des adhérents de la saison ++ personnes inscrit sur la liste
+                   else if (filter.equalsIgnoreCase("ONLYADH") && (dto.isAdhesionSaisonCourante() || dto.isInscriptionMailingList())) {
+                       listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
+                   }
+
+               }
+
                // Restitution uniquement des inscrits
-               else  if(((this.hasRole("ADMIN") && filter.equalsIgnoreCase("ONLYINSCRIT")) || this.hasRole("RES_ATELIER"))
-                   && dto.isInscriptionMailingList()){
-
-                   LOGGER.info("UNIQUEMENT LES INSCRITS");
+               else  if(this.hasRole("RES_ATELIER") && dto.isInscriptionMailingList()) {
                    listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
                }
 
