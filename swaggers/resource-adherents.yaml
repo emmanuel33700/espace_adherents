@@ -765,6 +765,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+  '/adherent/listeSaisonFiltre':
+    get:
+      tags:
+        - listing adherent
+      summary: Récupérer les  adhérents de la saison ayant accepté d'apparaitre sur le site
+      operationId: getListeAdherentsFiltreSaison
+      security:
+        - oAuth:
+            - ress-adherent-read
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeAdherents'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'                
   '/adherent/{idadh}/manifestions':
     get:
       tags:
@@ -1016,6 +1050,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+                
+  '/adherent/{idadh}/manifestion/{idManifestation}/accesdirect':
+    post:
+      tags:
+        - Manifestation
+      summary: Ajouter la participation à une manifestation pour un adherent
+      operationId: ajoutManifestationAdherentAccesDirect
+      parameters:
+        - name: idadh
+          in: path
+          description: id l'adherent
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: idManifestation
+          in: path
+          description: id de la manifestation
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Besoin de l'objet manifestation le lier à un adherents
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipationManifestationAccesDirect'
+        required: true
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'                
   '/adherent/{idadh}/communications':
     get:
       tags:
@@ -1513,6 +1595,27 @@ components:
           example: 1
       xml:
         name: Order
+    ParticipationManifestationAccesDirect:
+      type: object
+      properties:
+        statutParticipation:
+          type: integer
+          format: int64
+          description: |
+            Types de participation. Valeurs possibles :
+            * 1 : PARTICIPE               
+            * 2 : PARTICIPE PAS             
+          enum:
+            - 1
+            - 2
+          example: 1
+        emailadherent:
+          maxLength: 40
+          minLength: 5
+          type: string
+          example: test.test@gmail.com
+      xml:
+        name: Order        
     ListeCommunications:
       type: array
       items:
