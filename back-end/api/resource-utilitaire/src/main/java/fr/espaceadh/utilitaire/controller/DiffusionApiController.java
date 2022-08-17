@@ -148,7 +148,10 @@ public class DiffusionApiController implements DiffusionApi {
     public ResponseEntity<ListInscritsMailingListe> getAdherentsInscritListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe,@Parameter(in = ParameterIn.QUERY, description = "type de filtre" ,schema=@Schema(allowableValues={ "ALL", "ONLYADH", "ONLYINSCRIT" }
     )) @Valid @RequestParam(value = "filter", required = false) String filter) {
         String accept = request.getHeader("Accept");
-        if (filter == null ) filter = "ALL";
+        if (this.hasRole("ADMIN") && filter == null ) filter = "ALL";
+        if (this.hasRole("CONSEIL") && filter == null ) filter = "ONLYADH";
+
+
         if (accept != null && accept.contains("application/json")) {
 
             LOGGER.info("Type de fitre appliqué {} " , filter);
