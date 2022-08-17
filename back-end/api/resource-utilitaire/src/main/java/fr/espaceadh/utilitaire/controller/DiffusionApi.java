@@ -126,7 +126,8 @@ public interface DiffusionApi {
             produces = { "application/json" },
             method = RequestMethod.GET)
     @PreAuthorize("isDansGroupe('RES_ATELIER')")
-    ResponseEntity<ListInscritsMailingListe> getAdherentsInscritListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe);
+    ResponseEntity<ListInscritsMailingListe> getAdherentsInscritListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe, @Parameter(in = ParameterIn.QUERY, description = "type de filtre" ,schema=@Schema(allowableValues={ "ALL", "ONLYADH", "ONLYINSCRIT" }
+    )) @Valid @RequestParam(value = "filter", required = false) String filter);
 
     @Operation(summary = "Recupérer la liste des listes de diffusion", description = "", security = {
         @SecurityRequirement(name = "oAuth", scopes = {

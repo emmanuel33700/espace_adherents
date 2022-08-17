@@ -145,8 +145,10 @@ public class DiffusionApiController implements DiffusionApi {
      * @param idListe
      * @return
      */
-    public ResponseEntity<ListInscritsMailingListe> getAdherentsInscritListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe) {
+    public ResponseEntity<ListInscritsMailingListe> getAdherentsInscritListe(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idListe") Long idListe,@Parameter(in = ParameterIn.QUERY, description = "type de filtre" ,schema=@Schema(allowableValues={ "ALL", "ONLYADH", "ONLYINSCRIT" }
+    )) @Valid @RequestParam(value = "filter", required = false) String filter) {
         String accept = request.getHeader("Accept");
+        if (filter == null ) filter = "ALL";
         if (accept != null && accept.contains("application/json")) {
            Collection<AdherentMailingListeDto> lstADh = this.listeDiffusionService.getListeAdherentsListDiffusion(idListe);
             ListInscritsMailingListe listInscritsMailingListe = new ListInscritsMailingListe();
@@ -155,11 +157,22 @@ public class DiffusionApiController implements DiffusionApi {
 
                InscritsMailingListe model = null;
 
-               if (this.hasRole("ADMIN")) {
+               // si l'admin veut voir l'ensemble des adhérents
+               if (this.hasRole("ADMIN") && filter.equalsIgnoreCase("ALL")) {
                    listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
-               } else if (this.hasRole("CONSEIL") && (dto.isAdhesionSaisonCourante() || dto.isInscriptionMailingList())){
+               }
+               // SI l'admin veut voir uniquement les adhérents de la saison conrante
+               // ou si role conseil d'admin
+               // Restitution uniquement des adhérents de la saison ++ personnes inscrit sur la liste
+               else if (((this.hasRole("ADMIN") && filter.equalsIgnoreCase("ONLYADH")) || this.hasRole("CONSEIL"))
+                       && (dto.isAdhesionSaisonCourante() || dto.isInscriptionMailingList())){
                    listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
-               } else  if( this.hasRole("RES_ATELIER") && dto.isInscriptionMailingList()){
+               }
+               // SI l'admin veut voir uniquement les adhérents inscrits
+               // ou si role conseil d'admin
+               // Restitution uniquement des inscrits
+               else  if(((this.hasRole("ADMIN") && filter.equalsIgnoreCase("ONLYINSCRIT")) || this.hasRole("RES_ATELIER"))
+                   && dto.isInscriptionMailingList()){
                    listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
                }
 
