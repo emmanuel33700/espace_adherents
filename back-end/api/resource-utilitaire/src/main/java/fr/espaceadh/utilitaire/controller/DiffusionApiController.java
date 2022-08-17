@@ -150,15 +150,20 @@ public class DiffusionApiController implements DiffusionApi {
         String accept = request.getHeader("Accept");
         if (filter == null ) filter = "ALL";
         if (accept != null && accept.contains("application/json")) {
-           Collection<AdherentMailingListeDto> lstADh = this.listeDiffusionService.getListeAdherentsListDiffusion(idListe);
+
+            LOGGER.info("Type de fitre appliqué {} " , filter);
+            Collection<AdherentMailingListeDto> lstADh = this.listeDiffusionService.getListeAdherentsListDiffusion(idListe);
             ListInscritsMailingListe listInscritsMailingListe = new ListInscritsMailingListe();
             listInscritsMailingListe.setId(idListe);
            for (AdherentMailingListeDto dto : lstADh)  {
 
                InscritsMailingListe model = null;
 
+               LOGGER.info("Saision courante  {}, inscriptionML {} ", dto.isAdhesionSaisonCourante() , dto.isInscriptionMailingList());
+
                // si l'admin veut voir l'ensemble des adhérents
                if (this.hasRole("ADMIN") && filter.equalsIgnoreCase("ALL")) {
+                   LOGGER.info("ENSEMBLE DES ADH ");
                    listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
                }
                // SI l'admin veut voir uniquement les adhérents de la saison conrante
@@ -166,6 +171,8 @@ public class DiffusionApiController implements DiffusionApi {
                // Restitution uniquement des adhérents de la saison ++ personnes inscrit sur la liste
                else if (((this.hasRole("ADMIN") && filter.equalsIgnoreCase("ONLYADH")) || this.hasRole("CONSEIL"))
                        && (dto.isAdhesionSaisonCourante() || dto.isInscriptionMailingList())){
+
+                   LOGGER.info("ENSEMBLE DES ADH A JOUR de la COTISATION");
                    listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
                }
                // SI l'admin veut voir uniquement les adhérents inscrits
@@ -173,6 +180,8 @@ public class DiffusionApiController implements DiffusionApi {
                // Restitution uniquement des inscrits
                else  if(((this.hasRole("ADMIN") && filter.equalsIgnoreCase("ONLYINSCRIT")) || this.hasRole("RES_ATELIER"))
                    && dto.isInscriptionMailingList()){
+
+                   LOGGER.info("UNIQUEMENT LES INSCRITS");
                    listInscritsMailingListe.addLstAdherentsItem(this.convertDto(dto));
                }
 
