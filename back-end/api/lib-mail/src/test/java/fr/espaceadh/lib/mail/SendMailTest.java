@@ -92,6 +92,7 @@ public class SendMailTest {
     }
 
 
+    @Test
     public void testEnvoyerMailSansTemplate(){
 
 
@@ -108,6 +109,9 @@ public class SendMailTest {
 
 
             mailIn.setMessageTo(messageTo);
+
+            mailIn.setMailReply("charline.rhein@hotmail.fr");
+            mailIn.setAuteurName("Emmanuel CHENAIS");
 
             /* type de template */
             mailIn.setTemplateMailEnum(null);
@@ -169,7 +173,8 @@ public class SendMailTest {
     }
 
 
-    @Test
+
+
     public void testStatisticMail(){
         ListeMessagesResulteDto mailOut = sendMail.recupeHistoriqueMessage("manu.chenais@gmail.com");
         System.out.println(mailOut);

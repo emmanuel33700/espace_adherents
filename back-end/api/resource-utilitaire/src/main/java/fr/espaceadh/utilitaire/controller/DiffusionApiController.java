@@ -2,6 +2,7 @@ package fr.espaceadh.utilitaire.controller;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
+import fr.espaceadh.adherents.service.AdherentService;
 import fr.espaceadh.lib.mail.dto.InputStreamCustom;
 import fr.espaceadh.utilitaire.dto.AdherentMailingListeDto;
 import fr.espaceadh.utilitaire.dto.EMailDto;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,6 +52,9 @@ public class DiffusionApiController implements DiffusionApi {
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    protected AdherentService adherentService;
 
     @org.springframework.beans.factory.annotation.Autowired
     public DiffusionApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -294,7 +299,13 @@ public class DiffusionApiController implements DiffusionApi {
         if (body.getTypeMail() == MailAEnvoyer.TypeMailEnum.NUMBER_10) {
             LOGGER.debug("Envoyer un mail à la mailing liste {}", body.getIdListeDiffusion());
 
+            AdherentDto auteurMaildto = getIdAdherentConnecte();
+
+            dto.setMailReplyTo(auteurMaildto.getEmail());
+            dto.setAuteurName(auteurMaildto.getNom() + " " + auteurMaildto.getPrenom());
+
             boolean restult = listeDiffusionService.envoyerMailListeDiffusion(dto, body.getIdListeDiffusion());
+
 
 
             try {
@@ -449,6 +460,25 @@ public class DiffusionApiController implements DiffusionApi {
 
         }
         return false;
+    }
+
+
+    private AdherentDto getIdAdherentConnecte() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        String username = null;
+        if (principal instanceof UserDetails) {
+            username = ((UserDetails) principal).getUsername();
+        } else {
+            username = principal.toString();
+        }
+
+        if (username != null) {
+            AdherentDto dto = this.adherentService.recupererAdherent(username);
+            return dto;
+        }
+        LOGGER.error("Aucun username recupérer dans le jeton d'authentification");
+        return null;
     }
 
 }

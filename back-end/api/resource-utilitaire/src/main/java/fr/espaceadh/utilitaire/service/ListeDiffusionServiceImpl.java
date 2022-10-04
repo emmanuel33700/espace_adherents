@@ -92,18 +92,26 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
      */
     @Override
     @Transactional(readOnly = true, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public boolean envoyerMailListeDiffusion(EMailDto emailDto,  long idMailingListe) {
+    public boolean envoyerMailListeDiffusion(EMailDto emailDto, long idMailingListe) {
 
-            // récupérer les adresses email de destinations
-            Collection<AdherentDto> lstAdherents = listeDiffusionDAO.getAdherentsInscritListeDiffusion(idMailingListe);
+        // récupérer les adresses email de destinations
+        emailDto.setLstAdherents(listeDiffusionDAO.getAdherentsInscritListeDiffusion(idMailingListe));
 
-            if (lstAdherents == null || lstAdherents.isEmpty()) {
-                LOGGER.info("Aucun mail associé à cette liste de diffusion {}", idMailingListe);
-                return false;
-            }
+        //récupérer le détail de la liste de diffusion
+        GroupeDiffusionDto lstDiffsionDto = listeDiffusionDAO.getListeListeDiffusion(idMailingListe);
 
-            return this.envoyerMail(emailDto, lstAdherents);
+        //Si liste de diffusion publique => Avec avec "reply to" avec l'adresse email de l'adhérent; sinon => par defauit (rien)
+        if (lstDiffsionDto.getIdAuthority() != 2){
+            emailDto.setMailReplyTo(null);
+            emailDto.setAuteurName(null);
+        }
 
+        if (emailDto.getLstAdherents() == null || emailDto.getLstAdherents().isEmpty()) {
+            LOGGER.info("Aucun mail associé à cette liste de diffusion {}", idMailingListe);
+            return false;
+        }
+
+        return this.envoyerMail(emailDto );
 
 
     }
@@ -111,15 +119,14 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
     /**
      * Création et envoie du mail
      * @param emailDto
-     * @param lstAdherents
      * @return
      */
-    private boolean envoyerMail(EMailDto emailDto, Collection<AdherentDto> lstAdherents) {
+    private boolean envoyerMail(EMailDto emailDto ) {
         MailInDto mailIn = new MailInDto();
 
         // renseigner les adresses de destination
         Collection<String> messageTo = new ArrayList<>();
-        for (AdherentDto adh : lstAdherents) {
+        for (AdherentDto adh : emailDto.getLstAdherents()) {
             messageTo.add(adh.getEmail());
         }
         mailIn.setMessageTo(messageTo);
@@ -134,6 +141,12 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
 
         /** ajouter l'id de mail **/
         mailIn.setIdMAil(Long.toString(emailDto.getIdMail()));
+
+        /** ajout auteur du mail **/
+        mailIn.setAuteurName(emailDto.getAuteurName());
+
+        /** ajout email replyto **/
+        mailIn.setMailReply(emailDto.getMailReplyTo());
 
         /** ajouter les fichiers **/
 
@@ -181,7 +194,8 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
             return false;
         }
 
-        return this.envoyerMail(eMailDto, lstAdherents);
+        eMailDto.setLstAdherents(lstAdherents);
+        return this.envoyerMail(eMailDto);
 
 
 

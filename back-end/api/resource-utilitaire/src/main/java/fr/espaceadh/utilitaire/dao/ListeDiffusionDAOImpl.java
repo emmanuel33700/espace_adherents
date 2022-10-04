@@ -143,6 +143,22 @@ public class ListeDiffusionDAOImpl extends JdbcDaoSupport implements ListeDiffus
         return lstGroupeDiffusionDto;      
     }
 
+    @Override
+    public GroupeDiffusionDto getListeListeDiffusion(long idGroupeDiffusion) {
+        StringBuilder query = new StringBuilder();
+
+        query.append(" SELECT id_groupe_diffusion, description, fk_id_type_authority ");
+        query.append("   , (select count(1) from r_groupe_diffusion_adherents where r_groupe_diffusion_adherents.pk_id_groupe_diffusion = t_groupe_diffusion.id_groupe_diffusion) as nbinscrit");
+        query.append(" 	  FROM t_groupe_diffusion ");
+        query.append(" 	  where  id_groupe_diffusion = ? ");
+
+        List<GroupeDiffusionDto> lstGroupeDiffusionDto =  this.getJdbcTemplate().query(query.toString(), new GroupeDiffusionMapper(), idGroupeDiffusion);
+
+        if (lstGroupeDiffusionDto.isEmpty())
+            LOGGER.error("Attention aucune mailing liste");
+        return lstGroupeDiffusionDto.get(0);
+    }
+
     /**
      * Recherche la liste des adhérents inscrit à une mailing liste
      *

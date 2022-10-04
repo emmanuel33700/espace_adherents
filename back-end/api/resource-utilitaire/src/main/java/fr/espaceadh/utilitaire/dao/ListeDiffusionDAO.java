@@ -63,6 +63,16 @@ public interface ListeDiffusionDAO {
      */
     public Collection<GroupeDiffusionDto> getListeListeDiffusion();
 
+
+
+    /**
+     * Récupérer le détail d'une  listes de diffusion
+     * @return
+     */
+    public GroupeDiffusionDto getListeListeDiffusion(long idGroupeDiffusion);
+
+
+
     /**
      * Recherche la liste des adhérents inscrit à une mailing liste
      * @param idGroupeDiffusion

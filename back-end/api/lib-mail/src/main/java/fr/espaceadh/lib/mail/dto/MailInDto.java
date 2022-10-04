@@ -26,6 +26,8 @@ public class MailInDto {
 
     private TemplateMailEnum templateMailEnum;
     private Collection<String> messageTo;
+    private String mailReply;
+    private String auteurName;
     HashMap<String, String> templateVariables;
     private String sujetMail;
     private String htmlMessage;
@@ -86,5 +88,25 @@ public class MailInDto {
 
     public void setIdMAil(String idMAil) {
         this.idMAil = idMAil;
+    }
+
+    public String getAuteurName() {
+        return auteurName;
+    }
+
+    public void setAuteurName(String auteurName) {
+        this.auteurName = auteurName;
+    }
+
+    public String getMailReply() {
+        return mailReply;
+    }
+
+    /**
+     * Adresse e-mail de réponse
+     * @param mailReply
+     */
+    public void setMailReply(String mailReply) {
+        this.mailReply = mailReply;
     }
 }

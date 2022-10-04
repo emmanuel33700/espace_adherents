@@ -195,6 +195,16 @@ public class GestionMailImpl implements GestionMail {
      */
     private MailjetRequest envoyerMailSansTemplate(MailInDto mailIn, JSONArray emailto, JSONArray jSONArrayAttachement) {
 
+        String mailFrom = env.getProperty("message.from.mail");
+        String fromName = env.getProperty("message.from.name");
+        String replyTo = env.getProperty("message.from.mail");
+        if (!mailIn.getMailReply().isEmpty()) {
+            replyTo = mailIn.getMailReply();
+        }
+
+        if (!mailIn.getAuteurName().isEmpty()) {
+            fromName = fromName + " (" + mailIn.getAuteurName() + ")";
+        }
 
         MailjetRequest request = null;
 
@@ -202,8 +212,10 @@ public class GestionMailImpl implements GestionMail {
                 .property(Emailv31.MESSAGES, new JSONArray()
                         .put(new JSONObject()
                                 .put(Emailv31.Message.FROM, new JSONObject()
-                                        .put("Email", env.getProperty("message.from.mail"))
-                                        .put("Name", env.getProperty("message.from.name")))
+                                        .put("Email", mailFrom)
+                                        .put("Name", fromName ))
+                                .put(Emailv31.Message.REPLYTO, new JSONObject()
+                                        .put("Email", replyTo))
                                 .put(Emailv31.Message.TO, emailto)
                                 .put(Emailv31.Message.CUSTOMID, mailIn.getIdMAil())
                                 .put(Emailv31.Message.TEMPLATELANGUAGE, false)
