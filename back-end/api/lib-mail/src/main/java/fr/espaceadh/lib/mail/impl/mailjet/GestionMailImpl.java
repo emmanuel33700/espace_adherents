@@ -198,11 +198,11 @@ public class GestionMailImpl implements GestionMail {
         String mailFrom = env.getProperty("message.from.mail");
         String fromName = env.getProperty("message.from.name");
         String replyTo = env.getProperty("message.from.mail");
-        if (!mailIn.getMailReply().isEmpty()) {
+        if (mailIn.getMailReply() != null) {
             replyTo = mailIn.getMailReply();
         }
 
-        if (!mailIn.getAuteurName().isEmpty()) {
+        if (mailIn.getAuteurName() != null) {
             fromName = fromName + " (" + mailIn.getAuteurName() + ")";
         }
 
