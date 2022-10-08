@@ -97,15 +97,6 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
         // récupérer les adresses email de destinations
         emailDto.setLstAdherents(listeDiffusionDAO.getAdherentsInscritListeDiffusion(idMailingListe));
 
-        //récupérer le détail de la liste de diffusion
-        GroupeDiffusionDto lstDiffsionDto = listeDiffusionDAO.getListeListeDiffusion(idMailingListe);
-
-        //Si liste de diffusion publique => Avec avec "reply to" avec l'adresse email de l'adhérent; sinon => par defauit (rien)
-        if (lstDiffsionDto.getIdAuthority() != 2){
-            emailDto.setMailReplyTo(null);
-            emailDto.setAuteurName(null);
-        }
-
         if (emailDto.getLstAdherents() == null || emailDto.getLstAdherents().isEmpty()) {
             LOGGER.info("Aucun mail associé à cette liste de diffusion {}", idMailingListe);
             return false;

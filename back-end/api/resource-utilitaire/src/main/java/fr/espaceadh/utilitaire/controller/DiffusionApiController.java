@@ -306,8 +306,6 @@ public class DiffusionApiController implements DiffusionApi {
 
             boolean restult = listeDiffusionService.envoyerMailListeDiffusion(dto, body.getIdListeDiffusion());
 
-
-
             try {
                 this.closeFilIpts(dto.getLstFile());
             } catch (IOException e) {
