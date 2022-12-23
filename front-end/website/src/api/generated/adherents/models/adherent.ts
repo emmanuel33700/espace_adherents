@@ -10,6 +10,11 @@ export interface Adherent {
    * Indique si l'adhérent est adhérent dans la saison courante
    */
   adhesionsSaisonCourante?: boolean;
+
+  /**
+   * Indique si l'adhérent est adhérent dans la saison précédente
+   */
+  adhesionsSaisonPrecedente?: boolean;
   adresse1?: string;
   adresse2?: string;
 

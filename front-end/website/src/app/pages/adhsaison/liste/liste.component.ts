@@ -3,18 +3,64 @@ import {Router} from '@angular/router';
 import {ListingAdherentService} from '../../../../api/generated/adherents/services/listing-adherent.service';
 import {LoggerService} from '../../../@core/utils/logger.service';
 import {Adherent} from '../../../../api/generated/adherents/models';
+import {Adherent2} from '../../../../api/generated/adherents/models';
 import {NbToastrService} from '@nebular/theme';
 import {AdherentService} from '../../../../api/generated/adherents/services/adherent.service';
 import {environment} from '../../../../environments/environment';
 import {CsvdataService} from '../../../@core/utils/csvdata.service';
+
+
+
+interface Adherentexport {
+  adhesionsSaisonCourante?: boolean;
+  adhesionsSaisonPrecedente?: boolean;
+  adresse1?: string;
+  adresse2?: string;
+  civilite?: 'Mr' | 'Mme';
+  codePostal?: string;
+  commentaire?: string;
+  dateEnregistrement?: string;
+  dateMiseAJour?: string;
+  dateNaissance?: string;
+  email?: string;
+  id?: number;
+  nom?: string;
+  prenom?: string;
+  publicContact?: boolean;
+  telMaison?: string;
+  telPortable?: string;
+  telTravail?: string;
+  ville?: string;
+
+
+  cheque?: boolean;
+  comptaBanque?: string;
+  comptaNumCheque?: string;
+  comptaSomme?: number;
+  espece?: boolean;
+  idadhesion?: number;
+  idAnneeAdhesion?: number;
+
+  /**
+   * Types d'adhersions. Valeurs possibles :
+   * * 1 : ADULTE
+   * * 2 : FAMILLE
+   * * 3 : RESPONSABLE DE FAMILLE
+   * * 4 : ENFANT
+   * * 5 : BIENFAITEUR
+   * * 6 : HONNEUR
+   * * 7 : ETUDIANT
+   * * 8 : DEMANDEUR EMPLOI
+   */
+  idTypeAdhesion?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  libelleAnneeAdhesion?: string;
+}
 
 @Component({
   selector: 'ngx-form-layouts',
   styleUrls: ['./liste.component.scss'],
   templateUrl: './liste.component.html',
 })
-
-
 export class ListeComponent implements OnInit {
 
 
@@ -23,6 +69,11 @@ export class ListeComponent implements OnInit {
   isAdherentSaison: boolean;
   adherentSelected: Adherent = {};
   url_photo_profil: string = environment.url_photo_profil;
+
+
+  // Utilisé uniquement pour l'export csv de la saison courante
+  adherents2: Adherent2[] = [];
+  adherentexport: Adherentexport[] = [];
 
   // Toaster
   @HostBinding('class')
@@ -188,9 +239,55 @@ export class ListeComponent implements OnInit {
     let nomFichier: string;
     if (this.isAdherentSaison) {
       nomFichier = 'export_adherent_de_la_saison';
+      this.listingAdherentService.getListeAdherentsSaison2({})
+        .subscribe(
+          (data) => {
+            this.adherents2 = data;
+            this.adherents2.forEach((value, index) => {
+                  this.adherentexport[index] = {
+                    id: value.adherent.id,
+                    civilite: value.adherent.civilite,
+                    nom: value.adherent.nom,
+                    prenom: value.adherent.prenom,
+                    email: value.adherent.email,
+                    adresse1: value.adherent.adresse1,
+                    adresse2: value.adherent.adresse2,
+                    codePostal: value.adherent.codePostal,
+                    ville: value.adherent.ville,
+                    adhesionsSaisonCourante: value.adherent.adhesionsSaisonCourante,
+                    adhesionsSaisonPrecedente: value.adherent.adhesionsSaisonPrecedente,
+                    telMaison : value.adherent.telMaison,
+                    telPortable: value.adherent.telPortable,
+                    dateEnregistrement: value.adherent.dateEnregistrement,
+                    dateMiseAJour: value.adherent.dateMiseAJour,
+                    dateNaissance: value.adherent.dateNaissance,
+
+
+                    idadhesion: value.adhesion.id,
+                    idTypeAdhesion: value.adhesion.idTypeAdhesion,
+                    cheque: value.adhesion.cheque,
+                    espece: value.adhesion.espace,
+                    comptaSomme: value.adhesion.comptaSomme,
+                    comptaBanque: value.adhesion.comptaBanque,
+                    comptaNumCheque: value.adhesion.comptaNumCheque,
+                    libelleAnneeAdhesion: value.adhesion.libelleAnneeAdhesion,
+                  };
+            });
+          },
+          (error) => {
+            this.loggerService.error(error);
+            this.toastrService.danger(
+              'Erreur technique lors de recuperation des données',
+              'Erreur ');
+          },
+          () => {
+            this.loggerService.debug('fini');
+            this.csvdataService.exportToCsv(nomFichier, this.adherentexport);
+          });
     } else {
       nomFichier = 'export_complet_adherent';
+      this.csvdataService.exportToCsv(nomFichier, this.adherentsListeComplete);
     }
-    this.csvdataService.exportToCsv(nomFichier, this.adherentsListeComplete);
+
   }
 }
