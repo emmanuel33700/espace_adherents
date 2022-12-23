@@ -104,6 +104,15 @@ public class AdherentServiceImpl implements AdherentService{
         return adherentsDAO.recupererListeAdherentSaison();
     }
 
+    /**
+     * Recupérer la liste des adhérents de la saison avec détail comptable sur l'adhésions de la saison
+     * @return
+     */
+    @Override
+    public Collection<AdhesionDto> recupererListeAdherentAdhesionSaison() {
+        return adherentsDAO.recupererListeAdherentAdhesionSaison();
+    }
+
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public boolean updateAdherents(AdherentDto adherentDto) {

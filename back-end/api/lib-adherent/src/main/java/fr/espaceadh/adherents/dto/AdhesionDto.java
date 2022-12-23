@@ -24,6 +24,7 @@ public class AdhesionDto {
 
     private Long id = null;
     private Long idAdherent = null;
+    private AdherentDto adherentDto = null;
     private Long idAnneeAdhesion = null;
     private String libelleAnneeAdhesion = null;
     private TypeAdhesionEnum idTypeAdhesion = null;
@@ -122,5 +123,11 @@ public class AdhesionDto {
         this.libelleAnneeAdhesion = libelleAnneeAdhesion;
     }
 
-  
+    public AdherentDto getAdherentDto() {
+        return adherentDto;
+    }
+
+    public void setAdherentDto(AdherentDto adherentDto) {
+        this.adherentDto = adherentDto;
+    }
 }

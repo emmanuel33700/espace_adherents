@@ -60,7 +60,11 @@ public interface AdherentsDAO {
      * @return collection d'AdherentDto
      */
     public Collection<AdherentDto> recupererListeAdherentSaison();
-    
+
+    /**
+     * Recupérer la liste des adhérents de la saison avec détail comptable sur l'adhésions de la saison
+     */
+    public Collection<AdhesionDto> recupererListeAdherentAdhesionSaison();
     
     /**
      * Mise à jour d'un adhérent

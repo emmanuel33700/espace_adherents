@@ -64,8 +64,12 @@ public interface AdherentService {
      * @return 
      */
     public Collection<AdherentDto> recupererListeAdherentSaison ();
-    
-    
+
+    /**
+     * Recupérer la liste des adhérents de la saison avec détail comptable sur l'adhésions de la saison
+     * @return
+     */
+    public Collection<AdhesionDto> recupererListeAdherentAdhesionSaison();
 
     /**
      * Mise à jour d'un adhérents
