@@ -6,13 +6,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * Adherent
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2022-12-23T09:53:28.767Z[GMT]")
 
 
 public class Adherent   {
@@ -108,6 +109,9 @@ public class Adherent   {
 
   @JsonProperty("adhesionsSaisonCourante")
   private Boolean adhesionsSaisonCourante = null;
+
+  @JsonProperty("adhesionsSaisonPrecedente")
+  private Boolean adhesionsSaisonPrecedente = null;
 
   public Adherent id(Long id) {
     this.id = id;
@@ -270,7 +274,7 @@ public class Adherent   {
    * Get telMaison
    * @return telMaison
    **/
-  @Schema(example = "95869805", description = "")
+  @Schema(example = "555555555", description = "")
   
   @Size(min=10,max=10)   public String getTelMaison() {
     return telMaison;
@@ -289,7 +293,7 @@ public class Adherent   {
    * Get telTravail
    * @return telTravail
    **/
-  @Schema(example = "95869805", description = "")
+  @Schema(example = "555555555", description = "")
   
   @Size(min=10,max=10)   public String getTelTravail() {
     return telTravail;
@@ -308,7 +312,7 @@ public class Adherent   {
    * Get telPortable
    * @return telPortable
    **/
-  @Schema(example = "112647021", description = "")
+  @Schema(example = "655555555", description = "")
   
   @Size(min=10,max=10)   public String getTelPortable() {
     return telPortable;
@@ -508,9 +512,28 @@ public class Adherent   {
     this.adhesionsSaisonCourante = adhesionsSaisonCourante;
   }
 
+  public Adherent adhesionsSaisonPrecedente(Boolean adhesionsSaisonPrecedente) {
+    this.adhesionsSaisonPrecedente = adhesionsSaisonPrecedente;
+    return this;
+  }
+
+  /**
+   * Indique si l'adhérent est adhérent dans la saison précédente
+   * @return adhesionsSaisonPrecedente
+   **/
+  @Schema(example = "true", description = "Indique si l'adhérent est adhérent dans la saison précédente")
+  
+    public Boolean isAdhesionsSaisonPrecedente() {
+    return adhesionsSaisonPrecedente;
+  }
+
+  public void setAdhesionsSaisonPrecedente(Boolean adhesionsSaisonPrecedente) {
+    this.adhesionsSaisonPrecedente = adhesionsSaisonPrecedente;
+  }
+
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -538,12 +561,13 @@ public class Adherent   {
         Objects.equals(this.commentaire, adherent.commentaire) &&
         Objects.equals(this.dateEnregistrement, adherent.dateEnregistrement) &&
         Objects.equals(this.dateMiseAJour, adherent.dateMiseAJour) &&
-        Objects.equals(this.adhesionsSaisonCourante, adherent.adhesionsSaisonCourante);
+        Objects.equals(this.adhesionsSaisonCourante, adherent.adhesionsSaisonCourante) &&
+        Objects.equals(this.adhesionsSaisonPrecedente, adherent.adhesionsSaisonPrecedente);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, civilite, nom, prenom, adresse1, adresse2, codePostal, ville, telMaison, telTravail, telPortable, email, profession, dateNaissance, lienPhotoProfil, accordMail, publicContact, commentaire, dateEnregistrement, dateMiseAJour, adhesionsSaisonCourante);
+    return Objects.hash(id, civilite, nom, prenom, adresse1, adresse2, codePostal, ville, telMaison, telTravail, telPortable, email, profession, dateNaissance, lienPhotoProfil, accordMail, publicContact, commentaire, dateEnregistrement, dateMiseAJour, adhesionsSaisonCourante, adhesionsSaisonPrecedente);
   }
 
   @Override
@@ -572,6 +596,7 @@ public class Adherent   {
     sb.append("    dateEnregistrement: ").append(toIndentedString(dateEnregistrement)).append("\n");
     sb.append("    dateMiseAJour: ").append(toIndentedString(dateMiseAJour)).append("\n");
     sb.append("    adhesionsSaisonCourante: ").append(toIndentedString(adhesionsSaisonCourante)).append("\n");
+    sb.append("    adhesionsSaisonPrecedente: ").append(toIndentedString(adhesionsSaisonPrecedente)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -580,7 +605,7 @@ public class Adherent   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

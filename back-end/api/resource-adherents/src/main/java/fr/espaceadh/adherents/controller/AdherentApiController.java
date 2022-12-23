@@ -787,7 +787,7 @@ public class AdherentApiController implements AdherentApi {
         model.setDateEnregistrement(this.dateToStringAvecMS(adherent.getDateEnregistrement()));
         model.setDateMiseAJour(this.dateToStringAvecMS(adherent.getDateMiseAJour()));
         model.setAdhesionsSaisonCourante(adherent.isAdhesionSaisonCourante());
-        adherent.isAdherentSaisonPrecedente();
+        model.setAdhesionsSaisonPrecedente(adherent.isAdherentSaisonPrecedente());
         return model;
     }
 
