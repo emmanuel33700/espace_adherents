@@ -653,6 +653,7 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
             adh.setIdAdherentUpdate(rs.getLong("fk_id_adherents_update"));
             adh.setDateMiseAJour(rs.getDate("update_date"));
             adh.setAdhesionSaisonCourante(rs.getBoolean("adherent_saison_courante"));
+
             return adh;
         }
         

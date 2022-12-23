@@ -48,6 +48,8 @@ public class AdherentDto {
   private Long idAdherentUpdate ;
   private boolean adhesionSaisonCourante;
 
+  private boolean adherentSaisonPrecedente;
+
     public Long getId() {
         return id;
     }
@@ -230,6 +232,12 @@ public class AdherentDto {
     public void setAdhesionSaisonCourante(boolean adhesionSaisonCourante) {
         this.adhesionSaisonCourante = adhesionSaisonCourante;
     }
-  
-  
+
+    public boolean isAdherentSaisonPrecedente() {
+        return adherentSaisonPrecedente;
+    }
+
+    public void setAdherentSaisonPrecedente(boolean adherentSaisonPrecedente) {
+        this.adherentSaisonPrecedente = adherentSaisonPrecedente;
+    }
 }
