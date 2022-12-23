@@ -350,6 +350,14 @@ public class AdherentsDAOImpl extends JdbcDaoSupport implements AdherentsDAO{
         query.append("        , tel3, date_maissance, profession, link_picture, public_contact");
         query.append("        , accord_mail, token_acces, commentaire, date_enregistrement");
         query.append("        , fk_id_adherents_update, update_date, true as adherent_saison_courante");
+        query.append("	      , CASE ");
+        query.append("			 WHEN (select 1 ");
+        query.append("			 from t_adhesions, i_annee_adhesion");
+        query.append("			 where t_adhesions.fk_id_annee_adhesions =   (i_annee_adhesion.id_annee_adhesion -1)");
+        query.append("			 and i_annee_adhesion.annee_courante = true ");
+        query.append("			 and t_adherents.id_adherents = t_adhesions.fk_id_adherents)  = 1 THEN true ");
+        query.append("			 ELSE false");
+        query.append("        END as adherent_saison_precedente");
         query.append("		, A.id_adhesions, A.fk_id_adherents, A.fk_id_annee_adhesions, B.libelle_annee, A.fk_id_type_adhesion");
         query.append("        , A.compta_somme, A.compta_banque, A.num_cheque, A.cheque, A.espece, A.a_carte_adhesions");
         query.append("  FROM t_adherents, t_adhesions as A, i_annee_adhesion as B");
