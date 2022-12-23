@@ -406,6 +406,24 @@ public class AdherentApiController implements AdherentApi {
         return new ResponseEntity<>(lstAdh,HttpStatus.OK);
     }
 
+    /**
+     * récupérer la liste des adhérents de la saisons enrichie avec les infos comptables
+     * @return
+     */
+    public ResponseEntity<ListeAdherent2> getListeAdherentsSaison2() {
+        String accept = request.getHeader("Accept");
+        ListeAdherent2 lstAdh =  new ListeAdherent2();
+
+
+        Collection<AdhesionDto> lstAdhesionDto =  this.adherentService.recupererListeAdherentAdhesionSaison();
+
+        for (AdhesionDto adhDto : lstAdhesionDto){
+            lstAdh.add(this.translateDto2(adhDto));
+        }
+
+        return new ResponseEntity<>(lstAdh,HttpStatus.OK);
+    }
+
     public ResponseEntity<ListeAdhesions> getListeAdhesionsAdherent(@Parameter(in = ParameterIn.PATH, description = "id de l'adherent à recuperer", required=true, schema=@Schema()) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
@@ -769,7 +787,17 @@ public class AdherentApiController implements AdherentApi {
         model.setDateEnregistrement(this.dateToStringAvecMS(adherent.getDateEnregistrement()));
         model.setDateMiseAJour(this.dateToStringAvecMS(adherent.getDateMiseAJour()));
         model.setAdhesionsSaisonCourante(adherent.isAdhesionSaisonCourante());
+        adherent.isAdherentSaisonPrecedente();
         return model;
+    }
+
+
+    private Adherent2 translateDto2(AdhesionDto adhesionDto){
+        Adherent2 adh2 = new Adherent2();
+
+        adh2.setAdherent(this.translateDto(adhesionDto.getAdherentDto()));
+        adh2.setAdhesion(this.convertModel(adhesionDto));
+        return adh2;
     }
 
      /**

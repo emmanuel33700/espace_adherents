@@ -765,6 +765,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponse'
+  '/adherent/listeSaison2':
+    get:
+      tags:
+        - listing adherent
+      summary: Récupérer l'ensemble des adhérents de la saison enrichi avec les informations de l'adhésion
+      operationId: getListeAdherentsSaison2
+      security:
+        - oAuth:
+            - ress-adherent-read
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeAdherent2'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: username non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
   '/adherent/listeSaisonFiltre':
     get:
       tags:
@@ -1415,9 +1449,26 @@ components:
         adhesionsSaisonCourante:
           type: boolean
           description: Indique si l'adhérent est adhérent dans la saison courante
-          example: true        
+          example: true      
+        adhesionsSaisonPrecedente:
+          type: boolean
+          description: Indique si l'adhérent est adhérent dans la saison précédente
+          example: true       
       xml:
         name: Order
+    Adherent2:
+      type: object
+      properties:
+        adherent:
+          $ref: '#/components/schemas/Adherent'
+          description:  détail info adhérents
+        adhesion:
+          $ref: '#/components/schemas/Adhesion'
+          description:  détail info adhésion courante
+    listeAdherent2:
+      type: array
+      items:
+        $ref: '#/components/schemas/Adherent2'        
     listeAdhesions:
       type: array
       items:
