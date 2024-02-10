@@ -1,6 +1,6 @@
 -- Database generated with pgModeler (PostgreSQL Database Modeler).
 -- pgModeler  version: 0.9.2
--- PostgreSQL version: 11.0
+-- PostgreSQL version: 12.0
 -- Project Site: pgmodeler.io
 -- Model Author: ---
 
@@ -87,6 +87,7 @@ CREATE TABLE public.t_adhesions (
 	num_cheque character varying(35),
 	cheque boolean,
 	espece boolean,
+	virement boolean,
 	a_carte_adhesions boolean,
 	CONSTRAINT pk_t_adhesions PRIMARY KEY (id_adhesions)
 
@@ -148,7 +149,7 @@ COMMENT ON COLUMN public.r_adh_evenement.participe_evenement IS E'indique si l a
 -- object: public.r_groupe_diffusion_adherents | type: TABLE --
 -- DROP TABLE IF EXISTS public.r_groupe_diffusion_adherents CASCADE;
 CREATE TABLE public.r_groupe_diffusion_adherents (
-	pk_id_groupe_diffusion numeric(20,0) NOT NULL,
+	pk_id_groupe_diffusion numeric(9,0) NOT NULL,
 	pk_id_adherent numeric(9,0) NOT NULL,
 	date_enregistrement timestamp with time zone,
 	CONSTRAINT pk_r_groupe_diffusion_adherent PRIMARY KEY (pk_id_groupe_diffusion,pk_id_adherent)
@@ -278,7 +279,7 @@ COMMENT ON COLUMN public.t_evenement.demande_communication IS E'Demande une comm
 -- object: public.t_groupe_diffusion | type: TABLE --
 -- DROP TABLE IF EXISTS public.t_groupe_diffusion CASCADE;
 CREATE TABLE public.t_groupe_diffusion (
-	id_groupe_diffusion numeric(20,0) NOT NULL,
+	id_groupe_diffusion numeric(9,0) NOT NULL,
 	description character varying(30) NOT NULL,
 	fk_id_type_authority numeric(2,0),
 	CONSTRAINT pk_t_groupe_diffusion PRIMARY KEY (id_groupe_diffusion)
@@ -433,6 +434,40 @@ COMMENT ON CONSTRAINT pk_r_relation_adherent ON public.r_relation_adherent  IS E
 -- ALTER TABLE public.r_relation_adherent OWNER TO postgres;
 -- ddl-end --
 
+-- object: public.t_information | type: TABLE --
+-- DROP TABLE IF EXISTS public.t_information CASCADE;
+CREATE TABLE public.t_information (
+	id_information numeric(9,0) NOT NULL,
+	information text,
+	fk_id_adherent numeric(4) NOT NULL,
+	fk_id_type_authority numeric(2) NOT NULL,
+	CONSTRAINT t_information_pk PRIMARY KEY (id_information)
+
+);
+-- ddl-end --
+COMMENT ON TABLE public.t_information IS E'table contenant les informations';
+-- ddl-end --
+COMMENT ON COLUMN public.t_information.fk_id_type_authority IS E'permet de restriendre la publication à un type de groupe d''adhérents';
+-- ddl-end --
+-- ALTER TABLE public.t_information OWNER TO postgres;
+-- ddl-end --
+
+-- object: public.seq_information | type: SEQUENCE --
+-- DROP SEQUENCE IF EXISTS public.seq_information CASCADE;
+CREATE SEQUENCE public.seq_information
+	INCREMENT BY 1
+	MINVALUE 0
+	MAXVALUE 2147483647
+	START WITH 1
+	CACHE 1
+	NO CYCLE
+	OWNED BY NONE;
+-- ddl-end --
+-- ALTER SEQUENCE public.seq_information OWNER TO postgres;
+-- ddl-end --
+COMMENT ON SEQUENCE public.seq_information IS E'sequence pour la table information';
+-- ddl-end --
+
 -- object: fk_t_adhesi_reference_i_annee_ | type: CONSTRAINT --
 -- ALTER TABLE public.t_adhesions DROP CONSTRAINT IF EXISTS fk_t_adhesi_reference_i_annee_ CASCADE;
 ALTER TABLE public.t_adhesions ADD CONSTRAINT fk_t_adhesi_reference_i_annee_ FOREIGN KEY (fk_id_annee_adhesions)
@@ -528,6 +563,20 @@ ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ALTER TABLE public.r_relation_adherent DROP CONSTRAINT IF EXISTS fk_id_adh_represente CASCADE;
 ALTER TABLE public.r_relation_adherent ADD CONSTRAINT fk_id_adh_represente FOREIGN KEY (fk_id_adherent_represente)
 REFERENCES public.t_adherents (id_adherents) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: fk_id_adherent | type: CONSTRAINT --
+-- ALTER TABLE public.t_information DROP CONSTRAINT IF EXISTS fk_id_adherent CASCADE;
+ALTER TABLE public.t_information ADD CONSTRAINT fk_id_adherent FOREIGN KEY (fk_id_adherent)
+REFERENCES public.t_adherents (id_adherents) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+
+-- object: fk_id_type_authority | type: CONSTRAINT --
+-- ALTER TABLE public.t_information DROP CONSTRAINT IF EXISTS fk_id_type_authority CASCADE;
+ALTER TABLE public.t_information ADD CONSTRAINT fk_id_type_authority FOREIGN KEY (fk_id_type_authority)
+REFERENCES public.i_type_authority (id_type_authority) MATCH FULL
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 -- ddl-end --
 
