@@ -11,7 +11,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-
             "preserveSymlinks": true,
             "outputPath": "dist",
             "index": "src/index.html",
@@ -56,9 +55,14 @@
               "echarts",
               "lodash",
               "zrender/lib/svg/svg",
-              "zrender/lib/vml/vml",
-              "style-loader!leaflet/dist/leaflet.css"
-            ]
+              "zrender/lib/vml/vml"
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -72,7 +76,6 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -82,30 +85,9 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
-            },
-            "preprod": {
-              "budgets": [
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.preprod.ts"
-                }
-              ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -115,9 +97,6 @@
           "configurations": {
             "production": {
               "browserTarget": "ngx-admin-demo:build:production"
-            },
-            "preprod": {
-              "browserTarget": "ngx-admin-demo:build:preprod"
             }
           }
         },
@@ -169,20 +148,18 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "typeCheck": true,
-            "exclude": []
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
     },
     "ngx-admin-demo-e2e": {
-      "root": "",
+      "root": "e2e",
       "sourceRoot": "",
       "projectType": "application",
       "architect": {
@@ -192,20 +169,10 @@
             "protractorConfig": "./protractor.conf.js",
             "devServerTarget": "ngx-admin-demo:serve"
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
-            ],
-            "exclude": []
-          }
         }
       }
     }
   },
-  "defaultProject": "ngx-admin-demo",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "ngx",
@@ -213,9 +180,15 @@
     },
     "@schematics/angular:directive": {
       "prefix": "ngx"
+    },
+    "@angular-eslint/schematics:application": {
+      "setParserOptionsProject": true
+    },
+    "@angular-eslint/schematics:library": {
+      "setParserOptionsProject": true
     }
   },
   "cli": {
-    "analytics": "991275f7-b185-49bc-b18b-0f034400e6ed"
+    "analytics": "9b1f5c9b-11d0-4c06-ab21-4f48be99216a"
   }
 }

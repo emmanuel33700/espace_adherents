@@ -1,20 +1,16 @@
 @import '../../@theme/styles/themes';
+@import 'bootstrap/scss/mixins/breakpoints';
+@import '@nebular/theme/styles/global/breakpoints';
 
 @include nb-install-component() {
-  .buttons-row {
-    margin: -0.5rem;
+  .solar-card nb-card-header {
+    border: none;
+    padding-bottom: 0;
   }
 
-  button[nbButton] {
-    margin: 0.5rem;
-  }
-
-  .action-icon {
-    @include nb-ltr(margin-right, 0.5rem);
-    @include nb-rtl(margin-left, 0.5rem);
-  }
-
-  .actions-card {
-    height: 8rem;
+  @include media-breakpoint-down(sm) {
+    ngx-traffic {
+      display: none;
+    }
   }
 }
