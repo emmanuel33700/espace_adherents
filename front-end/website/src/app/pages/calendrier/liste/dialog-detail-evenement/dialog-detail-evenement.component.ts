@@ -1,6 +1,6 @@
 import {Component, HostBinding, Input, OnInit} from '@angular/core';
 import {NbDialogRef, NbToastrService} from '@nebular/theme';
-import {EventClickArg} from '@fullcalendar/angular';
+import {EventClickArg} from '@fullcalendar/core';
 import {ManifestationService} from '../../../../../api/generated/adherents/services/manifestation.service';
 import {Adherent} from '../../../../../api/generated/adherents/models/adherent';
 import {ParticipationManifestation} from '../../../../../api/generated/adherents/models/participation-manifestation';

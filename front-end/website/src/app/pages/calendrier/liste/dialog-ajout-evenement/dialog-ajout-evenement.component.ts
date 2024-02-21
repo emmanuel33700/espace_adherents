@@ -1,6 +1,6 @@
 import {Component, HostBinding, Input, OnInit} from '@angular/core';
 import {NbDialogRef, NbToastrService} from '@nebular/theme';
-import {DateSelectArg} from '@fullcalendar/angular';
+import {DateSelectArg} from '@fullcalendar/core';
 import {Evenement} from '../../../../../api/generated/utilitaire/models/evenement';
 import {DateService, LoggerService} from '../../../../@core/utils';
 import {AgendaService} from '../../../../../api/generated/utilitaire/services/agenda.service';

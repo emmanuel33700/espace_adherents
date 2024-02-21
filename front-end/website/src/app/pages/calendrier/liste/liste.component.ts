@@ -1,17 +1,21 @@
 import {Component, OnInit} from '@angular/core';
 import frLocale from '@fullcalendar/core/locales/fr';
-import {CalendarOptions, DateSelectArg, EventClickArg, EventApi} from '@fullcalendar/angular';
+import {CalendarOptions, DateSelectArg, EventClickArg, EventApi} from '@fullcalendar/core';
 import {AgendaService} from '../../../../api/generated/utilitaire/services/agenda.service';
 import {ManifestationService} from '../../../../api/generated/adherents/services/manifestation.service';
 import {Evenement} from '../../../../api/generated/utilitaire/models/evenement';
 import {Manifestation} from '../../../../api/generated/adherents/models/manifestation';
 import {LoggerService} from '../../../@core/utils/logger.service';
 import {NbToastrService, NbDialogService} from '@nebular/theme';
-import {EventInput} from '@fullcalendar/angular';
+import {EventInput} from '@fullcalendar/core';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 import {DialogDetailEvenementComponent} from './dialog-detail-evenement/dialog-detail-evenement.component';
 import {DialogAjoutEvenementComponent} from './dialog-ajout-evenement/dialog-ajout-evenement.component';
 import {DateService} from '../../../@core/utils';
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import listPlugin from "@fullcalendar/list";
+import interactionPlugin from "@fullcalendar/interaction";
 
 @Component({
   selector: 'ngx-form-layouts',
@@ -103,6 +107,7 @@ export class ListeComponent implements OnInit {
 
           if ((this.role === 'ADMIN') || (this.role === 'CONSEIL')) {
             this.calendarOptions = {
+              plugins: [  dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin,],
               headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
@@ -118,8 +123,8 @@ export class ListeComponent implements OnInit {
               select: this.handleDateSelect.bind(this),
               eventClick: this.handleEventClick.bind(this),
               eventsSet: this.handleEvents.bind(this),
-              eventDrop: this.updateEvent.bind(this),
-              eventResize: this.updateEvent.bind(this),
+              //eventDrop: this.updateEvent.bind(this),
+              //eventResize: this.updateEvent.bind(this),
               locale: frLocale,
               events: this.initialEvent,
             };

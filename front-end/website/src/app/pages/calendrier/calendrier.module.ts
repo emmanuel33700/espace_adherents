@@ -27,13 +27,13 @@ import listPlugin from '@fullcalendar/list';
 import {DialogDetailEvenementComponent} from './liste/dialog-detail-evenement/dialog-detail-evenement.component';
 import {DialogAjoutEvenementComponent} from './liste/dialog-ajout-evenement/dialog-ajout-evenement.component';
 
-FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+/** FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,
   timeGridPlugin,
   listPlugin,
   interactionPlugin,
 ]);
-
+*/
 @NgModule({
     imports: [
         ThemeModule,
