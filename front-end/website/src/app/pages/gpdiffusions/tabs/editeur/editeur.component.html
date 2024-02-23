@@ -90,7 +90,7 @@
             <ng-container *ngIf="nbFichierEnCourTelechargement > 0">
               <label class="label col-sm-3 col-form-label">Téléchargement des fichiers en cours...</label>
             </ng-container>
-            <ng-container *ngIf="nbFichierEnCourTelechargement == 0 && filesName?.length">
+            <ng-container *ngIf="nbFichierEnCourTelechargement === 0 && filesName?.length">
 
               <label class="label col-sm-3 col-form-label">Fichier(s) joint(s) :
                 <nb-icon class="action-icon" icon="trash-2" (click)="supprimerFichiersJoints()"></nb-icon>

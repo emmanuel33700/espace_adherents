@@ -13,7 +13,7 @@ import {Router} from '@angular/router';
   styleUrls: ['./ajouteradhesion.component.scss'],
   templateUrl: './ajouteradhesion.component.html',
 })
-export class AjouteradhesionComponent implements OnInit {
+export class AjouteradhesionComponent  {
   adherent: Adherent = JSON.parse(localStorage.getItem('adh_selected'));
   adhesion: Adhesion = {};
   form: FormGroup ;
@@ -40,8 +40,6 @@ export class AjouteradhesionComponent implements OnInit {
     private router: Router,
     ) {}
 
-  ngOnInit(): void {
-  }
 
   submit(form: NgForm) {
     // Initialisation des variables

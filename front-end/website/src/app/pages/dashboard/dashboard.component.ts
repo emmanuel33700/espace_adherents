@@ -7,7 +7,7 @@ import {Adherent} from '../../../api/generated/adherents/models/adherent';
 import {ParticipationManifestation} from '../../../api/generated/adherents/models/participation-manifestation';
 import {DocumentationService} from '../../../api/generated/utilitaire/services/documentation.service';
 import {Document} from '../../../api/generated/utilitaire/models/document.js';
-import {TokenService} from '../../@core/utils/token.service';
+import {TokenService} from '../../@core/utils';
 import {Router} from '@angular/router';
 import {LiensAdherentsService} from '../../../api/generated/adherents/services/liens-adherents.service';
 import {LiensAdherent} from '../../../api/generated/adherents/models/liens-adherent';
@@ -71,7 +71,7 @@ export class DashboardComponent implements OnInit {
 
   url_documents: string = environment.url_document;
 
-  optionsChart = {
+  optionsChart : any  = {
     backgroundColor: echarts.bg,
     color: ['blue'],
     tooltip: {

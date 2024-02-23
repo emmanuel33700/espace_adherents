@@ -11,7 +11,7 @@ import {DateService} from '../../../@core/utils';
   styleUrls: ['./ajouteradherent.component.scss'],
   templateUrl: './ajouteradherent.component.html',
 })
-export class AjouteradherentComponent implements OnInit {
+export class AjouteradherentComponent {
   form: FormGroup;
   adherent: Adherent = {};
 
@@ -37,8 +37,6 @@ export class AjouteradherentComponent implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {
-  }
 
   submit(form: NgForm) {
 

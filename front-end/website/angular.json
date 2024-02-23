@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngx-admin-demo": {
+    "espace-adherents": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -92,18 +92,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ngx-admin-demo:build"
+            "browserTarget": "espace-adherents:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ngx-admin-demo:build:production"
+              "browserTarget": "espace-adherents:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ngx-admin-demo:build"
+            "browserTarget": "espace-adherents:build"
           }
         },
         "test": {
@@ -158,7 +158,7 @@
         }
       }
     },
-    "ngx-admin-demo-e2e": {
+    "espace-adherents-e2e": {
       "root": "e2e",
       "sourceRoot": "",
       "projectType": "application",
@@ -167,7 +167,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "ngx-admin-demo:serve"
+            "devServerTarget": "espace-adherents:serve"
           }
         }
       }

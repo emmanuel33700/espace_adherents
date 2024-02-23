@@ -3,7 +3,7 @@
 
   <div class="col-12">
     <h1>
-      <ng-container *ngIf="adherent.lienPhotoProfil != null">
+      <ng-container *ngIf="adherent.lienPhotoProfil !== null">
         <div class="circular--landscape">
           <img src="{{url_photo_profil}}{{adherent.lienPhotoProfil}}" width="50"/>
 

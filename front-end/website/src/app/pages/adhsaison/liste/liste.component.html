@@ -44,14 +44,14 @@
 
 
           <!-- l'adherent à une  photo de profil -->
-          <ng-container *ngIf="adherent.lienPhotoProfil != null">
+          <ng-container *ngIf="adherent.lienPhotoProfil !== null">
             <nb-user picture="{{url_photo_profil}}{{adherent.lienPhotoProfil}}"
                      [name]="adherent.nom + ' ' +adherent.prenom"
                      [title]="adherent.email" (click)="sectionAdherents(adherent.id)">
             </nb-user>
           </ng-container>
           <!-- l'adherent n'a pas de   photo de profil -->
-          <ng-container *ngIf="adherent.lienPhotoProfil == null">
+          <ng-container *ngIf="adherent.lienPhotoProfil === null">
             <nb-user [name]="adherent.nom + ' ' +adherent.prenom"
                      [title]="adherent.email" (click)="sectionAdherents(adherent.id)">
             </nb-user>
