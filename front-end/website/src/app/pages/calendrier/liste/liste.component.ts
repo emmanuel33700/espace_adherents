@@ -123,13 +123,14 @@ export class ListeComponent implements OnInit {
               select: this.handleDateSelect.bind(this),
               eventClick: this.handleEventClick.bind(this),
               eventsSet: this.handleEvents.bind(this),
-              //eventDrop: this.updateEvent.bind(this),
-              //eventResize: this.updateEvent.bind(this),
+              eventDrop: this.updateEvent.bind(this),
+              eventResize: this.updateEvent.bind(this),
               locale: frLocale,
               events: this.initialEvent,
             };
           } else if (this.role === 'RES_ATELIER') {
             this.calendarOptions = {
+              plugins: [  dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin,],
               headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
@@ -150,6 +151,7 @@ export class ListeComponent implements OnInit {
             };
           } else {
             this.calendarOptions = {
+              plugins: [  dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin,],
               headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',

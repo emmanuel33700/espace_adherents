@@ -34,7 +34,7 @@
     "label-position": true,
     "max-line-length": [
       true,
-      130
+      120
     ],
     "member-access": false,
     "no-arg": true,
@@ -131,6 +131,7 @@
     "no-output-rename": true,
     "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
+    "component-class-suffix": true,
     "directive-class-suffix": true
-  }
+}
 }
