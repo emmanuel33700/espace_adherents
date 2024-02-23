@@ -25,7 +25,8 @@ export class SyntheseevenementComponent implements OnInit {
   classes = 'example-items-rows';
   // fin toaster
 
-  participantsEvenement: ParticipantsEvenement[] = [];
+  participantsEvenementAll: ParticipantsEvenement[] = [];
+  participantsEvenementFiltre: ParticipantsEvenement[] = [];
 
   idEvenement: number;
   evenementSelectionne: SyntheseEvenement = {};
@@ -33,6 +34,7 @@ export class SyntheseevenementComponent implements OnInit {
   modificationParticipation = false;
 
   url_photo_profil: string = environment.url_photo_profil;
+  filtrerSelected: any;
 
   constructor(
     private manifestationService: ManifestationService,
@@ -66,11 +68,13 @@ export class SyntheseevenementComponent implements OnInit {
    */
   initParticipation() {
     this.loading = true;
+    this.filtrerSelected = 'ALL'
     this.agendaService.getSyntheseEvenement({idevenement : this.idEvenement})
       .subscribe(
         (data) => {
           this.loggerService.info(JSON.stringify(data));
-          this.participantsEvenement = data;
+          this.participantsEvenementAll = data;
+          this.participantsEvenementFiltre = data;
         },
         (error) => {
           this.loggerService.error(JSON.stringify(error));
@@ -173,6 +177,40 @@ export class SyntheseevenementComponent implements OnInit {
    */
   recupererCSV() {
     const nomFichier = 'export_' + this.idEvenement + '.csv';
-    this.csvdataService.exportToCsv(nomFichier, this.participantsEvenement);
+    this.csvdataService.exportToCsv(nomFichier, this.participantsEvenementAll);
+  }
+
+  changeFiltre(event: string) {
+    this.loggerService.info('Evenement : ' + event);
+
+    // Type de filtre pour l'affichange des adhérents
+    type typeFiltre = 'OK' | 'NOK' | 'WAIT' | 'ALL' ;
+
+    const choixFiltre: typeFiltre = event as typeFiltre;
+
+    this.loggerService.info('choixFiltre : ' + choixFiltre);
+
+    this.loading = true;
+
+    this.participantsEvenementFiltre = [];
+
+    this.participantsEvenementAll.forEach((value, index) => {
+
+      if (choixFiltre == 'ALL'){
+        this.participantsEvenementFiltre.push(value);
+      }
+      else if (choixFiltre == 'OK' && value.statutParticipation == 1) {
+        this.participantsEvenementFiltre.push(value);
+      }
+      else if (choixFiltre == 'NOK' && value.statutParticipation == 2) {
+        this.participantsEvenementFiltre.push(value);
+      }
+      else if (choixFiltre == 'WAIT' && value.statutParticipation == 3) {
+        this.participantsEvenementFiltre.push(value);
+      }
+    });
+
+    this.loading = false;
+
   }
 }

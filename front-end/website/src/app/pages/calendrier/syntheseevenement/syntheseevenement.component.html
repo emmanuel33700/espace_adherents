@@ -4,8 +4,29 @@
       <nb-card-header>Synthèse des participations à {{evenementSelectionne.description}}</nb-card-header>
       <nb-card-body>
 
-        <nb-icon icon="download-outline" pack="eva" (click)="recupererCSV()"></nb-icon>
-        <span>Exporter la liste</span>
+        <div class="form-group row">
+            <div class="col-sm-8">
+              <nb-icon icon="download-outline" pack="eva" (click)="recupererCSV()"></nb-icon>
+              <span>Exporter la liste</span>
+
+            </div>
+            <label for="input-typeFiltre" class="label col-sm-2 col-form-label">Filtre</label>
+            <div class="col-sm-2">
+              <nb-select
+                id="input-typeFiltre"
+                name="typeFiltre"
+                fullWidth
+                (selectedChange)="changeFiltre($event)"
+                [(selected)]="filtrerSelected">
+                <nb-option value="ALL" >Ensemble des adherents</nb-option>
+                <nb-option value="OK" >Participe</nb-option>
+                <nb-option value="NOK">Participe pas</nb-option>
+                <nb-option value="WAIT">En attente</nb-option>
+              </nb-select>
+            </div>
+
+        </div>
+
 
         <div class="row show-grid">
           <div class="col-sm-4">Nom prénon de l'adhérent</div>
@@ -14,7 +35,7 @@
 
         </div>
         <nb-list>
-          <nb-list-item *ngFor="let participantEvenement of participantsEvenement">
+          <nb-list-item *ngFor="let participantEvenement of participantsEvenementFiltre">
             <div class="col-sm-4">
               <ng-container *ngIf="participantEvenement.lienPhotoProfil != null">
                 <div class="circular--landscape">
