@@ -87,7 +87,11 @@ export class InfosadhComponent implements OnInit {
     this.adherent.civilite = this.user.civilite;
     this.adherent.nom = this.user.nom;
     this.adherent.prenom = this.user.prenom;
-    this.adherent.email = this.user.email;
+    if (this.user.email === "") {
+      this.adherent.email = null;
+    } else {
+      this.adherent.email = this.user.email;
+    }
     this.adherent.adresse1 = this.user.adresse1;
     this.adherent.adresse2 = this.user.adresse2;
     this.adherent.codePostal = this.user.codePostal;
