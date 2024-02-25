@@ -3,122 +3,133 @@
     <nb-card>
       <nb-card-header>Envoyer un email</nb-card-header>
       <nb-card-body>
-
-        <form
-          (ngSubmit)="envoyerMail(form)"
-          #form="ngForm"
-        >
-
-
+        <!--  Message d'info pour les adhérents qui ne sont pas inscrit à un groupe -->
+        <ng-container *ngIf="role === 'ADHERENT' && listeDiffusion?.length === 0">
           <div class="form-group row">
             <div class="col-sm-12">
-              <nb-radio-group name="optionEnvoyerMail"
-                              *ngIf="droitcomplet"
-                              [(ngModel)]="optionEnvoyerMail"
-                              [required]="true">
-                <nb-radio value="1" checked="true" (valueChange)="desactiverSelectionGroupe()"> Envoyer un mail aux adhérents de la saison</nb-radio>
-                <nb-radio value="2" (valueChange)="desactiverSelectionGroupe()"> Envoyer un mail aux adhérents de la saison et saison d'avant</nb-radio>
-                <nb-radio value="4" (valueChange)="desactiverSelectionGroupe()" > Envoyer un mail aux adhérents n'ayant pas renouvelés leur adhésion</nb-radio>
-                <nb-radio value="10" (valueChange)="activerSelectionGroupe()"> Envoyer un mail aux adhérents d'un groupe</nb-radio>
-              </nb-radio-group>
+              Il faut être inscrit dans un groupe de diffusion pour envoyer un email
             </div>
           </div>
+        </ng-container>
 
-          <div class="form-group row">
-            <label for="select-MailingListe" class="label col-sm-3 col-form-label">Envoyer au groupe suivant :</label>
-            <div class="col-sm-9">
+        <!-- gestion de l'editeur de mail pour les personnes autorisées -->
+        <ng-container *ngIf="role !== 'ADHERENT' || (role === 'ADHERENT' && listeDiffusion?.length !== 0)">
+          <form
+            (ngSubmit)="envoyerMail(form)"
+            #form="ngForm"
+          >
 
-              <nb-select [(selected)]="selectedMailingListe"
-                         id="select-MailingListe"
-                         [(ngModel)]="selectedMailingListe"
-                         name="selectedMailingListe"
-                         placeholder="Nom du groupe de diffusion"
-                         [disabled]="!selectionGroupeActive"
-              >
-                <nb-option *ngFor="let diffusion of listeDiffusion"
-                           [value]="diffusion.id">{{diffusion.libelle}}</nb-option>
-              </nb-select>
+
+            <div class="form-group row">
+              <div class="col-sm-12">
+                <nb-radio-group name="optionEnvoyerMail"
+                                *ngIf="droitcomplet"
+                                [(ngModel)]="optionEnvoyerMail"
+                                [required]="true">
+                  <nb-radio value="1" checked="true" (valueChange)="desactiverSelectionGroupe()"> Envoyer un mail aux adhérents de la saison</nb-radio>
+                  <nb-radio value="2" (valueChange)="desactiverSelectionGroupe()"> Envoyer un mail aux adhérents de la saison et saison d'avant</nb-radio>
+                  <nb-radio value="4" (valueChange)="desactiverSelectionGroupe()" > Envoyer un mail aux adhérents n'ayant pas renouvelés leur adhésion</nb-radio>
+                  <nb-radio value="10" (valueChange)="activerSelectionGroupe()"> Envoyer un mail aux adhérents d'un groupe</nb-radio>
+                </nb-radio-group>
+              </div>
             </div>
-          </div>
 
-          <br/>
-          <br/>
+            <div class="form-group row">
+              <label for="select-MailingListe" class="label col-sm-3 col-form-label">Envoyer au groupe suivant :</label>
+              <div class="col-sm-9">
 
-          <div class="form-group row">
-            <label for="input-objetMail" class="label col-sm-3 col-form-label">Objet du mail</label>
-            <div class="col-sm-9">
-              <input nbInput
-                     [(ngModel)]="objetMail"
-                     #objetMailHtml="ngModel"
-                     id="input-objetMail"
-                     name="objetMail"
-                     placeholder="Objet du mail"
-                     fullWidth
-                     [status]="objetMailHtml.dirty ? (objetMailHtml.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="true"
-                     [minlength]="3"
-                     [maxlength]="50"
-                     [attr.aria-invalid]="objetMailHtml.invalid && objetMailHtml.touched ? true : null">
-              <ng-container *ngIf="objetMailHtml.invalid && objetMailHtml.touched">
-                <p class="caption status-danger" *ngIf="objetMailHtml.errors?.required">
-                  Objet du mail nécésaire
-                </p>
-                <p class="caption status-danger"
-                   *ngIf="objetMailHtml.errors?.minlength || objetMailHtml.errors?.maxlength">
-                  L'objet du mail doit etre compris entre entre 3 et 50 caracteres
-                </p>
+                <nb-select [(selected)]="selectedMailingListe"
+                           id="select-MailingListe"
+                           [(ngModel)]="selectedMailingListe"
+                           name="selectedMailingListe"
+                           placeholder="Nom du groupe de diffusion"
+                           [disabled]="!selectionGroupeActive"
+                >
+                  <nb-option *ngFor="let diffusion of listeDiffusion"
+                             [value]="diffusion.id">{{diffusion.libelle}}</nb-option>
+                </nb-select>
+              </div>
+            </div>
+
+            <br/>
+            <br/>
+
+            <div class="form-group row">
+              <label for="input-objetMail" class="label col-sm-3 col-form-label">Objet du mail</label>
+              <div class="col-sm-9">
+                <input nbInput
+                       [(ngModel)]="objetMail"
+                       #objetMailHtml="ngModel"
+                       id="input-objetMail"
+                       name="objetMail"
+                       placeholder="Objet du mail"
+                       fullWidth
+                       [status]="objetMailHtml.dirty ? (objetMailHtml.invalid  ? 'danger' : 'success') : 'basic'"
+                       [required]="true"
+                       [minlength]="3"
+                       [maxlength]="50"
+                       [attr.aria-invalid]="objetMailHtml.invalid && objetMailHtml.touched ? true : null">
+                <ng-container *ngIf="objetMailHtml.invalid && objetMailHtml.touched">
+                  <p class="caption status-danger" *ngIf="objetMailHtml.errors?.required">
+                    Objet du mail nécésaire
+                  </p>
+                  <p class="caption status-danger"
+                     *ngIf="objetMailHtml.errors?.minlength || objetMailHtml.errors?.maxlength">
+                    L'objet du mail doit etre compris entre entre 3 et 50 caracteres
+                  </p>
+                </ng-container>
+              </div>
+            </div>
+
+
+            <div class="form-group row">
+              <label for="load-fichier" class="label col-sm-3 col-form-label">Télécharger un fichier :</label>
+              <div class="col-sm-9">
+                <input type="file" class="file-input"
+                       #fileUpload
+                       [required]="true"
+                       (change)="onFileSelected($event)"
+                       id="load-fichier"
+                       multiple
+                >
+              </div>
+            </div>
+
+
+            <div class="form-group row">
+              <ng-container *ngIf="nbFichierEnCourTelechargement > 0">
+                <label class="label col-sm-3 col-form-label">Téléchargement des fichiers en cours...</label>
+              </ng-container>
+              <ng-container *ngIf="nbFichierEnCourTelechargement === 0 && filesName?.length">
+
+                <label class="label col-sm-3 col-form-label">Fichier(s) joint(s) :
+                  <nb-icon class="action-icon" icon="trash-2" (click)="supprimerFichiersJoints()"></nb-icon>
+                </label>
+                <ul>
+                  <li *ngFor="let fileName of filesName" class="label col-sm-9 col-form-label">{{ fileName }}</li>
+                </ul>
+
               </ng-container>
             </div>
-          </div>
-
-
-          <div class="form-group row">
-            <label for="load-fichier" class="label col-sm-3 col-form-label">Télécharger un fichier :</label>
-            <div class="col-sm-9">
-              <input type="file" class="file-input"
-                     #fileUpload
-                     [required]="true"
-                     (change)="onFileSelected($event)"
-                     id="load-fichier"
-                     multiple
-              >
-            </div>
-          </div>
-
-
-          <div class="form-group row">
-            <ng-container *ngIf="nbFichierEnCourTelechargement > 0">
-              <label class="label col-sm-3 col-form-label">Téléchargement des fichiers en cours...</label>
-            </ng-container>
-            <ng-container *ngIf="nbFichierEnCourTelechargement === 0 && filesName?.length">
-
-              <label class="label col-sm-3 col-form-label">Fichier(s) joint(s) :
-                <nb-icon class="action-icon" icon="trash-2" (click)="supprimerFichiersJoints()"></nb-icon>
-              </label>
-              <ul>
-                <li *ngFor="let fileName of filesName" class="label col-sm-9 col-form-label">{{ fileName }}</li>
-              </ul>
-
-            </ng-container>
-          </div>
 
 
 
-          <angular-editor [placeholder]="'Votre email...'" [(ngModel)]="mailHtml" name="mailHtml"
-                          [config]="editorConfig"></angular-editor>
+            <angular-editor [placeholder]="'Votre email...'" [(ngModel)]="mailHtml" name="mailHtml"
+                            [config]="editorConfig"></angular-editor>
 
 
-          <button nbButton
-                  fullWidth
-                  status="success"
-                  [nbSpinner]='loadingEnvoyerMail'
-                  [disabled]="!form.valid || nbFichierEnCourTelechargement > 0"
-                  [class.btn-pulse]="submitted"
-          >
-            Envoyer le mail
-          </button>
+            <button nbButton
+                    fullWidth
+                    status="success"
+                    [nbSpinner]='loadingEnvoyerMail'
+                    [disabled]="!form.valid || nbFichierEnCourTelechargement > 0"
+                    [class.btn-pulse]="submitted"
+            >
+              Envoyer le mail
+            </button>
 
-        </form>
+          </form>
+        </ng-container>
 
       </nb-card-body>
     </nb-card>
