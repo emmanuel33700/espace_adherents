@@ -187,6 +187,6 @@ public interface DiffusionApi {
             produces = { "application/json" },
             consumes = { "application/json" },
             method = RequestMethod.POST)
-    @PreAuthorize("isDansGroupe('RES_ATELIER')")
+    @PreAuthorize("isDansGroupe('ADHERENT')")
     ResponseEntity<Void> sendMail(@Parameter(in = ParameterIn.PATH, description = "id du mail à envoyer", required=true, schema=@Schema()) @PathVariable("idMail") Long idMail, @Parameter(in = ParameterIn.DEFAULT, description = "Objet listeDiffusion", schema=@Schema()) @Valid @RequestBody MailAEnvoyer body);
 }

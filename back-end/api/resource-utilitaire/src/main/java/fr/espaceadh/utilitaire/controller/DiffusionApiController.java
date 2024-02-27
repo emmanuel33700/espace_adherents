@@ -2,6 +2,7 @@ package fr.espaceadh.utilitaire.controller;
 
 import fr.espaceadh.adherents.dto.AdherentDto;
 import fr.espaceadh.adherents.dto.CiviliteEnum;
+import fr.espaceadh.adherents.service.AdherentListeDiffusionService;
 import fr.espaceadh.adherents.service.AdherentService;
 import fr.espaceadh.lib.mail.dto.InputStreamCustom;
 import fr.espaceadh.utilitaire.dto.AdherentMailingListeDto;
@@ -55,6 +56,9 @@ public class DiffusionApiController implements DiffusionApi {
 
     @Autowired
     protected AdherentService adherentService;
+
+    @Autowired
+    private AdherentListeDiffusionService adherentListeDiffusionService;
 
     @org.springframework.beans.factory.annotation.Autowired
     public DiffusionApiController(ObjectMapper objectMapper, HttpServletRequest request) {
@@ -300,6 +304,28 @@ public class DiffusionApiController implements DiffusionApi {
             LOGGER.debug("Envoyer un mail à la mailing liste {}", body.getIdListeDiffusion());
 
             AdherentDto auteurMaildto = getIdAdherentConnecte();
+            boolean droitEnvoieMails = false;
+            //Vé"rifier si l'adhérent à le droit d'envoyer un mail (Appartient au groupe dont il souhaite envoyer un mail)
+            if (this.hasRole("ADHERENT")) {
+                Collection<fr.espaceadh.adherents.dto.GroupeDiffusionDto> lstDto = this.adherentListeDiffusionService.getListDiffusion(auteurMaildto.getId());
+
+                for (fr.espaceadh.adherents.dto.GroupeDiffusionDto groupeDiffusion : lstDto){
+                    if (groupeDiffusion.getIdGroupeDiffusion() == body.getIdListeDiffusion() && groupeDiffusion.isParticipe()){
+                        droitEnvoieMails = true;
+                    }
+                }
+
+            }
+            //Si l'utilisateur à le droit conseil, admin ou responsable d'atelier -> droit d'envoyer un mailÒ
+            else {
+                droitEnvoieMails = true;
+            }
+
+
+            if (!droitEnvoieMails){
+                LOGGER.error("Attention, l'adherent {} n'as pas le droit d'envoyer un mail sur cette liste {}", auteurMaildto.getEmail(),body.getIdListeDiffusion() );
+                return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
+            }
 
             dto.setMailReplyTo(auteurMaildto.getEmail());
             dto.setAuteurName(auteurMaildto.getNom() + " " + auteurMaildto.getPrenom());
