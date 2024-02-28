@@ -306,7 +306,11 @@ public class DiffusionApiController implements DiffusionApi {
             AdherentDto auteurMaildto = getIdAdherentConnecte();
             boolean droitEnvoieMails = false;
             //Vé"rifier si l'adhérent à le droit d'envoyer un mail (Appartient au groupe dont il souhaite envoyer un mail)
-            if (this.hasRole("ADHERENT")) {
+            //Si l'utilisateur à au moins le droit responsable d'atelier -> droit d'envoyer un mail sinon vérifier le droit de l'adhérent
+            if (this.hasRole("RES_ATELIER")) {
+                droitEnvoieMails = true;
+            }
+            else if (this.hasRole("ADHERENT")) {
                 Collection<fr.espaceadh.adherents.dto.GroupeDiffusionDto> lstDto = this.adherentListeDiffusionService.getListDiffusion(auteurMaildto.getId());
 
                 for (fr.espaceadh.adherents.dto.GroupeDiffusionDto groupeDiffusion : lstDto){
@@ -316,10 +320,7 @@ public class DiffusionApiController implements DiffusionApi {
                 }
 
             }
-            //Si l'utilisateur à le droit conseil, admin ou responsable d'atelier -> droit d'envoyer un mailÒ
-            else {
-                droitEnvoieMails = true;
-            }
+
 
 
             if (!droitEnvoieMails){
