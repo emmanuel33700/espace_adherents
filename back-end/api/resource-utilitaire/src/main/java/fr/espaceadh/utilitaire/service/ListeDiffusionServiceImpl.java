@@ -118,6 +118,7 @@ public class ListeDiffusionServiceImpl implements ListeDiffusionService {
         // renseigner les adresses de destination
         Collection<String> messageTo = new ArrayList<>();
         for (AdherentDto adh : emailDto.getLstAdherents()) {
+           if (adh.getEmail() != null && adh.isAccordMail())
             messageTo.add(adh.getEmail());
         }
         mailIn.setMessageTo(messageTo);

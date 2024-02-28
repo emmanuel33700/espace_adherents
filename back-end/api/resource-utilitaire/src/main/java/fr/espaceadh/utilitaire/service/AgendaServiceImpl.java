@@ -89,7 +89,7 @@ public class AgendaServiceImpl implements AgendaService{
         //envoyer un email au adhérent
         Collection<AdherentDto> lstAdherent = this.adherentsDAO.recupererListeAdherentSaison();
         for (AdherentDto adhDto : lstAdherent) {
-            if (adhDto.getEmail() != null) {
+            if (adhDto.getEmail() != null && adhDto.isAccordMail()) {
                 MailInDto mailIn = new MailInDto();
 
                 /* adresse email de destination */
