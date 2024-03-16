@@ -5,6 +5,10 @@ import {Evenement} from '../../../../../api/generated/utilitaire/models/evenemen
 import {DateService, LoggerService} from '../../../../@core/utils';
 import {AgendaService} from '../../../../../api/generated/utilitaire/services/agenda.service';
 import { NgForm} from '@angular/forms';
+import {ListeDiffusion as MailingListeUtilitaire} from "../../../../../api/generated/utilitaire/models/liste-diffusion";
+import {
+  ListeDeDiffusionService as ListeDeDiffusionServiceUtilitaire
+} from "../../../../../api/generated/utilitaire/services/liste-de-diffusion.service";
 
 @Component({
   selector: 'ngx-showcase-dialog',
@@ -24,6 +28,19 @@ export class DialogAjoutEvenementComponent implements OnInit {
   classes = 'example-items-rows';
   // fin toaster
 
+  // Id de la mailing liste sélectionnée
+  selectedMailingListe: number = 0;
+
+
+  listeDiffusion: MailingListeUtilitaire[];
+
+
+  // indicateur de désactivation du selction des groupe
+  selectionGroupeActive: boolean = false;
+
+  // indicateur d'affichage de la selection du groupe de diffusion
+  afficherSelctionActive : boolean = false;
+
   @Input() dateDebut: string;
   @Input() dateFin: string;
   @Input() selectInfo: DateSelectArg;
@@ -33,6 +50,7 @@ export class DialogAjoutEvenementComponent implements OnInit {
               private toastrService: NbToastrService,
               private agendaService: AgendaService,
               private dateService: DateService,
+              private listeDeDiffusionServiceUtilitaire: ListeDeDiffusionServiceUtilitaire,
   ) {
   }
 
@@ -49,6 +67,25 @@ export class DialogAjoutEvenementComponent implements OnInit {
     this.evenementForm.description = '';
     this.evenementForm.demandeEnvoyerMail = false;
     this.evenementForm.confirmationParticipation = false;
+    this.evenementForm.demandeEnvoyerMailListe = false;
+
+
+    this.listeDeDiffusionServiceUtilitaire.getListes()
+      .subscribe(
+        (data) => {
+          this.loggerService.info(JSON.stringify(data));
+          this.listeDiffusion = data;
+        },
+        (error) => {
+          this.loggerService.error(JSON.stringify(error));
+          this.toastrService.danger(
+            'Erreur technique lors de la récupération des données',
+            'Erreur ');
+        },
+        () => {
+
+        },
+      );
   }
 
 
@@ -98,5 +135,29 @@ export class DialogAjoutEvenementComponent implements OnInit {
 
 
     this.ref.close();
+  }
+
+  /*
+  Activer la sélection d'un groupe de diffusion
+   */
+  activerSelectionGroupe() {
+
+    if (this.selectionGroupeActive) {
+      this.selectionGroupeActive = false;
+    } else {
+      this.selectionGroupeActive = true;
+    }
+
+  }
+
+  /**
+   * Afichier la selction d'un groupe
+   */
+  afficherSelectionGroupe() {
+    if (this.afficherSelctionActive) {
+      this.afficherSelctionActive = false;
+    } else {
+      this.afficherSelctionActive = true;
+    }
   }
 }
