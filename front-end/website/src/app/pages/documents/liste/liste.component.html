@@ -54,7 +54,7 @@
             <!-- gestion des actions spécifgique à un fichier -->
             <ng-container *ngIf="row.data.kind === 'doc'">
                 <nb-icon  icon="file-remove" (click)="supprimerFichier(row.data.id)" nbPopover="Supprimer le document" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
-                <nb-icon  icon="edit" (click)="editerFichier(row.data.id)" nbPopover="Editier le document" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+                <nb-icon  icon="edit" (click)="editerFichier(row.data.id)" nbPopover="Editer le document" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
             </ng-container>
           </ng-container>
 

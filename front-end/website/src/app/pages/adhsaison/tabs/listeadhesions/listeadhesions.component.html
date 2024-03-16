@@ -39,7 +39,7 @@
          </span>
       </div>
 
-      <div class="col-sm-8">
+      <div class="col-sm-6">
         {{adhesion.comptaSomme}} € -
         <ng-container *ngIf="adhesion.cheque">
            (Chèque : num {{adhesion.comptaNumCheque}} banque {{adhesion.comptaBanque}})
@@ -47,6 +47,10 @@
         <ng-container *ngIf="!adhesion.cheque">
            (Espece)
         </ng-container>
+      </div>
+
+      <div class="col-sm-2">
+        <nb-icon  icon="edit" (click)="modifierAdhesion(adhesion.id)" nbPopover="Modifier l'adhésion" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
       </div>
 
     </nb-list-item>
