@@ -62,6 +62,9 @@ export class AjouteradhesionComponent  {
     if (this.adhesionform.espace) {
       this.adhesion.espace = true;
     }
+    if(this.adhesionform.virement) {
+      //TODO a compléter avec le virement (apres màj du swagger)
+    }
     this.adhesion.comptaBanque = this.adhesionform.comptaBanque;
     this.adhesion.comptaNumCheque = this.adhesionform.comptaNumCheque;
 
