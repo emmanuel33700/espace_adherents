@@ -36,8 +36,8 @@ const routes: Routes = [{
         .then(m => m.TrombinoscopeModule),
     },
     {
-      path: 'saisons',
-      loadChildren: () => import('./saisons/saisons.module')
+      path: 'admin',
+      loadChildren: () => import('./admin/saisons.module')
         .then(m => m.SaisonsModule),
     },
     {
