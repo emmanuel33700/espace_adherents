@@ -1,3 +1,4 @@
 /* tslint:disable */
-import { ListeDiffusion } from './liste-diffusion';
+/* eslint-disable */
+import { ListeDiffusion } from '../models/liste-diffusion';
 export type ListeListeDiffusion = Array<ListeDiffusion>;

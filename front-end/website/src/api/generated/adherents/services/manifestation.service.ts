@@ -1,197 +1,111 @@
 /* tslint:disable */
+/* eslint-disable */
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
+import { ajoutManifestationAdherent } from '../fn/manifestation/ajout-manifestation-adherent';
+import { AjoutManifestationAdherent$Params } from '../fn/manifestation/ajout-manifestation-adherent';
+import { ajoutManifestationAdherentAccesDirect } from '../fn/manifestation/ajout-manifestation-adherent-acces-direct';
+import { AjoutManifestationAdherentAccesDirect$Params } from '../fn/manifestation/ajout-manifestation-adherent-acces-direct';
+import { deleteManifestationAdherent } from '../fn/manifestation/delete-manifestation-adherent';
+import { DeleteManifestationAdherent$Params } from '../fn/manifestation/delete-manifestation-adherent';
+import { getListeManifestationsAdherent } from '../fn/manifestation/get-liste-manifestations-adherent';
+import { GetListeManifestationsAdherent$Params } from '../fn/manifestation/get-liste-manifestations-adherent';
+import { getManifestationsAdherent } from '../fn/manifestation/get-manifestations-adherent';
+import { GetManifestationsAdherent$Params } from '../fn/manifestation/get-manifestations-adherent';
 import { ListeManifestations } from '../models/liste-manifestations';
 import { Manifestation } from '../models/manifestation';
-import { ParticipationManifestation } from '../models/participation-manifestation';
-import { ParticipationManifestationAccesDirect } from '../models/participation-manifestation-acces-direct';
+import { updateManifestationAdherent } from '../fn/manifestation/update-manifestation-adherent';
+import { UpdateManifestationAdherent$Params } from '../fn/manifestation/update-manifestation-adherent';
 
 
 /**
  * Gestion de la participation d'un adherent à une manifestion
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ManifestationService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation getListeManifestationsAdherent
-   */
+  /** Path part for operation `getListeManifestationsAdherent()` */
   static readonly GetListeManifestationsAdherentPath = '/adherent/{idadh}/manifestions';
 
   /**
+   * rechercher la liste des manifestations affectée au un adhérents.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getListeManifestationsAdherent()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getListeManifestationsAdherent$Response(params: {
-
-    /**
-     * id d&#x27;adherent à recuperer
-     */
-    idadh: number;
-
-    /**
-     * date de début
-     */
-    datedebut?: string;
-
-    /**
-     * date de fin
-     */
-    datefin?: string;
-
-    /**
-     * indique si il faut récupérer uniquement les manifestations avec une demande de participation
-     */
-    retourParticipationAdh?: boolean;
-
-  }): Observable<StrictHttpResponse<ListeManifestations>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ManifestationService.GetListeManifestationsAdherentPath, 'get');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-      rb.query('datedebut', params.datedebut);
-      rb.query('datefin', params.datefin);
-      rb.query('retourParticipationAdh', params.retourParticipationAdh);
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ListeManifestations>;
-      })
-    );
+  getListeManifestationsAdherent$Response(params: GetListeManifestationsAdherent$Params, context?: HttpContext): Observable<StrictHttpResponse<ListeManifestations>> {
+    return getListeManifestationsAdherent(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * rechercher la liste des manifestations affectée au un adhérents.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getListeManifestationsAdherent$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getListeManifestationsAdherent(params: {
-
-    /**
-     * id d&#x27;adherent à recuperer
-     */
-    idadh: number;
-
-    /**
-     * date de début
-     */
-    datedebut?: string;
-
-    /**
-     * date de fin
-     */
-    datefin?: string;
-
-    /**
-     * indique si il faut récupérer uniquement les manifestations avec une demande de participation
-     */
-    retourParticipationAdh?: boolean;
-
-  }): Observable<ListeManifestations> {
-
-    return this.getListeManifestationsAdherent$Response(params).pipe(
-      map((r: StrictHttpResponse<ListeManifestations>) => r.body as ListeManifestations)
+  getListeManifestationsAdherent(params: GetListeManifestationsAdherent$Params, context?: HttpContext): Observable<ListeManifestations> {
+    return this.getListeManifestationsAdherent$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ListeManifestations>): ListeManifestations => r.body)
     );
   }
 
-  /**
-   * Path part for operation getManifestationsAdherent
-   */
+  /** Path part for operation `getManifestationsAdherent()` */
   static readonly GetManifestationsAdherentPath = '/adherent/{idadh}/manifestion/{idManifestation}';
 
   /**
+   * rechercher le d'étail d'une  manifestations affectée au un adhérent.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getManifestationsAdherent()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getManifestationsAdherent$Response(params: {
-
-    /**
-     * id d&#x27;adherent à recuperer
-     */
-    idadh: number;
-
-    /**
-     * id de la manifestation à recuperer
-     */
-    idManifestation: number;
-
-  }): Observable<StrictHttpResponse<Manifestation>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ManifestationService.GetManifestationsAdherentPath, 'get');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-      rb.path('idManifestation', params.idManifestation);
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Manifestation>;
-      })
-    );
+  getManifestationsAdherent$Response(params: GetManifestationsAdherent$Params, context?: HttpContext): Observable<StrictHttpResponse<Manifestation>> {
+    return getManifestationsAdherent(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * rechercher le d'étail d'une  manifestations affectée au un adhérent.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getManifestationsAdherent$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getManifestationsAdherent(params: {
-
-    /**
-     * id d&#x27;adherent à recuperer
-     */
-    idadh: number;
-
-    /**
-     * id de la manifestation à recuperer
-     */
-    idManifestation: number;
-
-  }): Observable<Manifestation> {
-
-    return this.getManifestationsAdherent$Response(params).pipe(
-      map((r: StrictHttpResponse<Manifestation>) => r.body as Manifestation)
+  getManifestationsAdherent(params: GetManifestationsAdherent$Params, context?: HttpContext): Observable<Manifestation> {
+    return this.getManifestationsAdherent$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Manifestation>): Manifestation => r.body)
     );
   }
 
-  /**
-   * Path part for operation updateManifestationAdherent
-   */
+  /** Path part for operation `updateManifestationAdherent()` */
   static readonly UpdateManifestationAdherentPath = '/adherent/{idadh}/manifestion/{idManifestation}';
 
   /**
+   * Mise à jour d'une manifestation pour un adherent.
+   *
    * Mise à jour d'une manifestation pour un adherent
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -199,293 +113,122 @@ export class ManifestationService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateManifestationAdherent$Response(params: {
-
-    /**
-     * id de l&#x27;adherent à recuperer
-     */
-    idadh: number;
-
-    /**
-     * id de la manifestation à modifier
-     */
-    idManifestation: number;
-  
-    /**
-     * mise à jour d'une adhesion
-     */
-    body: ParticipationManifestation
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ManifestationService.UpdateManifestationAdherentPath, 'put');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-      rb.path('idManifestation', params.idManifestation);
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  updateManifestationAdherent$Response(params: UpdateManifestationAdherent$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateManifestationAdherent(this.http, this.rootUrl, params, context);
   }
 
   /**
+   * Mise à jour d'une manifestation pour un adherent.
+   *
    * Mise à jour d'une manifestation pour un adherent
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `updateManifestationAdherent$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateManifestationAdherent(params: {
-
-    /**
-     * id de l&#x27;adherent à recuperer
-     */
-    idadh: number;
-
-    /**
-     * id de la manifestation à modifier
-     */
-    idManifestation: number;
-  
-    /**
-     * mise à jour d'une adhesion
-     */
-    body: ParticipationManifestation
-  }): Observable<void> {
-
-    return this.updateManifestationAdherent$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  updateManifestationAdherent(params: UpdateManifestationAdherent$Params, context?: HttpContext): Observable<void> {
+    return this.updateManifestationAdherent$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation ajoutManifestationAdherent
-   */
+  /** Path part for operation `ajoutManifestationAdherent()` */
   static readonly AjoutManifestationAdherentPath = '/adherent/{idadh}/manifestion/{idManifestation}';
 
   /**
+   * Ajouter la participation à une manifestation pour un adherent.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `ajoutManifestationAdherent()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  ajoutManifestationAdherent$Response(params: {
-
-    /**
-     * id l&#x27;adherent à modifier
-     */
-    idadh: number;
-
-    /**
-     * id de la manifestation à modifier
-     */
-    idManifestation: number;
-  
-    /**
-     * Besoin de l'objet manifestation le lier à un adherents
-     */
-    body: ParticipationManifestation
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ManifestationService.AjoutManifestationAdherentPath, 'post');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-      rb.path('idManifestation', params.idManifestation);
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  ajoutManifestationAdherent$Response(params: AjoutManifestationAdherent$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return ajoutManifestationAdherent(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * Ajouter la participation à une manifestation pour un adherent.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `ajoutManifestationAdherent$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  ajoutManifestationAdherent(params: {
-
-    /**
-     * id l&#x27;adherent à modifier
-     */
-    idadh: number;
-
-    /**
-     * id de la manifestation à modifier
-     */
-    idManifestation: number;
-  
-    /**
-     * Besoin de l'objet manifestation le lier à un adherents
-     */
-    body: ParticipationManifestation
-  }): Observable<void> {
-
-    return this.ajoutManifestationAdherent$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  ajoutManifestationAdherent(params: AjoutManifestationAdherent$Params, context?: HttpContext): Observable<void> {
+    return this.ajoutManifestationAdherent$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation deleteManifestationAdherent
-   */
+  /** Path part for operation `deleteManifestationAdherent()` */
   static readonly DeleteManifestationAdherentPath = '/adherent/{idadh}/manifestion/{idManifestation}';
 
   /**
+   * Supression d'une manifestation pour un adherent.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `deleteManifestationAdherent()` instead.
    *
    * This method doesn't expect any request body.
    */
-  deleteManifestationAdherent$Response(params: {
-
-    /**
-     * id de l&#x27;adherent à recuperer
-     */
-    idadh: number;
-
-    /**
-     * id de la manifestation à supprimer
-     */
-    idManifestation: number;
-
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ManifestationService.DeleteManifestationAdherentPath, 'delete');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-      rb.path('idManifestation', params.idManifestation);
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  deleteManifestationAdherent$Response(params: DeleteManifestationAdherent$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteManifestationAdherent(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * Supression d'une manifestation pour un adherent.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `deleteManifestationAdherent$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  deleteManifestationAdherent(params: {
-
-    /**
-     * id de l&#x27;adherent à recuperer
-     */
-    idadh: number;
-
-    /**
-     * id de la manifestation à supprimer
-     */
-    idManifestation: number;
-
-  }): Observable<void> {
-
-    return this.deleteManifestationAdherent$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  deleteManifestationAdherent(params: DeleteManifestationAdherent$Params, context?: HttpContext): Observable<void> {
+    return this.deleteManifestationAdherent$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation ajoutManifestationAdherentAccesDirect
-   */
+  /** Path part for operation `ajoutManifestationAdherentAccesDirect()` */
   static readonly AjoutManifestationAdherentAccesDirectPath = '/adherent/{idadh}/manifestion/{idManifestation}/accesdirect';
 
   /**
+   * Ajouter la participation à une manifestation pour un adherent.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `ajoutManifestationAdherentAccesDirect()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  ajoutManifestationAdherentAccesDirect$Response(params: {
-
-    /**
-     * id l&#x27;adherent
-     */
-    idadh: number;
-
-    /**
-     * id de la manifestation
-     */
-    idManifestation: number;
-  
-    /**
-     * Besoin de l'objet manifestation le lier à un adherents
-     */
-    body: ParticipationManifestationAccesDirect
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, ManifestationService.AjoutManifestationAdherentAccesDirectPath, 'post');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-      rb.path('idManifestation', params.idManifestation);
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  ajoutManifestationAdherentAccesDirect$Response(params: AjoutManifestationAdherentAccesDirect$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return ajoutManifestationAdherentAccesDirect(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * Ajouter la participation à une manifestation pour un adherent.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `ajoutManifestationAdherentAccesDirect$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  ajoutManifestationAdherentAccesDirect(params: {
-
-    /**
-     * id l&#x27;adherent
-     */
-    idadh: number;
-
-    /**
-     * id de la manifestation
-     */
-    idManifestation: number;
-  
-    /**
-     * Besoin de l'objet manifestation le lier à un adherents
-     */
-    body: ParticipationManifestationAccesDirect
-  }): Observable<void> {
-
-    return this.ajoutManifestationAdherentAccesDirect$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  ajoutManifestationAdherentAccesDirect(params: AjoutManifestationAdherentAccesDirect$Params, context?: HttpContext): Observable<void> {
+    return this.ajoutManifestationAdherentAccesDirect$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

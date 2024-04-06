@@ -1,6 +1,7 @@
 /* tslint:disable */
-import { Adherent } from './adherent';
-import { Adhesion } from './adhesion';
+/* eslint-disable */
+import { Adherent } from '../models/adherent';
+import { Adhesion } from '../models/adhesion';
 export interface Adherent2 {
 
   /**

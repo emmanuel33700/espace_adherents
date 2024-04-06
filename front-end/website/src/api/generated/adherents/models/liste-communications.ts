@@ -1,3 +1,4 @@
 /* tslint:disable */
-import { Communication } from './communication';
+/* eslint-disable */
+import { Communication } from '../models/communication';
 export type ListeCommunications = Array<Communication>;

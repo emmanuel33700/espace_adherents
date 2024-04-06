@@ -1,3 +1,4 @@
 /* tslint:disable */
-import { Adherent } from './adherent';
+/* eslint-disable */
+import { Adherent } from '../models/adherent';
 export type ListeAdherents = Array<Adherent>;

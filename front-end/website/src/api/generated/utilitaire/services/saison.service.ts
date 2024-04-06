@@ -1,83 +1,72 @@
 /* tslint:disable */
+/* eslint-disable */
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
+import { getListeSaison } from '../fn/saison/get-liste-saison';
+import { GetListeSaison$Params } from '../fn/saison/get-liste-saison';
+import { getSaisonCourante } from '../fn/saison/get-saison-courante';
+import { GetSaisonCourante$Params } from '../fn/saison/get-saison-courante';
 import { ListeSaison } from '../models/liste-saison';
 import { Saison } from '../models/saison';
+import { updateSaisonCourante } from '../fn/saison/update-saison-courante';
+import { UpdateSaisonCourante$Params } from '../fn/saison/update-saison-courante';
 
 
 /**
- * Gestion des admin
+ * Gestion des saisons
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class SaisonService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation getSaisonCourante
-   */
+  /** Path part for operation `getSaisonCourante()` */
   static readonly GetSaisonCourantePath = '/saison/active';
 
   /**
+   * récupérer la saison courante.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getSaisonCourante()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getSaisonCourante$Response(params?: {
-
-  }): Observable<StrictHttpResponse<Saison>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SaisonService.GetSaisonCourantePath, 'get');
-    if (params) {
-
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Saison>;
-      })
-    );
+  getSaisonCourante$Response(params?: GetSaisonCourante$Params, context?: HttpContext): Observable<StrictHttpResponse<Saison>> {
+    return getSaisonCourante(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * récupérer la saison courante.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getSaisonCourante$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getSaisonCourante(params?: {
-
-  }): Observable<Saison> {
-
-    return this.getSaisonCourante$Response(params).pipe(
-      map((r: StrictHttpResponse<Saison>) => r.body as Saison)
+  getSaisonCourante(params?: GetSaisonCourante$Params, context?: HttpContext): Observable<Saison> {
+    return this.getSaisonCourante$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Saison>): Saison => r.body)
     );
   }
 
-  /**
-   * Path part for operation updateSaisonCourante
-   */
+  /** Path part for operation `updateSaisonCourante()` */
   static readonly UpdateSaisonCourantePath = '/saison/{idSaison}/active';
 
   /**
+   * Mise à jour de la saison courante.
+   *
    * Mise à jour de la saison courante
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -85,97 +74,56 @@ export class SaisonService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  updateSaisonCourante$Response(params: {
-
-    /**
-     * id de la saison
-     */
-    idSaison: number;
-
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SaisonService.UpdateSaisonCourantePath, 'put');
-    if (params) {
-
-      rb.path('idSaison', params.idSaison);
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  updateSaisonCourante$Response(params: UpdateSaisonCourante$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateSaisonCourante(this.http, this.rootUrl, params, context);
   }
 
   /**
+   * Mise à jour de la saison courante.
+   *
    * Mise à jour de la saison courante
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `updateSaisonCourante$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  updateSaisonCourante(params: {
-
-    /**
-     * id de la saison
-     */
-    idSaison: number;
-
-  }): Observable<void> {
-
-    return this.updateSaisonCourante$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  updateSaisonCourante(params: UpdateSaisonCourante$Params, context?: HttpContext): Observable<void> {
+    return this.updateSaisonCourante$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation getListeSaison
-   */
+  /** Path part for operation `getListeSaison()` */
   static readonly GetListeSaisonPath = '/saison/liste';
 
   /**
+   * récupérer la liste des saisons.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getListeSaison()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getListeSaison$Response(params?: {
-
-  }): Observable<StrictHttpResponse<ListeSaison>> {
-
-    const rb = new RequestBuilder(this.rootUrl, SaisonService.GetListeSaisonPath, 'get');
-    if (params) {
-
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<ListeSaison>;
-      })
-    );
+  getListeSaison$Response(params?: GetListeSaison$Params, context?: HttpContext): Observable<StrictHttpResponse<ListeSaison>> {
+    return getListeSaison(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * récupérer la liste des saisons.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getListeSaison$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getListeSaison(params?: {
-
-  }): Observable<ListeSaison> {
-
-    return this.getListeSaison$Response(params).pipe(
-      map((r: StrictHttpResponse<ListeSaison>) => r.body as ListeSaison)
+  getListeSaison(params?: GetListeSaison$Params, context?: HttpContext): Observable<ListeSaison> {
+    return this.getListeSaison$Response(params, context).pipe(
+      map((r: StrictHttpResponse<ListeSaison>): ListeSaison => r.body)
     );
   }
 

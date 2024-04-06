@@ -9,6 +9,10 @@ import {DateService, LoggerService} from '../../../../@core/utils';
 import {Evenement} from '../../../../../api/generated/utilitaire/models/evenement';
 import {AgendaService} from '../../../../../api/generated/utilitaire/services/agenda.service';
 import {NgForm} from '@angular/forms';
+import {ListeDiffusion as MailingListeUtilitaire} from "../../../../../api/generated/utilitaire/models/liste-diffusion";
+import {
+  ListeDeDiffusionService as ListeDeDiffusionServiceUtilitaire
+} from "../../../../../api/generated/utilitaire/services/liste-de-diffusion.service";
 
 @Component({
   selector: 'ngx-showcase-dialog',
@@ -39,6 +43,17 @@ export class DialogDetailEvenementComponent implements OnInit {
 
   droitEditionEvenement = false;
 
+  // indicateur de désactivation du selction des groupe
+  selectionGroupeActive: boolean = false;
+
+  // indicateur d'affichage de la selection du groupe de diffusion
+  afficherSelctionActive : boolean = false;
+
+  // Id de la mailing liste sélectionnée
+  selectedMailingListe: number = 0;
+
+  listeDiffusion: MailingListeUtilitaire[];
+
   // Type participation Evènement 1 => Participe; 2 => Ne participe pas 3=> Ne sais pas
   typeParticipationEvenement: number;
 
@@ -51,7 +66,8 @@ export class DialogDetailEvenementComponent implements OnInit {
               private agendaService: AgendaService,
               private loggerService: LoggerService,
               private toastrService: NbToastrService,
-              private dateService: DateService) {
+              private dateService: DateService,
+              private listeDeDiffusionServiceUtilitaire: ListeDeDiffusionServiceUtilitaire,) {
   }
 
 
@@ -84,10 +100,33 @@ export class DialogDetailEvenementComponent implements OnInit {
           this.evenementForm.lieux = this.manifestation.lieux;
           this.evenementForm.demandeEnvoyerMail = this.manifestation.envoyerInfoAdherents;
           this.evenementForm.confirmationParticipation = this.manifestation.demanderConfirmationParticipation;
+          this.evenementForm.selectedMailingListe = this.manifestation.idGPDiffusion;
 
           this.typeParticipationEvenement = this.manifestation.statutParticipation;
           if (String(this.manifestation.statutParticipation) === '1') {
             this.statutToogle = true;
+          }
+
+          // si selection de la case encvoyé mail, afficher la sélection de la liste de diffusion
+          if (this.evenementForm.demandeEnvoyerMail){
+            this.listeDeDiffusionServiceUtilitaire.getListes()
+              .subscribe(
+                (data) => {
+                  this.loggerService.info(JSON.stringify(data));
+                  this.listeDiffusion = data;
+                },
+                (error) => {
+                  this.loggerService.error(JSON.stringify(error));
+                  this.toastrService.danger(
+                    'Erreur technique lors de la récupération des données',
+                    'Erreur ');
+                },
+                () => {
+
+                },
+              );
+            //this.selectionGroupeActive = true;
+            this.afficherSelctionActive = true;
           }
 
         },
@@ -198,6 +237,9 @@ export class DialogDetailEvenementComponent implements OnInit {
     evenement.type = 1;
     evenement.envoyerInfoAdherents = this.evenementForm.demandeEnvoyerMail;
     evenement.demanderConfirmationParticipation = this.evenementForm.confirmationParticipation;
+    evenement.idGPDiffusion = this.selectedMailingListe;
+
+    this.loggerService.info('gp'+evenement.idGPDiffusion);
 
     this.agendaService.updateEvenement({idevenement: this.manifestation.id, body: evenement})
       .subscribe(
@@ -225,4 +267,42 @@ export class DialogDetailEvenementComponent implements OnInit {
 
     this.ref.close();
   }
-}
+  /*
+  Activer la sélection d'un groupe de diffusion
+   */
+  activerSelectionGroupe() {
+
+    if (this.selectionGroupeActive) {
+      this.selectionGroupeActive = false;
+    } else {
+      this.listeDeDiffusionServiceUtilitaire.getListes()
+        .subscribe(
+          (data) => {
+            this.loggerService.info(JSON.stringify(data));
+            this.listeDiffusion = data;
+          },
+          (error) => {
+            this.loggerService.error(JSON.stringify(error));
+            this.toastrService.danger(
+              'Erreur technique lors de la récupération des données',
+              'Erreur ');
+          },
+          () => {
+
+          },
+        );
+      this.selectionGroupeActive = true;
+    }
+
+  }
+
+  /**
+   * Afichier la selction d'un groupe
+   */
+  afficherSelectionGroupe() {
+    if (this.afficherSelctionActive) {
+      this.afficherSelctionActive = false;
+    } else {
+      this.afficherSelctionActive = true;
+    }
+  }}

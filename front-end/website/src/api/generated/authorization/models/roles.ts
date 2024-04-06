@@ -1,4 +1,5 @@
 /* tslint:disable */
+/* eslint-disable */
 export interface Roles {
   login?: string;
 

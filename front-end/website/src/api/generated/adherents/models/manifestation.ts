@@ -1,4 +1,5 @@
 /* tslint:disable */
+/* eslint-disable */
 export interface Manifestation {
 
   /**
@@ -40,6 +41,11 @@ export interface Manifestation {
    * Id de l'adherent
    */
   idAdherent?: number;
+
+  /**
+   * indique laid du groupe de diffusion pour cibler l'envoie de mail
+   */
+  idGPDiffusion?: number;
 
   /**
    * Description du lieux de l'évènement

@@ -1,3 +1,4 @@
 /* tslint:disable */
-import { ParticipantsEvenement } from './participants-evenement';
+/* eslint-disable */
+import { ParticipantsEvenement } from '../models/participants-evenement';
 export type ListeParticipantsEvenement = Array<ParticipantsEvenement>;

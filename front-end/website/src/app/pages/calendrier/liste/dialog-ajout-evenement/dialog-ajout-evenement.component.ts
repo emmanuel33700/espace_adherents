@@ -107,6 +107,7 @@ export class DialogAjoutEvenementComponent implements OnInit {
     evenement.type = 1;
     evenement.envoyerInfoAdherents = this.evenementForm.demandeEnvoyerMail;
     evenement.demanderConfirmationParticipation = this.evenementForm.confirmationParticipation;
+    evenement.idGPDiffusion = this.selectedMailingListe;
 
     this.agendaService.addEvenement({body: evenement})
       .subscribe(

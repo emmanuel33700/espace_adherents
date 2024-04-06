@@ -1,205 +1,145 @@
 /* tslint:disable */
+/* eslint-disable */
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
+import { activerCompteAdherent } from '../fn/adherent/activer-compte-adherent';
+import { ActiverCompteAdherent$Params } from '../fn/adherent/activer-compte-adherent';
 import { Adherent } from '../models/adherent';
+import { ajoutAdherent } from '../fn/adherent/ajout-adherent';
+import { AjoutAdherent$Params } from '../fn/adherent/ajout-adherent';
+import { deleteUser } from '../fn/adherent/delete-user';
+import { DeleteUser$Params } from '../fn/adherent/delete-user';
+import { getAdherent } from '../fn/adherent/get-adherent';
+import { GetAdherent$Params } from '../fn/adherent/get-adherent';
+import { getAdherentByMail } from '../fn/adherent/get-adherent-by-mail';
+import { GetAdherentByMail$Params } from '../fn/adherent/get-adherent-by-mail';
+import { updateUser } from '../fn/adherent/update-user';
+import { UpdateUser$Params } from '../fn/adherent/update-user';
+import { updateUserPhoto } from '../fn/adherent/update-user-photo';
+import { UpdateUserPhoto$Params } from '../fn/adherent/update-user-photo';
 
 
 /**
  * gestion des adhérents
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AdherentService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation getAdherentByMail
-   */
+  /** Path part for operation `getAdherentByMail()` */
   static readonly GetAdherentByMailPath = '/adherent';
 
   /**
+   * rechercher adherent via son mail.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getAdherentByMail()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAdherentByMail$Response(params: {
-
-    /**
-     * mail de l&#x27;adhérent
-     */
-    mailadherent: string;
-
-  }): Observable<StrictHttpResponse<Adherent>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AdherentService.GetAdherentByMailPath, 'get');
-    if (params) {
-
-      rb.query('mailadherent', params.mailadherent);
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Adherent>;
-      })
-    );
+  getAdherentByMail$Response(params: GetAdherentByMail$Params, context?: HttpContext): Observable<StrictHttpResponse<Adherent>> {
+    return getAdherentByMail(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * rechercher adherent via son mail.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getAdherentByMail$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAdherentByMail(params: {
-
-    /**
-     * mail de l&#x27;adhérent
-     */
-    mailadherent: string;
-
-  }): Observable<Adherent> {
-
-    return this.getAdherentByMail$Response(params).pipe(
-      map((r: StrictHttpResponse<Adherent>) => r.body as Adherent)
+  getAdherentByMail(params: GetAdherentByMail$Params, context?: HttpContext): Observable<Adherent> {
+    return this.getAdherentByMail$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Adherent>): Adherent => r.body)
     );
   }
 
-  /**
-   * Path part for operation ajoutAdherent
-   */
+  /** Path part for operation `ajoutAdherent()` */
   static readonly AjoutAdherentPath = '/adherent';
 
   /**
+   * Ajouter un adhérent.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `ajoutAdherent()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  ajoutAdherent$Response(params: {
-  
-    /**
-     * Objet adhérent
-     */
-    body: Adherent
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AdherentService.AjoutAdherentPath, 'post');
-    if (params) {
-
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  ajoutAdherent$Response(params: AjoutAdherent$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return ajoutAdherent(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * Ajouter un adhérent.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `ajoutAdherent$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  ajoutAdherent(params: {
-  
-    /**
-     * Objet adhérent
-     */
-    body: Adherent
-  }): Observable<void> {
-
-    return this.ajoutAdherent$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  ajoutAdherent(params: AjoutAdherent$Params, context?: HttpContext): Observable<void> {
+    return this.ajoutAdherent$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation getAdherent
-   */
+  /** Path part for operation `getAdherent()` */
   static readonly GetAdherentPath = '/adherent/{idadh}';
 
   /**
+   * recuperer adherent.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `getAdherent()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAdherent$Response(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-
-  }): Observable<StrictHttpResponse<Adherent>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AdherentService.GetAdherentPath, 'get');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<Adherent>;
-      })
-    );
+  getAdherent$Response(params: GetAdherent$Params, context?: HttpContext): Observable<StrictHttpResponse<Adherent>> {
+    return getAdherent(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * recuperer adherent.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getAdherent$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAdherent(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-
-  }): Observable<Adherent> {
-
-    return this.getAdherent$Response(params).pipe(
-      map((r: StrictHttpResponse<Adherent>) => r.body as Adherent)
+  getAdherent(params: GetAdherent$Params, context?: HttpContext): Observable<Adherent> {
+    return this.getAdherent$Response(params, context).pipe(
+      map((r: StrictHttpResponse<Adherent>): Adherent => r.body)
     );
   }
 
-  /**
-   * Path part for operation updateUser
-   */
+  /** Path part for operation `updateUser()` */
   static readonly UpdateUserPath = '/adherent/{idadh}';
 
   /**
+   * Mise à jour de l'adherent.
+   *
    * Mise à jour de l'adherent
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -207,183 +147,98 @@ export class AdherentService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateUser$Response(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-  
-    /**
-     * Objet adherent
-     */
-    body: Adherent
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AdherentService.UpdateUserPath, 'put');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  updateUser$Response(params: UpdateUser$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateUser(this.http, this.rootUrl, params, context);
   }
 
   /**
+   * Mise à jour de l'adherent.
+   *
    * Mise à jour de l'adherent
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `updateUser$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateUser(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-  
-    /**
-     * Objet adherent
-     */
-    body: Adherent
-  }): Observable<void> {
-
-    return this.updateUser$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  updateUser(params: UpdateUser$Params, context?: HttpContext): Observable<void> {
+    return this.updateUser$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation deleteUser
-   */
+  /** Path part for operation `deleteUser()` */
   static readonly DeleteUserPath = '/adherent/{idadh}';
 
   /**
+   * Supression de l'adherent.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `deleteUser()` instead.
    *
    * This method doesn't expect any request body.
    */
-  deleteUser$Response(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AdherentService.DeleteUserPath, 'delete');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  deleteUser$Response(params: DeleteUser$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteUser(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * Supression de l'adherent.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `deleteUser$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  deleteUser(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-
-  }): Observable<void> {
-
-    return this.deleteUser$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  deleteUser(params: DeleteUser$Params, context?: HttpContext): Observable<void> {
+    return this.deleteUser$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation activerCompteAdherent
-   */
+  /** Path part for operation `activerCompteAdherent()` */
   static readonly ActiverCompteAdherentPath = '/adherent/{idadh}/activerCompte';
 
   /**
+   * Activer le compte d'un adhérent.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `activerCompteAdherent()` instead.
    *
    * This method doesn't expect any request body.
    */
-  activerCompteAdherent$Response(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AdherentService.ActiverCompteAdherentPath, 'post');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  activerCompteAdherent$Response(params: ActiverCompteAdherent$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return activerCompteAdherent(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * Activer le compte d'un adhérent.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `activerCompteAdherent$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  activerCompteAdherent(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-
-  }): Observable<void> {
-
-    return this.activerCompteAdherent$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  activerCompteAdherent(params: ActiverCompteAdherent$Params, context?: HttpContext): Observable<void> {
+    return this.activerCompteAdherent$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation updateUserPhoto
-   */
+  /** Path part for operation `updateUserPhoto()` */
   static readonly UpdateUserPhotoPath = '/adherent/{idadh}/photo';
 
   /**
+   * Mise à jour de la photo de l'adhérent.
+   *
    * Mise à jour de la photo de l'adhérent
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -391,52 +246,23 @@ export class AdherentService extends BaseService {
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  updateUserPhoto$Response(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-      body: { 'fileName'?: string, 'file'?: Blob }
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AdherentService.UpdateUserPhotoPath, 'put');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-
-      rb.body(params.body, 'multipart/form-data');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  updateUserPhoto$Response(params: UpdateUserPhoto$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateUserPhoto(this.http, this.rootUrl, params, context);
   }
 
   /**
+   * Mise à jour de la photo de l'adhérent.
+   *
    * Mise à jour de la photo de l'adhérent
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `updateUserPhoto$Response()` instead.
    *
    * This method sends `multipart/form-data` and handles request body of type `multipart/form-data`.
    */
-  updateUserPhoto(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-      body: { 'fileName'?: string, 'file'?: Blob }
-  }): Observable<void> {
-
-    return this.updateUserPhoto$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  updateUserPhoto(params: UpdateUserPhoto$Params, context?: HttpContext): Observable<void> {
+    return this.updateUserPhoto$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

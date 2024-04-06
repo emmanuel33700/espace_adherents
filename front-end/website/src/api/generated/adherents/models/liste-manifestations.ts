@@ -1,3 +1,4 @@
 /* tslint:disable */
-import { Manifestation } from './manifestation';
+/* eslint-disable */
+import { Manifestation } from '../models/manifestation';
 export type ListeManifestations = Array<Manifestation>;

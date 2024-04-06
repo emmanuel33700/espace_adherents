@@ -1262,7 +1262,7 @@ components:
           maxLength: 100
           minLength: 3
           type: string
-          example: Conférence sur le soleil
+          exemple: Conférence sur le soleil
         detail:
           maxLength: 500
           minLength: 3
@@ -1283,7 +1283,12 @@ components:
         demanderConfirmationParticipation:
           type: boolean
           example: true
-          description: indique si il faut demander une confirmation de présence à l'adhérent          
+          description: indique si il faut demander une confirmation de présence à l'adhérent
+        idGPDiffusion:
+          type: integer
+          format: int64
+          example: 1  
+          description: indique laid du groupe de diffusion pour cibler l'envoie de mail
       xml:
         name: Order
     listeSyntheseEvenements:

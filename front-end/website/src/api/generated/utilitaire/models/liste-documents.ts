@@ -1,3 +1,4 @@
 /* tslint:disable */
-import { Document } from './document';
+/* eslint-disable */
+import { Document } from '../models/document';
 export type ListeDocuments = Array<Document>;
