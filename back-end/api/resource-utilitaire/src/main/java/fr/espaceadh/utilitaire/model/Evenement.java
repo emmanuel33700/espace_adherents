@@ -12,30 +12,31 @@ import javax.validation.constraints.*;
  * Evenement
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-02T08:30:39.723Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2024-04-06T07:20:30.065467118Z[GMT]")
+
 
 public class Evenement   {
   @JsonProperty("id")
   private Long id = null;
 
   /**
-   * Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS 
+   * Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS
    */
   public enum TypeEnum {
     NUMBER_1(1),
-    
+
     NUMBER_2(2),
-    
+
     NUMBER_3(3),
-    
+
     NUMBER_4(4),
-    
+
     NUMBER_5(5),
-    
+
     NUMBER_6(6),
-    
+
     NUMBER_7(7),
-    
+
     NUMBER_8(8);
 
     private Integer value;
@@ -81,6 +82,9 @@ public class Evenement   {
   @JsonProperty("demanderConfirmationParticipation")
   private Boolean demanderConfirmationParticipation = null;
 
+  @JsonProperty("idGPDiffusion")
+  private Long idGPDiffusion = null;
+
   public Evenement id(Long id) {
     this.id = id;
     return this;
@@ -91,8 +95,8 @@ public class Evenement   {
    * @return id
    **/
   @Schema(example = "1", description = "")
-  
-    public Long getId() {
+
+  public Long getId() {
     return id;
   }
 
@@ -106,12 +110,12 @@ public class Evenement   {
   }
 
   /**
-   * Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS 
+   * Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS
    * @return type
    **/
   @Schema(example = "1", description = "Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS ")
-  
-    public TypeEnum getType() {
+
+  public TypeEnum getType() {
     return type;
   }
 
@@ -128,8 +132,8 @@ public class Evenement   {
    * Get description
    * @return description
    **/
-  @Schema(example = "Conférence sur le soleil", description = "")
-  
+  @Schema(description = "")
+
   @Size(min=3,max=100)   public String getDescription() {
     return description;
   }
@@ -148,7 +152,7 @@ public class Evenement   {
    * @return detail
    **/
   @Schema(example = "Conférence sur le soleil présenté par Monsieur Dupont", description = "")
-  
+
   @Size(min=3,max=500)   public String getDetail() {
     return detail;
   }
@@ -167,8 +171,8 @@ public class Evenement   {
    * @return datedebut
    **/
   @Schema(example = "2020-01-18T21:00:00", description = "date de début au format iso8601")
-  
-    public String getDatedebut() {
+
+  public String getDatedebut() {
     return datedebut;
   }
 
@@ -186,8 +190,8 @@ public class Evenement   {
    * @return datefin
    **/
   @Schema(example = "2020-01-18T21:00:00", description = "date de fin au format iso8601")
-  
-    public String getDatefin() {
+
+  public String getDatefin() {
     return datefin;
   }
 
@@ -205,8 +209,8 @@ public class Evenement   {
    * @return envoyerInfoAdherents
    **/
   @Schema(example = "true", description = "indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement")
-  
-    public Boolean isEnvoyerInfoAdherents() {
+
+  public Boolean isEnvoyerInfoAdherents() {
     return envoyerInfoAdherents;
   }
 
@@ -224,13 +228,32 @@ public class Evenement   {
    * @return demanderConfirmationParticipation
    **/
   @Schema(example = "true", description = "indique si il faut demander une confirmation de présence à l'adhérent")
-  
-    public Boolean isDemanderConfirmationParticipation() {
+
+  public Boolean isDemanderConfirmationParticipation() {
     return demanderConfirmationParticipation;
   }
 
   public void setDemanderConfirmationParticipation(Boolean demanderConfirmationParticipation) {
     this.demanderConfirmationParticipation = demanderConfirmationParticipation;
+  }
+
+  public Evenement idGPDiffusion(Long idGPDiffusion) {
+    this.idGPDiffusion = idGPDiffusion;
+    return this;
+  }
+
+  /**
+   * indique laid du groupe de diffusion pour cibler l'envoie de mail
+   * @return idGPDiffusion
+   **/
+  @Schema(example = "1", description = "indique laid du groupe de diffusion pour cibler l'envoie de mail")
+
+  public Long getIdGPDiffusion() {
+    return idGPDiffusion;
+  }
+
+  public void setIdGPDiffusion(Long idGPDiffusion) {
+    this.idGPDiffusion = idGPDiffusion;
   }
 
 
@@ -244,25 +267,26 @@ public class Evenement   {
     }
     Evenement evenement = (Evenement) o;
     return Objects.equals(this.id, evenement.id) &&
-        Objects.equals(this.type, evenement.type) &&
-        Objects.equals(this.description, evenement.description) &&
-        Objects.equals(this.detail, evenement.detail) &&
-        Objects.equals(this.datedebut, evenement.datedebut) &&
-        Objects.equals(this.datefin, evenement.datefin) &&
-        Objects.equals(this.envoyerInfoAdherents, evenement.envoyerInfoAdherents) &&
-        Objects.equals(this.demanderConfirmationParticipation, evenement.demanderConfirmationParticipation);
+            Objects.equals(this.type, evenement.type) &&
+            Objects.equals(this.description, evenement.description) &&
+            Objects.equals(this.detail, evenement.detail) &&
+            Objects.equals(this.datedebut, evenement.datedebut) &&
+            Objects.equals(this.datefin, evenement.datefin) &&
+            Objects.equals(this.envoyerInfoAdherents, evenement.envoyerInfoAdherents) &&
+            Objects.equals(this.demanderConfirmationParticipation, evenement.demanderConfirmationParticipation) &&
+            Objects.equals(this.idGPDiffusion, evenement.idGPDiffusion);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, type, description, detail, datedebut, datefin, envoyerInfoAdherents, demanderConfirmationParticipation);
+    return Objects.hash(id, type, description, detail, datedebut, datefin, envoyerInfoAdherents, demanderConfirmationParticipation, idGPDiffusion);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Evenement {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
@@ -271,6 +295,7 @@ public class Evenement   {
     sb.append("    datefin: ").append(toIndentedString(datefin)).append("\n");
     sb.append("    envoyerInfoAdherents: ").append(toIndentedString(envoyerInfoAdherents)).append("\n");
     sb.append("    demanderConfirmationParticipation: ").append(toIndentedString(demanderConfirmationParticipation)).append("\n");
+    sb.append("    idGPDiffusion: ").append(toIndentedString(idGPDiffusion)).append("\n");
     sb.append("}");
     return sb.toString();
   }

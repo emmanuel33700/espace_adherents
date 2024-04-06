@@ -251,6 +251,7 @@ public class AgendaApiController implements AgendaApi {
         dto.setIdAuthority(1); //TODO a revoir le type d'authority
         dto.setDemanderConfirmationParticipation(evenementModel.isDemanderConfirmationParticipation());
         dto.setEnvoyerInfoAdherents(evenementModel.isEnvoyerInfoAdherents());
+        dto.setIdGroupeDiffusion(evenementModel.getIdGPDiffusion());
         return dto;
     }
     

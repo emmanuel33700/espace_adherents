@@ -33,6 +33,7 @@ public class EvenementDto {
     private int idAuthority;
     private boolean envoyerInfoAdherents;
     private boolean demanderConfirmationParticipation;
+    private long idGroupeDiffusion;
 
     public long getIdEvenement() {
         return idEvenement;
@@ -105,7 +106,12 @@ public class EvenementDto {
     public void setDemanderConfirmationParticipation(boolean demanderConfirmationParticipation) {
         this.demanderConfirmationParticipation = demanderConfirmationParticipation;
     }
-    
 
-    
+    public long getIdGroupeDiffusion() {
+        return idGroupeDiffusion;
+    }
+
+    public void setIdGroupeDiffusion(long idGroupeDiffusion) {
+        this.idGroupeDiffusion = idGroupeDiffusion;
+    }
 }
