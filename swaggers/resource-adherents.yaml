@@ -1628,6 +1628,11 @@ components:
             - 2
             - 3
           example: 1
+        idGPDiffusion:
+          type: integer
+          format: int64
+          example: 1  
+          description: indique laid du groupe de diffusion pour cibler l'envoie de mail
       xml:
         name: Order
     ParticipationManifestation:
