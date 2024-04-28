@@ -8,15 +8,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
-
 /**
  * Manifestation
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-03-07T09:56:02.754Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2024-04-06T08:21:10.826534040Z[GMT]")
 
 
-public class Manifestation  {
+public class Manifestation   {
   @JsonProperty("id")
   private Long id = null;
 
@@ -45,23 +44,23 @@ public class Manifestation  {
   private Boolean demanderConfirmationParticipation = null;
 
   /**
-   * Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS 
+   * Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS
    */
   public enum TypeEnum {
     NUMBER_1(1),
-    
+
     NUMBER_2(2),
-    
+
     NUMBER_3(3),
-    
+
     NUMBER_4(4),
-    
+
     NUMBER_5(5),
-    
+
     NUMBER_6(6),
-    
+
     NUMBER_7(7),
-    
+
     NUMBER_8(8);
 
     private Integer value;
@@ -90,13 +89,13 @@ public class Manifestation  {
   private TypeEnum type = null;
 
   /**
-   * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS                
+   * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS
    */
   public enum StatutParticipationEnum {
     NUMBER_1(1l),
-    
+
     NUMBER_2(2l),
-    
+
     NUMBER_3(3l);
 
     private Long value;
@@ -124,6 +123,9 @@ public class Manifestation  {
   @JsonProperty("statutParticipation")
   private StatutParticipationEnum statutParticipation = null;
 
+  @JsonProperty("idGPDiffusion")
+  private Long idGPDiffusion = null;
+
   public Manifestation id(Long id) {
     this.id = id;
     return this;
@@ -134,8 +136,8 @@ public class Manifestation  {
    * @return id
    **/
   @Schema(example = "1", description = "Id de la manifestation")
-  
-    public Long getId() {
+
+  public Long getId() {
     return id;
   }
 
@@ -153,8 +155,8 @@ public class Manifestation  {
    * @return idAdherent
    **/
   @Schema(example = "1", description = "Id de l'adherent")
-  
-    public Long getIdAdherent() {
+
+  public Long getIdAdherent() {
     return idAdherent;
   }
 
@@ -172,7 +174,7 @@ public class Manifestation  {
    * @return descriptionCourte
    **/
   @Schema(example = "Manifestation à la conférence", description = "Description courte de l'évènement")
-  
+
   @Size(min=2,max=100)   public String getDescriptionCourte() {
     return descriptionCourte;
   }
@@ -191,7 +193,7 @@ public class Manifestation  {
    * @return descriptionLongue
    **/
   @Schema(example = "Manifestation à la conférence sur le soleil qui sera présenté par Mr dupond", description = "Description longue de l'évènement")
-  
+
   @Size(min=2,max=500)   public String getDescriptionLongue() {
     return descriptionLongue;
   }
@@ -210,7 +212,7 @@ public class Manifestation  {
    * @return lieux
    **/
   @Schema(example = "Martignas", description = "Description du lieux de l'évènement")
-  
+
   @Size(min=2,max=100)   public String getLieux() {
     return lieux;
   }
@@ -229,8 +231,8 @@ public class Manifestation  {
    * @return dateDebut
    **/
   @Schema(example = "2020-01-18T21:00:00", description = "Date de début de l'évènement (format ISO8601)")
-  
-    public String getDateDebut() {
+
+  public String getDateDebut() {
     return dateDebut;
   }
 
@@ -248,8 +250,8 @@ public class Manifestation  {
    * @return dateFin
    **/
   @Schema(example = "2020-01-18T21:00:00", description = "Date de fin de l'évènement")
-  
-    public String getDateFin() {
+
+  public String getDateFin() {
     return dateFin;
   }
 
@@ -267,8 +269,8 @@ public class Manifestation  {
    * @return envoyerInfoAdherents
    **/
   @Schema(example = "true", description = "indique si le système doit envoyer un mail au adhérent à la suite de la création d'un évènement")
-  
-    public Boolean isEnvoyerInfoAdherents() {
+
+  public Boolean isEnvoyerInfoAdherents() {
     return envoyerInfoAdherents;
   }
 
@@ -286,8 +288,8 @@ public class Manifestation  {
    * @return demanderConfirmationParticipation
    **/
   @Schema(example = "true", description = "indique si il faut demander une confirmation de présence à l'adhérent")
-  
-    public Boolean isDemanderConfirmationParticipation() {
+
+  public Boolean isDemanderConfirmationParticipation() {
     return demanderConfirmationParticipation;
   }
 
@@ -301,12 +303,12 @@ public class Manifestation  {
   }
 
   /**
-   * Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS 
+   * Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS
    * @return type
    **/
   @Schema(example = "1", description = "Types evenement * 1 : CONFERENCE                * 2 : MANIFESTATION             * 3 : OBSERVATION * 4 : ANIMATION * 5 : REUNION * 6 : SORTIE * 7 : ATELIER * 8 : DIVERS ")
-  
-    public TypeEnum getType() {
+
+  public TypeEnum getType() {
     return type;
   }
 
@@ -320,17 +322,36 @@ public class Manifestation  {
   }
 
   /**
-   * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS                
+   * Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS
    * @return statutParticipation
    **/
   @Schema(example = "1", description = "Types de participation. Valeurs possibles : * 1 : PARTICIPE                * 2 : PARTICIPE PAS              * 3 : NE SAIS PAS                ")
-  
-    public StatutParticipationEnum getStatutParticipation() {
+
+  public StatutParticipationEnum getStatutParticipation() {
     return statutParticipation;
   }
 
   public void setStatutParticipation(StatutParticipationEnum statutParticipation) {
     this.statutParticipation = statutParticipation;
+  }
+
+  public Manifestation idGPDiffusion(Long idGPDiffusion) {
+    this.idGPDiffusion = idGPDiffusion;
+    return this;
+  }
+
+  /**
+   * indique laid du groupe de diffusion pour cibler l'envoie de mail
+   * @return idGPDiffusion
+   **/
+  @Schema(example = "1", description = "indique laid du groupe de diffusion pour cibler l'envoie de mail")
+
+  public Long getIdGPDiffusion() {
+    return idGPDiffusion;
+  }
+
+  public void setIdGPDiffusion(Long idGPDiffusion) {
+    this.idGPDiffusion = idGPDiffusion;
   }
 
 
@@ -344,28 +365,29 @@ public class Manifestation  {
     }
     Manifestation manifestation = (Manifestation) o;
     return Objects.equals(this.id, manifestation.id) &&
-        Objects.equals(this.idAdherent, manifestation.idAdherent) &&
-        Objects.equals(this.descriptionCourte, manifestation.descriptionCourte) &&
-        Objects.equals(this.descriptionLongue, manifestation.descriptionLongue) &&
-        Objects.equals(this.lieux, manifestation.lieux) &&
-        Objects.equals(this.dateDebut, manifestation.dateDebut) &&
-        Objects.equals(this.dateFin, manifestation.dateFin) &&
-        Objects.equals(this.envoyerInfoAdherents, manifestation.envoyerInfoAdherents) &&
-        Objects.equals(this.demanderConfirmationParticipation, manifestation.demanderConfirmationParticipation) &&
-        Objects.equals(this.type, manifestation.type) &&
-        Objects.equals(this.statutParticipation, manifestation.statutParticipation);
+            Objects.equals(this.idAdherent, manifestation.idAdherent) &&
+            Objects.equals(this.descriptionCourte, manifestation.descriptionCourte) &&
+            Objects.equals(this.descriptionLongue, manifestation.descriptionLongue) &&
+            Objects.equals(this.lieux, manifestation.lieux) &&
+            Objects.equals(this.dateDebut, manifestation.dateDebut) &&
+            Objects.equals(this.dateFin, manifestation.dateFin) &&
+            Objects.equals(this.envoyerInfoAdherents, manifestation.envoyerInfoAdherents) &&
+            Objects.equals(this.demanderConfirmationParticipation, manifestation.demanderConfirmationParticipation) &&
+            Objects.equals(this.type, manifestation.type) &&
+            Objects.equals(this.statutParticipation, manifestation.statutParticipation) &&
+            Objects.equals(this.idGPDiffusion, manifestation.idGPDiffusion);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, idAdherent, descriptionCourte, descriptionLongue, lieux, dateDebut, dateFin, envoyerInfoAdherents, demanderConfirmationParticipation, type, statutParticipation);
+    return Objects.hash(id, idAdherent, descriptionCourte, descriptionLongue, lieux, dateDebut, dateFin, envoyerInfoAdherents, demanderConfirmationParticipation, type, statutParticipation, idGPDiffusion);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Manifestation {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    idAdherent: ").append(toIndentedString(idAdherent)).append("\n");
     sb.append("    descriptionCourte: ").append(toIndentedString(descriptionCourte)).append("\n");
@@ -377,6 +399,7 @@ public class Manifestation  {
     sb.append("    demanderConfirmationParticipation: ").append(toIndentedString(demanderConfirmationParticipation)).append("\n");
     sb.append("    type: ").append(toIndentedString(type)).append("\n");
     sb.append("    statutParticipation: ").append(toIndentedString(statutParticipation)).append("\n");
+    sb.append("    idGPDiffusion: ").append(toIndentedString(idGPDiffusion)).append("\n");
     sb.append("}");
     return sb.toString();
   }
