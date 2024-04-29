@@ -63,6 +63,7 @@ public class ActualiteApiController implements ActualiteApi {
         dto.setLibelleActualite(body.getLibelleActualite());
         dto.setIdAdherent(adh.getId());
         dto.setDateCreation(new Date());
+        dto.setIdAuthority(1);
 
         boolean result = this.actualiteService.ajouterNouvelleActualite(dto);
 
