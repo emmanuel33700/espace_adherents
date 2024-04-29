@@ -8,6 +8,7 @@ import { AgendaService } from './services/agenda.service';
 import { SaisonService } from './services/saison.service';
 import { DocumentationService } from './services/documentation.service';
 import { ListeDeDiffusionService } from './services/liste-de-diffusion.service';
+import { ActualiteService } from './services/actualite.service';
 
 /**
  * Module that provides all services and configuration.
@@ -21,6 +22,7 @@ import { ListeDeDiffusionService } from './services/liste-de-diffusion.service';
     SaisonService,
     DocumentationService,
     ListeDeDiffusionService,
+    ActualiteService,
     ApiConfiguration
   ],
 })

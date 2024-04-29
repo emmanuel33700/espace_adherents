@@ -1,11 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
+export { Actualiteecriture } from './models/actualiteecriture';
+export { Actualitelecture } from './models/actualitelecture';
 export { ApiResponse } from './models/api-response';
 export { ArborescenceDocuments } from './models/arborescence-documents';
 export { ArborescenceDocumentsInit } from './models/arborescence-documents-init';
 export { Document } from './models/document';
 export { Evenement } from './models/evenement';
 export { InscritsMailingListe } from './models/inscrits-mailing-liste';
+export { ListeActualite } from './models/liste-actualite';
 export { ListeDiffusion } from './models/liste-diffusion';
 export { ListeDocuments } from './models/liste-documents';
 export { ListeEvenements } from './models/liste-evenements';

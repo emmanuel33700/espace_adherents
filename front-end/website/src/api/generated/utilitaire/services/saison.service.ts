@@ -20,7 +20,7 @@ import { UpdateSaisonCourante$Params } from '../fn/saison/update-saison-courante
 
 
 /**
- * Gestion des saisons
+ * Gestion des actualités du club
  */
 @Injectable({ providedIn: 'root' })
 export class SaisonService extends BaseService {
