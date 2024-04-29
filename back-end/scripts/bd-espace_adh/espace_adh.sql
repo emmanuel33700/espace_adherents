@@ -439,6 +439,7 @@ COMMENT ON CONSTRAINT pk_r_relation_adherent ON public.r_relation_adherent  IS E
 CREATE TABLE public.t_information (
 	id_information numeric(9,0) NOT NULL,
 	information text,
+	date_enregistrement date NOT NULL,
 	fk_id_adherent numeric(4) NOT NULL,
 	fk_id_type_authority numeric(2) NOT NULL,
 	CONSTRAINT t_information_pk PRIMARY KEY (id_information)
