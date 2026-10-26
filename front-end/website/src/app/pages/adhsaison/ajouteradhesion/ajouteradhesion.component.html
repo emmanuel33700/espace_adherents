@@ -79,11 +79,19 @@
           </div>
 
           <div class="form-group row">
-            <label for="input-espace" class="label col-sm-3 col-form-label">Paiement en espece</label>
-            <nb-checkbox name="espace" id="input-espace" [(ngModel)]="adhesionform.espace" [required]="false">
+            <label for="input-espece" class="label col-sm-3 col-form-label">Paiement en espece</label>
+            <nb-checkbox name="espece" id="input-espece" [(ngModel)]="adhesionform.espace" [required]="false">
               Espece
             </nb-checkbox>
           </div>
+
+          <div class="form-group row">
+            <label for="input-virement" class="label col-sm-3 col-form-label">Paiement par virement</label>
+            <nb-checkbox name="virement" id="input-virement" [(ngModel)]="adhesionform.virement" [required]="false">
+              Virement
+            </nb-checkbox>
+          </div>
+
 
           <div class="form-group row">
             <label for="input-comptaBanque" class="label col-sm-3 col-form-label">Nom de la banque</label>
@@ -109,7 +117,7 @@
           </div>
 
           <div class="form-group row">
-            <label for="input-email" class="label col-sm-3 col-form-label">Numéro du cheque</label>
+            <label for="input-email" class="label col-sm-3 col-form-label">Référence bancaire</label>
             <div class="col-sm-9">
               <input nbInput
                      [(ngModel)]="adhesionform.comptaNumCheque"
@@ -125,7 +133,7 @@
                      [attr.aria-invalid]="comptaNumCheque.invalid && comptaNumCheque.touched ? true : null">
               <ng-container *ngIf="comptaNumCheque.invalid && comptaNumCheque.touched">
                 <p class="caption status-danger" *ngIf="comptaNumCheque.errors?.minlength || comptaNumCheque.errors?.maxlength">
-                  Le numéro du cheque doit etre compris entre 5 et 40 caracteres
+                  La référence bancaire doit etre comprise entre 5 et 40 caracteres
                 </p>
               </ng-container>
             </div>

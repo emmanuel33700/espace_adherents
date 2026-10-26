@@ -1,4 +1,5 @@
 /* tslint:disable */
+/* eslint-disable */
 export interface Evenement {
 
   /**
@@ -23,6 +24,11 @@ export interface Evenement {
    */
   envoyerInfoAdherents?: boolean;
   id?: number;
+
+  /**
+   * indique laid du groupe de diffusion pour cibler l'envoie de mail
+   */
+  idGPDiffusion?: number;
 
   /**
    * Types evenement

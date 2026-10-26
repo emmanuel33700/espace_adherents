@@ -1,96 +1,83 @@
 /* tslint:disable */
+/* eslint-disable */
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
-import { RequestBuilder } from '../request-builder';
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
 
-import { Authentification } from '../models/authentification';
+import { activationAuthentification } from '../fn/authentification/activation-authentification';
+import { ActivationAuthentification$Params } from '../fn/authentification/activation-authentification';
+import { addAuthentification } from '../fn/authentification/add-authentification';
+import { AddAuthentification$Params } from '../fn/authentification/add-authentification';
+import { deleteAuthentification } from '../fn/authentification/delete-authentification';
+import { DeleteAuthentification$Params } from '../fn/authentification/delete-authentification';
+import { desactiverAllAuthentification } from '../fn/authentification/desactiver-all-authentification';
+import { DesactiverAllAuthentification$Params } from '../fn/authentification/desactiver-all-authentification';
+import { getAuthentification } from '../fn/authentification/get-authentification';
+import { GetAuthentification$Params } from '../fn/authentification/get-authentification';
 import { InfoAuthentification } from '../models/info-authentification';
-import { Login } from '../models/login';
-import { ReinitAuthentification } from '../models/reinit-authentification';
-import { Validation } from '../models/validation';
-import { ActivationAuthentification } from '../models/activation-authentification';
+import { resetPassword } from '../fn/authentification/reset-password';
+import { ResetPassword$Params } from '../fn/authentification/reset-password';
+import { updateAuthentification } from '../fn/authentification/update-authentification';
+import { UpdateAuthentification$Params } from '../fn/authentification/update-authentification';
+import { validationAuthentification } from '../fn/authentification/validation-authentification';
+import { ValidationAuthentification$Params } from '../fn/authentification/validation-authentification';
+import { valideResetPassword } from '../fn/authentification/valide-reset-password';
+import { ValideResetPassword$Params } from '../fn/authentification/valide-reset-password';
 
 
 /**
  * Gestion des authentifications
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthentificationService extends BaseService {
-  constructor(
-    config: ApiConfiguration,
-    http: HttpClient
-  ) {
+  constructor(config: ApiConfiguration, http: HttpClient) {
     super(config, http);
   }
 
-  /**
-   * Path part for operation addAuthentification
-   */
+  /** Path part for operation `addAuthentification()` */
   static readonly AddAuthentificationPath = '/authentification';
 
   /**
+   * Ajouter  compte d'accès d'une personne.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `addAuthentification()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addAuthentification$Response(params: {
-  
-    /**
-     * ajout de l'objet authentification
-     */
-    body: Authentification
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.AddAuthentificationPath, 'post');
-    if (params) {
-
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  addAuthentification$Response(params: AddAuthentification$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return addAuthentification(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * Ajouter  compte d'accès d'une personne.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `addAuthentification$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  addAuthentification(params: {
-  
-    /**
-     * ajout de l'objet authentification
-     */
-    body: Authentification
-  }): Observable<void> {
-
-    return this.addAuthentification$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  addAuthentification(params: AddAuthentification$Params, context?: HttpContext): Observable<void> {
+    return this.addAuthentification$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation getAuthentification
-   */
+  /** Path part for operation `getAuthentification()` */
   static readonly GetAuthentificationPath = '/authentification/{idadh}';
 
   /**
+   * Récupérer les informations d'authentification (login et statut).
+   *
    * vérifier si un login existe dans la BD
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -98,60 +85,32 @@ export class AuthentificationService extends BaseService {
    *
    * This method doesn't expect any request body.
    */
-  getAuthentification$Response(params: {
-
-    /**
-     * id de la personne à modifier
-     */
-    idadh: number;
-
-  }): Observable<StrictHttpResponse<InfoAuthentification>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.GetAuthentificationPath, 'get');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'json',
-      accept: 'application/json'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return r as StrictHttpResponse<InfoAuthentification>;
-      })
-    );
+  getAuthentification$Response(params: GetAuthentification$Params, context?: HttpContext): Observable<StrictHttpResponse<InfoAuthentification>> {
+    return getAuthentification(this.http, this.rootUrl, params, context);
   }
 
   /**
+   * Récupérer les informations d'authentification (login et statut).
+   *
    * vérifier si un login existe dans la BD
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `getAuthentification$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  getAuthentification(params: {
-
-    /**
-     * id de la personne à modifier
-     */
-    idadh: number;
-
-  }): Observable<InfoAuthentification> {
-
-    return this.getAuthentification$Response(params).pipe(
-      map((r: StrictHttpResponse<InfoAuthentification>) => r.body as InfoAuthentification)
+  getAuthentification(params: GetAuthentification$Params, context?: HttpContext): Observable<InfoAuthentification> {
+    return this.getAuthentification$Response(params, context).pipe(
+      map((r: StrictHttpResponse<InfoAuthentification>): InfoAuthentification => r.body)
     );
   }
 
-  /**
-   * Path part for operation updateAuthentification
-   */
+  /** Path part for operation `updateAuthentification()` */
   static readonly UpdateAuthentificationPath = '/authentification/{idadh}';
 
   /**
+   * Mise à jour  info d'authentification d'une personne.
+   *
    * Mise à jour  info d'authentification d'une personne
    *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
@@ -159,416 +118,221 @@ export class AuthentificationService extends BaseService {
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateAuthentification$Response(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-  
-    /**
-     * mise à jour du login de la personne
-     */
-    body: Authentification
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.UpdateAuthentificationPath, 'put');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  updateAuthentification$Response(params: UpdateAuthentification$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return updateAuthentification(this.http, this.rootUrl, params, context);
   }
 
   /**
+   * Mise à jour  info d'authentification d'une personne.
+   *
    * Mise à jour  info d'authentification d'une personne
    *
-   * This method provides access to only to the response body.
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `updateAuthentification$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  updateAuthentification(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-  
-    /**
-     * mise à jour du login de la personne
-     */
-    body: Authentification
-  }): Observable<void> {
-
-    return this.updateAuthentification$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  updateAuthentification(params: UpdateAuthentification$Params, context?: HttpContext): Observable<void> {
+    return this.updateAuthentification$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation deleteAuthentification
-   */
+  /** Path part for operation `deleteAuthentification()` */
   static readonly DeleteAuthentificationPath = '/authentification/{idadh}';
 
   /**
+   * suppression du compte accès d'une personne.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `deleteAuthentification()` instead.
    *
    * This method doesn't expect any request body.
    */
-  deleteAuthentification$Response(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.DeleteAuthentificationPath, 'delete');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  deleteAuthentification$Response(params: DeleteAuthentification$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return deleteAuthentification(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * suppression du compte accès d'une personne.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `deleteAuthentification$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  deleteAuthentification(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-
-  }): Observable<void> {
-
-    return this.deleteAuthentification$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  deleteAuthentification(params: DeleteAuthentification$Params, context?: HttpContext): Observable<void> {
+    return this.deleteAuthentification$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation resetPassword
-   */
+  /** Path part for operation `resetPassword()` */
   static readonly ResetPasswordPath = '/authentification/resetPassword';
 
   /**
+   * demander la réinitialisation du mot de passe.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `resetPassword()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  resetPassword$Response(params?: {
-  
-    /**
-     * demander la réinitialisation du mot de passe
-     */
-    body?: Login
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.ResetPasswordPath, 'post');
-    if (params) {
-
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  resetPassword$Response(params?: ResetPassword$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return resetPassword(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * demander la réinitialisation du mot de passe.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `resetPassword$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  resetPassword(params?: {
-  
-    /**
-     * demander la réinitialisation du mot de passe
-     */
-    body?: Login
-  }): Observable<void> {
-
-    return this.resetPassword$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  resetPassword(params?: ResetPassword$Params, context?: HttpContext): Observable<void> {
+    return this.resetPassword$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation desactiverAllAuthentification
-   */
+  /** Path part for operation `desactiverAllAuthentification()` */
   static readonly DesactiverAllAuthentificationPath = '/authentification/all/desactiver';
 
   /**
+   * Désactiver l'ensemble des authentifications (hors role administrateur et représentant de l'association qui restent activé).
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `desactiverAllAuthentification()` instead.
    *
    * This method doesn't expect any request body.
    */
-  desactiverAllAuthentification$Response(params?: {
-
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.DesactiverAllAuthentificationPath, 'put');
-    if (params) {
-
-
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  desactiverAllAuthentification$Response(params?: DesactiverAllAuthentification$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return desactiverAllAuthentification(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * Désactiver l'ensemble des authentifications (hors role administrateur et représentant de l'association qui restent activé).
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `desactiverAllAuthentification$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  desactiverAllAuthentification(params?: {
-
-  }): Observable<void> {
-
-    return this.desactiverAllAuthentification$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  desactiverAllAuthentification(params?: DesactiverAllAuthentification$Params, context?: HttpContext): Observable<void> {
+    return this.desactiverAllAuthentification$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation valideResetPassword
-   */
+  /** Path part for operation `valideResetPassword()` */
   static readonly ValideResetPasswordPath = '/authentification/{idadh}/validerResetPassword';
 
   /**
+   * demander la validation de la réinitialisation du mot de passe.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `valideResetPassword()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  valideResetPassword$Response(params: {
-
-    /**
-     * id de la personne à modifier
-     */
-    idadh: number;
-  
-    /**
-     * demander la validation de la réinitialisation du mot de passe
-     */
-    body?: ReinitAuthentification
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.ValideResetPasswordPath, 'post');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  valideResetPassword$Response(params: ValideResetPassword$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return valideResetPassword(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * demander la validation de la réinitialisation du mot de passe.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `valideResetPassword$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  valideResetPassword(params: {
-
-    /**
-     * id de la personne à modifier
-     */
-    idadh: number;
-  
-    /**
-     * demander la validation de la réinitialisation du mot de passe
-     */
-    body?: ReinitAuthentification
-  }): Observable<void> {
-
-    return this.valideResetPassword$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  valideResetPassword(params: ValideResetPassword$Params, context?: HttpContext): Observable<void> {
+    return this.valideResetPassword$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation validationAuthentification
-   */
+  /** Path part for operation `validationAuthentification()` */
   static readonly ValidationAuthentificationPath = '/authentification/{idadh}/validation';
 
   /**
+   * validation d'enregistrement du login d'une personne.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `validationAuthentification()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  validationAuthentification$Response(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-  
-    /**
-     * Clée de validation reçu par mail au moment de la création du compte
-     */
-    body: Validation
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.ValidationAuthentificationPath, 'post');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  validationAuthentification$Response(params: ValidationAuthentification$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return validationAuthentification(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * validation d'enregistrement du login d'une personne.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `validationAuthentification$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  validationAuthentification(params: {
-
-    /**
-     * id de l&#x27;adherent
-     */
-    idadh: number;
-  
-    /**
-     * Clée de validation reçu par mail au moment de la création du compte
-     */
-    body: Validation
-  }): Observable<void> {
-
-    return this.validationAuthentification$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  validationAuthentification(params: ValidationAuthentification$Params, context?: HttpContext): Observable<void> {
+    return this.validationAuthentification$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 
-  /**
-   * Path part for operation activationAuthentification
-   */
+  /** Path part for operation `activationAuthentification()` */
   static readonly ActivationAuthentificationPath = '/authentification/{idadh}/activation';
 
   /**
+   * activation ou désactivation d'une authentification.
+   *
+   *
+   *
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
    * To access only the response body, use `activationAuthentification()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  activationAuthentification$Response(params: {
-
-    /**
-     * id de la personne à modifier
-     */
-    idadh: number;
-  
-    /**
-     * information d'activation ou desactivation d'un authentification
-     */
-    body: ActivationAuthentification
-  }): Observable<StrictHttpResponse<void>> {
-
-    const rb = new RequestBuilder(this.rootUrl, AuthentificationService.ActivationAuthentificationPath, 'put');
-    if (params) {
-
-      rb.path('idadh', params.idadh);
-
-      rb.body(params.body, 'application/json');
-    }
-    return this.http.request(rb.build({
-      responseType: 'text',
-      accept: '*/*'
-    })).pipe(
-      filter((r: any) => r instanceof HttpResponse),
-      map((r: HttpResponse<any>) => {
-        return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
-      })
-    );
+  activationAuthentification$Response(params: ActivationAuthentification$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return activationAuthentification(this.http, this.rootUrl, params, context);
   }
 
   /**
-   * This method provides access to only to the response body.
+   * activation ou désactivation d'une authentification.
+   *
+   *
+   *
+   * This method provides access only to the response body.
    * To access the full response (for headers, for example), `activationAuthentification$Response()` instead.
    *
    * This method sends `application/json` and handles request body of type `application/json`.
    */
-  activationAuthentification(params: {
-
-    /**
-     * id de la personne à modifier
-     */
-    idadh: number;
-  
-    /**
-     * information d'activation ou desactivation d'un authentification
-     */
-    body: ActivationAuthentification
-  }): Observable<void> {
-
-    return this.activationAuthentification$Response(params).pipe(
-      map((r: StrictHttpResponse<void>) => r.body as void)
+  activationAuthentification(params: ActivationAuthentification$Params, context?: HttpContext): Observable<void> {
+    return this.activationAuthentification$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

@@ -190,9 +190,9 @@ export const MENU_ITEMS_ADMIN: NbMenuItem[] = [
       group: true,
     },
     {
-      title: 'Saisons',
-      icon: 'clock',
-      link: '/pages/saisons/liste',
+      title: 'Gestion Espace Adherent',
+      icon: 'options-outline',
+      link: '/pages/admin/liste',
     },
 
 ];

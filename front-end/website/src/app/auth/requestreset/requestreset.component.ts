@@ -13,7 +13,7 @@ import {Login} from '../../../api/generated/authorization/models/login';
   styleUrls: ['./requestreset.component.scss'],
   templateUrl: './requestreset.component.html',
 })
-export class RequestresetComponent implements OnInit {
+export class RequestresetComponent  {
 
   showMessages: any = {};
 
@@ -60,9 +60,6 @@ export class RequestresetComponent implements OnInit {
 
   }
 
-
-  ngOnInit(): void {
-  }
 
 
 }

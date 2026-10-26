@@ -192,11 +192,34 @@
         <label for="input-demandeEnvoyerMail" class="label col-sm-3 col-form-label">Envoyer un mail
           d'information</label>
         <nb-checkbox name="demandeEnvoyerMail" id="input-demandeEnvoyerMail"
-                     [(ngModel)]="evenementForm.demandeEnvoyerMail" [required]="false">
+                     [(ngModel)]="evenementForm.demandeEnvoyerMail" [required]="false"
+                     (checkedChange)="afficherSelectionGroupe()">
           Envoyer un email
         </nb-checkbox>
       </div>
 
+      <ng-container *ngIf="afficherSelctionActive">
+        <div class="form-group row">
+          <label for="input-selectListe" class="label col-sm-3 col-form-label">Envoyer à une liste</label>
+
+          <nb-checkbox name="demandeEnvoyerMailListe" id="input-selectListe"
+                       [(ngModel)]="evenementForm.demandeEnvoyerMailListe" [required]="false"
+                       (checkedChange)="activerSelectionGroupe()">
+
+              <nb-select [(selected)]="selectedMailingListe"
+                         id="select-MailingListe"
+                         [(ngModel)]="selectedMailingListe"
+                         name="selectedMailingListe"
+                         placeholder="Nom du groupe de diffusion"
+                         [disabled]="!selectionGroupeActive"
+              >
+                <nb-option *ngFor="let diffusion of listeDiffusion"
+                           [value]="diffusion.id">{{diffusion.libelle}}</nb-option>
+              </nb-select>
+          </nb-checkbox>
+
+        </div>
+      </ng-container>
 
       <div class="form-group row">
         <label for="input-demandeEnvoyerMail" class="label col-sm-3 col-form-label">Demander une confirmation de participation</label>

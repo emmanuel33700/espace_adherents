@@ -1,3 +1,4 @@
 /* tslint:disable */
-import { Saison } from './saison';
+/* eslint-disable */
+import { Saison } from '../models/saison';
 export type ListeSaison = Array<Saison>;

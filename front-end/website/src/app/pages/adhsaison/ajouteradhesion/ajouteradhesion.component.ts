@@ -13,7 +13,7 @@ import {Router} from '@angular/router';
   styleUrls: ['./ajouteradhesion.component.scss'],
   templateUrl: './ajouteradhesion.component.html',
 })
-export class AjouteradhesionComponent implements OnInit {
+export class AjouteradhesionComponent  {
   adherent: Adherent = JSON.parse(localStorage.getItem('adh_selected'));
   adhesion: Adhesion = {};
   form: FormGroup ;
@@ -40,8 +40,6 @@ export class AjouteradhesionComponent implements OnInit {
     private router: Router,
     ) {}
 
-  ngOnInit(): void {
-  }
 
   submit(form: NgForm) {
     // Initialisation des variables
@@ -63,6 +61,9 @@ export class AjouteradhesionComponent implements OnInit {
     }
     if (this.adhesionform.espace) {
       this.adhesion.espace = true;
+    }
+    if(this.adhesionform.virement) {
+      //TODO a compléter avec le virement (apres màj du swagger)
     }
     this.adhesion.comptaBanque = this.adhesionform.comptaBanque;
     this.adhesion.comptaNumCheque = this.adhesionform.comptaNumCheque;

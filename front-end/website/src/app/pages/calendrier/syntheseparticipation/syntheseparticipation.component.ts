@@ -1,5 +1,5 @@
 import {Component, HostBinding, OnInit} from '@angular/core';
-import {LoggerService} from '../../../@core/utils/logger.service';
+import {LoggerService} from '../../../@core/utils';
 import {NbToastrService} from '@nebular/theme';
 import {AgendaService} from '../../../../api/generated/utilitaire/services/agenda.service';
 import {SyntheseEvenement} from '../../../../api/generated/utilitaire/models/synthese-evenement';
@@ -41,7 +41,7 @@ export class SyntheseparticipationComponent implements OnInit {
 
     // Gestion date debut et fin de recherche
     const dDebut = new Date();
-    dDebut.setMonth(dDebut.getMonth() - 1);
+    dDebut.setMonth(dDebut.getMonth() - 12);
 
     const dFin = new Date();
     dFin.setMonth(dFin.getMonth() + 12);

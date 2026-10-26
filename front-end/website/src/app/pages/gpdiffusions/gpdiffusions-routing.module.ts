@@ -20,8 +20,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'liste',
-            pathMatch: 'full',
+            component: ListeComponent,
           },
           {
             path: 'liste',

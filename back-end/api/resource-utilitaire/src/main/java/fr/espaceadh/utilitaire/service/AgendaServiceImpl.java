@@ -23,6 +23,7 @@ import fr.espaceadh.lib.mail.dto.MailInDto;
 import fr.espaceadh.lib.mail.dto.MailOutDto;
 import fr.espaceadh.lib.mail.dto.TemplateMailEnum;
 import fr.espaceadh.utilitaire.dao.AgendaDao;
+import fr.espaceadh.utilitaire.dao.ListeDiffusionDAO;
 import fr.espaceadh.utilitaire.dto.EvenementDto;
 import fr.espaceadh.utilitaire.dto.EvenementParticipationAdherentDto;
 import fr.espaceadh.utilitaire.dto.EvenementSyntheseDto;
@@ -61,6 +62,9 @@ public class AgendaServiceImpl implements AgendaService{
     
     @Autowired
     private GestionMail sendMail;
+
+    @Autowired
+    protected ListeDiffusionDAO listeDiffusionDAO;
             
         
     /**
@@ -76,8 +80,21 @@ public class AgendaServiceImpl implements AgendaService{
         
         if (envoyerMailInfo) {
             LOGGER.debug("Envoyer un mail d'information au adhérent sur la création d'un évènement {}", evenement.getIdEvenement());
-            this.envoyerMailAdherents(evenement);
+            Collection<AdherentDto> lstAdherent;
+
+            // si groupe de diffusion == 0 -> On envoie à l'ensemble des adhérents
+            if (evenement.getIdGroupeDiffusion() == 0) {
+                LOGGER.debug("Envoie à mail à l'ensemble des adhérents");
+                lstAdherent = this.adherentsDAO.recupererListeAdherentSaison();
             }
+            // si groupe de diffuson != 0 -> On envoie aux personnes du groupe de diffusion
+            else {
+                LOGGER.debug("Envoie à mail à aux  adhérents de la lsite de diffusion {} ", evenement.getIdGroupeDiffusion());
+                lstAdherent = listeDiffusionDAO.getAdherentsInscritListeDiffusion(evenement.getIdGroupeDiffusion());
+            }
+
+            this.envoyerMailAdherents(evenement, lstAdherent);
+        }
         return resultCreation;
     }
 
@@ -85,11 +102,11 @@ public class AgendaServiceImpl implements AgendaService{
      * Envoyer un mail aux adhérents
      * @param evenement
      */
-    private void envoyerMailAdherents(EvenementDto evenement) {
+    private void envoyerMailAdherents(EvenementDto evenement, Collection<AdherentDto> lstAdherent) {
         //envoyer un email au adhérent
-        Collection<AdherentDto> lstAdherent = this.adherentsDAO.recupererListeAdherentSaison();
+
         for (AdherentDto adhDto : lstAdherent) {
-            if (adhDto.getEmail() != null) {
+            if (adhDto.getEmail() != null && adhDto.isAccordMail()) {
                 MailInDto mailIn = new MailInDto();
 
                 /* adresse email de destination */
@@ -217,7 +234,20 @@ public class AgendaServiceImpl implements AgendaService{
                 (evenement.isEnvoyerInfoAdherents()  && evenement.isDemanderConfirmationParticipation()
                 && !evenementtmp.isDemanderConfirmationParticipation())) {
             LOGGER.debug("Envoyer un mail d'information au adhérent sur la màj d'un évènement {}", evenement.getIdEvenement());
-            this.envoyerMailAdherents(evenement);
+            Collection<AdherentDto> lstAdherent;
+
+            // si groupe de diffusion == 0 -> On envoie à l'ensemble des adhérents
+            if (evenement.getIdGroupeDiffusion() == 0) {
+                LOGGER.debug("Envoie à mail à l'ensemble des adhérents");
+                lstAdherent = this.adherentsDAO.recupererListeAdherentSaison();
+            }
+            // si groupe de diffuson != 0 -> On envoie aux personnes du groupe de diffusion
+            else {
+                LOGGER.debug("Envoie à mail à aux  adhérents de la lsite de diffusion {} ", evenement.getIdGroupeDiffusion());
+                lstAdherent = listeDiffusionDAO.getAdherentsInscritListeDiffusion(evenement.getIdGroupeDiffusion());
+            }
+
+            this.envoyerMailAdherents(evenement, lstAdherent);
         }
         
         return resultCreation;

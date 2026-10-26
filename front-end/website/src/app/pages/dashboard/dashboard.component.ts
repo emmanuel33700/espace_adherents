@@ -7,11 +7,15 @@ import {Adherent} from '../../../api/generated/adherents/models/adherent';
 import {ParticipationManifestation} from '../../../api/generated/adherents/models/participation-manifestation';
 import {DocumentationService} from '../../../api/generated/utilitaire/services/documentation.service';
 import {Document} from '../../../api/generated/utilitaire/models/document.js';
-import {TokenService} from '../../@core/utils/token.service';
+import {Actualitelecture} from '../../../api/generated/utilitaire/models/actualitelecture';
+import {Actualiteecriture} from '../../../api/generated/utilitaire/models/actualiteecriture';
+import {TokenService} from '../../@core/utils';
 import {Router} from '@angular/router';
+import {NgForm} from '@angular/forms';
 import {LiensAdherentsService} from '../../../api/generated/adherents/services/liens-adherents.service';
 import {LiensAdherent} from '../../../api/generated/adherents/models/liens-adherent';
 import {AgendaService} from '../../../api/generated/utilitaire/services/agenda.service';
+import {ActualiteService} from '../../../api/generated/utilitaire/services/actualite.service';
 import {environment} from '../../../environments/environment';
 
 
@@ -48,6 +52,9 @@ export class DashboardComponent implements OnInit {
   classes = 'example-items-rows';
   // fin toaster
 
+  //Gestion des actualite
+  actualite: Actualitelecture[] = [];
+
 
   // gestion des évènements
   loadingEvenement = true;
@@ -65,13 +72,21 @@ export class DashboardComponent implements OnInit {
   // droit acces à la synthèse participation
   accesSynthesParticipation: boolean = false;
 
+  //droit de gestion de l'encart sur l'actualité de l'association
+  gestionEncartActualit: boolean = false;
+
   // gestion du graphique de participation aux évènement
   loadingSyntheseEvenement = true;
 
 
+  //Message a ajouter dans l'encart de l'info de l'association
+  messageEncarForm: string;
+  submittedMessageEncart: boolean;
+
+
   url_documents: string = environment.url_document;
 
-  optionsChart = {
+  optionsChart : any  = {
     backgroundColor: echarts.bg,
     color: ['blue'],
     tooltip: {
@@ -169,7 +184,8 @@ export class DashboardComponent implements OnInit {
               protected router: Router,
               private liensAdherentsService: LiensAdherentsService,
               private tokenService: TokenService,
-              private agendaService: AgendaService) {
+              private agendaService: AgendaService,
+              private actualiteService: ActualiteService) {
   }
 
 
@@ -183,12 +199,17 @@ export class DashboardComponent implements OnInit {
     if (role !== 'ADHERENT') {
       this.accesSynthesParticipation = true;
     }
+    if ((role === 'ADMIN') || (role === 'CONSEIL')) {
+      this.gestionEncartActualit = true;
+    }
 
     if (this.adherent != null) {
       this.idAdh = this.adherent.id;
     } else {
       this.idAdh = this.tokenService.getIdAdherent();
     }
+
+    this.initActualite();
 
     this.initEvenements();
 
@@ -621,5 +642,73 @@ export class DashboardComponent implements OnInit {
       );
 
 
+  }
+
+  /*
+  Supprimer un encart
+   */
+  supprimerEncart(id: number) {
+    this.actualiteService.delActualite({idActualite:id})
+      .subscribe(
+        (data) => {
+          this.loggerService.debug(JSON.stringify(data));
+          this.actualite  = [];
+        },
+        (error) => {
+          this.loggerService.error(JSON.stringify(error));
+          this.toastrService.danger(
+            'Erreur technique lors de suppression d\'une actualite',
+            'Erreur ');
+        },
+        () => {
+        },
+      );
+  }
+
+  /*
+  Ajouter un message dans l'encart
+   */
+  ajouterEncart(form: NgForm) {
+    const actualite: Actualiteecriture= {};
+    actualite.libelleActualite = this.messageEncarForm;
+
+    this.actualiteService.addActualite({body:actualite})
+      .subscribe(
+        (data) => {
+          this.loggerService.debug(JSON.stringify(data));
+          this.initActualite();
+        },
+        (error) => {
+          this.loggerService.error(JSON.stringify(error));
+          this.toastrService.danger(
+            'Erreur technique lors de ajout d\'une actualite',
+            'Erreur ');
+        },
+        () => {
+        },
+      );
+
+  }
+
+  /**
+   * initialisation actualite
+   * @private
+   */
+  private initActualite() {
+    this.actualiteService.getListeActualite()
+      .subscribe(
+        (data) => {
+          this.actualite = data;
+
+        },
+        (error) => {
+          this.loggerService.info('Erreur sur la réxcupération des actualite');
+          this.toastrService.danger(
+            'Erreur technique lors de recuperation des données',
+            'Erreur ');
+        },
+        () => {
+          this.loggerService.info('fini');
+        });
   }
 }

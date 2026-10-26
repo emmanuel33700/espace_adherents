@@ -1,3 +1,4 @@
 /* tslint:disable */
-import { ArborescenceDocuments } from './arborescence-documents';
+/* eslint-disable */
+import { ArborescenceDocuments } from '../models/arborescence-documents';
 export type ArborescenceDocumentsInit = Array<ArborescenceDocuments>;

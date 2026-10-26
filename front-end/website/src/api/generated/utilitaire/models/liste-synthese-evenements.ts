@@ -1,3 +1,4 @@
 /* tslint:disable */
-import { SyntheseEvenement } from './synthese-evenement';
+/* eslint-disable */
+import { SyntheseEvenement } from '../models/synthese-evenement';
 export type ListeSyntheseEvenements = Array<SyntheseEvenement>;

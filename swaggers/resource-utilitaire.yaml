@@ -30,7 +30,12 @@ tags:
       description: Pour plus de détail
       url: 'http://plusdedétail.ht'
   - name: Saison
-    description: Gestion des saisons
+    description: Gestion des actualités du club
+    externalDocs:
+      description: Pour plus de détail
+      url: 'http://plusdedétail.ht'
+  - name: Actualité
+    description: Gestion des actualité
     externalDocs:
       description: Pour plus de détail
       url: 'http://plusdedétail.ht'
@@ -1179,7 +1184,102 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'                
+                $ref: '#/components/schemas/ApiResponse'   
+  '/actualite/information':
+    post:
+      tags:
+        - Actualité
+      summary: Ajouter d'une actualité
+      operationId: addActualite
+      requestBody:
+        description: Objet Actualite
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/actualiteecriture'
+        required: true
+      responses:
+        '201':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+    get:
+      tags:
+        - Actualité
+      summary: récupérer la liste des actualités
+      operationId: getListeActualite
+      responses:
+        '200':
+          description: Operation réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/listeActualite'
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '404':
+          description: saison non trouvée
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  '/actualite/information/{idActualite}':
+    delete:
+      tags:
+        - Actualité
+      summary: Supprimer d'une actualité
+      operationId: delActualite
+      parameters:
+        - name: idActualite
+          in: path
+          description: id dde l'actualité à supprimer
+          required: true
+          schema:
+            type: integer
+            format: int64     
+      responses:
+        '200':
+          description: Operation réussie
+        '401':
+          description: utilisateur non authentifié
+        '403':
+          description: Droit insufisant
+        '405':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '500':
+          description: Erreur serveur
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse' 
 components:
   schemas:
     ApiResponse:
@@ -1262,7 +1362,7 @@ components:
           maxLength: 100
           minLength: 3
           type: string
-          example: Conférence sur le soleil
+          exemple: Conférence sur le soleil
         detail:
           maxLength: 500
           minLength: 3
@@ -1283,7 +1383,12 @@ components:
         demanderConfirmationParticipation:
           type: boolean
           example: true
-          description: indique si il faut demander une confirmation de présence à l'adhérent          
+          description: indique si il faut demander une confirmation de présence à l'adhérent
+        idGPDiffusion:
+          type: integer
+          format: int64
+          example: 1  
+          description: indique laid du groupe de diffusion pour cibler l'envoie de mail
       xml:
         name: Order
     listeSyntheseEvenements:
@@ -1377,6 +1482,54 @@ components:
           description: indique si la saison est active
       xml:
         name: Order
+    actualitelecture:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: id de l'actualite
+          example: 1
+        libelleActualite:
+          type: string
+          example: Pas d'observation aujourd'hui
+          description: libelle de l'actualite
+        dateCreation:
+          type: string
+          example: '2020-01-18T21:00:00'
+          description: date de creation de l'actualité
+        idAdherent:
+          type: integer
+          format: int64
+          example: 1
+          description: id de l'adhérent qui a créé l'actualité
+        idAuthority:
+          type: integer
+          description: |
+            Types d'adhersions. Valeurs possibles :
+            * 1 : ADHERENT               
+            * 2 : CONSEIL ADMINISTRATON             
+            * 3 : BUREAU               
+            * 4 : ADMIN
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+      xml:
+        name: Order
+    actualiteecriture:
+      type: object
+      properties:
+        libelleActualite:
+          type: string
+          example: Pas d'observation aujourd'hui
+          description: libelle de l'actualite
+      xml:
+        name: Order
+    listeActualite:
+      type: array
+      items:
+        $ref: '#/components/schemas/actualitelecture'
     listeParticipantsEvenement:
       type: array
       items:

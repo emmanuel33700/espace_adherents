@@ -190,7 +190,7 @@ export class ListeComponent implements OnInit {
    * Ajouter un répertoire
    * @param idRepParent
    */
-  private ajouterRepertoire(idRepertoireParent: number) {
+  ajouterRepertoire(idRepertoireParent: number) {
     this.loggerService.info('ajouterRepertoire ' + idRepertoireParent);
 
     let repertoireForm: any;

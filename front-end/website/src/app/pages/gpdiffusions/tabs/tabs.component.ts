@@ -14,7 +14,10 @@ export class TabsComponent implements OnInit {
       title: 'Liste groupes',
       route: '/pages/gpdiffusions/tabs/liste',
     },
-
+    {
+      title: 'Envoyer mail',
+      route: '/pages/gpdiffusions/tabs/editeur',
+    },
 
   ];
 
@@ -25,10 +28,6 @@ export class TabsComponent implements OnInit {
 
     if (role !== 'ADHERENT') {
       this.tabs.push(
-        {
-          title: 'Envoyer mail',
-          route: '/pages/gpdiffusions/tabs/editeur',
-        },
         {
           title: 'Administration',
           route: '/pages/gpdiffusions/tabs/admin',

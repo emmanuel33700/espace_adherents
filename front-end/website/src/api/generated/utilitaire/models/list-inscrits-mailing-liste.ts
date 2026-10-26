@@ -1,5 +1,6 @@
 /* tslint:disable */
-import { InscritsMailingListe } from './inscrits-mailing-liste';
+/* eslint-disable */
+import { InscritsMailingListe } from '../models/inscrits-mailing-liste';
 export interface ListInscritsMailingListe {
 
   /**

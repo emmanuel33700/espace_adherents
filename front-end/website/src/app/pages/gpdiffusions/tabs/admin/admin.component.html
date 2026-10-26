@@ -2,7 +2,7 @@
   <nb-list>
     <nb-list-item *ngFor="let mailingListe of listeDiffusion">
       <div class="col-sm-2">
-        <ng-container *ngIf="mailingListe.idAuthority == 4">
+        <ng-container *ngIf="mailingListe.idAuthority === 4">
           <nb-icon icon="eye-off-outline"></nb-icon>
         </ng-container>
       </div>

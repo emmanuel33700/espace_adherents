@@ -24,3 +24,11 @@ insert into authorities (username, authority) values ('admin@gmail.com', 'CONSEI
 insert into authorities (username, authority) values ('admin@gmail.com', 'RES_ATELIER');
 insert into authorities (username, authority) values ('admin@gmail.com', 'ADHERENT');
 
+
+
+insert into users (username, password, enabled, idAdherent) values ('test2@gmail.com', '$2a$10$HAPdjhc01NS9KcUhfvY5c.TLPZi4lvnhq6QwWc6P1bLdkmDKuAM52', true, 687);
+insert into authorities (username, authority) values ('test2@gmail.com', 'ADMIN');
+insert into authorities (username, authority) values ('test2@gmail.com', 'CONSEIL');
+insert into authorities (username, authority) values ('test2@gmail.com', 'RES_ATELIER');
+insert into authorities (username, authority) values ('test2@gmail.com', 'ADHERENT');
+

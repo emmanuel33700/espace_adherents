@@ -6,6 +6,10 @@ import {ListeDeDiffusionService as  ListeDeDiffusionServiceUtilitaire} from '../
 import {ListeDiffusion as MailingListeUtilitaire} from '../../../../../api/generated/utilitaire/models/liste-diffusion';
 import {MailAEnvoyer} from '../../../../../api/generated/utilitaire/models/mail-a-envoyer';
 import {AngularEditorConfig} from '@kolkov/angular-editor';
+import {
+  ListeDeDiffusionService as ListeDeDiffusionServiceAdherent
+} from "../../../../../api/generated/adherents/services/liste-de-diffusion.service";
+import {Adherent} from '../../../../../api/generated/adherents/models/adherent';
 
 
 
@@ -105,11 +109,13 @@ export class EditeurComponent implements OnInit {
   // indicateur de désactivation du selction des groupe
   selectionGroupeActive: boolean = false;
 
+  adherent: Adherent;
 
   constructor(
     private loggerService: LoggerService,
     private toastrService: NbToastrService,
     private listeDeDiffusionServiceUtilitaire: ListeDeDiffusionServiceUtilitaire,
+    private listeDeDiffusionServiceAdherent: ListeDeDiffusionServiceAdherent,
   ) {
   }
 
@@ -128,23 +134,61 @@ export class EditeurComponent implements OnInit {
 
     this.idMail = Date.now();
 
-    // Récupérer les listes des mailing list
-    this.listeDeDiffusionServiceUtilitaire.getListes()
-      .subscribe(
-        (data) => {
-          this.loggerService.info(JSON.stringify(data));
-          this.listeDiffusion = data;
-        },
-        (error) => {
-          this.loggerService.error(JSON.stringify(error));
-          this.toastrService.danger(
-            'Erreur technique lors de la récupération des données',
-            'Erreur ');
-        },
-        () => {
-          this.loading = false;
-        },
-      );
+    // Récupérer les listes des mailing list pour les ADMIN / CONSEIL et RESP ATELIER
+    if (this.role !== 'ADHERENT') {
+      this.listeDeDiffusionServiceUtilitaire.getListes()
+        .subscribe(
+          (data) => {
+            this.loggerService.info(JSON.stringify(data));
+            this.listeDiffusion = data;
+          },
+          (error) => {
+            this.loggerService.error(JSON.stringify(error));
+            this.toastrService.danger(
+              'Erreur technique lors de la récupération des données',
+              'Erreur ');
+          },
+          () => {
+            this.loading = false;
+          },
+        );
+    }
+    // Récupérer les listes des mailing list pour les adhérents
+    else if (this.role === 'ADHERENT') {
+
+      this.adherent = JSON.parse(localStorage.getItem('adherent'));
+
+      this.listeDeDiffusionServiceAdherent.getListesDiffusionAdherent({idadh: this.adherent.id})
+        .subscribe(
+          (data) => {
+            this.listeDiffusion = [];
+            this.loggerService.info(JSON.stringify(data));
+            data.forEach((value, index) => {
+              if (value.inscriptionListeDiffusion){
+                const mailingList : MailingListeUtilitaire  = {
+                  id: value.id,
+                  libelle: value.libelle,
+                  idAuthority: 2,
+                  nbInscrit:1,
+                }
+                this.listeDiffusion.push(mailingList);
+                // volorisation de la mailing list avec le dernier id
+                this.selectedMailingListe = value.id;
+              }
+            });
+          },
+          (error) => {
+            this.loggerService.error(JSON.stringify(error));
+            this.toastrService.danger(
+              'Erreur technique lors de la récupération des données',
+              'Erreur ');
+          },
+          () => {
+            this.loading = false;
+          },
+        );
+    }
+
 
     // gestion de l'activation de la sélection du groupe.
     if ((this.role === 'ADMIN' || this.role === 'CONSEIL' ) ) {

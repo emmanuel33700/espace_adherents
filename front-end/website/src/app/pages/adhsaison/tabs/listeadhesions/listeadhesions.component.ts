@@ -94,4 +94,13 @@ export class ListeadhesionsComponent implements OnInit {
       return 'DEMANDEUR EMPLOI';
     }
   }
+
+
+  /**
+   * Renvoyer vers la page de modification d'une adhésions
+   * @param id
+   */
+  modifierAdhesion(id: number) {
+    alert("A compléter")
+  }
 }

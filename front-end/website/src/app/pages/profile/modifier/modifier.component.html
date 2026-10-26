@@ -32,10 +32,10 @@
             <div class="col-sm-9">
 
               <div class="circular--landscape">
-                <ng-container *ngIf="user.lienPhotoProfil == null">
+                <ng-container *ngIf="user.lienPhotoProfil === null">
                   <img src="assets/images/user-profile.png" width="100"/>
                 </ng-container>
-                <ng-container *ngIf="user.lienPhotoProfil != null">
+                <ng-container *ngIf="user.lienPhotoProfil !== null">
                   <img [src]="lienPhotoProfil" width="100" />
                 </ng-container>
               </div>
@@ -243,7 +243,7 @@
             <div class="col-sm-9">
               <input nbInput
                      [(ngModel)]="user.telFixe"
-                     mask="00 00 00 00 00"                     
+                     mask="00 00 00 00 00"
                      type="tel"
                      #telFixe="ngModel"
                      id="input-telFixe"

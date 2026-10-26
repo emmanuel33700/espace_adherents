@@ -5,6 +5,7 @@ import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 
+
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -35,8 +36,8 @@ const routes: Routes = [{
         .then(m => m.TrombinoscopeModule),
     },
     {
-      path: 'saisons',
-      loadChildren: () => import('./saisons/saisons.module')
+      path: 'admin',
+      loadChildren: () => import('./admin/saisons.module')
         .then(m => m.SaisonsModule),
     },
     {

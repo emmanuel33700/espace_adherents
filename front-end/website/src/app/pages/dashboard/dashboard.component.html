@@ -2,6 +2,83 @@
 
 
   <!-- ----------------------------------------------------------------- -->
+  <!-- Encart infos de l'association -->
+  <!-- ----------------------------------------------------------------- -->
+  <ng-container *ngIf="actualite.length > 0 || gestionEncartActualit">
+    <div class="col-md-auto col-lg-12 col-xxxl-12">
+      <nb-card class="list-card" accent="info">
+        <nb-card-header>Actualité de l'association</nb-card-header>
+        <nb-card-body>
+
+          <ng-container *ngIf="actualite.length > 0">
+            <div class="form-group row">
+              <div class="col-sm-10">
+                {{ actualite[0].libelleActualite }}
+              </div>
+              <div class="col-sm-2">
+                <ng-container *ngIf="gestionEncartActualit">
+                  <nb-icon class="action-icon" icon="trash-2" (click)="supprimerEncart(actualite[0].id)"
+                           nbPopover="Supprimer le message" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+
+
+          <ng-container *ngIf="gestionEncartActualit && actualite.length === 0">
+            <form
+              (ngSubmit)="ajouterEncart(form)"
+              #form="ngForm"
+            >
+              <div class="form-group row">
+
+
+                <div class="col-sm-10">
+
+                  <input nbInput
+                         [(ngModel)]="messageEncarForm"
+                         #libelle="ngModel"
+                         id="input-libelle"
+                         name="libelle"
+                         placeholder="Saisir le message à publier"
+                         fullWidth
+                         [status]="libelle.dirty ? (libelle.invalid  ? 'danger' : 'success') : 'basic'"
+                         [required]="true"
+                         [minlength]="3"
+                         [maxlength]="200"
+                         [attr.aria-invalid]="libelle.invalid && libelle.touched ? true : null">
+                  <ng-container *ngIf="libelle.invalid && libelle.touched">
+                    <p class="caption status-danger" *ngIf="libelle.errors?.required">
+                      Message necésaire
+                    </p>
+                    <p class="caption status-danger" *ngIf="libelle.errors?.minlength || libelle.errors?.maxlength">
+                      Le message doit comporter entre 3 en 200 characteres
+                    </p>
+                  </ng-container>
+
+
+                </div>
+
+                <div class="col-sm-2">
+                  <button nbButton
+                          fullWidth
+                          status="success"
+                          [disabled]="submittedMessageEncart || !form.valid"
+                          [class.btn-pulse]="submittedMessageEncart">
+                    Ajouter message
+                  </button>
+                </div>
+              </div>
+
+            </form>
+          </ng-container>
+
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </ng-container>
+
+  <!-- ----------------------------------------------------------------- -->
   <!-- TDB les participations en attente de confirmation -->
   <!-- ----------------------------------------------------------------- -->
   <div class="col-xxxl-9 col-xxl-8 col-lg-7 col-md-6">
@@ -76,42 +153,42 @@
             <label class="label col-sm-3 col-form-label">
               {{ manifestation.descriptionCourte }} le {{ afficherDate(manifestation.dateDebut) }}
               à  {{ afficherHeure(manifestation.dateDebut) }}
-              </label>
+            </label>
 
 
-              <!-- affichage si adhérent n'a jamais sa réponse -->
-              <ng-container *ngIf="manifestation.statutParticipation == 3">
+            <!-- affichage si adhérent n'a jamais sa réponse -->
+            <ng-container *ngIf="manifestation.statutParticipation == 3">
+              <div class="col-sm-9">
+                <button status='success' type="submit" nbButton
+                        (click)="indiquerParticipeEvenement(idAdh, 1, manifestation.id)">Je
+                  participe
+                </button>
+                <button status='warning' type="submit" nbButton
+                        (click)="indiquerParticipeEvenement(idAdh, 2, manifestation.id)">Je ne
+                  participe pas
+                </button>
+              </div>
+            </ng-container>
+
+            <!-- si l'adhérent à déjà donné sa réponse -->
+            <ng-container *ngIf="!manifestation.statutParticipation != 3">
+              <ng-container *ngIf="manifestation.statutParticipation == 1">
                 <div class="col-sm-9">
-                  <button status='success' type="submit" nbButton
-                          (click)="indiquerParticipeEvenement(idAdh, 1, manifestation.id)">Je
-                    participe
-                  </button>
-                  <button status='warning' type="submit" nbButton
-                          (click)="indiquerParticipeEvenement(idAdh, 2, manifestation.id)">Je ne
-                    participe pas
-                  </button>
+                  <nb-toggle labelPosition="right" [checked]="true"
+                             (change)="changerParticipeEvenement(idAdh, $event, manifestation.id)">Je
+                    participe à l'évènement
+                  </nb-toggle>
                 </div>
               </ng-container>
-
-              <!-- si l'adhérent à déjà donné sa réponse -->
-              <ng-container *ngIf="!manifestation.statutParticipation != 3">
-                <ng-container *ngIf="manifestation.statutParticipation == 1">
-                  <div class="col-sm-9">
-                    <nb-toggle labelPosition="right" [checked]="true"
-                               (change)="changerParticipeEvenement(idAdh, $event, manifestation.id)">Je
-                      participe à l'évènement
-                    </nb-toggle>
-                  </div>
-                </ng-container>
-                <ng-container *ngIf="manifestation.statutParticipation == 2">
-                  <div class="col-sm-9">
-                    <nb-toggle labelPosition="right" [checked]="false"
-                               (change)="changerParticipeEvenement(idAdh, $event, manifestation.id)">Je
-                      participe à l'évènement
-                    </nb-toggle>
-                  </div>
-                </ng-container>
+              <ng-container *ngIf="manifestation.statutParticipation == 2">
+                <div class="col-sm-9">
+                  <nb-toggle labelPosition="right" [checked]="false"
+                             (change)="changerParticipeEvenement(idAdh, $event, manifestation.id)">Je
+                    participe à l'évènement
+                  </nb-toggle>
+                </div>
               </ng-container>
+            </ng-container>
           </nb-list-item>
         </ng-container>
 
@@ -134,7 +211,8 @@
               <nb-icon icon="file-outline" pack="eva"></nb-icon>
             </span>
             <span class="results">
-              <a href="{{url_documents}}{{ document.lienFichier }}"  target="_blank"> {{ document.nom }} </a><span class="caption">{{ document.description }}</span>
+              <a href="{{url_documents}}{{ document.lienFichier }}" target="_blank"> {{ document.nom }} </a><span
+              class="caption">{{ document.description }}</span>
             </span>
           </nb-list-item>
         </nb-list>
@@ -151,7 +229,8 @@
     <div class="col-xxxl-9 col-xxl-8 col-lg-7 col-md-6">
       <nb-card size="large" class="table-card" [nbSpinner]='loadingSyntheseEvenement'>
         <nb-card-header>Participation aux évènements</nb-card-header>
-        <div echarts [options]="optionsChart" class="echart" [loading]='loadingSyntheseEvenement' [autoResize]='true'></div>
+        <div echarts [options]="optionsChart" class="echart" [loading]='loadingSyntheseEvenement'
+             [autoResize]='true'></div>
       </nb-card>
     </div>
   </ng-container>

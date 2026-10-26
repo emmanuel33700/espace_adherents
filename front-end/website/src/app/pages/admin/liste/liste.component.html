@@ -23,11 +23,28 @@
                   fullWidth
                   status="success"
                   [class.btn-pulse]="submitted">
-            Valider
+            Enregistrer
           </button>
         </form>
       </nb-card-body>
     </nb-card>
+  </div>
+
+  <div class="col-md-6">
+    <nb-card>
+      <nb-card-header>Purge RGPD</nb-card-header>
+      <nb-card-body>
+
+          <button nbButton
+                  fullWidth
+                  status="desable"
+                  [class.btn-pulse]="submitted">
+            Purger
+          </button>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
 
 
   </div>
