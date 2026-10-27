@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 
 #generate the keys
@@ -13,7 +14,7 @@ cp privatekey.jks ../../api/privatekey.jks
 
 # Export Public Key
 rm publickey.txt
-keytool -list -rfc --keystore privatekey.jks | openssl x509 -inform pem -pubkey | grep  -B9 'END PUBLIC KEY' > publickey.txt
+keytool -exportcert -rfc -alias privatekey -keystore privatekey.jks | openssl x509 -pubkey -noout > publickey.txt
 
 
 
