@@ -38,9 +38,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import fr.espaceadh.security.ClientCredentialsTokens;
+
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -52,13 +52,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
   @TestPropertySource("classpath:application-dev.properties")
-public class ClientResourceAuthorizationTest {
+public class ClientResourceAuthorizationExample {
     
         @Autowired
     private Environment env;
     
     
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ClientResourceAuthorizationTest.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(ClientResourceAuthorizationExample.class);
     
         @Configuration
     public static class SpringConfig {
@@ -74,8 +74,8 @@ public class ClientResourceAuthorizationTest {
     public void testChangerUserName(){
         OAuth2AccessToken token = this.recupererToken();
         
-        LOGGER.info(token.toString());
-        this.changerUserName(37, "toto.toto@hotmail.fr", token.getValue());
+        LOGGER.info(token.getTokenValue());
+        this.changerUserName(37, "toto.toto@hotmail.fr", token.getTokenValue());
         
     }    
     
@@ -93,7 +93,7 @@ public class ClientResourceAuthorizationTest {
             
             StringBuilder bearer = new StringBuilder();
             bearer.append("Bearer ");
-            bearer.append(token.toString());
+            bearer.append(token.getTokenValue());
             
 
             String urlString = env.getProperty("api.ress.authorization.url");
@@ -234,18 +234,7 @@ public class ClientResourceAuthorizationTest {
     
     
     private OAuth2AccessToken recupererToken() {
-        ClientCredentialsResourceDetails resourceDetails = new ClientCredentialsResourceDetails();
-        resourceDetails.setClientSecret(env.getProperty("oauth2.ress-adh.clientsecret"));
-        resourceDetails.setClientId(env.getProperty("oauth2.ress-adh.clientid"));
-        resourceDetails.setAccessTokenUri(env.getProperty("oauth2.url"));
-       // resourceDetails.setScope("ress-autorization-admin");
-
-        OAuth2RestTemplate oAuthRestTemplate = new OAuth2RestTemplate(resourceDetails);
-
-        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
-        headers.setContentType( MediaType.APPLICATION_JSON );
-
-        return  oAuthRestTemplate.getAccessToken();
+        return ClientCredentialsTokens.obtain(env);
     }
     
 }

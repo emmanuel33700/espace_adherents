@@ -26,7 +26,6 @@ import org.springframework.security.access.expression.SecurityExpressionRoot;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
@@ -49,13 +48,7 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
 
     public boolean isProprietraireDonnee(Long idAdh) {
        
-        Object principal = this.getAuthentication().getPrincipal();
-        String username = "";
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
+        String username = this.getAuthentication().getName();
         
         LOGGER.info("username {}", username);
         
@@ -107,13 +100,7 @@ public class CustomMethodSecurityExpressionRoot extends SecurityExpressionRoot i
      * @return 
      */
     private boolean peutAgirSurDonnee(Long idAdh) {
-        Object principal = this.getAuthentication().getPrincipal();
-        String username = "";
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
+        String username = this.getAuthentication().getName();
         
         LOGGER.info("username {}", username);
         

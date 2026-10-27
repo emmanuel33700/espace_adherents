@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.espaceadh</groupId>
 	<artifactId>espaceAdherents</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>2.7.18</version>
 
 	<name>espaceAdherents</name>
 	<packaging>pom</packaging>
@@ -12,11 +12,23 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.7.RELEASE</version>
+		<version>3.5.16</version>
 		<relativePath></relativePath>
 	</parent>
 
 	<build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/.env*</exclude>
+                    <exclude>**/*.jks</exclude>
+                    <exclude>**/public.txt</exclude>
+                    <exclude>**/publickey.txt</exclude>
+                    <exclude>application-*.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
 		<finalName>espaceAdherents</finalName>
 		<pluginManagement>
 			<plugins>
@@ -26,8 +38,15 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>${maven-compiler-plugin.version}</version>
 					<configuration>
-						<source>1.8</source>
-						<target>1.8</target>
+						<release>${java.version}</release>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<configuration>
+						<propertiesEncoding>ISO-8859-1</propertiesEncoding>
 					</configuration>
 				</plugin>
 
@@ -45,7 +64,7 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${maven-surefire-plugin.version}</version>
 					<configuration>
-						<testFailureIgnore>true</testFailureIgnore>
+						<testFailureIgnore>false</testFailureIgnore>
 						<excludes>
 							<exclude>**/*IntegrationTest.java</exclude>
 							<exclude>**/*LiveTest.java</exclude>
@@ -59,31 +78,35 @@
 	</build>
 
 	<properties>
-		<oauth.version>2.3.6.RELEASE</oauth.version>
-		<jwt.version>1.0.10.RELEASE</jwt.version>
-		<swagger.version>2.9.2</swagger.version>
-		<springfox-version>2.7.0</springfox-version>
+		<java.version>21</java.version>
+		<maven.compiler.release>${java.version}</maven.compiler.release>
 
-		<netflix-zuul.version>2.1.1.RELEASE</netflix-zuul.version>
-		<oauth-autoconfig.version>2.1.3.RELEASE</oauth-autoconfig.version>
 
 		<!-- util -->
-		<commons-io.version>2.6</commons-io.version>
+		<commons-io.version>2.22.0</commons-io.version>
 
 		<!-- Maven plugins -->
-		<maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
-		<maven-war-plugin.version>3.2.2</maven-war-plugin.version>
-		<maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
-		<cargo-maven2-plugin.version>1.7.3</cargo-maven2-plugin.version>
+		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+		<maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+		<cargo-maven2-plugin.version>1.10.20</cargo-maven2-plugin.version>
 
 
-		<gson-version>2.8.1</gson-version>
-		<gson-fire-version>1.8.3</gson-fire-version>
-		<swagger-core-version>2.0.0</swagger-core-version>
+		<gson-fire-version>1.9.0</gson-fire-version>
+		<springdoc.version>2.8.17</springdoc.version>
 	</properties>
 
 
+	<!-- Annotation API used by generated sources. -->
+	<dependencies>
+		<dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+		</dependency>
+	</dependencies>
+
 	<modules>
+		<module>lib-security</module>
 		<module>lib-mail</module>
 		<module>lib-adherent</module>
 		<module>authorization-server</module>

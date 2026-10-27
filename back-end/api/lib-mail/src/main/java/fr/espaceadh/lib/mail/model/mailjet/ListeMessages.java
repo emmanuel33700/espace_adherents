@@ -21,7 +21,7 @@ import java.util.List;
  * ListeMessages
  */
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2020-11-15T20:39:15.462Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.JavaClientCodegen", date = "2020-11-15T20:39:15.462Z[GMT]")
 public class ListeMessages {
   @SerializedName("Count")
   private Long count = null;

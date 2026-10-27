@@ -41,7 +41,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 //@ContextConfiguration(locations="classpath:config.xml")
 @ContextConfiguration
   @TestPropertySource("classpath:application-dev.properties")
-public class SendMailTest {
+public class SendMailLiveTest {
     
     @Autowired
     private GestionMail sendMail;
@@ -51,7 +51,7 @@ public class SendMailTest {
     
 
     
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SendMailTest.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(SendMailLiveTest.class);
 
     
     @Configuration

@@ -16,12 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import javax.validation.Valid;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -47,7 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-04-11T08:45:53.348Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-04-11T08:45:53.348Z[GMT]")
 @RestController
 public class DocumentsApiController implements DocumentsApi {
 
@@ -412,14 +411,7 @@ public class DocumentsApiController implements DocumentsApi {
      * @return
      */
     private long getIdAdherentConnecte() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String username = null;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (username != null) {
            AdherentDto dto = this.adherentService.recupererAdherent(username);

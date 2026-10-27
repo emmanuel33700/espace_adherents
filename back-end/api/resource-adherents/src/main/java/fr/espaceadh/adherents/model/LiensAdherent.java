@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
  * LiensAdherent
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-06-26T08:37:56.470Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-06-26T08:37:56.470Z[GMT]")
 
 
 public class LiensAdherent extends ArrayList<LiensAdherentInner>  {

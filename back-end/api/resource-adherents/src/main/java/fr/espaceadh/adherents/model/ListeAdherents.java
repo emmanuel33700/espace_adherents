@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
  * ListeAdherents
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
 
 
 public class ListeAdherents extends ArrayList<Adherent>  {

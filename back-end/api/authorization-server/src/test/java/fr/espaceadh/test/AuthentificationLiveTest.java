@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import fr.espaceadh.security.ClientCredentialsTokens;
+
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -36,30 +36,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 @TestPropertySource("classpath:application-dev.properties")
-public class AuthentificationTest {
+public class AuthentificationLiveTest {
 
     @Autowired
     private Environment env;
 
-    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuthentificationTest.class);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuthentificationLiveTest.class);
 
     @Test
     public void testClientCredentials() {
-        ClientCredentialsResourceDetails resourceDetails = new ClientCredentialsResourceDetails();
-        resourceDetails.setClientSecret(env.getProperty("oauth2.ress-adh.clientid"));
-        resourceDetails.setClientId(env.getProperty("oauth2.ress-adh.clientsecret"));
-        resourceDetails.setAccessTokenUri("http://127.0.0.1:8081/authorization-server/oauth/token");
-       // resourceDetails.setScope("ress-autorization-admin");
-
-        OAuth2RestTemplate oAuthRestTemplate = new OAuth2RestTemplate(resourceDetails);
-
-        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
-        headers.setContentType( MediaType.APPLICATION_JSON );
-
-        OAuth2AccessToken token = oAuthRestTemplate.getAccessToken();
-        LOGGER.info("{}",oAuthRestTemplate.getResource());
-        LOGGER.info("{}",oAuthRestTemplate.getOAuth2ClientContext());
-        LOGGER.info("{}",token);
+        OAuth2AccessToken token = ClientCredentialsTokens.obtain(env);
+        org.junit.Assert.assertNotNull(token.getTokenValue());
     }
 
 }

@@ -24,14 +24,23 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
+
 
 /**
  *
  * @author emmanuel33700 https://github.com/emmanuel33700/espace_adherents
  * DefaultMethodSecurityExpressionHandler
  */
-public class CustomMethodSecurityExpressionHandler  extends OAuth2MethodSecurityExpressionHandler  {
+public class CustomMethodSecurityExpressionHandler  extends DefaultMethodSecurityExpressionHandler  {
+    @Override
+    public org.springframework.expression.EvaluationContext createEvaluationContext(
+            java.util.function.Supplier<Authentication> authentication, MethodInvocation invocation) {
+        var context = (org.springframework.expression.spel.support.StandardEvaluationContext)
+                super.createEvaluationContext(authentication, invocation);
+        context.setRootObject(createSecurityExpressionRoot(authentication.get(), invocation));
+        return context;
+    }
+
     private final AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
     
     private ApplicationContext applicationContext;

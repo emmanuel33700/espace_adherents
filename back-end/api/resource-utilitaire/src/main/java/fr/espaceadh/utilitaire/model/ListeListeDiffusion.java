@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
  * ListeListeDiffusion
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-15T13:08:44.732Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-15T13:08:44.732Z[GMT]")
 
 
 public class ListeListeDiffusion extends ArrayList<ListeDiffusion>  {

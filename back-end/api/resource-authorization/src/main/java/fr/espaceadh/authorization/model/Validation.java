@@ -19,17 +19,17 @@ package fr.espaceadh.authorization.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * Validation
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-10-19T08:19:59.368Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-10-19T08:19:59.368Z[GMT]")
 public class Validation   {
   @JsonProperty("cleeValidation")
   private String cleeValidation = null;
@@ -43,7 +43,7 @@ public class Validation   {
    * clée de validation pour activer le compte créé
    * @return cleeValidation
   **/
-  @ApiModelProperty(value = "clée de validation pour activer le compte créé")
+  @io.swagger.v3.oas.annotations.media.Schema(description = "clée de validation pour activer le compte créé")
   
   @Pattern(regexp="^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$") @Size(min=3,max=50)   public String getCleeValidation() {
     return cleeValidation;

@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
  * ListeDiffusion
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-12-17T12:37:12.841Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-12-17T12:37:12.841Z[GMT]")
 
 
 public class ListeDiffusion   {

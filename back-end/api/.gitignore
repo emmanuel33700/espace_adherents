@@ -1,0 +1,68 @@
+# Configuration locale et secrets
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.key
+
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.hprof
+hs_err_pid*
+replay_pid*
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+.mvn/timing.properties
+!.mvn/wrapper/maven-wrapper.jar
+# Anciennes sorties Maven creees avec une variable non resolue
+${project.build.directory}/
+
+# IntelliJ IDEA / Eclipse / VS Code
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.factorypath
+.vscode/
+bin/
+out/
+
+# Journaux et fichiers temporaires
+logs/
+*.log
+*.log.*
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.bak
+.history/
+
+# macOS / Windows / Linux
+.DS_Store
+._*
+.AppleDouble
+.LSOverride
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.directory
+.Trash-*/
