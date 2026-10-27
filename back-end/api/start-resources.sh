@@ -9,7 +9,9 @@ MODULES=(authorization-server resource-adherents resource-authorization resource
 ENV_FILE="${ENV_FILE:-$PROJECT_DIR/.env}"
 [[ "$ENV_FILE" = /* ]] || ENV_FILE="$PWD/$ENV_FILE"
 export ENV_FILE
-LOG_DIR="$PROJECT_DIR/target/resources-run"
+LOGGING_CONFIG="${LOGGING_CONFIG:-file:$PROJECT_DIR/logback.xml}"
+export LOGGING_CONFIG
+LOG_DIR="$PROJECT_DIR/logs"
 
 usage() {
     cat <<'HELP'
@@ -73,16 +75,8 @@ for module in "${MODULES[@]}"; do
     }
 done
 
-mkdir -p "$LOG_DIR"
-# Override the production Logback configuration, which writes under /home/webuser.
-cat > "$LOG_DIR/logback-console.xml" <<'XML'
-<configuration>
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder><pattern>%date %-5level [%thread] %logger{36} - %msg%n</pattern></encoder>
-    </appender>
-    <root level="INFO"><appender-ref ref="CONSOLE"/></root>
-</configuration>
-XML
+mkdir -p "$LOG_DIR/console"
+
 
 cleanup() {
     trap - EXIT INT TERM
@@ -100,21 +94,22 @@ for i in "${!MODULES[@]}"; do
     module="${MODULES[$i]}"
     java_args=("-jar" "target/$module.jar"
         "--spring.profiles.active=$PROFILE"
-        "--logging.config=file:$LOG_DIR/logback-console.xml")
+        "--logging.config=$LOGGING_CONFIG"
+        "--logging.file.path=$LOG_DIR")
     (
         cd "$PROJECT_DIR/$module"
         exec "$JAVA_BIN" "${java_args[@]}"
-    ) > "$LOG_DIR/$module.log" 2>&1 &
+    ) > "$LOG_DIR/console/$module.log" 2>&1 &
     PIDS+=("$!")
     echo "Lancement de $module (PID $!) — configuration : $ENV_FILE"
-    echo "  Log : $LOG_DIR/$module.log"
+    echo "  Log : $LOG_DIR/$module.log — console : $LOG_DIR/console/$module.log"
 done
 
 echo 'Ctrl+C pour arrêter le serveur OAuth et les trois API.'
 while true; do
     for i in "${!PIDS[@]}"; do
         if ! kill -0 "${PIDS[$i]}" 2>/dev/null; then
-            echo "${MODULES[$i]} s'est arrêté. Consulter $LOG_DIR/${MODULES[$i]}.log" >&2
+            echo "${MODULES[$i]} s'est arrêté. Consulter $LOG_DIR/console/${MODULES[$i]}.log" >&2
             exit 1
         fi
     done

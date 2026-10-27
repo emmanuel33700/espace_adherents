@@ -97,3 +97,29 @@ pour les configurations qui l'utilisent. Ces deux fichiers sont exclus des JAR.
 Les ressources Maven excluent les `.env*`, les `*.jks` et les `application-*.properties`
 des archives. Après migration, utiliser `clean package` pour supprimer les
 anciennes copies de configuration dans `target/classes`.
+
+## Configuration Logback commune
+
+Les quatre JAR utilisent le même `logback.xml` externe, à la racine de l'API.
+Les scripts transmettent son chemin absolu via `LOGGING_CONFIG`. Pour lancer
+un JAR directement depuis la racine, le chemin par défaut `file:logback.xml`
+convient. Depuis un autre dossier, fournir aussi le chemin Logback :
+
+```bash
+ENV_FILE=/etc/espace-adherents/.env \
+LOGGING_CONFIG=file:/etc/espace-adherents/logback.xml \
+java -jar /opt/espace-adherents/authorization-server.jar
+```
+
+Les deux scripts centralisent les journaux dans `api/logs/`, avec un fichier
+`<spring.application.name>.log` par service. Les sorties console (y compris les
+erreurs de démarrage) sont conservées dans `api/logs/console/<service>.log`.
+Ce dossier est ignoré par Git. Les scripts passent un chemin absolu
+`--logging.file.path`, indépendant du dossier de travail des JAR.
+Pour un lancement direct sans script, le défaut reste `logs/` dans le dossier
+de travail. Chaque service possède un nom distinct. Le niveau par défaut est INFO. `LOGGING_FILE_PATH` et `LOGGING_LEVEL_ROOT`
+permettent de changer le dossier et le niveau via le `.env` ou l'environnement,
+par exemple `/home/webuser/log` et `DEBUG`. Redémarrer les services après modification.
+
+Les configurations `logback*.xml` sont exclues des ressources des JAR.
+Les tests conservent leur propre `logback-test.xml`, utilisé uniquement par Maven.

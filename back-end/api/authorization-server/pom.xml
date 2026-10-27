@@ -127,12 +127,22 @@
                 <excludes>
                     <exclude>**/.env*</exclude>
                     <exclude>**/*.jks</exclude>
+                    <exclude>**/logback*.xml</exclude>
                     <exclude>application-*.properties</exclude>
                 </excludes>
             </resource>
         </resources>
         <finalName>authorization-server</finalName>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <logging.config>classpath:logback-test.xml</logging.config>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

@@ -12,7 +12,10 @@ API_DIR="$PWD"
 ENV_FILE="${ENV_FILE:-$API_DIR/.env}"
 [[ "$ENV_FILE" = /* ]] || ENV_FILE="$PWD/$ENV_FILE"
 export ENV_FILE
+LOGGING_CONFIG="${LOGGING_CONFIG:-file:$API_DIR/logback.xml}"
+export LOGGING_CONFIG
 JAVA_BIN="${JAVA_HOME:+$JAVA_HOME/bin/}java"
+LOG_DIR="$API_DIR/logs"
 PIDS=()
 
 # Les archives du projet sont des JAR exécutables Spring Boot.
@@ -23,16 +26,8 @@ for archive in "$OAUTH_ARCHIVE" "$ADHERENTS_ARCHIVE" "$AUTHORIZATION_ARCHIVE" "$
     fi
 done
 
-mkdir -p target/resources-run
-# Éviter le chemin de logs de production /home/webuser/log.
-cat > target/resources-run/logback-console.xml <<'XML'
-<configuration>
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder><pattern>%date %-5level %logger{36} - %msg%n</pattern></encoder>
-    </appender>
-    <root level="INFO"><appender-ref ref="CONSOLE"/></root>
-</configuration>
-XML
+mkdir -p "$LOG_DIR/console"
+
 
 stop() {
     trap - EXIT INT TERM
@@ -49,8 +44,9 @@ start() {
         cd "$module"
         exec "$JAVA_BIN" -jar "$archive" \
             "--spring.profiles.active=${SPRING_PROFILES_ACTIVE:-dev}" \
-            "--logging.config=file:$API_DIR/target/resources-run/logback-console.xml"
-    ) > "target/resources-run/$module.log" 2>&1 &
+            "--logging.config=$LOGGING_CONFIG" \
+            "--logging.file.path=$LOG_DIR"
+    ) > "$LOG_DIR/console/$module.log" 2>&1 &
     PIDS+=("$!")
     echo "$module — configuration : $ENV_FILE"
 }
@@ -59,6 +55,5 @@ start authorization-server "$OAUTH_ARCHIVE"
 start resource-adherents "$ADHERENTS_ARCHIVE"
 start resource-authorization "$AUTHORIZATION_ARCHIVE"
 start resource-utilitaire "$UTILITAIRE_ARCHIVE"
-
-echo 'Logs : target/resources-run/ — Ctrl+C pour arrêter.'
+echo "Logs : $LOG_DIR/ — Ctrl+C pour arrêter."
 wait

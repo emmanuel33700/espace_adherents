@@ -43,6 +43,8 @@ bin/
 out/
 
 # Journaux et fichiers temporaires
+# Journaux des services centralises a la racine de l’API
+/logs/
 logs/
 *.log
 *.log.*

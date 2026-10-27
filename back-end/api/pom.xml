@@ -23,6 +23,7 @@
                 <excludes>
                     <exclude>**/.env*</exclude>
                     <exclude>**/*.jks</exclude>
+                    <exclude>**/logback*.xml</exclude>
                     <exclude>**/public.txt</exclude>
                     <exclude>**/publickey.txt</exclude>
                     <exclude>application-*.properties</exclude>

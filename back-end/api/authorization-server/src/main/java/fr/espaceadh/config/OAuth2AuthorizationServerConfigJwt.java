@@ -131,7 +131,12 @@ public class OAuth2AuthorizationServerConfigJwt {
             store.load(input, password);
         }
         String alias = env.getRequiredProperty("jks.alias");
-        RSAKey key = new RSAKey.Builder((RSAPublicKey) store.getCertificate(alias).getPublicKey())
+        var certificate = store.getCertificate(alias);
+        if (certificate == null || !store.isKeyEntry(alias)) {
+            throw new IllegalStateException("Aucune cle privee avec certificat pour l'alias '" + alias
+                    + "' dans le keystore " + keystore + ". Verifier JKS_KEYSTORE et JKS_ALIAS.");
+        }
+        RSAKey key = new RSAKey.Builder((RSAPublicKey) certificate.getPublicKey())
                 .privateKey((RSAPrivateKey) store.getKey(alias, password)).keyID(alias).build();
         return (selector, context) -> selector.select(new JWKSet(key));
     }
