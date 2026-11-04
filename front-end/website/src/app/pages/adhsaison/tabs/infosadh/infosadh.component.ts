@@ -9,9 +9,10 @@ import {DateService} from '../../../../@core/utils/date.service';
 
 
 @Component({
-  selector: 'ngx-tab2',
-  styleUrls: ['./infosadh.component.scss'],
-  templateUrl: './infosadh.component.html',
+    selector: 'ngx-tab2',
+    styleUrls: ['./infosadh.component.scss'],
+    templateUrl: './infosadh.component.html',
+    standalone: false
 })
 export class InfosadhComponent implements OnInit {
 

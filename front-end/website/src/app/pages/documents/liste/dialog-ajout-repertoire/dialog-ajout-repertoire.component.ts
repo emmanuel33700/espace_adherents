@@ -8,9 +8,10 @@ import {Document} from '../../../../../api/generated/utilitaire/models/document'
 
 
 @Component({
-  selector: 'ngx-showcase-dialog',
-  templateUrl: 'dialog-ajout-repertoire.component.html',
-  styleUrls: ['dialog-ajout-repertoire.component.scss'],
+    selector: 'ngx-showcase-dialog',
+    templateUrl: 'dialog-ajout-repertoire.component.html',
+    styleUrls: ['dialog-ajout-repertoire.component.scss'],
+    standalone: false
 })
 export class DialogAjoutRepertoireComponent {
 

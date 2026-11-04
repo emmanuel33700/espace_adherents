@@ -18,9 +18,10 @@ import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 
 @Component({
-  selector: 'ngx-form-layouts',
-  styleUrls: ['./liste.component.scss'],
-  templateUrl: './liste.component.html',
+    selector: 'ngx-form-layouts',
+    styleUrls: ['./liste.component.scss'],
+    templateUrl: './liste.component.html',
+    standalone: false
 })
 export class ListeComponent implements OnInit {
   adherent: Adherent;

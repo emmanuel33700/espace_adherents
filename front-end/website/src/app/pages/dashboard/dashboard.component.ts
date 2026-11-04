@@ -38,9 +38,10 @@ interface ListeEvenementsAdherent {
 
 
 @Component({
-  selector: 'ngx-dashboard',
-  styleUrls: ['./dashboard.component.scss'],
-  templateUrl: './dashboard.component.html',
+    selector: 'ngx-dashboard',
+    styleUrls: ['./dashboard.component.scss'],
+    templateUrl: './dashboard.component.html',
+    standalone: false
 })
 export class DashboardComponent implements OnInit {
 
@@ -87,7 +88,6 @@ export class DashboardComponent implements OnInit {
   url_documents: string = environment.url_document;
 
   optionsChart : any  = {
-    backgroundColor: echarts.bg,
     color: ['blue'],
     tooltip: {
       trigger: 'axis',
@@ -109,69 +109,6 @@ export class DashboardComponent implements OnInit {
       type: 'value',
     },
     series: [
-    ],
-  };
-
-  optionsChartOlf = {
-    backgroundColor: echarts.bg,
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow',
-      },
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true,
-    },
-    xAxis: [
-      {
-        type: 'category',
-        data: ['Conference 1', 'Sortie JA', 'Evenement 3', 'Evenement 4', 'Evenement 5', 'Evenement 6'],
-        axisTick: {
-          alignWithLabel: true,
-        },
-        axisLine: {
-          lineStyle: {
-            color: echarts.axisLineColor,
-          },
-        },
-        axisLabel: {
-          textStyle: {
-            color: echarts.textColor,
-          },
-        },
-      },
-    ],
-    yAxis: [
-      {
-        type: 'value',
-        axisLine: {
-          lineStyle: {
-            color: echarts.axisLineColor,
-          },
-        },
-        splitLine: {
-          lineStyle: {
-            color: echarts.splitLineColor,
-          },
-        },
-        axisLabel: {
-          textStyle: {
-            color: echarts.textColor,
-          },
-        },
-      },
-    ],
-    series: [
-      {
-        name: 'Score',
-        type: 'bar',
-        barWidth: '60%',
-        data: [10, 52, 200, 334, 390, 330],
-      },
     ],
   };
 

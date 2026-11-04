@@ -5,7 +5,7 @@
  */
 
 import { async, inject, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { NB_WINDOW } from '@nebular/theme';
@@ -13,6 +13,7 @@ import { NbOAuth2AuthStrategy } from './oauth2-strategy';
 import { NbOAuth2ClientAuthMethod, NbOAuth2GrantType, NbOAuth2ResponseType } from './oauth2-strategy.options';
 import { NbAuthResult } from '../../services/auth-result';
 import { nbAuthCreateToken, NbAuthOAuth2Token } from '../../services/token/token';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 function createURL(params: any) {
   return Object.keys(params).map((k) => {
     return `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`;
@@ -83,13 +84,15 @@ describe('oauth2-auth-strategy', () => {
     routeMock = { snapshot: { params: {}, queryParams: {}, fragment: '' } };
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [
+    imports: [RouterTestingModule],
+    providers: [
         NbOAuth2AuthStrategy,
         { provide: ActivatedRoute, useFactory: () => routeMock },
-        { provide: NB_WINDOW, useFactory: () => windowMock }, // useValue will clone, we need reference
-      ],
-    });
+        { provide: NB_WINDOW, useFactory: () => windowMock },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
   });
 
   beforeEach(async(inject(

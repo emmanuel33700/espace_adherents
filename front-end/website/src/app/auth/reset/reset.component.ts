@@ -9,9 +9,10 @@ import {NbToastrService} from '@nebular/theme';
 
 
 @Component({
-  selector: 'ngx-register',
-  styleUrls: ['./reset.component.scss'],
-  templateUrl: './reset.component.html',
+    selector: 'ngx-register',
+    styleUrls: ['./reset.component.scss'],
+    templateUrl: './reset.component.html',
+    standalone: false
 })
 export class ResetComponent implements OnInit {
 

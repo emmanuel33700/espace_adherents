@@ -4,79 +4,72 @@
   <!-- ----------------------------------------------------------------- -->
   <!-- Encart infos de l'association -->
   <!-- ----------------------------------------------------------------- -->
-  <ng-container *ngIf="actualite.length > 0 || gestionEncartActualit">
+  @if (actualite.length > 0 || gestionEncartActualit) {
     <div class="col-md-auto col-lg-12 col-xxxl-12">
       <nb-card class="list-card" accent="info">
         <nb-card-header>Actualité de l'association</nb-card-header>
         <nb-card-body>
-
-          <ng-container *ngIf="actualite.length > 0">
+          @if (actualite.length > 0) {
             <div class="form-group row">
               <div class="col-sm-10">
                 {{ actualite[0].libelleActualite }}
               </div>
               <div class="col-sm-2">
-                <ng-container *ngIf="gestionEncartActualit">
+                @if (gestionEncartActualit) {
                   <nb-icon class="action-icon" icon="trash-2" (click)="supprimerEncart(actualite[0].id)"
-                           nbPopover="Supprimer le message" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
-                </ng-container>
+                  nbPopover="Supprimer le message" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+                }
               </div>
             </div>
-          </ng-container>
-
-
-          <ng-container *ngIf="gestionEncartActualit && actualite.length === 0">
+          }
+          @if (gestionEncartActualit && actualite.length === 0) {
             <form
               (ngSubmit)="ajouterEncart(form)"
               #form="ngForm"
-            >
+              >
               <div class="form-group row">
-
-
                 <div class="col-sm-10">
-
                   <input nbInput
-                         [(ngModel)]="messageEncarForm"
-                         #libelle="ngModel"
-                         id="input-libelle"
-                         name="libelle"
-                         placeholder="Saisir le message à publier"
-                         fullWidth
-                         [status]="libelle.dirty ? (libelle.invalid  ? 'danger' : 'success') : 'basic'"
-                         [required]="true"
-                         [minlength]="3"
-                         [maxlength]="200"
-                         [attr.aria-invalid]="libelle.invalid && libelle.touched ? true : null">
-                  <ng-container *ngIf="libelle.invalid && libelle.touched">
-                    <p class="caption status-danger" *ngIf="libelle.errors?.required">
-                      Message necésaire
-                    </p>
-                    <p class="caption status-danger" *ngIf="libelle.errors?.minlength || libelle.errors?.maxlength">
-                      Le message doit comporter entre 3 en 200 characteres
-                    </p>
-                  </ng-container>
-
-
+                    [(ngModel)]="messageEncarForm"
+                    #libelle="ngModel"
+                    id="input-libelle"
+                    name="libelle"
+                    placeholder="Saisir le message à publier"
+                    fullWidth
+                    [status]="libelle.dirty ? (libelle.invalid  ? 'danger' : 'success') : 'basic'"
+                    [required]="true"
+                    [minlength]="3"
+                    [maxlength]="200"
+                    [attr.aria-invalid]="libelle.invalid && libelle.touched ? true : null">
+                  @if (libelle.invalid && libelle.touched) {
+                    @if (libelle.errors?.required) {
+                      <p class="caption status-danger">
+                        Message necésaire
+                      </p>
+                    }
+                    @if (libelle.errors?.minlength || libelle.errors?.maxlength) {
+                      <p class="caption status-danger">
+                        Le message doit comporter entre 3 en 200 characteres
+                      </p>
+                    }
+                  }
                 </div>
-
                 <div class="col-sm-2">
                   <button nbButton
-                          fullWidth
-                          status="success"
-                          [disabled]="submittedMessageEncart || !form.valid"
-                          [class.btn-pulse]="submittedMessageEncart">
+                    fullWidth
+                    status="success"
+                    [disabled]="submittedMessageEncart || !form.valid"
+                    [class.btn-pulse]="submittedMessageEncart">
                     Ajouter message
                   </button>
                 </div>
               </div>
-
             </form>
-          </ng-container>
-
+          }
         </nb-card-body>
       </nb-card>
     </div>
-  </ng-container>
+  }
 
   <!-- ----------------------------------------------------------------- -->
   <!-- TDB les participations en attente de confirmation -->
@@ -87,110 +80,109 @@
       <nb-card-body>
 
         <!-- gestion pour affichages des tabs pour les accès délégues -->
-        <ng-container *ngIf="!loadingEvenement && accesDelegue">
+        @if (!loadingEvenement && accesDelegue) {
           <nb-tabset>
-            <nb-tab *ngFor="let evenementsAdherent of listeEvenementsAdherent"
-                    tabTitle="{{evenementsAdherent.adhRepresente.prenomAdhRepresente}}"
-            >
-              <ng-container *ngIf="!evenementsAdherent.manifestations.length">
-                Aucune manifestation a confirmer
-              </ng-container>
-              <nb-list-item *ngFor="let manifestation of evenementsAdherent.manifestations">
-
-                <label class="label col-sm-3 col-form-label">
-                  {{ manifestation.descriptionCourte }} le {{ afficherDate(manifestation.dateDebut) }}
-                  à  {{ afficherHeure(manifestation.dateDebut) }}
-                </label>
-
-                <!-- affichage si adhérent n'a jamais sa réponse -->
-                <ng-container *ngIf="manifestation.statutParticipation == 3">
-                  <div class="col-sm-9">
-                    <button status='success' type="submit" nbButton
-                            (click)="indiquerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, 1, manifestation.id)">
-                      Je
-                      participe
-                    </button>
-                    <button status='warning' type="submit" nbButton
-                            (click)="indiquerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, 2, manifestation.id)">
-                      Je ne
-                      participe pas
-                    </button>
-                  </div>
-                </ng-container>
-
-                <!-- si l'adhérent à déjà donné sa réponse -->
-                <ng-container *ngIf="manifestation.statutParticipation == 1">
-                  <div class="col-sm-9">
-                    <nb-toggle labelPosition="right" [checked]="true"
-                               (change)="changerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, $event, manifestation.id)">
-                      Je
-                      participe à l'évènement
-                    </nb-toggle>
-                  </div>
-                </ng-container>
-                <ng-container *ngIf="manifestation.statutParticipation == 2">
-                  <div class="col-sm-9">
-                    <nb-toggle labelPosition="right" [checked]="false"
-                               (change)="changerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, $event, manifestation.id)">
-                      Je
-                      participe à l'évènement
-                    </nb-toggle>
-                  </div>
-                </ng-container>
-              </nb-list-item>
-            </nb-tab>
+            @for (evenementsAdherent of listeEvenementsAdherent; track evenementsAdherent) {
+              <nb-tab
+                tabTitle="{{evenementsAdherent.adhRepresente.prenomAdhRepresente}}"
+                >
+                @if (!evenementsAdherent.manifestations.length) {
+                  Aucune manifestation a confirmer
+                }
+                @for (manifestation of evenementsAdherent.manifestations; track manifestation) {
+                  <nb-list-item>
+                    <label class="label col-sm-3 col-form-label">
+                      {{ manifestation.descriptionCourte }} le {{ afficherDate(manifestation.dateDebut) }}
+                      à  {{ afficherHeure(manifestation.dateDebut) }}
+                    </label>
+                    <!-- affichage si adhérent n'a jamais sa réponse -->
+                    @if (manifestation.statutParticipation == 3) {
+                      <div class="col-sm-9">
+                        <button status='success' type="submit" nbButton
+                          (click)="indiquerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, 1, manifestation.id)">
+                          Je
+                          participe
+                        </button>
+                        <button status='warning' type="submit" nbButton
+                          (click)="indiquerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, 2, manifestation.id)">
+                          Je ne
+                          participe pas
+                        </button>
+                      </div>
+                    }
+                    <!-- si l'adhérent à déjà donné sa réponse -->
+                    @if (manifestation.statutParticipation == 1) {
+                      <div class="col-sm-9">
+                        <nb-toggle labelPosition="right" [checked]="true"
+                          (change)="changerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, $event, manifestation.id)">
+                          Je
+                          participe à l'évènement
+                        </nb-toggle>
+                      </div>
+                    }
+                    @if (manifestation.statutParticipation == 2) {
+                      <div class="col-sm-9">
+                        <nb-toggle labelPosition="right" [checked]="false"
+                          (change)="changerParticipeEvenement(evenementsAdherent.adhRepresente.idAdhRepresente, $event, manifestation.id)">
+                          Je
+                          participe à l'évènement
+                        </nb-toggle>
+                      </div>
+                    }
+                  </nb-list-item>
+                }
+              </nb-tab>
+            }
           </nb-tabset>
-
-        </ng-container>
+        }
 
 
         <!-- si il n'y a pas d'accès délégues -->
-        <ng-container *ngIf="!loadingEvenement && !accesDelegue">
-          <ng-container *ngIf="!listeEvenementsAdherent[0].manifestations.length">
+        @if (!loadingEvenement && !accesDelegue) {
+          @if (!listeEvenementsAdherent[0].manifestations.length) {
             Aucune manifestation a confirmer
-          </ng-container>
-          <nb-list-item *ngFor="let manifestation of listeEvenementsAdherent[0].manifestations">
-            <label class="label col-sm-3 col-form-label">
-              {{ manifestation.descriptionCourte }} le {{ afficherDate(manifestation.dateDebut) }}
-              à  {{ afficherHeure(manifestation.dateDebut) }}
-            </label>
-
-
-            <!-- affichage si adhérent n'a jamais sa réponse -->
-            <ng-container *ngIf="manifestation.statutParticipation == 3">
-              <div class="col-sm-9">
-                <button status='success' type="submit" nbButton
-                        (click)="indiquerParticipeEvenement(idAdh, 1, manifestation.id)">Je
-                  participe
-                </button>
-                <button status='warning' type="submit" nbButton
-                        (click)="indiquerParticipeEvenement(idAdh, 2, manifestation.id)">Je ne
-                  participe pas
-                </button>
-              </div>
-            </ng-container>
-
-            <!-- si l'adhérent à déjà donné sa réponse -->
-            <ng-container *ngIf="!manifestation.statutParticipation != 3">
-              <ng-container *ngIf="manifestation.statutParticipation == 1">
+          }
+          @for (manifestation of listeEvenementsAdherent[0].manifestations; track manifestation) {
+            <nb-list-item>
+              <label class="label col-sm-3 col-form-label">
+                {{ manifestation.descriptionCourte }} le {{ afficherDate(manifestation.dateDebut) }}
+                à  {{ afficherHeure(manifestation.dateDebut) }}
+              </label>
+              <!-- affichage si adhérent n'a jamais sa réponse -->
+              @if (manifestation.statutParticipation == 3) {
                 <div class="col-sm-9">
-                  <nb-toggle labelPosition="right" [checked]="true"
-                             (change)="changerParticipeEvenement(idAdh, $event, manifestation.id)">Je
-                    participe à l'évènement
-                  </nb-toggle>
+                  <button status='success' type="submit" nbButton
+                    (click)="indiquerParticipeEvenement(idAdh, 1, manifestation.id)">Je
+                    participe
+                  </button>
+                  <button status='warning' type="submit" nbButton
+                    (click)="indiquerParticipeEvenement(idAdh, 2, manifestation.id)">Je ne
+                    participe pas
+                  </button>
                 </div>
-              </ng-container>
-              <ng-container *ngIf="manifestation.statutParticipation == 2">
-                <div class="col-sm-9">
-                  <nb-toggle labelPosition="right" [checked]="false"
-                             (change)="changerParticipeEvenement(idAdh, $event, manifestation.id)">Je
-                    participe à l'évènement
-                  </nb-toggle>
-                </div>
-              </ng-container>
-            </ng-container>
-          </nb-list-item>
-        </ng-container>
+              }
+              <!-- si l'adhérent à déjà donné sa réponse -->
+              @if (!manifestation.statutParticipation != 3) {
+                @if (manifestation.statutParticipation == 1) {
+                  <div class="col-sm-9">
+                    <nb-toggle labelPosition="right" [checked]="true"
+                      (change)="changerParticipeEvenement(idAdh, $event, manifestation.id)">Je
+                      participe à l'évènement
+                    </nb-toggle>
+                  </div>
+                }
+                @if (manifestation.statutParticipation == 2) {
+                  <div class="col-sm-9">
+                    <nb-toggle labelPosition="right" [checked]="false"
+                      (change)="changerParticipeEvenement(idAdh, $event, manifestation.id)">Je
+                      participe à l'évènement
+                    </nb-toggle>
+                  </div>
+                }
+              }
+            </nb-list-item>
+          }
+        }
 
 
       </nb-card-body>
@@ -206,33 +198,35 @@
       <nb-card-body>
 
         <nb-list>
-          <nb-list-item *ngFor="let document of documentsDashboard">
-            <span>
-              <nb-icon icon="file-outline" pack="eva"></nb-icon>
-            </span>
-            <span class="results">
-              <a href="{{url_documents}}{{ document.lienFichier }}" target="_blank"> {{ document.nom }} </a><span
+          @for (document of documentsDashboard; track document) {
+            <nb-list-item>
+              <span>
+                <nb-icon icon="file-outline" pack="eva"></nb-icon>
+              </span>
+              <span class="results">
+                <a href="{{url_documents}}{{ document.lienFichier }}" target="_blank"> {{ document.nom }} </a><span
               class="caption">{{ document.description }}</span>
             </span>
           </nb-list-item>
-        </nb-list>
+        }
+      </nb-list>
 
-      </nb-card-body>
+    </nb-card-body>
+  </nb-card>
+</div>
+
+
+<!-- ----------------------------------------------------------------- -->
+<!-- TDB synthèse des participations aux évènements -->
+<!-- ----------------------------------------------------------------- -->
+@if (accesSynthesParticipation) {
+  <div class="col-xxxl-9 col-xxl-8 col-lg-7 col-md-6">
+    <nb-card size="large" class="table-card" [nbSpinner]='loadingSyntheseEvenement'>
+      <nb-card-header>Participation aux évènements</nb-card-header>
+      <div echarts [options]="optionsChart" class="echart" [loading]='loadingSyntheseEvenement'
+      [autoResize]='true'></div>
     </nb-card>
   </div>
-
-
-  <!-- ----------------------------------------------------------------- -->
-  <!-- TDB synthèse des participations aux évènements -->
-  <!-- ----------------------------------------------------------------- -->
-  <ng-container *ngIf="accesSynthesParticipation">
-    <div class="col-xxxl-9 col-xxl-8 col-lg-7 col-md-6">
-      <nb-card size="large" class="table-card" [nbSpinner]='loadingSyntheseEvenement'>
-        <nb-card-header>Participation aux évènements</nb-card-header>
-        <div echarts [options]="optionsChart" class="echart" [loading]='loadingSyntheseEvenement'
-             [autoResize]='true'></div>
-      </nb-card>
-    </div>
-  </ng-container>
+}
 
 </div>

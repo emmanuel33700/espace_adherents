@@ -14,9 +14,10 @@ import {Authentification} from '../../../api/generated/authorization/models/auth
 
 
 @Component({
-  selector: 'ngx-register',
-  styleUrls: ['./register.component.scss'],
-  templateUrl: './register.component.html',
+    selector: 'ngx-register',
+    styleUrls: ['./register.component.scss'],
+    templateUrl: './register.component.html',
+    standalone: false
 })
 export class RegisterComponent implements OnInit {
 

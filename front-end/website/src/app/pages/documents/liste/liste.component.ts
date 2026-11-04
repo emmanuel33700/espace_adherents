@@ -33,9 +33,10 @@ interface FSEntry {
 
 
 @Component({
-  selector: 'ngx-tree-grid',
-  templateUrl: './liste.component.html',
-  styleUrls: ['./liste.component.scss'],
+    selector: 'ngx-tree-grid',
+    templateUrl: './liste.component.html',
+    styleUrls: ['./liste.component.scss'],
+    standalone: false
 })
 export class ListeComponent implements OnInit {
 
@@ -430,14 +431,16 @@ export class ListeComponent implements OnInit {
 }
 
 @Component({
-  selector: 'ngx-fs-icon',
-  template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-    </nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
+    selector: 'ngx-fs-icon',
+    template: `
+    @if (isDir()) {
+      <nb-tree-grid-row-toggle [expanded]="expanded">
+      </nb-tree-grid-row-toggle>
+    } @else {
       <nb-icon icon="file-text-outline"></nb-icon>
-    </ng-template>
-  `,
+    }
+    `,
+    standalone: false
 })
 export class FsIconComponent {
   @Input() kind: string;

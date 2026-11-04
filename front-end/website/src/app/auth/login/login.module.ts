@@ -15,7 +15,7 @@ import { LoginRoutingModule } from './login-routing.module';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 import {environment} from '../../../environments/environment';
 
@@ -28,61 +28,53 @@ import {
 } from '@nebular/auth';
 
 
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-
-    NbAuthModule.forRoot({
-      forms: {
-        login: {
-          redirectDelay: 0,
-          showMessages: {
-            error: true,
-            success: false,
-          },
-          strategy: 'password',
-        },
-      },
-      strategies: [
-        NbOAuth2AuthStrategy.setup({
-          name: 'password',
-          clientId: environment.as_clientId,
-          clientSecret: environment.as_clientSecret,
-          clientAuthMethod: NbOAuth2ClientAuthMethod.BASIC,
-          baseEndpoint: environment.endpoint_authorisation_serveur,
-          token: {
-            endpoint: 'token',
-            grantType: NbOAuth2GrantType.PASSWORD,
-            class: NbAuthOAuth2JWTToken,
-            requireValidToken: true,
-          },
-          redirect: {
-            success: '/pages/dashboard',
-          },
+@NgModule({ declarations: [
+        LoginComponent,
+    ], imports: [CommonModule,
+        FormsModule,
+        NbAuthModule.forRoot({
+            forms: {
+                login: {
+                    redirectDelay: 0,
+                    showMessages: {
+                        error: true,
+                        success: false,
+                    },
+                    strategy: 'password',
+                },
+            },
+            strategies: [
+                NbOAuth2AuthStrategy.setup({
+                    name: 'password',
+                    clientId: environment.as_clientId,
+                    clientSecret: environment.as_clientSecret,
+                    clientAuthMethod: NbOAuth2ClientAuthMethod.BASIC,
+                    baseEndpoint: environment.endpoint_authorisation_serveur,
+                    token: {
+                        endpoint: 'token',
+                        grantType: NbOAuth2GrantType.PASSWORD,
+                        class: NbAuthOAuth2JWTToken,
+                        requireValidToken: true,
+                    },
+                    redirect: {
+                        success: '/pages/dashboard',
+                    },
+                }),
+            ],
         }),
-      ],
-    }),
-
-    ThemeModule,
-    NbMenuModule,
-    NbLayoutModule,
-    NbInputModule,
-    NbCardModule,
-    NbButtonModule,
-    NbActionsModule,
-    NbUserModule,
-    NbCheckboxModule,
-    NbRadioModule,
-    NbDatepickerModule,
-    NbSelectModule,
-    NbIconModule,
-    ngFormsModule, LoginRoutingModule, NbAlertModule,
-  ],
-  declarations: [
-    LoginComponent,
-  ],
-})
+        ThemeModule,
+        NbMenuModule,
+        NbLayoutModule,
+        NbInputModule,
+        NbCardModule,
+        NbButtonModule,
+        NbActionsModule,
+        NbUserModule,
+        NbCheckboxModule,
+        NbRadioModule,
+        NbDatepickerModule,
+        NbSelectModule,
+        NbIconModule,
+        ngFormsModule, LoginRoutingModule, NbAlertModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class LoginModule {
 }

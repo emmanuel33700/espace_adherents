@@ -5,39 +5,47 @@
       <nb-card-header>Modifier mon profil</nb-card-header>
       <nb-card-body>
 
-        <nb-alert *ngIf="errors?.length" outline="danger" role="alert">
-          <p class="alert-title"><b>Erreur</b></p>
-          <ul class="alert-message-list">
-            <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
-            showMessages
-          </ul>
-        </nb-alert>
+        @if (errors?.length) {
+          <nb-alert outline="danger" role="alert">
+            <p class="alert-title"><b>Erreur</b></p>
+            <ul class="alert-message-list">
+              @for (error of errors; track error) {
+                <li class="alert-message">{{ error }}</li>
+              }
+              showMessages
+            </ul>
+          </nb-alert>
+        }
 
-        <nb-alert *ngIf="messages?.length" outline="success" role="alert">
-          <p class="alert-title"><b>Hooray!</b></p>
-          <ul class="alert-message-list">
-            <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
-          </ul>
-        </nb-alert>
+        @if (messages?.length) {
+          <nb-alert outline="success" role="alert">
+            <p class="alert-title"><b>Hooray!</b></p>
+            <ul class="alert-message-list">
+              @for (message of messages; track message) {
+                <li class="alert-message">{{ message }}</li>
+              }
+            </ul>
+          </nb-alert>
+        }
 
 
 
         <form
           (ngSubmit)="submit(form)"
           #form="ngForm"
-        >
+          >
 
           <div class="form-group row">
             <label class="label col-sm-3 col-form-label">Photo de profil</label>
             <div class="col-sm-9">
 
               <div class="circular--landscape">
-                <ng-container *ngIf="user.lienPhotoProfil === null">
+                @if (user.lienPhotoProfil === null) {
                   <img src="assets/images/user-profile.png" width="100"/>
-                </ng-container>
-                <ng-container *ngIf="user.lienPhotoProfil !== null">
+                }
+                @if (user.lienPhotoProfil !== null) {
                   <img [src]="lienPhotoProfil" width="100" />
-                </ng-container>
+                }
               </div>
               <nb-icon  icon="edit-outline"  (click)="editerPhoto()" nbPopover="Editer la photo" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
 
@@ -63,26 +71,30 @@
             <label for="input-nom" class="label col-sm-3 col-form-label">Nom</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="user.nom"
-                     #nom="ngModel"
-                     id="input-nom"
-                     name="nom"
-                     placeholder="Votre nom"
-                     autofocus
-                     fullWidth
-                     [status]="nom.dirty ? (nom.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="true"
-                     [minlength]="3"
-                     [maxlength]="20"
-                     [attr.aria-invalid]="nom.invalid && nom.touched ? true : null">
-              <ng-container *ngIf="nom.invalid && nom.touched">
-                <p class="caption status-danger" *ngIf="nom.errors?.required">
-                  Le nom est nécésaire
-                </p>
-                <p class="caption status-danger" *ngIf="nom.errors?.minlength || nom.errors?.maxlength">
-                  Le nom doit entre compris entre 3 et 20 caracteres
-                </p>
-              </ng-container>
+                [(ngModel)]="user.nom"
+                #nom="ngModel"
+                id="input-nom"
+                name="nom"
+                placeholder="Votre nom"
+                autofocus
+                fullWidth
+                [status]="nom.dirty ? (nom.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="true"
+                [minlength]="3"
+                [maxlength]="20"
+                [attr.aria-invalid]="nom.invalid && nom.touched ? true : null">
+              @if (nom.invalid && nom.touched) {
+                @if (nom.errors?.required) {
+                  <p class="caption status-danger">
+                    Le nom est nécésaire
+                  </p>
+                }
+                @if (nom.errors?.minlength || nom.errors?.maxlength) {
+                  <p class="caption status-danger">
+                    Le nom doit entre compris entre 3 et 20 caracteres
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -90,25 +102,29 @@
             <label for="input-prenom" class="label col-sm-3 col-form-label">Prénom</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="user.prenom"
-                     #prenom="ngModel"
-                     id="input-prenom"
-                     name="prenom"
-                     placeholder="Le prénom"
-                     fullWidth
-                     [status]="prenom.dirty ? (prenom.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="true"
-                     [minlength]="3"
-                     [maxlength]="20"
-                     [attr.aria-invalid]="prenom.invalid && prenom.touched ? true : null">
-              <ng-container *ngIf="prenom.invalid && prenom.touched">
-                <p class="caption status-danger" *ngIf="prenom.errors?.required">
-                  Le prenom est nécésaire
-                </p>
-                <p class="caption status-danger" *ngIf="prenom.errors?.minlength || prenom.errors?.maxlength">
-                  Le prenom doit entre compris entre 3 et 20 caracteres
-                </p>
-              </ng-container>
+                [(ngModel)]="user.prenom"
+                #prenom="ngModel"
+                id="input-prenom"
+                name="prenom"
+                placeholder="Le prénom"
+                fullWidth
+                [status]="prenom.dirty ? (prenom.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="true"
+                [minlength]="3"
+                [maxlength]="20"
+                [attr.aria-invalid]="prenom.invalid && prenom.touched ? true : null">
+              @if (prenom.invalid && prenom.touched) {
+                @if (prenom.errors?.required) {
+                  <p class="caption status-danger">
+                    Le prenom est nécésaire
+                  </p>
+                }
+                @if (prenom.errors?.minlength || prenom.errors?.maxlength) {
+                  <p class="caption status-danger">
+                    Le prenom doit entre compris entre 3 et 20 caracteres
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -117,25 +133,29 @@
             <label for="input-adresse1" class="label col-sm-3 col-form-label">Adresse 1</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="user.adresse1"
-                     #adresse1="ngModel"
-                     id="input-adresse1"
-                     name="adresse1"
-                     placeholder="6 allée des grives"
-                     fullWidth
-                     [status]="adresse1.dirty ? (adresse1.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="true"
-                     [minlength]="3"
-                     [maxlength]="37"
-                     [attr.aria-invalid]="adresse1.invalid && adresse1.touched ? true : null">
-              <ng-container *ngIf="adresse1.invalid && adresse1.touched">
-                <p class="caption status-danger" *ngIf="adresse1.errors?.required">
-                  Adresse necesaire
-                </p>
-                <p class="caption status-danger" *ngIf="adresse1.errors?.minlength || adresse1.errors?.maxlength">
-                  Adresse doit entre comprise entre 3 et 37 caracteres
-                </p>
-              </ng-container>
+                [(ngModel)]="user.adresse1"
+                #adresse1="ngModel"
+                id="input-adresse1"
+                name="adresse1"
+                placeholder="6 allée des grives"
+                fullWidth
+                [status]="adresse1.dirty ? (adresse1.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="true"
+                [minlength]="3"
+                [maxlength]="37"
+                [attr.aria-invalid]="adresse1.invalid && adresse1.touched ? true : null">
+              @if (adresse1.invalid && adresse1.touched) {
+                @if (adresse1.errors?.required) {
+                  <p class="caption status-danger">
+                    Adresse necesaire
+                  </p>
+                }
+                @if (adresse1.errors?.minlength || adresse1.errors?.maxlength) {
+                  <p class="caption status-danger">
+                    Adresse doit entre comprise entre 3 et 37 caracteres
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -143,22 +163,24 @@
             <label for="input-adresse2" class="label col-sm-3 col-form-label">Adresse 2</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="user.adresse2"
-                     #adresse2="ngModel"
-                     id="input-adresse2"
-                     name="adresse2"
-                     placeholder="Complèment d'adresse"
-                     fullWidth
-                     [status]="adresse2.dirty ? (adresse2.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="false"
-                     [minlength]="3"
-                     [maxlength]="37"
-                     [attr.aria-invalid]="adresse2.invalid && adresse2.touched ? true : null">
-              <ng-container *ngIf="adresse2.invalid && adresse2.touched">
-                <p class="caption status-danger" *ngIf="adresse2.errors?.minlength || adresse2.errors?.maxlength">
-                  Adresse doit entre comprise entre 3 et 37 caracteres
-                </p>
-              </ng-container>
+                [(ngModel)]="user.adresse2"
+                #adresse2="ngModel"
+                id="input-adresse2"
+                name="adresse2"
+                placeholder="Complèment d'adresse"
+                fullWidth
+                [status]="adresse2.dirty ? (adresse2.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="false"
+                [minlength]="3"
+                [maxlength]="37"
+                [attr.aria-invalid]="adresse2.invalid && adresse2.touched ? true : null">
+              @if (adresse2.invalid && adresse2.touched) {
+                @if (adresse2.errors?.minlength || adresse2.errors?.maxlength) {
+                  <p class="caption status-danger">
+                    Adresse doit entre comprise entre 3 et 37 caracteres
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -167,22 +189,24 @@
             <label for="input-codePostal" class="label col-sm-3 col-form-label">Code Postal</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="user.codePostal"
-                     #codePostal="ngModel"
-                     id="input-codePostal"
-                     name="codePostal"
-                     placeholder="33127"
-                     fullWidth
-                     [status]="codePostal.dirty ? (codePostal.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="false"
-                     [minlength]="5"
-                     [maxlength]="5"
-                     [attr.aria-invalid]="codePostal.invalid && codePostal.touched ? true : null">
-              <ng-container *ngIf="codePostal.invalid && codePostal.touched">
-                <p class="caption status-danger" *ngIf="codePostal.errors?.minlength || codePostal.errors?.maxlength">
-                  Le code postal doit contenir 5 caracteres
-                </p>
-              </ng-container>
+                [(ngModel)]="user.codePostal"
+                #codePostal="ngModel"
+                id="input-codePostal"
+                name="codePostal"
+                placeholder="33127"
+                fullWidth
+                [status]="codePostal.dirty ? (codePostal.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="false"
+                [minlength]="5"
+                [maxlength]="5"
+                [attr.aria-invalid]="codePostal.invalid && codePostal.touched ? true : null">
+              @if (codePostal.invalid && codePostal.touched) {
+                @if (codePostal.errors?.minlength || codePostal.errors?.maxlength) {
+                  <p class="caption status-danger">
+                    Le code postal doit contenir 5 caracteres
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -191,25 +215,29 @@
             <label for="input-ville" class="label col-sm-3 col-form-label">Ville</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="user.ville"
-                     #ville="ngModel"
-                     id="input-ville"
-                     name="ville"
-                     placeholder="Martignas"
-                     fullWidth
-                     [status]="ville.dirty ? (ville.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="true"
-                     [minlength]="3"
-                     [maxlength]="50"
-                     [attr.aria-invalid]="ville.invalid && ville.touched ? true : null">
-              <ng-container *ngIf="ville.invalid && ville.touched">
-                <p class="caption status-danger" *ngIf="ville.errors?.required">
-                  Ville necesaire
-                </p>
-                <p class="caption status-danger" *ngIf="ville.errors?.minlength || ville.errors?.maxlength">
-                  Ville doit entre comprise entre 3 et 50 caracteres
-                </p>
-              </ng-container>
+                [(ngModel)]="user.ville"
+                #ville="ngModel"
+                id="input-ville"
+                name="ville"
+                placeholder="Martignas"
+                fullWidth
+                [status]="ville.dirty ? (ville.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="true"
+                [minlength]="3"
+                [maxlength]="50"
+                [attr.aria-invalid]="ville.invalid && ville.touched ? true : null">
+              @if (ville.invalid && ville.touched) {
+                @if (ville.errors?.required) {
+                  <p class="caption status-danger">
+                    Ville necesaire
+                  </p>
+                }
+                @if (ville.errors?.minlength || ville.errors?.maxlength) {
+                  <p class="caption status-danger">
+                    Ville doit entre comprise entre 3 et 50 caracteres
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -217,24 +245,26 @@
             <label for="input-telPortable" class="label col-sm-3 col-form-label">Téléphone Portable</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="user.telPortable"
-                     #telPortable="ngModel"
-                     type="tel"
-                     id="input-telPortable"
-                     name="telPortable"
-                     placeholder="0606060606"
-                     fullWidth
-                     [status]="telPortable.dirty ? (telPortable.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="false"
-                     [minlength]="10"
-                     [maxlength]="10"
-                     [attr.aria-invalid]="telPortable.invalid && telPortable.touched ? true : null"
-                     mask="00 00 00 00 00">
-              <ng-container *ngIf="telPortable.invalid && telPortable.touched">
-                <p class="caption status-danger" *ngIf="ville.errors?.minlength || ville.errors?.maxlength">
-                  Le tel doit avoir 10 caracteres
-                </p>
-              </ng-container>
+                [(ngModel)]="user.telPortable"
+                #telPortable="ngModel"
+                type="tel"
+                id="input-telPortable"
+                name="telPortable"
+                placeholder="0606060606"
+                fullWidth
+                [status]="telPortable.dirty ? (telPortable.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="false"
+                [minlength]="10"
+                [maxlength]="10"
+                [attr.aria-invalid]="telPortable.invalid && telPortable.touched ? true : null"
+                mask="00 00 00 00 00">
+              @if (telPortable.invalid && telPortable.touched) {
+                @if (ville.errors?.minlength || ville.errors?.maxlength) {
+                  <p class="caption status-danger">
+                    Le tel doit avoir 10 caracteres
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -242,25 +272,27 @@
             <label for="input-telFixe" class="label col-sm-3 col-form-label">Téléphone Fixe</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="user.telFixe"
-                     mask="00 00 00 00 00"
-                     type="tel"
-                     #telFixe="ngModel"
-                     id="input-telFixe"
-                     name="telFixe"
-                     placeholder="0506060606"
-                     fullWidth
-                     [status]="telFixe.dirty ? (telFixe.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="false"
-                     [minlength]="10"
-                     [maxlength]="10"
-                     [attr.aria-invalid]="telFixe.invalid && telFixe.touched ? true : null"
-                     >
-              <ng-container *ngIf="telFixe.invalid && telFixe.touched">
-                <p class="caption status-danger" *ngIf="ville.errors?.minlength || ville.errors?.maxlength">
-                  Le tel doit avoir 10 caracteres
-                </p>
-              </ng-container>
+                [(ngModel)]="user.telFixe"
+                mask="00 00 00 00 00"
+                type="tel"
+                #telFixe="ngModel"
+                id="input-telFixe"
+                name="telFixe"
+                placeholder="0506060606"
+                fullWidth
+                [status]="telFixe.dirty ? (telFixe.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="false"
+                [minlength]="10"
+                [maxlength]="10"
+                [attr.aria-invalid]="telFixe.invalid && telFixe.touched ? true : null"
+                >
+              @if (telFixe.invalid && telFixe.touched) {
+                @if (ville.errors?.minlength || ville.errors?.maxlength) {
+                  <p class="caption status-danger">
+                    Le tel doit avoir 10 caracteres
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -268,26 +300,30 @@
             <label for="input-dateNaissance" class="label col-sm-3 col-form-label">Date de naissance</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="user.dateNaissance"
-                     #dateNaissance="ngModel"
-                     pattern="(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/\d{4}"
-                     id="input-dateNaissance"
-                     name="dateNaissance"
-                     placeholder="17/02/2000"
-                     fullWidth
-                     [status]="dateNaissance.dirty ? (dateNaissance.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="false"
-                     [minlength]="10"
-                     [maxlength]="10"
-                     [attr.aria-invalid]="dateNaissance.invalid && dateNaissance.touched ? true : null">
-              <ng-container *ngIf="dateNaissance.invalid && dateNaissance.touched">
-                <p class="caption status-danger" *ngIf="dateNaissance.errors?.minlength || dateNaissance.errors?.maxlength">
-                  Le date doit avoir 10 caracteres
-                </p>
-                <p class="caption status-danger" *ngIf="dateNaissance.errors?.pattern">
-                  Erreur dans le format de date
-                </p>
-              </ng-container>
+                [(ngModel)]="user.dateNaissance"
+                #dateNaissance="ngModel"
+                pattern="(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/\d{4}"
+                id="input-dateNaissance"
+                name="dateNaissance"
+                placeholder="17/02/2000"
+                fullWidth
+                [status]="dateNaissance.dirty ? (dateNaissance.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="false"
+                [minlength]="10"
+                [maxlength]="10"
+                [attr.aria-invalid]="dateNaissance.invalid && dateNaissance.touched ? true : null">
+              @if (dateNaissance.invalid && dateNaissance.touched) {
+                @if (dateNaissance.errors?.minlength || dateNaissance.errors?.maxlength) {
+                  <p class="caption status-danger">
+                    Le date doit avoir 10 caracteres
+                  </p>
+                }
+                @if (dateNaissance.errors?.pattern) {
+                  <p class="caption status-danger">
+                    Erreur dans le format de date
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -307,19 +343,19 @@
             </nb-checkbox>
           </div>
 
-	<div class="form-group row">
+          <div class="form-group row">
             <label for="input-mail" class="label col-sm-3 col-form-label">Email</label>
             <div class="col-sm-9">
-             	Pour modifier votre e-mail, demander au bureau de l'association
+              Pour modifier votre e-mail, demander au bureau de l'association
             </div>
           </div>
 
 
           <button nbButton
-                  fullWidth
-                  status="success"
-                  [disabled]="submitted || !form.valid"
-                  [class.btn-pulse]="submitted">
+            fullWidth
+            status="success"
+            [disabled]="submitted || !form.valid"
+            [class.btn-pulse]="submitted">
             Valider
           </button>
 

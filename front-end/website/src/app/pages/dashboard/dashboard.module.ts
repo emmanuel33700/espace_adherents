@@ -38,7 +38,7 @@ import {NgxEchartsModule} from 'ngx-echarts';
         NbSpinnerModule,
         NbListModule,
         NbToggleModule,
-        NgxEchartsModule,
+        NgxEchartsModule.forRoot({ echarts: () => import('echarts') }),
         NbTabsetModule,
         NbPopoverModule,
     ],

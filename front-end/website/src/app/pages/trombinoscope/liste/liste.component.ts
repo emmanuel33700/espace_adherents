@@ -4,9 +4,10 @@ import {ListingAdherentService} from '../../../../api/generated/adherents/servic
 import {environment} from '../../../../environments/environment';
 
 @Component({
-  selector: 'ngx-list',
-  templateUrl: 'liste.component.html',
-  styleUrls: ['liste.component.scss'],
+    selector: 'ngx-list',
+    templateUrl: 'liste.component.html',
+    styleUrls: ['liste.component.scss'],
+    standalone: false
 })
 export class ListeComponent implements OnInit {
 

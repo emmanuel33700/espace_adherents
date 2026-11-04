@@ -6,9 +6,10 @@ import {DocumentationService} from '../../../../../api/generated/utilitaire/serv
 import {Document} from '../../../../../api/generated/utilitaire/models/document';
 
 @Component({
-  selector: 'ngx-showcase-dialog',
-  templateUrl: 'dialog-ajout-docs.component.html',
-  styleUrls: ['dialog-ajout-docs.component.scss'],
+    selector: 'ngx-showcase-dialog',
+    templateUrl: 'dialog-ajout-docs.component.html',
+    styleUrls: ['dialog-ajout-docs.component.scss'],
+    standalone: false
 })
 export class DialogAjoutDocsComponent {
 

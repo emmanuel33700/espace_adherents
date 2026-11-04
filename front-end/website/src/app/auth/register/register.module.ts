@@ -15,50 +15,42 @@ import { RegisterRoutingModule } from './register-routing.module';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {
   NbAuthModule,
 } from '@nebular/auth';
 
 
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-
-    NbAuthModule.forRoot({
-      forms: {
-        register: {
-          redirectDelay: 500,
-          strategy: 'email',
-          showMessages: {
-            success: true,
-            error: true,
-          },
-          terms: false,
-        },
-      },
-    }),
-
-    ThemeModule,
-    NbMenuModule,
-    NbLayoutModule,
-    NbInputModule,
-    NbCardModule,
-    NbButtonModule,
-    NbActionsModule,
-    NbUserModule,
-    NbCheckboxModule,
-    NbRadioModule,
-    NbDatepickerModule,
-    NbSelectModule,
-    NbIconModule,
-    ngFormsModule, RegisterRoutingModule, NbAlertModule,
-  ],
-  declarations: [
-    RegisterComponent,
-  ],
-})
+@NgModule({ declarations: [
+        RegisterComponent,
+    ], imports: [CommonModule,
+        FormsModule,
+        NbAuthModule.forRoot({
+            forms: {
+                register: {
+                    redirectDelay: 500,
+                    strategy: 'email',
+                    showMessages: {
+                        success: true,
+                        error: true,
+                    },
+                    terms: false,
+                },
+            },
+        }),
+        ThemeModule,
+        NbMenuModule,
+        NbLayoutModule,
+        NbInputModule,
+        NbCardModule,
+        NbButtonModule,
+        NbActionsModule,
+        NbUserModule,
+        NbCheckboxModule,
+        NbRadioModule,
+        NbDatepickerModule,
+        NbSelectModule,
+        NbIconModule,
+        ngFormsModule, RegisterRoutingModule, NbAlertModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class RegisterModule {
 }

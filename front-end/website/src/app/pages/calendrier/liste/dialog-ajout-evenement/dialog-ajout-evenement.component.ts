@@ -11,9 +11,10 @@ import {
 } from "../../../../../api/generated/utilitaire/services/liste-de-diffusion.service";
 
 @Component({
-  selector: 'ngx-showcase-dialog',
-  templateUrl: 'dialog-ajout-evenement.component.html',
-  styleUrls: ['dialog-ajout-evenement.component.scss'],
+    selector: 'ngx-showcase-dialog',
+    templateUrl: 'dialog-ajout-evenement.component.html',
+    styleUrls: ['dialog-ajout-evenement.component.scss'],
+    standalone: false
 })
 export class DialogAjoutEvenementComponent implements OnInit {
 

@@ -8,9 +8,10 @@ import {ParticipationManifestationAccesDirect} from '../../api/generated/adheren
 
 
 @Component({
-  selector: 'ngx-register',
-  styleUrls: ['./evenement.component.scss'],
-  templateUrl: './evenement.component.html',
+    selector: 'ngx-register',
+    styleUrls: ['./evenement.component.scss'],
+    templateUrl: './evenement.component.html',
+    standalone: false
 })
 export class EvenementComponent  implements OnInit {
 

@@ -12,9 +12,10 @@ import { NbAuthService } from '../../services/auth.service';
 import { NbAuthResult } from '../../services/auth-result';
 
 @Component({
-  selector: 'ngx-login',
-  templateUrl: './login.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'ngx-login',
+    templateUrl: './login.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NbLoginComponent {
 

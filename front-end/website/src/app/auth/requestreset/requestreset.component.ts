@@ -9,9 +9,10 @@ import {Login} from '../../../api/generated/authorization/models/login';
 
 
 @Component({
-  selector: 'ngx-register',
-  styleUrls: ['./requestreset.component.scss'],
-  templateUrl: './requestreset.component.html',
+    selector: 'ngx-register',
+    styleUrls: ['./requestreset.component.scss'],
+    templateUrl: './requestreset.component.html',
+    standalone: false
 })
 export class RequestresetComponent  {
 

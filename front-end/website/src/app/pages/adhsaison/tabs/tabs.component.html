@@ -3,14 +3,13 @@
 
   <div class="col-12">
     <h1>
-      <ng-container *ngIf="adherent.lienPhotoProfil !== null">
+      @if (adherent.lienPhotoProfil !== null) {
         <div class="circular--landscape">
           <img src="{{url_photo_profil}}{{adherent.lienPhotoProfil}}" width="50"/>
-
         </div>
-      </ng-container>
+      }
 
-      {{ adherent.nom }} {{ adherent.prenom }}</h1>
+    {{ adherent.nom }} {{ adherent.prenom }}</h1>
     <nb-card>
       <nb-route-tabset [tabs]="tabs"></nb-route-tabset>
     </nb-card>

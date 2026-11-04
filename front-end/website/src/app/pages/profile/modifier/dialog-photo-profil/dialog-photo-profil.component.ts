@@ -10,9 +10,10 @@ import {Adherent} from '../../../../../api/generated/adherents/models/adherent';
 
 
 @Component({
-  selector: 'ngx-showcase-dialog',
-  templateUrl: 'dialog-photo-profil.component.html',
-  styleUrls: ['dialog-photo-profil.component.scss'],
+    selector: 'ngx-showcase-dialog',
+    templateUrl: 'dialog-photo-profil.component.html',
+    styleUrls: ['dialog-photo-profil.component.scss'],
+    standalone: false
 })
 export class DialogPhotoProfilComponent {
 

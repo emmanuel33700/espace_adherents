@@ -1,14 +1,15 @@
 <nb-card-body [nbSpinner]='loading'>
   <nb-list>
-    <nb-list-item *ngFor="let mailingListe of mailingListes">
-      <div class="col-sm-8">
-        <nb-toggle labelPosition="right" [checked]="mailingListe.inscriptionListeDiffusion"
-                   (change)="changerParticipeMailingList(mailingListe.id, $event)">
-          {{mailingListe.libelle}}
-        </nb-toggle>
-      </div>
-
-    </nb-list-item>
+    @for (mailingListe of mailingListes; track mailingListe) {
+      <nb-list-item>
+        <div class="col-sm-8">
+          <nb-toggle labelPosition="right" [checked]="mailingListe.inscriptionListeDiffusion"
+            (change)="changerParticipeMailingList(mailingListe.id, $event)">
+            {{mailingListe.libelle}}
+          </nb-toggle>
+        </div>
+      </nb-list-item>
+    }
   </nb-list>
 
 

@@ -8,21 +8,23 @@
         <form
           (ngSubmit)="submit(form)"
           #form="ngForm"
-        >
+          >
 
           <div class="form-group row">
             <label class="col-sm-3 label">Saision</label>
             <div class="col-sm-9">
               <nb-radio-group name="changementSaison" [(ngModel)]="selectedOption">
-                <nb-radio *ngFor="let saison of saisons" [value]="saison.id" [checked]="saison.saisonActive"  >{{ saison.libelle }}</nb-radio>
+                @for (saison of saisons; track saison) {
+                  <nb-radio [value]="saison.id" [checked]="saison.saisonActive"  >{{ saison.libelle }}</nb-radio>
+                }
               </nb-radio-group>
             </div>
           </div>
 
           <button nbButton
-                  fullWidth
-                  status="success"
-                  [class.btn-pulse]="submitted">
+            fullWidth
+            status="success"
+            [class.btn-pulse]="submitted">
             Enregistrer
           </button>
         </form>
@@ -35,16 +37,16 @@
       <nb-card-header>Purge RGPD</nb-card-header>
       <nb-card-body>
 
-          <button nbButton
-                  fullWidth
-                  status="desable"
-                  [class.btn-pulse]="submitted">
-            Purger
-          </button>
+        <button nbButton
+          fullWidth
+          status="desable"
+          [class.btn-pulse]="submitted">
+          Purger
+        </button>
 
       </nb-card-body>
     </nb-card>
   </div>
 
 
-  </div>
+</div>

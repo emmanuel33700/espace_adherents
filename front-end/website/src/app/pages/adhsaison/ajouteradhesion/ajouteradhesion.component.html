@@ -1,31 +1,39 @@
 
 <div class="row">
   <div class="col-md-12">
-<h1>{{ adherent.nom }} {{ adherent.prenom }}</h1>
+    <h1>{{ adherent.nom }} {{ adherent.prenom }}</h1>
     <nb-card>
       <nb-card-header>Ajouter une adhesion</nb-card-header>
       <nb-card-body>
 
-        <nb-alert *ngIf="errors?.length" outline="danger" role="alert">
-          <p class="alert-title"><b>Erreur</b></p>
-          <ul class="alert-message-list">
-            <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
-            showMessages
-          </ul>
-        </nb-alert>
+        @if (errors?.length) {
+          <nb-alert outline="danger" role="alert">
+            <p class="alert-title"><b>Erreur</b></p>
+            <ul class="alert-message-list">
+              @for (error of errors; track error) {
+                <li class="alert-message">{{ error }}</li>
+              }
+              showMessages
+            </ul>
+          </nb-alert>
+        }
 
-        <nb-alert *ngIf="messages?.length" outline="success" role="alert">
-          <p class="alert-title"><b>Hooray!</b></p>
-          <ul class="alert-message-list">
-            <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
-          </ul>
-        </nb-alert>
+        @if (messages?.length) {
+          <nb-alert outline="success" role="alert">
+            <p class="alert-title"><b>Hooray!</b></p>
+            <ul class="alert-message-list">
+              @for (message of messages; track message) {
+                <li class="alert-message">{{ message }}</li>
+              }
+            </ul>
+          </nb-alert>
+        }
 
 
         <form
           (ngSubmit)="submit(form)"
           #form="ngForm"
-        >
+          >
 
           <div class="form-group row">
             <label for="input-typeadhesion" class="label col-sm-3 col-form-label">type adhésion</label>
@@ -53,21 +61,23 @@
             <label for="input-comptaSomme" class="label col-sm-3 col-form-label">Montant</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="adhesionform.comptaSomme"
-                     #comptaSomme="ngModel"
-                     id="input-comptaSomme"
-                     name="comptaSomme"
-                     placeholder="20"
-                     autofocus
-                     fullWidth
-                     [status]="comptaSomme.dirty ? (comptaSomme.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="true"
-                     [attr.aria-invalid]="comptaSomme.invalid && comptaSomme.touched ? true : null">
-              <ng-container *ngIf="comptaSomme.invalid && comptaSomme.touched">
-                <p class="caption status-danger" *ngIf="comptaSomme.errors?.required">
-                  Le montant est nécésaire
-                </p>
-              </ng-container>
+                [(ngModel)]="adhesionform.comptaSomme"
+                #comptaSomme="ngModel"
+                id="input-comptaSomme"
+                name="comptaSomme"
+                placeholder="20"
+                autofocus
+                fullWidth
+                [status]="comptaSomme.dirty ? (comptaSomme.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="true"
+                [attr.aria-invalid]="comptaSomme.invalid && comptaSomme.touched ? true : null">
+              @if (comptaSomme.invalid && comptaSomme.touched) {
+                @if (comptaSomme.errors?.required) {
+                  <p class="caption status-danger">
+                    Le montant est nécésaire
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -97,22 +107,24 @@
             <label for="input-comptaBanque" class="label col-sm-3 col-form-label">Nom de la banque</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="adhesionform.comptaBanque"
-                     #comptaBanque="ngModel"
-                     id="input-comptaBanque"
-                     name="comptaBanque"
-                     placeholder="Crédit Agricole"
-                     fullWidth
-                     [status]="comptaBanque.dirty ? (comptaBanque.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="false"
-                     [minlength]="3"
-                     [maxlength]="20"
-                     [attr.aria-invalid]="comptaBanque.invalid && comptaBanque.touched ? true : null">
-              <ng-container *ngIf="comptaBanque.invalid && comptaBanque.touched">
-                <p class="caption status-danger" *ngIf="comptaBanque.errors?.minlength || comptaBanque.errors?.maxlength">
-                  Le nom de la banque doit etre entre 3 et 20 caracteres
-                </p>
-              </ng-container>
+                [(ngModel)]="adhesionform.comptaBanque"
+                #comptaBanque="ngModel"
+                id="input-comptaBanque"
+                name="comptaBanque"
+                placeholder="Crédit Agricole"
+                fullWidth
+                [status]="comptaBanque.dirty ? (comptaBanque.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="false"
+                [minlength]="3"
+                [maxlength]="20"
+                [attr.aria-invalid]="comptaBanque.invalid && comptaBanque.touched ? true : null">
+              @if (comptaBanque.invalid && comptaBanque.touched) {
+                @if (comptaBanque.errors?.minlength || comptaBanque.errors?.maxlength) {
+                  <p class="caption status-danger">
+                    Le nom de la banque doit etre entre 3 et 20 caracteres
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -120,22 +132,24 @@
             <label for="input-email" class="label col-sm-3 col-form-label">Référence bancaire</label>
             <div class="col-sm-9">
               <input nbInput
-                     [(ngModel)]="adhesionform.comptaNumCheque"
-                     #comptaNumCheque="ngModel"
-                     id="input-email"
-                     name="comptaNumCheque"
-                     placeholder="123456"
-                     fullWidth
-                     [status]="comptaNumCheque.dirty ? (comptaNumCheque.invalid  ? 'danger' : 'success') : 'basic'"
-                     [required]="false"
-                     [minlength]="2"
-                     [maxlength]="40"
-                     [attr.aria-invalid]="comptaNumCheque.invalid && comptaNumCheque.touched ? true : null">
-              <ng-container *ngIf="comptaNumCheque.invalid && comptaNumCheque.touched">
-                <p class="caption status-danger" *ngIf="comptaNumCheque.errors?.minlength || comptaNumCheque.errors?.maxlength">
-                  La référence bancaire doit etre comprise entre 5 et 40 caracteres
-                </p>
-              </ng-container>
+                [(ngModel)]="adhesionform.comptaNumCheque"
+                #comptaNumCheque="ngModel"
+                id="input-email"
+                name="comptaNumCheque"
+                placeholder="123456"
+                fullWidth
+                [status]="comptaNumCheque.dirty ? (comptaNumCheque.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="false"
+                [minlength]="2"
+                [maxlength]="40"
+                [attr.aria-invalid]="comptaNumCheque.invalid && comptaNumCheque.touched ? true : null">
+              @if (comptaNumCheque.invalid && comptaNumCheque.touched) {
+                @if (comptaNumCheque.errors?.minlength || comptaNumCheque.errors?.maxlength) {
+                  <p class="caption status-danger">
+                    La référence bancaire doit etre comprise entre 5 et 40 caracteres
+                  </p>
+                }
+              }
             </div>
           </div>
 
@@ -143,10 +157,10 @@
 
 
           <button nbButton
-                  fullWidth
-                  status="success"
-                  [disabled]="submitted || !form.valid"
-                  [class.btn-pulse]="submitted">
+            fullWidth
+            status="success"
+            [disabled]="submitted || !form.valid"
+            [class.btn-pulse]="submitted">
             Valider
           </button>
 

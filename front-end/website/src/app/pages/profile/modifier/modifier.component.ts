@@ -9,9 +9,10 @@ import {DialogPhotoProfilComponent} from './dialog-photo-profil/dialog-photo-pro
 import {environment} from '../../../../environments/environment';
 
 @Component({
-  selector: 'ngx-form-layouts',
-  styleUrls: ['./modifier.component.scss'],
-  templateUrl: './modifier.component.html',
+    selector: 'ngx-form-layouts',
+    styleUrls: ['./modifier.component.scss'],
+    templateUrl: './modifier.component.html',
+    standalone: false
 })
 export class ModifierComponent implements OnInit {
   adherent: Adherent;

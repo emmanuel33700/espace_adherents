@@ -8,9 +8,9 @@ import { async, inject, TestBed } from '@angular/core/testing';
 import { NbPasswordAuthStrategy } from './password-strategy';
 import { NbAuthResult } from '../../services/auth-result';
 
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { nbAuthCreateToken, NbAuthSimpleToken } from '../../services/token/token';
 
 const ownerStrategyName = 'strategy';
@@ -44,11 +44,13 @@ describe('password-auth-strategy', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [
+    imports: [RouterTestingModule],
+    providers: [
         { provide: NbPasswordAuthStrategy, useClass: NbPasswordAuthStrategy },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
   });
 
   beforeEach(async(inject(

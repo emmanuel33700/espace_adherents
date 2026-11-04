@@ -9,9 +9,10 @@ import {environment} from '../../../../../environments/environment';
 import {ListeDiffusion } from '../../../../../api/generated/utilitaire/models/liste-diffusion';
 
 @Component({
-  selector: 'ngx-form-layouts',
-  styleUrls: ['./inscritgpdiffusions.component.scss'],
-  templateUrl: './inscritgpdiffusions.component.html',
+    selector: 'ngx-form-layouts',
+    styleUrls: ['./inscritgpdiffusions.component.scss'],
+    templateUrl: './inscritgpdiffusions.component.html',
+    standalone: false
 })
 export class InscritgpdiffusionsComponent implements OnInit {
 

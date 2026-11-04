@@ -1,49 +1,39 @@
-<ng-container *ngIf="loading" >
-	Chargement...
-</ng-container>
-<ng-container *ngIf="!loading && communications.length">
-   <nb-list>
-
-        <nb-list-item *ngFor="let communication of communications">
-
-          <!-- mail en cours d'envoie -->
-          <ng-container *ngIf="communication.statut === 'queued' ">
-            <span><nb-icon icon="loader-outline" status="info" nbPopover="En cours" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
-          </ng-container>
-
-          <!-- mail non lu -->
-          <ng-container *ngIf="communication.statut === 'sent' ">
-            <span><nb-icon icon="email-outline" status="info" nbPopover="Envoyé" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
-          </ng-container>
-
-          <!-- mail lu -->
-          <ng-container *ngIf="communication.statut === 'opened' ">
-            <span><nb-icon icon="checkmark-square-2-outline" nbPopover="Ouvert" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
-          </ng-container>
-
-
-          <!-- mail lu  et cliqué -->
-          <ng-container *ngIf="communication.statut === 'clicked' ">
-            <span><nb-icon icon="checkmark-square-2-outline" status="success" nbPopover="Cliqué" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
-          </ng-container>
-
-          <!-- mail en erreur -->
-          <ng-container *ngIf="(communication.statut !== 'queued')
+@if (loading) {
+  Chargement...
+}
+@if (!loading && communications.length) {
+  <nb-list>
+    @for (communication of communications; track communication) {
+      <nb-list-item>
+        <!-- mail en cours d'envoie -->
+        @if (communication.statut === 'queued' ) {
+          <span><nb-icon icon="loader-outline" status="info" nbPopover="En cours" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
+        }
+        <!-- mail non lu -->
+        @if (communication.statut === 'sent' ) {
+          <span><nb-icon icon="email-outline" status="info" nbPopover="Envoyé" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
+        }
+        <!-- mail lu -->
+        @if (communication.statut === 'opened' ) {
+          <span><nb-icon icon="checkmark-square-2-outline" nbPopover="Ouvert" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
+        }
+        <!-- mail lu  et cliqué -->
+        @if (communication.statut === 'clicked' ) {
+          <span><nb-icon icon="checkmark-square-2-outline" status="success" nbPopover="Cliqué" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon></span>
+        }
+        <!-- mail en erreur -->
+        @if ((communication.statut !== 'queued')
           && (communication.statut !== 'sent')
-           && (communication.statut !== 'opened')
-           && (communication.statut !== 'clicked')
-          ">
-            <span><nb-icon icon="alert-triangle-outline"></nb-icon></span>
-          </ng-container>
-
-          <span class="results"> {{communication.sujet}} -- Mail envoyé le {{ dateFormat(communication.dateArrive) }} ( statut mail : {{communication.statut}})</span>
-
-
-        </nb-list-item>
-
-
-      </nb-list>
-</ng-container>
-<ng-container *ngIf="!loading && !communications.length" >
-	Aucune communication
-</ng-container>
+          && (communication.statut !== 'opened')
+          && (communication.statut !== 'clicked')
+          ) {
+          <span><nb-icon icon="alert-triangle-outline"></nb-icon></span>
+        }
+        <span class="results"> {{communication.sujet}} -- Mail envoyé le {{ dateFormat(communication.dateArrive) }} ( statut mail : {{communication.statut}})</span>
+      </nb-list-item>
+    }
+  </nb-list>
+}
+@if (!loading && !communications.length) {
+  Aucune communication
+}

@@ -12,8 +12,9 @@ import { NbAuthService } from '../../services/auth.service';
 import { NbAuthResult } from '../../services/auth-result';
 
 @Component({
-  selector: 'ngx-logout',
-  templateUrl: './logout.component.html',
+    selector: 'ngx-logout',
+    templateUrl: './logout.component.html',
+    standalone: false
 })
 export class NbLogoutComponent implements OnInit {
 

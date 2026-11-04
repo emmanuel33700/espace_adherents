@@ -1,8 +1,8 @@
 import { Injector } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HTTP_INTERCEPTORS, HttpRequest } from '@angular/common/http';
 import { TestBed, async, inject } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of as observableOf } from 'rxjs';
 
@@ -43,20 +43,20 @@ describe('jwt-interceptor', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule, HttpClientTestingModule, RouterTestingModule],
-      providers: [
-         { provide: NB_AUTH_FALLBACK_TOKEN, useValue: NbAuthSimpleToken },
-         { provide: NB_AUTH_TOKENS, useValue: [NbAuthJWTToken] },
+    imports: [RouterTestingModule],
+    providers: [
+        { provide: NB_AUTH_FALLBACK_TOKEN, useValue: NbAuthSimpleToken },
+        { provide: NB_AUTH_TOKENS, useValue: [NbAuthJWTToken] },
         NbAuthTokenParceler,
-         {
-          provide: NB_AUTH_USER_OPTIONS, useValue: {
-            strategies: [
-              NbDummyAuthStrategy.setup({
-                alwaysFail: false,
-                name: 'dummy',
-              }),
-            ],
-          },
+        {
+            provide: NB_AUTH_USER_OPTIONS, useValue: {
+                strategies: [
+                    NbDummyAuthStrategy.setup({
+                        alwaysFail: false,
+                        name: 'dummy',
+                    }),
+                ],
+            },
         },
         { provide: NB_AUTH_OPTIONS, useFactory: nbOptionsFactory, deps: [NB_AUTH_USER_OPTIONS] },
         { provide: NB_AUTH_STRATEGIES, useFactory: nbStrategiesFactory, deps: [NB_AUTH_OPTIONS, Injector] },
@@ -66,11 +66,13 @@ describe('jwt-interceptor', () => {
         NbTokenService,
         NbAuthService,
         NbDummyAuthStrategy,
-      ],
-    });
-    authService = TestBed.get(NbAuthService);
-    tokenService = TestBed.get(NbTokenService);
-    dummyAuthStrategy = TestBed.get(NbDummyAuthStrategy);
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
+    authService = TestBed.inject(NbAuthService);
+    tokenService = TestBed.inject(NbTokenService);
+    dummyAuthStrategy = TestBed.inject(NbDummyAuthStrategy);
   });
 
     beforeEach(async(

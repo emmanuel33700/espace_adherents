@@ -7,7 +7,6 @@ import {
     NbPopoverModule, NbProgressBarModule, NbSpinnerModule, NbStepperModule,
     NbTreeGridModule,
 } from '@nebular/theme';
-import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { ThemeModule } from '../../@theme/theme.module';
 import { DocumentsRoutingModule, routedComponents } from './documents-routing.module';
@@ -24,7 +23,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         NbInputModule,
         ThemeModule,
         DocumentsRoutingModule,
-        Ng2SmartTableModule,
         NbActionsModule,
         NbPopoverModule,
         NbButtonModule,

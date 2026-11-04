@@ -3,9 +3,10 @@ import {Component, OnInit} from '@angular/core';
 
 
 @Component({
-  selector: 'ngx-tabs',
-  styleUrls: ['./tabs.component.scss'],
-  templateUrl: './tabs.component.html',
+    selector: 'ngx-tabs',
+    styleUrls: ['./tabs.component.scss'],
+    templateUrl: './tabs.component.html',
+    standalone: false
 })
 export class TabsComponent implements OnInit {
 

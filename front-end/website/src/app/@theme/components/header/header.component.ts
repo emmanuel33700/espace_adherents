@@ -12,9 +12,10 @@ import {TokenService} from '../../../@core/utils/token.service';
 import {environment} from '../../../../environments/environment';
 
 @Component({
-  selector: 'ngx-header',
-  styleUrls: ['./header.component.scss'],
-  templateUrl: './header.component.html',
+    selector: 'ngx-header',
+    styleUrls: ['./header.component.scss'],
+    templateUrl: './header.component.html',
+    standalone: false
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
