@@ -10,8 +10,7 @@
       ],
       "parserOptions": {
         "project": [
-          "tsconfig.json",
-          "e2e/tsconfig.json"
+          "tsconfig.json"
         ],
         "createDefaultProgram": true
       },
@@ -23,7 +22,9 @@
         "@angular-eslint/no-input-rename": [
           "warn",
           {
-            "allowedNames": ["name"]
+            "allowedNames": [
+              "name"
+            ]
           }
         ],
         "@angular-eslint/component-selector": [
@@ -41,7 +42,9 @@
             "style": "camelCase",
             "type": "attribute"
           }
-        ]
+        ],
+        "@angular-eslint/prefer-inject": "off",
+        "@angular-eslint/prefer-standalone": "off"
       }
     },
     {
@@ -51,7 +54,9 @@
       "extends": [
         "plugin:@angular-eslint/template/recommended"
       ],
-      "rules": {}
+      "rules": {
+        "@angular-eslint/template/prefer-control-flow": "off"
+      }
     }
   ]
 }
