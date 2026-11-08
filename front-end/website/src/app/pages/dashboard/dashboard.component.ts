@@ -474,20 +474,23 @@ export class DashboardComponent implements OnInit {
       datedebut: dateDebutString
       , datefin: dateFinString
       , retourParticipationAdh: true})
+      .pipe(finalize(() => this.loadingSyntheseEvenement = false))
       .subscribe(
         (data) => {
           this.loggerService.info(JSON.stringify(data));
-          data.forEach((value, index) => {
-            this.optionsChart.xAxis.data.push(value.description);
+          const descriptions: string[] = [];
+          (data ?? []).forEach(value => {
+            descriptions.push(value.description);
             seriesParticipe.data.push(value.nbAdherentParticipant);
             seriesParticipePas.data.push(value.nbAdherentParticipantPas);
             seriesEnAttente.data.push(value.nbAdherentEnAttente);
           });
-          this.optionsChart.series.push(seriesParticipe);
-          this.optionsChart.series.push(seriesParticipePas);
-          this.optionsChart.series.push(seriesEnAttente);
-
-          this.loadingSyntheseEvenement = false;
+          // ngx-echarts détecte les changements via la référence des options.
+          this.optionsChart = {
+            ...this.optionsChart,
+            xAxis: {...this.optionsChart.xAxis, data: descriptions},
+            series: [seriesParticipe, seriesParticipePas, seriesEnAttente],
+          };
 
           this.loggerService.info(JSON.stringify(this.optionsChart));
         },
