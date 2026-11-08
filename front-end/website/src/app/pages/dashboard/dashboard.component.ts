@@ -13,10 +13,11 @@ import {TokenService} from '../../@core/utils';
 import {Router} from '@angular/router';
 import {NgForm} from '@angular/forms';
 import {LiensAdherentsService} from '../../../api/generated/adherents/services/liens-adherents.service';
-import {LiensAdherent} from '../../../api/generated/adherents/models/liens-adherent';
 import {AgendaService} from '../../../api/generated/utilitaire/services/agenda.service';
 import {ActualiteService} from '../../../api/generated/utilitaire/services/actualite.service';
 import {environment} from '../../../environments/environment';
+import {forkJoin, Observable, of} from 'rxjs';
+import {catchError, finalize, map, switchMap} from 'rxjs/operators';
 
 
 interface DocumentDashboard {
@@ -268,138 +269,61 @@ export class DashboardComponent implements OnInit {
 
 
   /**
-   * Complete this.listeEvenementsAdherent[] avec les manifestatio des personnes représentées (Attention doit débuter
-   * avec l'index 1 du tableau
-   * @param liensAdh
+   * Récupérer les événements d'un adhérent ou d'une personne représentée.
    */
-  private recupererEvenementsPersonneRepresente(liensAdh: LiensAdherent) {
-    this.loggerService.info('Recupere les évènement des adherents représenté ');
+  private recupererEvenementsAdherent(
+    idAdh: number,
+    adhRepresente: ListeEvenementsAdherent['adhRepresente'],
+  ): Observable<ListeEvenementsAdherent> {
+    const dateDebut = new Date();
+    const dateFin = new Date();
+    dateFin.setMonth(dateFin.getMonth() + 8);
 
-
-    // Gestion date debut et fin de recherche
-    const dDebut = new Date();
-
-
-    const dFin = new Date();
-    dFin.setMonth(dFin.getMonth() + 8);
-
-    const dateDebutString = this.dateService.convertDateToStringIsoWithOutHour(dDebut);
-    const dateFinString = this.dateService.convertDateToStringIsoWithOutHour(dFin);
-
-
-    liensAdh.forEach((value, index) => {
-
-      // Recupérer les événement pour une personne représenté
-      this.manifestationService.getListeManifestationsAdherent({
-        idadh: value.idAdhRepresente
-        , datedebut: dateDebutString
-        , datefin: dateFinString
-        , retourParticipationAdh: true})
-        .subscribe(
-          (data) => {
-            this.loggerService.debug(JSON.stringify(data));
-
-            this.listeEvenementsAdherent[index + 1] = {manifestations: data, adhRepresente: value};
-
-          },
-          (error) => {
-            this.loggerService.error(error);
-            this.toastrService.danger(
-              'Erreur technique lors de recuperation des données',
-              'Erreur ');
-          },
-          () => {
-            this.loggerService.debug('fini');
-
-            if (liensAdh.length === index + 1) {
-              setTimeout(() => {
-                this.loadingEvenement = false;
-              }, 1000);
-            }
-
-          });
-    });
-
-
+    return this.manifestationService.getListeManifestationsAdherent({
+      idadh: idAdh,
+      datedebut: this.dateService.convertDateToStringIsoWithOutHour(dateDebut),
+      datefin: this.dateService.convertDateToStringIsoWithOutHour(dateFin),
+      retourParticipationAdh: true,
+    }).pipe(
+      map(data => ({manifestations: data ?? [], adhRepresente})),
+      catchError(error => {
+        this.loggerService.error(error);
+        this.toastrService.danger(
+          'Erreur technique lors de recuperation des données',
+          'Erreur ');
+        return of({manifestations: [], adhRepresente});
+      }),
+    );
   }
 
   /**
-   * récupérer les évènement d'un adhérent (Attention complete la variable this.listeEvenementsAdherent[0]
-   * @param idAdh
-   */
-  private recupererEvenementsAdherent(idAdh: number) {
-    this.loggerService.info('Recupere les évènement de l_\'adherent ' + idAdh);
-
-    // Gestion date debut et fin de recherche
-    const dDebut = new Date();
-
-
-    const dFin = new Date();
-    dFin.setMonth(dFin.getMonth() + 8);
-
-    const dateDebutString = this.dateService.convertDateToStringIsoWithOutHour(dDebut);
-    const dateFinString = this.dateService.convertDateToStringIsoWithOutHour(dFin);
-
-
-    this.manifestationService.getListeManifestationsAdherent({
-      idadh: idAdh
-      , datedebut: dateDebutString
-      , datefin: dateFinString
-      , retourParticipationAdh: true})
-      .subscribe(
-        (data) => {
-          // La partie adhRepresente est renseigné par defaut, car il n'y a pas d'adh représenté
-          this.listeEvenementsAdherent[0] = {
-            manifestations: data, adhRepresente: {
-              idAdhRepresentant: -1, idAdhRepresente: -1, nomAdhRepresente: 'xxx',
-              prenomAdhRepresente: 'moi', emailAdhRepresente: null,
-            },
-          };
-        },
-        (error) => {
-          this.loggerService.error(error);
-          this.toastrService.danger(
-            'Erreur technique lors de recuperation des données',
-            'Erreur ');
-        },
-        () => {
-          this.loggerService.debug('fini');
-        });
-  }
-
-
-  /**
-   * Initialisation des évènements
+   * Attendre toutes les réponses avant d'afficher les événements.
    */
   private initEvenements() {
-
-    this.liensAdherentsService.getLienAdherent({idadh: this.idAdh})
-      .subscribe(
-        (data) => {
-          this.recupererEvenementsAdherent(this.idAdh);
-
-          /**
-           * Si la personne représente d'autre adhérent, récupération de ces évènements
-           */
-          if (data != null) {
-            this.accesDelegue = true;
-            this.recupererEvenementsPersonneRepresente(data);
-          } else {
-            setTimeout(() => {
-              this.loadingEvenement = false;
-            }, 1000);
-          }
-        },
-        (error) => {
-          this.loggerService.info('Pas de lien');
-          this.toastrService.danger(
-            'Erreur technique lors de recuperation des données',
-            'Erreur ');
-        },
-        () => {
-          this.loggerService.info('fini');
-        });
+    this.loadingEvenement = true;
+    this.liensAdherentsService.getLienAdherent({idadh: this.idAdh}).pipe(
+      switchMap(data => {
+        this.accesDelegue = (data?.length ?? 0) > 0;
+        return forkJoin([
+          this.recupererEvenementsAdherent(this.idAdh, {
+            idAdhRepresentant: -1, idAdhRepresente: -1, nomAdhRepresente: 'xxx',
+            prenomAdhRepresente: 'moi', emailAdhRepresente: null,
+          }),
+          ...(data ?? []).map(lien => this.recupererEvenementsAdherent(lien.idAdhRepresente, lien)),
+        ]);
+      }),
+      finalize(() => this.loadingEvenement = false),
+    ).subscribe({
+      next: evenements => this.listeEvenementsAdherent = evenements,
+      error: error => {
+        this.loggerService.error(error);
+        this.toastrService.danger(
+          'Erreur technique lors de recuperation des données',
+          'Erreur ');
+      },
+    });
   }
+
 
   /**
    * Initialisation des documents à afficher dans le TDB
