@@ -14,6 +14,7 @@ import {Router} from '@angular/router';
 import {NgForm} from '@angular/forms';
 import {LiensAdherentsService} from '../../../api/generated/adherents/services/liens-adherents.service';
 import {AgendaService} from '../../../api/generated/utilitaire/services/agenda.service';
+import {SyntheseEvenement} from '../../../api/generated/utilitaire/models/synthese-evenement';
 import {ActualiteService} from '../../../api/generated/utilitaire/services/actualite.service';
 import {environment} from '../../../environments/environment';
 import {forkJoin, Observable, of} from 'rxjs';
@@ -79,6 +80,7 @@ export class DashboardComponent implements OnInit {
 
   // gestion du graphique de participation aux évènement
   loadingSyntheseEvenement = true;
+  private syntheseEvenements: SyntheseEvenement[] = [];
 
 
   //Message a ajouter dans l'encart de l'info de l'association
@@ -435,6 +437,25 @@ export class DashboardComponent implements OnInit {
 
 
   /**
+   * Ouvrir la synthèse de l'événement associé à la barre sélectionnée.
+   */
+  accederSyntheseEvenement(event: {componentType?: string; dataIndex?: number}) {
+    if (event.componentType !== 'series' || event.dataIndex == null) {
+      return;
+    }
+
+    const evenement = this.syntheseEvenements[event.dataIndex];
+    if (evenement?.id == null) {
+      return;
+    }
+
+    localStorage.setItem('evenement_selected', JSON.stringify(evenement));
+    localStorage.setItem('id_evenement_selected', String(evenement.id));
+    return this.router.navigateByUrl('pages/calendrier/syntheseevenement');
+  }
+
+
+  /**
    * Initialisation de la synthèse des participations aux évènements
    */
   private initSyntheseEvenements() {
@@ -484,8 +505,9 @@ export class DashboardComponent implements OnInit {
       .subscribe(
         (data) => {
           this.loggerService.info(JSON.stringify(data));
+          this.syntheseEvenements = data ?? [];
           const descriptions: string[] = [];
-          (data ?? []).forEach(value => {
+          this.syntheseEvenements.forEach(value => {
             const titre = value.description || 'Évènement sans titre';
             const date = this.dateService.dateFormatForPrint(value.datedebut);
             descriptions.push(date ? `${titre}\n${date}` : titre);

@@ -224,7 +224,7 @@
     <nb-card size="large" class="table-card" [nbSpinner]='loadingSyntheseEvenement'>
       <nb-card-header>Participation aux évènements</nb-card-header>
       <div echarts [options]="optionsChart" class="echart" [loading]='loadingSyntheseEvenement'
-      [autoResize]='true'></div>
+      [autoResize]='true' (chartClick)="accederSyntheseEvenement($event)"></div>
     </nb-card>
   </div>
 }
