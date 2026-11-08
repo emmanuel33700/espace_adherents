@@ -99,11 +99,17 @@ export class DashboardComponent implements OnInit {
     grid: {
       left: '3%',
       right: '4%',
-      bottom: '3%',
+      bottom: 65,
       containLabel: true,
     },
     xAxis: {
       type: 'category',
+      axisLabel: {
+        interval: 0,
+        width: 140,
+        overflow: 'break',
+        lineHeight: 16,
+      },
       data: [],
     },
     yAxis: {
@@ -480,7 +486,9 @@ export class DashboardComponent implements OnInit {
           this.loggerService.info(JSON.stringify(data));
           const descriptions: string[] = [];
           (data ?? []).forEach(value => {
-            descriptions.push(value.description);
+            const titre = value.description || 'Évènement sans titre';
+            const date = this.dateService.dateFormatForPrint(value.datedebut);
+            descriptions.push(date ? `${titre}\n${date}` : titre);
             seriesParticipe.data.push(value.nbAdherentParticipant);
             seriesParticipePas.data.push(value.nbAdherentParticipantPas);
             seriesEnAttente.data.push(value.nbAdherentEnAttente);
@@ -489,6 +497,16 @@ export class DashboardComponent implements OnInit {
           this.optionsChart = {
             ...this.optionsChart,
             xAxis: {...this.optionsChart.xAxis, data: descriptions},
+            // Garder les libellés lisibles et permettre de parcourir tous les événements.
+            dataZoom: descriptions.length > 4 ? [{
+              type: 'slider',
+              xAxisIndex: 0,
+              startValue: 0,
+              endValue: 3,
+              bottom: 10,
+              height: 20,
+              showDetail: false,
+            }] : [],
             series: [seriesParticipe, seriesParticipePas, seriesEnAttente],
           };
 
