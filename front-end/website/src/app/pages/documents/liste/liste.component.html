@@ -63,9 +63,9 @@
 
           <!-- Boiton d'action pour l'ensemble des adhérents-->
           @if (row.data.kind === 'doc') {
-            <a href="{{url_documents}}{{ row.data.lienFichier }}"  target="_blank">
+            <button nbButton ghost size="tiny" type="button" (click)="telechargerFichier(row.data)" aria-label="Télécharger le document">
               <nb-icon  icon="download" nbPopover="Télécharger le document" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
-            </a>
+            </button>
           }
 
         </td>

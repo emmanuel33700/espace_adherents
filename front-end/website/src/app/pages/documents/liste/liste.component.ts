@@ -11,9 +11,7 @@ import {DialogAjoutDocsComponent} from './dialog-ajout-docs/dialog-ajout-docs.co
 import {DialogAjoutRepertoireComponent} from './dialog-ajout-repertoire/dialog-ajout-repertoire.component';
 import {DocumentationService} from '../../../../api/generated/utilitaire/services/documentation.service';
 import {ArborescenceDocuments} from '../../../../api/generated/utilitaire/models/arborescence-documents';
-import {DownloadService} from '../../../@core/utils/download.service';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
-import {environment} from '../../../../environments/environment';
 
 interface TreeNode<T> {
   data: T;
@@ -63,14 +61,11 @@ export class ListeComponent implements OnInit {
   // Information de l'adhérent courant (Qui utilise l'IHM)
   adherent: Adherent = JSON.parse(localStorage.getItem('adherent'));
 
-  url_documents: string = environment.url_document;
-
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               private loggerService: LoggerService,
               private toastrService: NbToastrService,
               private dialogService: NbDialogService,
-              private documentationService: DocumentationService,
-              private downloads: DownloadService) {
+              private documentationService: DocumentationService) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
@@ -318,6 +313,40 @@ export class ListeComponent implements OnInit {
    */
   editerRepertoire(idRepertoire: number) {
     this.loggerService.info('editerRepertoire ' + idRepertoire);
+  }
+
+  telechargerFichier(document: FSEntry): void {
+    const onglet = window.open('about:blank', '_blank');
+    if (!onglet) {
+      this.toastrService.warning('Veuillez autoriser les fenêtres contextuelles pour afficher le document', 'Document');
+      return;
+    }
+    onglet.opener = null;
+
+    this.documentationService.getFichier({idFichier: document.id}).subscribe({
+      next: (fichier) => {
+        if (!(fichier instanceof Blob)) {
+          onglet.close();
+          this.toastrService.danger('La réponse du serveur ne contient pas de fichier binaire', 'Erreur');
+          return;
+        }
+        const url = URL.createObjectURL(fichier);
+        onglet.location.href = url;
+        const verificationFermeture = window.setInterval(() => {
+          if (onglet.closed) {
+            URL.revokeObjectURL(url);
+            window.clearInterval(verificationFermeture);
+          }
+        }, 1000);
+      },
+      error: (error) => {
+        onglet.close();
+        this.loggerService.error(error);
+        this.toastrService.danger(
+          'Erreur lors du téléchargement du document',
+          'Erreur');
+      },
+    });
   }
 
   /**

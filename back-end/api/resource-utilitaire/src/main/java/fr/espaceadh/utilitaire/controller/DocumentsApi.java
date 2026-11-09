@@ -197,24 +197,18 @@ public interface DocumentsApi {
     ResponseEntity<Document> getDossier(@Parameter(in = ParameterIn.PATH, description = "id du dossier", required=true, schema=@Schema()) @PathVariable("idDossier") Long idDossier);
 
 
-    @Operation(summary = "Recupérer les informations d'un fichier", description = "", security = {
-        @SecurityRequirement(name = "oAuth", scopes = {
-            "ress-adherent-admin"        })    }, tags={ "Documentation" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "Operation réussie", content = @Content(schema = @Schema(implementation = Document.class))),
-        
-        @ApiResponse(responseCode = "401", description = "utilisateur non authentifié"),
-        
-        @ApiResponse(responseCode = "403", description = "Droit insufisant"),
-        
-        @ApiResponse(responseCode = "405", description = "Invalid input", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))),
-        
-        @ApiResponse(responseCode = "500", description = "Erreur serveur", content = @Content(schema = @Schema(implementation = ModelApiResponse.class))) })
-    @RequestMapping(value = "/documents/fichier/{idFichier}",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    @PreAuthorize("isDansGroupe('ADHERENT')")           
-    ResponseEntity<Document> getFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required=true, schema=@Schema()) @PathVariable("idFichier") Long idFichier);
+    @Operation(summary = "Télécharger un fichier", description = "Accès réservé aux utilisateurs authentifiés autorisés par idAuthority du document.",
+        security = { @SecurityRequirement(name = "oAuth", scopes = { "ress-utilitaire-fichier-read" }) }, tags = { "Documentation" })
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Contenu du fichier", content = @Content(mediaType = "application/octet-stream", schema = @Schema(type = "string", format = "binary"))),
+        @ApiResponse(responseCode = "401", description = "Utilisateur non authentifié"),
+        @ApiResponse(responseCode = "403", description = "Droits insuffisants"),
+        @ApiResponse(responseCode = "404", description = "Document ou fichier absent"),
+        @ApiResponse(responseCode = "500", description = "Erreur de lecture")
+    })
+    @RequestMapping(value = "/documents/fichier/{idFichier}", produces = "application/octet-stream", method = RequestMethod.GET)
+    @PreAuthorize("isDansGroupe('ADHERENT')")
+    ResponseEntity<org.springframework.core.io.Resource> getFichier(@PathVariable("idFichier") Long idFichier);
 
 
     @Operation(summary = "Mise à jour d'un dossier", description = "", security = {
