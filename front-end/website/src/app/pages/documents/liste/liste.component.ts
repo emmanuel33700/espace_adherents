@@ -316,31 +316,34 @@ export class ListeComponent implements OnInit {
   }
 
   telechargerFichier(document: FSEntry): void {
-    const onglet = window.open('about:blank', '_blank');
-    if (!onglet) {
-      this.toastrService.warning('Veuillez autoriser les fenêtres contextuelles pour afficher le document', 'Document');
-      return;
-    }
-    onglet.opener = null;
-
-    this.documentationService.getFichier({idFichier: document.id}).subscribe({
-      next: (fichier) => {
+    this.documentationService.getFichier$Response({idFichier: document.id}).subscribe({
+      next: (response) => {
+        const fichier = response.body;
         if (!(fichier instanceof Blob)) {
-          onglet.close();
           this.toastrService.danger('La réponse du serveur ne contient pas de fichier binaire', 'Erreur');
           return;
         }
-        const url = URL.createObjectURL(fichier);
-        onglet.location.href = url;
-        const verificationFermeture = window.setInterval(() => {
-          if (onglet.closed) {
-            URL.revokeObjectURL(url);
-            window.clearInterval(verificationFermeture);
+        const disposition = response.headers.get('Content-Disposition') || '';
+        const nomEncode = /filename\*\s*=\s*UTF-8'[^']*'([^;]+)/i.exec(disposition);
+        const nomSimple = /filename\s*=\s*(?:"((?:\\.|[^"\\])*)"|([^;]+))/i.exec(disposition);
+        let nomFichier = nomSimple ? (nomSimple[1] || nomSimple[2]).trim() : '';
+        if (nomEncode) {
+          try {
+            nomFichier = decodeURIComponent(nomEncode[1].trim());
+          } catch {
+            // Conserver le nom simple si le nom encodé est invalide.
           }
-        }, 1000);
+        }
+        const url = URL.createObjectURL(fichier);
+        const lien = window.document.createElement('a');
+        lien.href = url;
+        lien.download = (nomFichier || document.lienFichier || document.nom).split(/[\\/]/).pop();
+        window.document.body.appendChild(lien);
+        lien.click();
+        lien.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
       },
       error: (error) => {
-        onglet.close();
         this.loggerService.error(error);
         this.toastrService.danger(
           'Erreur lors du téléchargement du document',
