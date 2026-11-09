@@ -745,7 +745,11 @@ paths:
     get:
       tags:
         - Documentation
-      summary: Recupérer les informations d'un fichier
+      summary: Télécharger un fichier
+      description: |
+        Renvoie le contenu binaire en téléchargement après authentification et
+        contrôle du niveau idAuthority du document (1 adhérent, 2 conseil,
+        3 bureau, 4 admin). Un niveau supérieur donne accès aux niveaux inférieurs.
       operationId: getFichier
       security:
         - oAuth:
@@ -753,34 +757,36 @@ paths:
       parameters:
         - name: idFichier
           in: path
-          description: id du fichier
+          description: Identifiant du fichier
           required: true
           schema:
             type: integer
             format: int64
       responses:
         '200':
-          description: Operation réussie
-          content:
-            application/json:
+          description: Contenu du fichier
+          headers:
+            Content-Disposition:
+              description: Pièce jointe avec le nom du fichier
               schema:
-                $ref: '#/components/schemas/document'
+                type: string
+            Cache-Control:
+              schema:
+                type: string
+                example: no-store
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
         '401':
-          description: utilisateur non authentifié
+          description: Utilisateur non authentifié
         '403':
-          description: Droit insufisant
-        '405':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
+          description: Droits insuffisants
+        '404':
+          description: Document ou fichier absent
         '500':
-          description: Erreur serveur
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ApiResponse'
+          description: Erreur de lecture
     delete:
       tags:
         - Documentation
