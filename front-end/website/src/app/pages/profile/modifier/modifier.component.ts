@@ -140,7 +140,6 @@ export class ModifierComponent implements OnInit {
     this.adherentService.updateUser({idadh: this.adherent.id, body: this.adherent})
       .subscribe(
         (data) => {
-          console.info(data);
         },
         (error) => {
           this.loggerService.error('Error lors de appel du api' + error);

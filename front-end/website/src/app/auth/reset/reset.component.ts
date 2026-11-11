@@ -1,3 +1,4 @@
+import {LoggerService} from '../../@core/utils/logger.service';
 import {Component, HostBinding, Inject, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
@@ -33,7 +34,8 @@ export class ResetComponent implements OnInit {
 
   user: any = {};
 
-  constructor(@Inject(NB_AUTH_OPTIONS) protected options = {},
+  constructor(private loggerService: LoggerService,
+              @Inject(NB_AUTH_OPTIONS) protected options = {},
               protected router: Router,
               private route: ActivatedRoute,
               private authentificationService: AuthentificationService,
@@ -55,17 +57,15 @@ export class ResetComponent implements OnInit {
     this.authentificationService.valideResetPassword({idadh: this.idAdh, body: this.reinitAuthentification})
       .subscribe(
         (data) => {
-          console.info(data);
         },
         (error) => {
-          console.info(error);
+          this.loggerService.error(error);
           this.toastrService.danger(
             'Erreur technique lors de enregistrement',
             'Erreur ');
           this.submitted = false;
         },
         () => {
-          console.info('fini');
           return this.router.navigateByUrl('/auth/login');
         },
       );
@@ -77,10 +77,9 @@ export class ResetComponent implements OnInit {
     this.reinitAuthentification.cleeValidation = this.route.snapshot.queryParamMap.get('key');
     if (!isNaN(Number(this.route.snapshot.queryParamMap.get('id')))) {
       this.idAdh = Number(this.route.snapshot.queryParamMap.get('id'));
-      console.info('idadh ' + this.idAdh);
     } else {
       this.idAdh = -1;
-      console.error('Erreur de récupération de id adherent ');
+      this.loggerService.error('Erreur de récupération de id adherent ');
     }
   }
 

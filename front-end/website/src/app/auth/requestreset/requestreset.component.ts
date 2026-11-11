@@ -1,3 +1,4 @@
+import {LoggerService} from '../../@core/utils/logger.service';
 import {Component, Inject, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -27,7 +28,8 @@ export class RequestresetComponent  {
 
   private login: Login = {};
 
-  constructor(@Inject(NB_AUTH_OPTIONS) protected options = {},
+  constructor(private loggerService: LoggerService,
+              @Inject(NB_AUTH_OPTIONS) protected options = {},
               protected router: Router,
               private route: ActivatedRoute,
               private authentificationService: AuthentificationService) {
@@ -48,13 +50,11 @@ export class RequestresetComponent  {
     this.authentificationService.resetPassword({body: this.login})
       .subscribe(
         (data) => {
-          console.info(data);
         },
         (error) => {
-          console.info(error);
+          this.loggerService.error(error);
         },
         () => {
-          console.info('demande de réinit du mot de passe OK');
           return this.router.navigateByUrl('/auth/login');
         },
       );

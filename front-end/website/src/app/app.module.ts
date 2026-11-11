@@ -5,7 +5,7 @@
  */
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { CoreModule } from './@core/core.module';
 import { ThemeModule } from './@theme/theme.module';
@@ -20,6 +20,8 @@ import {
   NbToastrModule,
   NbWindowModule,
 } from '@nebular/theme';
+import {ApiInterceptor} from './@core/utils/api.interceptor';
+import {GlobalErrorHandler} from './@core/utils/global-error-handler.service';
 import {TokenInterceptor} from './@core/utils/token.interceptor';
 import {ApiModule as ApiModuleAdherents} from '../api/generated/adherents/api.module';
 import {ApiModule as ApiModuleAuthorization} from '../api/generated/authorization/api.module';
@@ -45,6 +47,8 @@ import { provideNgxMask } from 'ngx-mask';
         ApiModuleAdherents.forRoot({ rootUrl: environment.resource_adherents }),
         ApiModuleAuthorization.forRoot({ rootUrl: environment.resource_authorization }),
         ApiModuleUtilitaire.forRoot({ rootUrl: environment.resource_utilitaire })], providers: [
+        {provide: ErrorHandler, useClass: GlobalErrorHandler},
+        provideBrowserGlobalErrorListeners(),
         provideNgxMask({
             showMaskTyped: true,
             // clearIfNotMatch : true
@@ -52,6 +56,11 @@ import { provideNgxMask } from 'ngx-mask';
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInterceptor,
+            multi: true,
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ApiInterceptor,
             multi: true,
         },
         provideHttpClient(withInterceptorsFromDi()),

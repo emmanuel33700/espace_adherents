@@ -1,3 +1,4 @@
+import {LoggerService} from '../../../@core/utils/logger.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
 
@@ -32,7 +33,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   userMenu = [ { title: 'Mes infos', link: '/pages/profile/modifier'}, { title: 'Déconnexion', link: '/auth/login' } ];
 
-  constructor(private sidebarService: NbSidebarService,
+  constructor(private loggerService: LoggerService,
+              private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private themeService: NbThemeService,
               private userService: UserData,
@@ -57,7 +59,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.adherent = data;
       },
       (error) => {
-        console.info(error);
+        this.loggerService.error(error);
       },
       () => {
         this.user.name = this.adherent.nom + ' ' + this.adherent.prenom;
