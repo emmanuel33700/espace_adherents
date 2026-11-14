@@ -64,9 +64,23 @@ export class DialogAjoutDocsComponent {
     if (this.fileBlob != null) {
       const idFichier: number = Date.now();
 
-      // Netoyage du nom du fichier
+      // Nom ASCII portable, limité à 255 octets, en conservant l'extension.
       const sanitize = require('sanitize-filename');
-      const filenameSanitize = sanitize(idFichier + '-' + this.file.name);
+      const nomNettoye = sanitize(this.file.name.normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9._-]+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/\.{2,}/g, '.')
+        .replace(/^[._-]+|[._-]+$/g, ''));
+      const prefixe = idFichier + '-';
+      const dernierPoint = nomNettoye.lastIndexOf('.');
+      const indexExtension = nomNettoye.length - dernierPoint < 255 - prefixe.length ? dernierPoint : -1;
+      const extension = indexExtension > 0 ? nomNettoye.slice(indexExtension) : '';
+      const nomSansExtension = indexExtension > 0 ? nomNettoye.slice(0, indexExtension) : nomNettoye;
+      const nomTronque = (nomSansExtension || 'document')
+        .slice(0, 255 - prefixe.length - extension.length)
+        .replace(/[._-]+$/g, '') || 'document';
+      const filenameSanitize = prefixe + nomTronque + extension;
 
       document.idDossierRattachement = this.idRepertoireRatachement;
       document.libelleCourt = this.documentForm.fichier;
