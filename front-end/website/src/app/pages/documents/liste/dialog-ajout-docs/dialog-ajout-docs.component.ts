@@ -4,7 +4,7 @@ import {FormGroup, NgForm} from '@angular/forms';
 import {LoggerService} from '../../../../@core/utils';
 import {DocumentationService} from '../../../../../api/generated/utilitaire/services/documentation.service';
 import {Document} from '../../../../../api/generated/utilitaire/models/document';
-vimport {validatePdfFile} from './pdf-validation';
+import {validatePdfFile} from './pdf-validation';
 
 @Component({
     selector: 'ngx-showcase-dialog',
