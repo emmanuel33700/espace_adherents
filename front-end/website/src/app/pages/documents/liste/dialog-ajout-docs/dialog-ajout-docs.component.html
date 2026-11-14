@@ -140,7 +140,8 @@
                 [required]="true"
                 (change)="onFileSelected($event)"
                 id="load-fichier"
-                accept="application/pdf"
+                accept=".pdf,application/pdf"
+                [disabled]="loadingFichier"
                 >
             </div>
           </div>
@@ -150,7 +151,7 @@
             fullWidth
             status="success"
             nbStepperNext
-            [disabled]="!valideForm"
+            [disabled]="!valideForm || loadingFichier"
             [class.btn-pulse]="submitted"
             [nbSpinner]='loadingFichier'>
             Valider
