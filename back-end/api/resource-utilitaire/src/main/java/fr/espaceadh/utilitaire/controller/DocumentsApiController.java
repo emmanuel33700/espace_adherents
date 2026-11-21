@@ -120,17 +120,13 @@ public class DocumentsApiController implements DocumentsApi {
                 cheminFichierDestination.append("/");
                 cheminFichierDestination.append(body.getNomFichier());
 
-                Files.move(Paths.get(cheminFichierSource.toString()), Paths.get(cheminFichierDestination.toString()), StandardCopyOption.REPLACE_EXISTING);
-
                 Set<PosixFilePermission> perms = new HashSet<>();
                 perms.add(PosixFilePermission.OWNER_READ);
                 perms.add(PosixFilePermission.OWNER_WRITE);
 
-                perms.add(PosixFilePermission.OTHERS_READ);
+                Files.setPosixFilePermissions(Paths.get(cheminFichierSource.toString()), perms);
 
-                perms.add(PosixFilePermission.GROUP_READ);
-
-                Files.setPosixFilePermissions(Paths.get(cheminFichierDestination.toString()), perms);
+                Files.move(Paths.get(cheminFichierSource.toString()), Paths.get(cheminFichierDestination.toString()), StandardCopyOption.REPLACE_EXISTING);
 
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
             } else {

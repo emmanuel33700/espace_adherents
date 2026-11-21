@@ -13,7 +13,7 @@ WORK_DIR="$(mktemp -d "$SCRIPT_DIR/.keygen.XXXXXX")"
 trap 'rm -rf -- "$WORK_DIR"' EXIT
 
 # Generation interactive de l'identite du certificat, comme auparavant.
-keytool -genkeypair -alias privatekey -keyalg RSA \
+keytool -genkeypair -alias privatekey -keyalg RSA -validity 1825 \
     -keypass mypass -storepass mypass -keystore "$WORK_DIR/privatekey.jks"
 
 # Le mot de passe explicite evite toute invite pendant l'export.
