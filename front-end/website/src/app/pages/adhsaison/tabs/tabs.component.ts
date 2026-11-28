@@ -6,9 +6,10 @@ import {environment} from '../../../../environments/environment';
 
 
 @Component({
-  selector: 'ngx-tabs',
-  styleUrls: ['./tabs.component.scss'],
-  templateUrl: './tabs.component.html',
+    selector: 'ngx-tabs',
+    styleUrls: ['./tabs.component.scss'],
+    templateUrl: './tabs.component.html',
+    standalone: false
 })
 export class TabsComponent implements OnInit {
 

@@ -10,9 +10,10 @@ import {SyntheseEvenement} from '../../../../api/generated/utilitaire/models/syn
 import {environment} from '../../../../environments/environment';
 
 @Component({
-  selector: 'ngx-form-layouts',
-  styleUrls: ['./syntheseevenement.component.scss'],
-  templateUrl: './syntheseevenement.component.html',
+    selector: 'ngx-form-layouts',
+    styleUrls: ['./syntheseevenement.component.scss'],
+    templateUrl: './syntheseevenement.component.html',
+    standalone: false
 })
 export class SyntheseevenementComponent implements OnInit {
 

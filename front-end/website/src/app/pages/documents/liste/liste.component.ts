@@ -11,9 +11,7 @@ import {DialogAjoutDocsComponent} from './dialog-ajout-docs/dialog-ajout-docs.co
 import {DialogAjoutRepertoireComponent} from './dialog-ajout-repertoire/dialog-ajout-repertoire.component';
 import {DocumentationService} from '../../../../api/generated/utilitaire/services/documentation.service';
 import {ArborescenceDocuments} from '../../../../api/generated/utilitaire/models/arborescence-documents';
-import {DownloadService} from '../../../@core/utils/download.service';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
-import {environment} from '../../../../environments/environment';
 
 interface TreeNode<T> {
   data: T;
@@ -33,9 +31,10 @@ interface FSEntry {
 
 
 @Component({
-  selector: 'ngx-tree-grid',
-  templateUrl: './liste.component.html',
-  styleUrls: ['./liste.component.scss'],
+    selector: 'ngx-tree-grid',
+    templateUrl: './liste.component.html',
+    styleUrls: ['./liste.component.scss'],
+    standalone: false
 })
 export class ListeComponent implements OnInit {
 
@@ -62,14 +61,11 @@ export class ListeComponent implements OnInit {
   // Information de l'adhérent courant (Qui utilise l'IHM)
   adherent: Adherent = JSON.parse(localStorage.getItem('adherent'));
 
-  url_documents: string = environment.url_document;
-
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               private loggerService: LoggerService,
               private toastrService: NbToastrService,
               private dialogService: NbDialogService,
-              private documentationService: DocumentationService,
-              private downloads: DownloadService) {
+              private documentationService: DocumentationService) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
@@ -319,6 +315,43 @@ export class ListeComponent implements OnInit {
     this.loggerService.info('editerRepertoire ' + idRepertoire);
   }
 
+  telechargerFichier(document: FSEntry): void {
+    this.documentationService.getFichier$Response({idFichier: document.id}).subscribe({
+      next: (response) => {
+        const fichier = response.body;
+        if (!(fichier instanceof Blob)) {
+          this.toastrService.danger('La réponse du serveur ne contient pas de fichier binaire', 'Erreur');
+          return;
+        }
+        const disposition = response.headers.get('Content-Disposition') || '';
+        const nomEncode = /filename\*\s*=\s*UTF-8'[^']*'([^;]+)/i.exec(disposition);
+        const nomSimple = /filename\s*=\s*(?:"((?:\\.|[^"\\])*)"|([^;]+))/i.exec(disposition);
+        let nomFichier = nomSimple ? (nomSimple[1] || nomSimple[2]).trim() : '';
+        if (nomEncode) {
+          try {
+            nomFichier = decodeURIComponent(nomEncode[1].trim());
+          } catch {
+            // Conserver le nom simple si le nom encodé est invalide.
+          }
+        }
+        const url = URL.createObjectURL(fichier);
+        const lien = window.document.createElement('a');
+        lien.href = url;
+        lien.download = (nomFichier || document.lienFichier || document.nom).split(/[\\/]/).pop();
+        window.document.body.appendChild(lien);
+        lien.click();
+        lien.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      },
+      error: (error) => {
+        this.loggerService.error(error);
+        this.toastrService.danger(
+          'Erreur lors du téléchargement du document',
+          'Erreur');
+      },
+    });
+  }
+
   /**
    * Supprimer un fichier
    * @param id
@@ -430,14 +463,16 @@ export class ListeComponent implements OnInit {
 }
 
 @Component({
-  selector: 'ngx-fs-icon',
-  template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-    </nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
+    selector: 'ngx-fs-icon',
+    template: `
+    @if (isDir()) {
+      <nb-tree-grid-row-toggle [expanded]="expanded">
+      </nb-tree-grid-row-toggle>
+    } @else {
       <nb-icon icon="file-text-outline"></nb-icon>
-    </ng-template>
-  `,
+    }
+    `,
+    standalone: false
 })
 export class FsIconComponent {
   @Input() kind: string;

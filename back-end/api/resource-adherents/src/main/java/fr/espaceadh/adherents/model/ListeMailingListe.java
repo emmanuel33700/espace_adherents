@@ -5,14 +5,14 @@ import fr.espaceadh.adherents.model.MailingListe;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * ListeMailingListe
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-28T09:42:09.305Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-28T09:42:09.305Z[GMT]")
 
 
 public class ListeMailingListe extends ArrayList<MailingListe>  {

@@ -9,9 +9,10 @@ import {LoggerService} from '../../../@core/utils/logger.service';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'ngx-form-layouts',
-  styleUrls: ['./ajouteradhesion.component.scss'],
-  templateUrl: './ajouteradhesion.component.html',
+    selector: 'ngx-form-layouts',
+    styleUrls: ['./ajouteradhesion.component.scss'],
+    templateUrl: './ajouteradhesion.component.html',
+    standalone: false
 })
 export class AjouteradhesionComponent  {
   adherent: Adherent = JSON.parse(localStorage.getItem('adh_selected'));

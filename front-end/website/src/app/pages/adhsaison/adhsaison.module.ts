@@ -28,11 +28,21 @@ import { AjouteradhesionComponent } from './ajouteradhesion/ajouteradhesion.comp
 import {NbSecurityModule} from '@nebular/security';
 import { FormsModule as ngFormsModule } from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {HttpClientModule} from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
-@NgModule({
-    imports: [
-        FormsModule,
+@NgModule({ declarations: [
+        AdhsaisonComponent,
+        ListeComponent,
+        TabsComponent,
+        InfosadhComponent,
+        LiensadherentComponent,
+        ListeadhesionsComponent,
+        ListeparticipationsComponent,
+        ListecommunicationsComponent,
+        ConnexionComponent,
+        AjouteradherentComponent,
+        AjouteradhesionComponent,
+    ], imports: [FormsModule,
         ReactiveFormsModule,
         ThemeModule,
         NbCardModule,
@@ -55,28 +65,12 @@ import {HttpClientModule} from '@angular/common/http';
         NbDatepickerModule,
         NbSelectModule,
         CommonModule,
-        HttpClientModule,
         NbInputModule,
         NbAlertModule,
         NbSpinnerModule,
         NbPopoverModule,
-        NbAutocompleteModule,
-    ],
-  declarations: [
-    AdhsaisonComponent,
-    ListeComponent,
-    TabsComponent,
-    InfosadhComponent,
-    LiensadherentComponent,
-    ListeadhesionsComponent,
-    ListeparticipationsComponent,
-    ListecommunicationsComponent,
-    ConnexionComponent,
-    AjouteradherentComponent,
-    AjouteradhesionComponent,
-  ],
-  providers: [
-    AdhsaisonService,
-  ],
-})
+        NbAutocompleteModule], providers: [
+        AdhsaisonService,
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AdhsaisonModule { }

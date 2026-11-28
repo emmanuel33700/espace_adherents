@@ -13,9 +13,8 @@ CREATE TABLE IF NOT EXISTS  USERS(
         dateModificationClee timestamp with time zone
 );
 
-CREATE TABLE IF NOT EXISTS  AUTHORITIES (
+CREATE TABLE IF NOT EXISTS  authorities (
 	username VARCHAR(50) not null,
 	authority VARCHAR(50) not null,
 	constraint fk_authorities_users foreign key(username) references USERS(username)
 );
-

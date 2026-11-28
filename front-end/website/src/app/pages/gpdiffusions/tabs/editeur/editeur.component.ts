@@ -20,9 +20,10 @@ interface Fichier {
 }
 
 @Component({
-  selector: 'ngx-form-layouts',
-  styleUrls: ['./editeur.component.scss'],
-  templateUrl: './editeur.component.html',
+    selector: 'ngx-form-layouts',
+    styleUrls: ['./editeur.component.scss'],
+    templateUrl: './editeur.component.html',
+    standalone: false
 })
 export class EditeurComponent implements OnInit {
 

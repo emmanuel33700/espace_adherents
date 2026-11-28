@@ -12,8 +12,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.espaceadh.adherents.config.ResourceServerApplication;
@@ -25,18 +25,18 @@ import fr.espaceadh.adherents.config.ResourceServerApplication;
 public class AuthenticationClaimsIntegrationTest {
 
     @Autowired
-    private JwtTokenStore tokenStore;
+    private JwtDecoder jwtDecoder;
 
     @Test
     public void whenTokenDontContainIssuer_thenSuccess() {
         final String tokenValue = obtainAccessToken("fooClientIdPassword", "john", "123");
-        final OAuth2Authentication auth = tokenStore.readAuthentication(tokenValue);
+        final Jwt auth = jwtDecoder.decode(tokenValue);
         System.out.println(tokenValue);
         System.out.println(auth);
-        assertTrue(auth.isAuthenticated());
-        System.out.println(auth.getDetails());
+        assertTrue(auth.getExpiresAt().isAfter(java.time.Instant.now()));
+        System.out.println(auth.getClaims());
 
-        Map<String, Object> details = (Map<String, Object>) auth.getDetails();
+        Map<String, Object> details = (Map<String, Object>) auth.getClaims();
         assertTrue(details.containsKey("organization"));
         System.out.println(details.get("organization"));
     }

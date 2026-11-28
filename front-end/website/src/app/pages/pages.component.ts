@@ -8,17 +8,26 @@ import { MENU_ITEMS_CONSEIL } from './pages-menu';
 import {NbAuthService, NbAuthToken} from '@nebular/auth';
 
 @Component({
-  selector: 'ngx-pages',
-  styleUrls: ['pages.component.scss'],
-  template: `
+    selector: 'ngx-pages',
+    styleUrls: ['pages.component.scss'],
+    template: `
     <ngx-one-column-layout >
-      <nb-menu *ngIf="role==='ADHERENT'" [items]="menu_adh"></nb-menu>
-      <nb-menu *ngIf="role==='RES_ATELIER'" [items]="menu_evenement"></nb-menu>
-      <nb-menu *ngIf="role==='CONSEIL'" [items]="menu_conseil"></nb-menu>
-      <nb-menu *ngIf="role==='ADMIN'" [items]="menu_admin"></nb-menu>
+      @if (role==='ADHERENT') {
+        <nb-menu [items]="menu_adh"></nb-menu>
+      }
+      @if (role==='RES_ATELIER') {
+        <nb-menu [items]="menu_evenement"></nb-menu>
+      }
+      @if (role==='CONSEIL') {
+        <nb-menu [items]="menu_conseil"></nb-menu>
+      }
+      @if (role==='ADMIN') {
+        <nb-menu [items]="menu_admin"></nb-menu>
+      }
       <router-outlet></router-outlet>
     </ngx-one-column-layout>
-  `,
+    `,
+    standalone: false
 })
 export class PagesComponent  implements OnInit {
 

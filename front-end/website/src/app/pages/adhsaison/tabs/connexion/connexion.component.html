@@ -4,52 +4,57 @@
       <nb-card-header>Modifier information adhérent</nb-card-header>
       <nb-card-body>
 
-        <nb-alert *ngIf="errors?.length" outline="danger" role="alert">
-          <p class="alert-title"><b>Erreur</b></p>
-          <ul class="alert-message-list">
-            <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
-            showMessages
-          </ul>
-        </nb-alert>
+        @if (errors?.length) {
+          <nb-alert outline="danger" role="alert">
+            <p class="alert-title"><b>Erreur</b></p>
+            <ul class="alert-message-list">
+              @for (error of errors; track error) {
+                <li class="alert-message">{{ error }}</li>
+              }
+              showMessages
+            </ul>
+          </nb-alert>
+        }
 
-        <nb-alert *ngIf="messages?.length" outline="success" role="alert">
-          <p class="alert-title"><b>Hooray!</b></p>
-          <ul class="alert-message-list">
-            <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
-          </ul>
-        </nb-alert>
+        @if (messages?.length) {
+          <nb-alert outline="success" role="alert">
+            <p class="alert-title"><b>Hooray!</b></p>
+            <ul class="alert-message-list">
+              @for (message of messages; track message) {
+                <li class="alert-message">{{ message }}</li>
+              }
+            </ul>
+          </nb-alert>
+        }
 
         <!-- cahrgement en cours -->
-        <ng-container *ngIf="loading">
+        @if (loading) {
           Chargement...
-        </ng-container>
+        }
 
         <!-- L'adhérent n'a pas crée de compte -->
-        <ng-container *ngIf="!aRole && !loading">
+        @if (!aRole && !loading) {
           {{ adherent.nom }} {{ adherent.prenom }} n'a pas encore créé de compte
-
           <button status='success' type="submit" nbButton
-                  (click)="demanderEnvoiNailPreInscription()">
+            (click)="demanderEnvoiNailPreInscription()">
             Envoyer un mail de préinscription
           </button>
-        </ng-container>
+        }
 
         <!-- L'adhérent a  créé un compte -->
-        <ng-container *ngIf="aRole && !loading">
+        @if (aRole && !loading) {
           <form
             (ngSubmit)="submit(form)"
             #form="ngForm"
-          >
-
+            >
             <div class="form-group row">
               <label for="input-role" class="label col-sm-3 col-form-label">Activer le compte : </label>
               <div class="col-sm-9">
                 <nb-toggle labelPosition="right" [checked]="compteActive"
-                           (change)="chargerStatutAuthentification($event)"> Compte activé
+                  (change)="chargerStatutAuthentification($event)"> Compte activé
                 </nb-toggle>
               </div>
             </div>
-
             <div class="form-group row">
               <label for="input-role" class="label col-sm-3 col-form-label">Profil de droits :</label>
               <div class="col-sm-9">
@@ -58,7 +63,7 @@
                   id="input-role"
                   name="role"
                   fullWidth
-                >
+                  >
                   <nb-radio value="ADHERENT">Adhérent</nb-radio>
                   <nb-radio value="RES_ATELIER">Responsable atelier</nb-radio>
                   <nb-radio value="CONSEIL">Conseil administration</nb-radio>
@@ -66,17 +71,15 @@
                 </nb-radio-group>
               </div>
             </div>
-
             <button nbButton
-                    fullWidth
-                    status="success"
-                    [disabled]="submitted || !form.valid"
-                    [class.btn-pulse]="submitted">
+              fullWidth
+              status="success"
+              [disabled]="submitted || !form.valid"
+              [class.btn-pulse]="submitted">
               Valider
             </button>
-
           </form>
-        </ng-container>
+        }
 
       </nb-card-body>
     </nb-card>

@@ -6,75 +6,93 @@
         <h1 id="title" class="title">JALLE ASTRONOMIE</h1>
         <p class="sub-title">Enregistrement de votre compte : {{mail}}</p>
 
-        <nb-alert *ngIf="showMessages.error && errors?.length && !submitted" outline="danger" role="alert">
-          <p class="alert-title"><b>Erreur</b></p>
-          <ul class="alert-message-list">
-            <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
-            showMessages
-          </ul>
-        </nb-alert>
+        @if (showMessages.error && errors?.length && !submitted) {
+          <nb-alert outline="danger" role="alert">
+            <p class="alert-title"><b>Erreur</b></p>
+            <ul class="alert-message-list">
+              @for (error of errors; track error) {
+                <li class="alert-message">{{ error }}</li>
+              }
+              showMessages
+            </ul>
+          </nb-alert>
+        }
 
-        <nb-alert *ngIf="showMessages.success && messages?.length && !submitted" outline="success" role="alert">
-          <p class="alert-title"><b>Hooray!</b></p>
-          <ul class="alert-message-list">
-            <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
-          </ul>
-        </nb-alert>
+        @if (showMessages.success && messages?.length && !submitted) {
+          <nb-alert outline="success" role="alert">
+            <p class="alert-title"><b>Hooray!</b></p>
+            <ul class="alert-message-list">
+              @for (message of messages; track message) {
+                <li class="alert-message">{{ message }}</li>
+              }
+            </ul>
+          </nb-alert>
+        }
 
         <form (ngSubmit)="register()" #form="ngForm" aria-labelledby="title" >
 
           <div class="form-control-group">
             <label class="label" for="input-password">Votre mot de passe:</label>
             <input nbInput
-                   [(ngModel)]="user.password"
-                   #password="ngModel"
-                   type="password"
-                   id="input-password"
-                   name="password"
-                   placeholder="Mot de passe"
-                   pattern="^[a-zA-Z0-9._%!?#\\u00e1\\u00e0\\u00e2\\u00e4\\u00e3\\u00e5\\u00e7\\u00e9\\u00e8\\u00ea\\u00eb\\u00ed\\u00ec\\u00ee\\u00ef\\u00f1\\u00f3\\u00f2\\u00f4\\u00f6\\u00f5\\u00fa\\u00f9\\u00fb\\u00fc\\u00fd\\u00ff\\u00e6\\u0153\\u00c1\\u00c0\\u00c2\\u00c4\\u00c3\\u00c5\\u00c7\\u00c9\\u00c8\\u00ca\\u00cb\\u00cd\\u00cc\\u00ce\\u00cf\\u00d1\\u00d3\\u00d2\\u00d4\\u00d6\\u00d5\\u00da\\u00d9\\u00db\\u00dc\\u00dd\\u0178-]{5,15}$"
-                   fullWidth
-                   fieldSize="large"
-                   [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
-                   [required]="true"
-                   [minlength]="5"
-                   [maxlength]="15"
-                   [attr.aria-invalid]="password.invalid && password.touched ? true : null">
-            <ng-container *ngIf="password.invalid && password.touched">
-              <p class="caption status-danger" *ngIf="password.errors?.required">
-                Mot de passe nécésaire
-              </p>
-              <p class="caption status-danger" *ngIf="password.errors?.minlength || password.errors?.maxlength">
-                Le mot de passe doit contenir entre 5 et 15 caracteres
-              </p>
-              <p class="caption status-danger" *ngIf="password.errors?.pattern">
-                Erreur dans le format. Le mot de passe peut contenir uniquement les caractères spéciaux  suivants :  ._%!?#
-              </p>
-            </ng-container>
+              [(ngModel)]="user.password"
+              #password="ngModel"
+              type="password"
+              id="input-password"
+              name="password"
+              placeholder="Mot de passe"
+              pattern="^[a-zA-Z0-9._%!?#\\u00e1\\u00e0\\u00e2\\u00e4\\u00e3\\u00e5\\u00e7\\u00e9\\u00e8\\u00ea\\u00eb\\u00ed\\u00ec\\u00ee\\u00ef\\u00f1\\u00f3\\u00f2\\u00f4\\u00f6\\u00f5\\u00fa\\u00f9\\u00fb\\u00fc\\u00fd\\u00ff\\u00e6\\u0153\\u00c1\\u00c0\\u00c2\\u00c4\\u00c3\\u00c5\\u00c7\\u00c9\\u00c8\\u00ca\\u00cb\\u00cd\\u00cc\\u00ce\\u00cf\\u00d1\\u00d3\\u00d2\\u00d4\\u00d6\\u00d5\\u00da\\u00d9\\u00db\\u00dc\\u00dd\\u0178-]{5,15}$"
+              fullWidth
+              fieldSize="large"
+              [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
+              [required]="true"
+              [minlength]="5"
+              [maxlength]="15"
+              [attr.aria-invalid]="password.invalid && password.touched ? true : null">
+            @if (password.invalid && password.touched) {
+              @if (password.errors?.required) {
+                <p class="caption status-danger">
+                  Mot de passe nécésaire
+                </p>
+              }
+              @if (password.errors?.minlength || password.errors?.maxlength) {
+                <p class="caption status-danger">
+                  Le mot de passe doit contenir entre 5 et 15 caracteres
+                </p>
+              }
+              @if (password.errors?.pattern) {
+                <p class="caption status-danger">
+                  Erreur dans le format. Le mot de passe peut contenir uniquement les caractères spéciaux  suivants :  ._%!?#
+                </p>
+              }
+            }
           </div>
 
           <div class="form-control-group">
             <label class="label" for="input-re-password">Confirmer votre mot de passe:</label>
             <input nbInput
-                   [(ngModel)]="user.confirmPassword"
-                   #rePass="ngModel"
-                   type="password"
-                   id="input-re-password"
-                   name="rePass"
-                   placeholder="Mot de passe"
-                   fullWidth
-                   fieldSize="large"
-                   [status]="rePass.dirty ? (rePass.invalid || password.value !== rePass.value  ? 'danger' : 'success') : 'basic'"
-                   [required]="getConfigValue('forms.validation.password.required')"
-                   [attr.aria-invalid]="rePass.invalid && rePass.touched ? true : null">
-            <ng-container *ngIf="rePass.invalid && rePass.touched">
-              <p class="caption status-danger" *ngIf="rePass.errors?.required">
-                Mot de passe de confirmation nécésaire
-              </p>
-              <p class="caption status-danger" *ngIf="password.value !== rePass.value && !rePass.errors?.required">
-                Incohérence entre les deux mots de passe
-              </p>
-            </ng-container>
+              [(ngModel)]="user.confirmPassword"
+              #rePass="ngModel"
+              type="password"
+              id="input-re-password"
+              name="rePass"
+              placeholder="Mot de passe"
+              fullWidth
+              fieldSize="large"
+              [status]="rePass.dirty ? (rePass.invalid || password.value !== rePass.value  ? 'danger' : 'success') : 'basic'"
+              [required]="getConfigValue('forms.validation.password.required')"
+              [attr.aria-invalid]="rePass.invalid && rePass.touched ? true : null">
+            @if (rePass.invalid && rePass.touched) {
+              @if (rePass.errors?.required) {
+                <p class="caption status-danger">
+                  Mot de passe de confirmation nécésaire
+                </p>
+              }
+              @if (password.value !== rePass.value && !rePass.errors?.required) {
+                <p class="caption status-danger">
+                  Incohérence entre les deux mots de passe
+                </p>
+              }
+            }
           </div>
 
           <div class="form-control-group accept-group" >
@@ -84,11 +102,11 @@
           </div>
 
           <button nbButton
-                  fullWidth
-                  status="primary"
-                  size="large"
-                  [disabled]="submitted || !form.valid || password.value !== rePass.value"
-                  [class.btn-pulse]="submitted">
+            fullWidth
+            status="primary"
+            size="large"
+            [disabled]="submitted || !form.valid || password.value !== rePass.value"
+            [class.btn-pulse]="submitted">
             Enregistrer
           </button>
         </form>

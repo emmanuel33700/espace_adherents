@@ -16,12 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import javax.validation.Valid;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -47,7 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-04-11T08:45:53.348Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-04-11T08:45:53.348Z[GMT]")
 @RestController
 public class DocumentsApiController implements DocumentsApi {
 
@@ -121,17 +120,13 @@ public class DocumentsApiController implements DocumentsApi {
                 cheminFichierDestination.append("/");
                 cheminFichierDestination.append(body.getNomFichier());
 
-                Files.move(Paths.get(cheminFichierSource.toString()), Paths.get(cheminFichierDestination.toString()), StandardCopyOption.REPLACE_EXISTING);
-
                 Set<PosixFilePermission> perms = new HashSet<>();
                 perms.add(PosixFilePermission.OWNER_READ);
                 perms.add(PosixFilePermission.OWNER_WRITE);
 
-                perms.add(PosixFilePermission.OTHERS_READ);
+                Files.setPosixFilePermissions(Paths.get(cheminFichierSource.toString()), perms);
 
-                perms.add(PosixFilePermission.GROUP_READ);
-
-                Files.setPosixFilePermissions(Paths.get(cheminFichierDestination.toString()), perms);
+                Files.move(Paths.get(cheminFichierSource.toString()), Paths.get(cheminFichierDestination.toString()), StandardCopyOption.REPLACE_EXISTING);
 
                 return new ResponseEntity<Void>(HttpStatus.CREATED);
             } else {
@@ -349,18 +344,38 @@ public class DocumentsApiController implements DocumentsApi {
      * @param idFichier
      * @return 
      */
-    public ResponseEntity<Document> getFichier(@Parameter(in = ParameterIn.PATH, description = "id du fichier", required = true, schema = @Schema()) @PathVariable("idFichier") Long idFichier) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Document>(objectMapper.readValue("{\n  \"libelleLong\" : \"document sur les étoiles\",\n  \"dateCreation\" : \"2020-01-18T21:00:00\",\n  \"id\" : 1225668,\n  \"idAuthority\" : 1,\n  \"nomFichier\" : \"055555884.pdf\",\n  \"idDossierRattachement\" : 1225668,\n  \"libelleCourt\" : \"Etoiles\"\n}", Document.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                LOGGER.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Document>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+    @Override
+    public ResponseEntity<org.springframework.core.io.Resource> getFichier(@PathVariable("idFichier") Long idFichier) {
+        DocumentDto document = documentService.getDocument(idFichier);
+        if (document == null || !document.isFichier() || document.isDossier()) {
+            return ResponseEntity.notFound().build();
         }
 
-        return new ResponseEntity<Document>(HttpStatus.NOT_IMPLEMENTED);
+        String nom = document.getNonFichier();
+        if (nom == null || nom.isBlank() || nom.startsWith(".") || nom.toLowerCase(java.util.Locale.ROOT).endsWith(".tmp")
+                || nom.contains("/") || nom.contains("\\") || nom.chars().anyMatch(Character::isISOControl)) {
+            return ResponseEntity.notFound().build();
+        }
+        try {
+            Path repertoire = Paths.get(env.getRequiredProperty("folder.path.document")).toRealPath();
+            Path fichier = repertoire.resolve(nom).toRealPath();
+            if (!fichier.startsWith(repertoire) || !Files.isRegularFile(fichier)) {
+                return ResponseEntity.notFound().build();
+            }
+            org.springframework.core.io.Resource contenu = new org.springframework.core.io.InputStreamResource(Files.newInputStream(fichier));
+            return ResponseEntity.ok()
+                    .contentType(org.springframework.http.MediaType.APPLICATION_OCTET_STREAM)
+                    .header("Content-Disposition", org.springframework.http.ContentDisposition.attachment()
+                            .filename(nom, java.nio.charset.StandardCharsets.UTF_8).build().toString())
+                    .header("X-Content-Type-Options", "nosniff")
+                    .header("Cache-Control", "no-store")
+                    .body(contenu);
+        } catch (java.nio.file.NoSuchFileException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IOException e) {
+            LOGGER.error("Erreur de lecture du document {}", idFichier, e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     /**
@@ -412,14 +427,7 @@ public class DocumentsApiController implements DocumentsApi {
      * @return
      */
     private long getIdAdherentConnecte() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        String username = null;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (username != null) {
            AdherentDto dto = this.adherentService.recupererAdherent(username);

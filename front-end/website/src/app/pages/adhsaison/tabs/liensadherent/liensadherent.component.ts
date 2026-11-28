@@ -16,9 +16,10 @@ interface ListeAdherentsOption {
 }
 
 @Component({
-  selector: 'ngx-tab2',
-  styleUrls: ['./liensadherent.component.scss'],
-  templateUrl: './liensadherent.component.html',
+    selector: 'ngx-tab2',
+    styleUrls: ['./liensadherent.component.scss'],
+    templateUrl: './liensadherent.component.html',
+    standalone: false
 })
 
 export class LiensadherentComponent implements OnInit {

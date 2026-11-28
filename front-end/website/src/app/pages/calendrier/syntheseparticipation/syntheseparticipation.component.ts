@@ -8,9 +8,10 @@ import {Router} from '@angular/router';
 
 
 @Component({
-  selector: 'ngx-form-layouts',
-  styleUrls: ['./syntheseparticipation.component.scss'],
-  templateUrl: './syntheseparticipation.component.html',
+    selector: 'ngx-form-layouts',
+    styleUrls: ['./syntheseparticipation.component.scss'],
+    templateUrl: './syntheseparticipation.component.html',
+    standalone: false
 })
 export class SyntheseparticipationComponent implements OnInit {
 

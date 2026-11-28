@@ -8,9 +8,10 @@ import {DatePipe} from '@angular/common';
 
 
 @Component({
-  selector: 'ngx-list',
-  templateUrl: 'listeparticipations.component.html',
-  styleUrls: ['listeparticipations.component.scss'],
+    selector: 'ngx-list',
+    templateUrl: 'listeparticipations.component.html',
+    styleUrls: ['listeparticipations.component.scss'],
+    standalone: false
 })
 
 export class ListeparticipationsComponent implements OnInit  {

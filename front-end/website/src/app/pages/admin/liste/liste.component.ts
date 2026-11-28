@@ -6,9 +6,10 @@ import {Saison} from '../../../../api/generated/utilitaire/models/saison';
 import {FormGroup, NgForm} from '@angular/forms';
 
 @Component({
-  selector: 'ngx-form-layouts',
-  styleUrls: ['./liste.component.scss'],
-  templateUrl: './liste.component.html',
+    selector: 'ngx-form-layouts',
+    styleUrls: ['./liste.component.scss'],
+    templateUrl: './liste.component.html',
+    standalone: false
 })
 export class ListeComponent implements OnInit {
 

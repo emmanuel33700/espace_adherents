@@ -15,9 +15,10 @@ import {TokenService} from '../../@core/utils/token.service';
 import {SaisonService} from '../../../api/generated/utilitaire/services/saison.service';
 
 @Component({
-  selector: 'ngx-playground-auth',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+    selector: 'ngx-playground-auth',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 
 

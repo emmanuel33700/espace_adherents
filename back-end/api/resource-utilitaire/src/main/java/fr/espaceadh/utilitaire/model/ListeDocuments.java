@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
  * ListeDocuments
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-08T08:11:52.652Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-05-08T08:11:52.652Z[GMT]")
 
 
 public class ListeDocuments extends ArrayList<Document>  {

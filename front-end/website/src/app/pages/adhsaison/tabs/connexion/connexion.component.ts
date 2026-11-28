@@ -10,9 +10,10 @@ import {LoggerService} from '../../../../@core/utils/logger.service';
 import {AdherentService} from '../../../../../api/generated/adherents/services/adherent.service';
 
 @Component({
-  selector: 'ngx-tab2',
-  styleUrls: ['./connexion.component.scss'],
-  templateUrl: './connexion.component.html',
+    selector: 'ngx-tab2',
+    styleUrls: ['./connexion.component.scss'],
+    templateUrl: './connexion.component.html',
+    standalone: false
 })
 export class ConnexionComponent implements OnInit {
 

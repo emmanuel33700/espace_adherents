@@ -5,14 +5,14 @@ import fr.espaceadh.utilitaire.model.ArborescenceDocuments;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * ArborescenceDocumentsInit
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-04-17T10:24:51.504Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-04-17T10:24:51.504Z[GMT]")
 
 
 public class ArborescenceDocumentsInit extends ArrayList<ArborescenceDocuments>  {

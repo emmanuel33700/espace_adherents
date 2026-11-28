@@ -11,11 +11,12 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'ngx-auth',
-  template: `
+    selector: 'ngx-auth',
+    template: `
     <nb-layout>
     </nb-layout>
   `,
+    standalone: false
 })
 export class NbAuthComponent implements OnDestroy {
 

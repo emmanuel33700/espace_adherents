@@ -4,11 +4,13 @@ import {FormGroup, NgForm} from '@angular/forms';
 import {LoggerService} from '../../../../@core/utils';
 import {DocumentationService} from '../../../../../api/generated/utilitaire/services/documentation.service';
 import {Document} from '../../../../../api/generated/utilitaire/models/document';
+import {validatePdfFile} from './pdf-validation';
 
 @Component({
-  selector: 'ngx-showcase-dialog',
-  templateUrl: 'dialog-ajout-docs.component.html',
-  styleUrls: ['dialog-ajout-docs.component.scss'],
+    selector: 'ngx-showcase-dialog',
+    templateUrl: 'dialog-ajout-docs.component.html',
+    styleUrls: ['dialog-ajout-docs.component.scss'],
+    standalone: false
 })
 export class DialogAjoutDocsComponent {
 
@@ -53,6 +55,9 @@ export class DialogAjoutDocsComponent {
   }
 
   validerDocument(form: NgForm) {
+    if (this.loadingFichier || !this.valideForm || !this.file || !this.fileBlob) {
+      return;
+    }
 
     // activation du spinner
     this.loadingFichier = true;
@@ -63,9 +68,23 @@ export class DialogAjoutDocsComponent {
     if (this.fileBlob != null) {
       const idFichier: number = Date.now();
 
-      // Netoyage du nom du fichier
+      // Nom ASCII portable, limité à 255 octets, en conservant l'extension.
       const sanitize = require('sanitize-filename');
-      const filenameSanitize = sanitize(idFichier + '-' + this.file.name);
+      const nomNettoye = sanitize(this.file.name.normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9._-]+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/\.{2,}/g, '.')
+        .replace(/^[._-]+|[._-]+$/g, ''));
+      const prefixe = idFichier + '-';
+      const dernierPoint = nomNettoye.lastIndexOf('.');
+      const indexExtension = nomNettoye.length - dernierPoint < 255 - prefixe.length ? dernierPoint : -1;
+      const extension = indexExtension > 0 ? nomNettoye.slice(indexExtension) : '';
+      const nomSansExtension = indexExtension > 0 ? nomNettoye.slice(0, indexExtension) : nomNettoye;
+      const nomTronque = (nomSansExtension || 'document')
+        .slice(0, 255 - prefixe.length - extension.length)
+        .replace(/[._-]+$/g, '') || 'document';
+      const filenameSanitize = prefixe + nomTronque + extension;
 
       document.idDossierRattachement = this.idRepertoireRatachement;
       document.libelleCourt = this.documentForm.fichier;
@@ -89,6 +108,7 @@ export class DialogAjoutDocsComponent {
             this.loggerService.info(JSON.stringify(data));
           },
           (error) => {
+            this.loadingFichier = false;
             this.loggerService.error(JSON.stringify(error));
             this.toastrService.danger(
               'Erreur technique lors de enregistrement',
@@ -106,6 +126,7 @@ export class DialogAjoutDocsComponent {
                   this.loggerService.info(JSON.stringify(data));
                 },
                 (error) => {
+                  this.loadingFichier = false;
                   this.loggerService.error(JSON.stringify(error));
                   this.toastrService.danger(
                     'Erreur technique lors de enregistrement',
@@ -137,28 +158,35 @@ export class DialogAjoutDocsComponent {
    *
    * @param event
    */
-  async onFileSelected(event) {
-    this.file = event.target.files[0];
-this.errors = null;
+  async onFileSelected(event: Event) {
+    if (this.loadingFichier) {
+      return;
+    }
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    this.valideForm = false;
+    this.fileBlob = null;
+    this.file = file || null;
+    this.errors = [];
 
-    this.loggerService.info('Filename : ' + this.file.name);
-    this.loggerService.info('Type : ' + this.file.type);
-    this.loggerService.info('Size : ' + this.file.size);
+    if (!file) {
+      return;
+    }
 
-    if (this.file.type !== 'application/pdf') {
-      this.loggerService.info('Le fichier téléchargé n\'est pas un PDF');
-      this.errors.push('LE fichier téléchargé n\'est pas un PDF');
+    const errors = await validatePdfFile(file);
+    // Une sélection plus récente doit primer sur une lecture encore en cours.
+    if (this.file !== file) {
+      return;
+    }
+    this.errors = errors;
+    if (errors.length) {
       this.file = null;
-    } else if (this.file.size > 5000000) {
-      this.loggerService.info('Le fichier téléchargé est trop gros ');
-      this.errors.push('Le fichier téléchargé est trop gros');
-      this.file = null;
-    } else {
-    const fileToBlob = async (file) => new Blob([new Uint8Array(await file.arrayBuffer())], {type: file.type});
-    this.fileBlob = await fileToBlob(this.file);
+      input.value = '';
+      return;
+    }
 
+    this.fileBlob = new Blob([file], {type: 'application/pdf'});
     this.valideForm = true;
-}
   }
 
 

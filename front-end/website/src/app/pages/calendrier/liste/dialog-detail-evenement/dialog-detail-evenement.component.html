@@ -2,266 +2,270 @@
   <nb-card-header>{{ title }}</nb-card-header>
   <nb-card-body>
 
-    <ng-container *ngIf="droitEditionEvenement">
-
-
+    @if (droitEditionEvenement) {
       <nb-actions fullWidth>
-
         <nb-action>
           <nb-toggle labelPosition="right" [(ngModel)]="statutToogle" (change)="participerEvenement($event)">Je
             participe à l'évènement
           </nb-toggle>
         </nb-action>
-          <nb-action>
-            <nb-icon class="action-icon" icon="trash-2" (click)="supprimerEvenement()"></nb-icon>
-            <span>Supprimer l'évènement</span>
-          </nb-action>
+        <nb-action>
+          <nb-icon class="action-icon" icon="trash-2" (click)="supprimerEvenement()"></nb-icon>
+          <span>Supprimer l'évènement</span>
+        </nb-action>
       </nb-actions>
-    <HR>
-
-
-      <nb-alert *ngIf="errors?.length" outline="danger" role="alert">
-        <p class="alert-title"><b>Erreur</b></p>
-        <ul class="alert-message-list">
-          <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
-          showMessages
-        </ul>
-      </nb-alert>
-
-      <nb-alert *ngIf="messages?.length" outline="success" role="alert">
-        <p class="alert-title"><b>Hooray!</b></p>
-        <ul class="alert-message-list">
-          <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
-        </ul>
-      </nb-alert>
-
+      <HR>
+      @if (errors?.length) {
+        <nb-alert outline="danger" role="alert">
+          <p class="alert-title"><b>Erreur</b></p>
+          <ul class="alert-message-list">
+            @for (error of errors; track error) {
+              <li class="alert-message">{{ error }}</li>
+            }
+            showMessages
+          </ul>
+        </nb-alert>
+      }
+      @if (messages?.length) {
+        <nb-alert outline="success" role="alert">
+          <p class="alert-title"><b>Hooray!</b></p>
+          <ul class="alert-message-list">
+            @for (message of messages; track message) {
+              <li class="alert-message">{{ message }}</li>
+            }
+          </ul>
+        </nb-alert>
+      }
       <form
         (ngSubmit)="modifierEvenement(form)"
         #form="ngForm"
-      >
-
+        >
         <div class="form-group row">
           <label for="input-dateDebut" class="label col-sm-3 col-form-label">Date de début</label>
           <div class="col-sm-9">
             <input nbInput
-                   [(ngModel)]="evenementForm.dateDebut"
-                   #dateDebut="ngModel"
-                   pattern="(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/\d{4}"
-                   id="input-dateDebut"
-                   name="dateDebut"
-                   placeholder="17/02/2000"
-                   fullWidth
-                   [status]="dateDebut.dirty ? (dateDebut.invalid  ? 'danger' : 'success') : 'basic'"
-                   [required]="true"
-                   [minlength]="10"
-                   [maxlength]="10"
-                   [attr.aria-invalid]="dateDebut.invalid && dateDebut.touched ? true : null">
-            <ng-container *ngIf="dateDebut.invalid && dateDebut.touched">
-              <p class="caption status-danger" *ngIf="dateDebut.errors?.minlength || dateDebut.errors?.maxlength">
-                Le date doit avoir 10 caracteres
-              </p>
-              <p class="caption status-danger" *ngIf="dateDebut.errors?.pattern">
-                Erreur dans le format de date
-              </p>
-            </ng-container>
+              [(ngModel)]="evenementForm.dateDebut"
+              #dateDebut="ngModel"
+              pattern="(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/\d{4}"
+              id="input-dateDebut"
+              name="dateDebut"
+              placeholder="17/02/2000"
+              fullWidth
+              [status]="dateDebut.dirty ? (dateDebut.invalid  ? 'danger' : 'success') : 'basic'"
+              [required]="true"
+              [minlength]="10"
+              [maxlength]="10"
+              [attr.aria-invalid]="dateDebut.invalid && dateDebut.touched ? true : null">
+            @if (dateDebut.invalid && dateDebut.touched) {
+              @if (dateDebut.errors?.minlength || dateDebut.errors?.maxlength) {
+                <p class="caption status-danger">
+                  Le date doit avoir 10 caracteres
+                </p>
+              }
+              @if (dateDebut.errors?.pattern) {
+                <p class="caption status-danger">
+                  Erreur dans le format de date
+                </p>
+              }
+            }
           </div>
         </div>
-
-
         <div class="form-group row">
           <label for="input-heureDebut" class="label col-sm-3 col-form-label">heure de début</label>
           <div class="col-sm-9">
             <input nbInput
-                   [(ngModel)]="evenementForm.heureDebut"
-                   #heureDebut="ngModel"
-                   pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"
-                   id="input-heureDebut"
-                   name="heureDebut"
-                   placeholder="10:00"
-                   fullWidth
-                   [status]="heureDebut.dirty ? (heureDebut.invalid  ? 'danger' : 'success') : 'basic'"
-                   [required]="true"
-                   [minlength]="5"
-                   [maxlength]="5"
-                   [attr.aria-invalid]="heureDebut.invalid && heureDebut.touched ? true : null">
-            <ng-container *ngIf="heureDebut.invalid && heureDebut.touched">
-              <p class="caption status-danger" *ngIf="heureDebut.errors?.minlength || heureDebut.errors?.maxlength">
-                L'heure doit avoir 5 caracteres
-              </p>
-              <p class="caption status-danger" *ngIf="heureDebut.errors?.pattern">
-                Erreur dans le format de l'heure
-              </p>
-            </ng-container>
+              [(ngModel)]="evenementForm.heureDebut"
+              #heureDebut="ngModel"
+              pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"
+              id="input-heureDebut"
+              name="heureDebut"
+              placeholder="10:00"
+              fullWidth
+              [status]="heureDebut.dirty ? (heureDebut.invalid  ? 'danger' : 'success') : 'basic'"
+              [required]="true"
+              [minlength]="5"
+              [maxlength]="5"
+              [attr.aria-invalid]="heureDebut.invalid && heureDebut.touched ? true : null">
+            @if (heureDebut.invalid && heureDebut.touched) {
+              @if (heureDebut.errors?.minlength || heureDebut.errors?.maxlength) {
+                <p class="caption status-danger">
+                  L'heure doit avoir 5 caracteres
+                </p>
+              }
+              @if (heureDebut.errors?.pattern) {
+                <p class="caption status-danger">
+                  Erreur dans le format de l'heure
+                </p>
+              }
+            }
           </div>
         </div>
-
-
         <div class="form-group row">
           <label for="input-dateFin" class="label col-sm-3 col-form-label">Date de Fin</label>
           <div class="col-sm-9">
             <input nbInput
-                   [(ngModel)]="evenementForm.dateFin"
-                   #dateFin="ngModel"
-                   pattern="(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/\d{4}"
-                   id="input-dateFin"
-                   name="dateFin"
-                   placeholder="17/02/2000"
-                   fullWidth
-                   [status]="dateFin.dirty ? (dateFin.invalid  ? 'danger' : 'success') : 'basic'"
-                   [required]="true"
-                   [minlength]="10"
-                   [maxlength]="10"
-                   [attr.aria-invalid]="dateFin.invalid && dateFin.touched ? true : null">
-            <ng-container *ngIf="dateFin.invalid && dateFin.touched">
-              <p class="caption status-danger" *ngIf="dateFin.errors?.minlength || dateFin.errors?.maxlength">
-                Le date doit avoir 10 caracteres
-              </p>
-              <p class="caption status-danger" *ngIf="dateFin.errors?.pattern">
-                Erreur dans le format de date
-              </p>
-            </ng-container>
+              [(ngModel)]="evenementForm.dateFin"
+              #dateFin="ngModel"
+              pattern="(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/\d{4}"
+              id="input-dateFin"
+              name="dateFin"
+              placeholder="17/02/2000"
+              fullWidth
+              [status]="dateFin.dirty ? (dateFin.invalid  ? 'danger' : 'success') : 'basic'"
+              [required]="true"
+              [minlength]="10"
+              [maxlength]="10"
+              [attr.aria-invalid]="dateFin.invalid && dateFin.touched ? true : null">
+            @if (dateFin.invalid && dateFin.touched) {
+              @if (dateFin.errors?.minlength || dateFin.errors?.maxlength) {
+                <p class="caption status-danger">
+                  Le date doit avoir 10 caracteres
+                </p>
+              }
+              @if (dateFin.errors?.pattern) {
+                <p class="caption status-danger">
+                  Erreur dans le format de date
+                </p>
+              }
+            }
           </div>
         </div>
-
-
         <div class="form-group row">
           <label for="input-heureFin" class="label col-sm-3 col-form-label">heure de fin</label>
           <div class="col-sm-9">
             <input nbInput
-                   [(ngModel)]="evenementForm.heureFin "
-                   #heureFin="ngModel"
-                   pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"
-                   id="input-heureFin"
-                   name="heureFin"
-                   placeholder="11:00"
-                   fullWidth
-                   [status]="heureFin.dirty ? (heureFin.invalid  ? 'danger' : 'success') : 'basic'"
-                   [required]="true"
-                   [minlength]="5"
-                   [maxlength]="5"
-                   [attr.aria-invalid]="heureFin.invalid && heureFin.touched ? true : null">
-            <ng-container *ngIf="heureFin.invalid && heureFin.touched">
-              <p class="caption status-danger" *ngIf="heureFin.errors?.minlength || heureFin.errors?.maxlength">
-                L'heure doit avoir 5 caracteres
-              </p>
-              <p class="caption status-danger" *ngIf="heureFin.errors?.pattern">
-                Erreur dans le format de l'heure
-              </p>
-            </ng-container>
+              [(ngModel)]="evenementForm.heureFin "
+              #heureFin="ngModel"
+              pattern="^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$"
+              id="input-heureFin"
+              name="heureFin"
+              placeholder="11:00"
+              fullWidth
+              [status]="heureFin.dirty ? (heureFin.invalid  ? 'danger' : 'success') : 'basic'"
+              [required]="true"
+              [minlength]="5"
+              [maxlength]="5"
+              [attr.aria-invalid]="heureFin.invalid && heureFin.touched ? true : null">
+            @if (heureFin.invalid && heureFin.touched) {
+              @if (heureFin.errors?.minlength || heureFin.errors?.maxlength) {
+                <p class="caption status-danger">
+                  L'heure doit avoir 5 caracteres
+                </p>
+              }
+              @if (heureFin.errors?.pattern) {
+                <p class="caption status-danger">
+                  Erreur dans le format de l'heure
+                </p>
+              }
+            }
           </div>
         </div>
-
         <div class="form-group row">
           <label for="input-titre" class="label col-sm-3 col-form-label">Titre de l'évènement</label>
           <div class="col-sm-9">
             <input nbInput
-                   [(ngModel)]="evenementForm.titre"
-                   #titre="ngModel"
-                   id="input-titre"
-                   name="titre"
-                   placeholder="Conférence sur le soleil"
-                   fullWidth
-                   [status]="titre.dirty ? (titre.invalid  ? 'danger' : 'success') : 'basic'"
-                   [required]="true"
-                   [minlength]="3"
-                   [maxlength]="100"
-                   [attr.aria-invalid]="titre.invalid && titre.touched ? true : null">
-            <ng-container *ngIf="titre.invalid && titre.touched">
-              <p class="caption status-danger" *ngIf="titre.errors?.required">
-                Le nom est nécésaire
-              </p>
-              <p class="caption status-danger" *ngIf="titre.errors?.minlength || titre.errors?.maxlength">
-                Le titre doit comporter entre 3 en 100 characteres
-              </p>
-            </ng-container>
+              [(ngModel)]="evenementForm.titre"
+              #titre="ngModel"
+              id="input-titre"
+              name="titre"
+              placeholder="Conférence sur le soleil"
+              fullWidth
+              [status]="titre.dirty ? (titre.invalid  ? 'danger' : 'success') : 'basic'"
+              [required]="true"
+              [minlength]="3"
+              [maxlength]="100"
+              [attr.aria-invalid]="titre.invalid && titre.touched ? true : null">
+            @if (titre.invalid && titre.touched) {
+              @if (titre.errors?.required) {
+                <p class="caption status-danger">
+                  Le nom est nécésaire
+                </p>
+              }
+              @if (titre.errors?.minlength || titre.errors?.maxlength) {
+                <p class="caption status-danger">
+                  Le titre doit comporter entre 3 en 100 characteres
+                </p>
+              }
+            }
           </div>
         </div>
-
         <div class="form-group row">
           <label for="input-description" class="label col-sm-3 col-form-label">Description de l'évènement</label>
           <div class="col-sm-9">
             <textarea nbInput
-                      [(ngModel)]="evenementForm.description"
-                      #description="ngModel"
-                      id="input-description"
-                      name="description"
-                      placeholder="Conférence sur le soleil qui aura se déroulera dans la salle ..."
-                      fullWidth
-                      [status]="description.dirty ? (description.invalid  ? 'danger' : 'success') : 'basic'"
-                      [required]="false"
-                      [minlength]="3"
-                      [maxlength]="500"
-                      [attr.aria-invalid]="description.invalid && description.touched ? true : null">
+              [(ngModel)]="evenementForm.description"
+              #description="ngModel"
+              id="input-description"
+              name="description"
+              placeholder="Conférence sur le soleil qui aura se déroulera dans la salle ..."
+              fullWidth
+              [status]="description.dirty ? (description.invalid  ? 'danger' : 'success') : 'basic'"
+              [required]="false"
+              [minlength]="3"
+              [maxlength]="500"
+              [attr.aria-invalid]="description.invalid && description.touched ? true : null">
             </textarea>
-            <ng-container *ngIf="description.invalid && description.touched">
-              <p class="caption status-danger" *ngIf="description.errors?.required">
-                Le nom est nécésaire
-              </p>
-              <p class="caption status-danger" *ngIf="description.errors?.minlength || description.errors?.maxlength">
-                Le description doit comporter entre 3 en 500 characteres
-              </p>
-            </ng-container>
+            @if (description.invalid && description.touched) {
+              @if (description.errors?.required) {
+                <p class="caption status-danger">
+                  Le nom est nécésaire
+                </p>
+              }
+              @if (description.errors?.minlength || description.errors?.maxlength) {
+                <p class="caption status-danger">
+                  Le description doit comporter entre 3 en 500 characteres
+                </p>
+              }
+            }
           </div>
         </div>
-
-
         <div class="form-group row">
           <label for="input-demandeEnvoyerMail" class="label col-sm-3 col-form-label">Envoyer un mail
-            d'information</label>
+          d'information</label>
           <nb-checkbox name="demandeEnvoyerMail" id="input-demandeEnvoyerMail"
-                       [(ngModel)]="evenementForm.demandeEnvoyerMail" [required]="false"
-                       (checkedChange)="afficherSelectionGroupe()">
+            [(ngModel)]="evenementForm.demandeEnvoyerMail" [required]="false"
+            (checkedChange)="afficherSelectionGroupe()">
             Envoyer un email
           </nb-checkbox>
         </div>
-
-        <ng-container *ngIf="afficherSelctionActive">
+        @if (afficherSelctionActive) {
           <div class="form-group row">
             <label for="input-selectListe" class="label col-sm-3 col-form-label">Envoyer à une liste</label>
-
             <nb-checkbox name="demandeEnvoyerMailListe" id="input-selectListe"
-                         [(ngModel)]="evenementForm.demandeEnvoyerMailListe" [required]="false"
-                         (checkedChange)="activerSelectionGroupe()">
-
+              [(ngModel)]="evenementForm.demandeEnvoyerMailListe" [required]="false"
+              (checkedChange)="activerSelectionGroupe()">
               <nb-select [(selected)]="selectedMailingListe"
-                         id="select-MailingListe"
-                         [(ngModel)]="selectedMailingListe"
-                         name="selectedMailingListe"
-                         placeholder="Nom du groupe de diffusion"
-                         [disabled]="!selectionGroupeActive"
-              >
-                <nb-option *ngFor="let diffusion of listeDiffusion"
-                           [value]="diffusion.id">{{diffusion.libelle}}</nb-option>
+                id="select-MailingListe"
+                [(ngModel)]="selectedMailingListe"
+                name="selectedMailingListe"
+                placeholder="Nom du groupe de diffusion"
+                [disabled]="!selectionGroupeActive"
+                >
+                @for (diffusion of listeDiffusion; track diffusion) {
+                  <nb-option
+                  [value]="diffusion.id">{{diffusion.libelle}}</nb-option>
+                }
               </nb-select>
             </nb-checkbox>
-
           </div>
-        </ng-container>
-
-
+        }
         <div class="form-group row">
           <label for="input-demandeEnvoyerMail" class="label col-sm-3 col-form-label">Demande une confirmation de participation</label>
           <nb-checkbox name="demandeConfirmationParticipation" id="input-confirmationParticipation"
-                       [(ngModel)]="evenementForm.confirmationParticipation" [required]="false">
+            [(ngModel)]="evenementForm.confirmationParticipation" [required]="false">
             Envoyer un email
           </nb-checkbox>
         </div>
-
-
         <button nbButton
-                fullWidth
-                status="success"
-                [disabled]="submitted || !form.valid"
-                [class.btn-pulse]="submitted">
+          fullWidth
+          status="success"
+          [disabled]="submitted || !form.valid"
+          [class.btn-pulse]="submitted">
           Modifier l'évènement
         </button>
-
-
       </form>
-
-
-    </ng-container>
-    <ng-container *ngIf="!droitEditionEvenement">
+    }
+    @if (!droitEditionEvenement) {
       <div class="form-group row">
         <div class="label col-sm-9 ">Date de début :</div>
         <div class="col-sm-9"> {{evenementForm.dateDebut}} à {{ evenementForm.heureDebut}} </div>
@@ -275,7 +279,6 @@
         <div class="col-sm-9">{{evenementForm.description}}</div>
       </div>
       <HR>
-
       <nb-actions fullWidth>
         <nb-action>
           <nb-toggle labelPosition="right" [(ngModel)]="statutToogle" (change)="participerEvenement($event)">Je
@@ -283,7 +286,7 @@
           </nb-toggle>
         </nb-action>
       </nb-actions>
-    </ng-container>
+    }
 
 
   </nb-card-body>

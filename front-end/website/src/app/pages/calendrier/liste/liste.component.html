@@ -1,7 +1,9 @@
 <nb-card>
   <nb-card-body [nbSpinner]='loading' >
 
-    <full-calendar *ngIf='calendarVisible' [options]="calendarOptions"></full-calendar>
+    @if (calendarVisible) {
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    }
 
   </nb-card-body>
 </nb-card>

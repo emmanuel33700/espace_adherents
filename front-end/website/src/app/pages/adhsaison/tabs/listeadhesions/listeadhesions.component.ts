@@ -8,9 +8,10 @@ import {NbToastrService} from '@nebular/theme';
 
 
 @Component({
-  selector: 'ngx-list',
-  templateUrl: 'listeadhesions.component.html',
-  styleUrls: ['listeadhesions.component.scss'],
+    selector: 'ngx-list',
+    templateUrl: 'listeadhesions.component.html',
+    styleUrls: ['listeadhesions.component.scss'],
+    standalone: false
 })
 
 

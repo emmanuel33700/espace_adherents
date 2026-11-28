@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
  * InscriptionMailingListe
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-15T13:01:26.073Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-15T13:01:26.073Z[GMT]")
 
 
 public class InscriptionMailingListe   {

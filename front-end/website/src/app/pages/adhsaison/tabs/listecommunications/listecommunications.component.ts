@@ -6,9 +6,10 @@ import {LoggerService} from '../../../../@core/utils';
 import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'ngx-list',
-  templateUrl: 'listecommunicationscomponent.html',
-  styleUrls: ['listecommunications.component.scss'],
+    selector: 'ngx-list',
+    templateUrl: 'listecommunicationscomponent.html',
+    styleUrls: ['listecommunications.component.scss'],
+    standalone: false
 })
 
 export class ListecommunicationsComponent implements OnInit {

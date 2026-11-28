@@ -18,12 +18,10 @@ package fr.espaceadh.lib.mail.impl.mailjet;
 
 import fr.espaceadh.lib.mail.dto.*;
 import fr.espaceadh.lib.mail.utilitaires.JSON;
-import com.mailjet.client.ClientOptions;
 import com.mailjet.client.MailjetClient;
 import com.mailjet.client.MailjetRequest;
 import com.mailjet.client.MailjetResponse;
 import com.mailjet.client.errors.MailjetException;
-import com.mailjet.client.errors.MailjetSocketTimeoutException;
 import com.mailjet.client.resource.Emailv31;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -137,7 +135,7 @@ public class GestionMailImpl implements GestionMail {
 
         try {
             //Envoie du mail via mailjet
-            MailjetClient client = new MailjetClient(env.getProperty("mailjet.login"), env.getProperty("mailjet.password"), new ClientOptions("v3.1"));
+            MailjetClient client = new MailjetClient(env.getProperty("mailjet.login"), env.getProperty("mailjet.password"));
 
             response = client.post(request);
 
@@ -151,7 +149,7 @@ public class GestionMailImpl implements GestionMail {
             else {
                 mailOutDto.setStatutEnvoi("error");
             }
-        } catch (MailjetException | MailjetSocketTimeoutException ex) {
+        } catch (MailjetException ex) {
             mailOutDto.setStatutEnvoi("error");
             LOGGER.error(ex.getMessage());
         }

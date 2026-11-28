@@ -10,9 +10,10 @@ import {ListeDeDiffusionService as ListeDeDiffusionServiceUtilitaire} from '../.
 import {ListeDiffusion as MailingListeUtilitaire} from '../../../../../api/generated/utilitaire/models/liste-diffusion';
 
 @Component({
-  selector: 'ngx-form-layouts',
-  styleUrls: ['./admin.component.scss'],
-  templateUrl: './admin.component.html',
+    selector: 'ngx-form-layouts',
+    styleUrls: ['./admin.component.scss'],
+    templateUrl: './admin.component.html',
+    standalone: false
 })
 export class AdminComponent implements OnInit {
 

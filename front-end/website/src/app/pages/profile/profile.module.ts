@@ -17,13 +17,16 @@ import { ProfileComponent } from './profile.component';
 import { ModifierComponent } from './modifier/modifier.component';
 import {FormsModule as ngFormsModule, ReactiveFormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import {ImageCropperModule} from 'ngx-image-cropper';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {ImageCropperComponent} from 'ngx-image-cropper';
+import {NgxMaskDirective} from 'ngx-mask';
 import {DialogPhotoProfilComponent} from './modifier/dialog-photo-profil/dialog-photo-profil.component';
 
-@NgModule({
-    imports: [
-        ThemeModule,
+@NgModule({ declarations: [
+        ProfileComponent,
+        ModifierComponent,
+        DialogPhotoProfilComponent,
+    ], imports: [ThemeModule,
         NbInputModule,
         NbCardModule,
         NbButtonModule,
@@ -38,18 +41,11 @@ import {DialogPhotoProfilComponent} from './modifier/dialog-photo-profil/dialog-
         ngFormsModule,
         CommonModule,
         ngFormsModule,
-        HttpClientModule,
         ReactiveFormsModule,
         NbAlertModule,
         NbSpinnerModule,
-        ImageCropperModule,
+        ImageCropperComponent,
+        NgxMaskDirective,
         NbPopoverModule,
-        NbListModule,
-    ],
-  declarations: [
-    ProfileComponent,
-    ModifierComponent,
-    DialogPhotoProfilComponent,
-  ],
-})
+        NbListModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class ProfileModule { }

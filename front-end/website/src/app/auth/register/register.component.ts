@@ -1,3 +1,4 @@
+import {LoggerService} from '../../@core/utils/logger.service';
 /**
  * @license
  * Copyright Akveo. All Rights Reserved.
@@ -14,9 +15,10 @@ import {Authentification} from '../../../api/generated/authorization/models/auth
 
 
 @Component({
-  selector: 'ngx-register',
-  styleUrls: ['./register.component.scss'],
-  templateUrl: './register.component.html',
+    selector: 'ngx-register',
+    styleUrls: ['./register.component.scss'],
+    templateUrl: './register.component.html',
+    standalone: false
 })
 export class RegisterComponent implements OnInit {
 
@@ -33,7 +35,8 @@ export class RegisterComponent implements OnInit {
   id: number = 0;
   private authDto: Authentification = {};
 
-  constructor(@Inject(NB_AUTH_OPTIONS) protected options = {},
+  constructor(private loggerService: LoggerService,
+              @Inject(NB_AUTH_OPTIONS) protected options = {},
               protected router: Router,
               private route: ActivatedRoute,
               private authentificationService: AuthentificationService) {
@@ -55,13 +58,11 @@ export class RegisterComponent implements OnInit {
     this.authentificationService.addAuthentification({body: this.authDto})
       .subscribe(
         (data) => {
-          console.info(data);
         },
         (error) => {
-          console.info(error);
+          this.loggerService.error(error);
         },
         () => {
-          console.info('fini');
           return this.router.navigateByUrl('/auth/login');
         },
       );
@@ -91,10 +92,9 @@ export class RegisterComponent implements OnInit {
     this.mail = this.route.snapshot.queryParamMap.get('mail');
     if (!isNaN(Number(this.route.snapshot.queryParamMap.get('id')))) {
       this.id = Number(this.route.snapshot.queryParamMap.get('id'));
-      console.info('id ' + this.id);
     } else {
       this.id = -1;
-      console.error('Erreur de récupération de id adherent ');
+      this.loggerService.error('Erreur de récupération de id adherent ');
     }
 
     this.user.email = this.mail;

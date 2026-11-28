@@ -1,19 +1,11 @@
 import {Injectable, Injector} from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor, HttpErrorResponse,
-} from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 
-import {Observable} from 'rxjs/Observable';
+import {Observable, throwError} from 'rxjs';
 import {NbAuthService, NbAuthToken} from '@nebular/auth';
-import {switchMap} from 'rxjs/operators';
+import {catchError, switchMap} from 'rxjs/operators';
 import {LoggerService} from './logger.service';
 import {Router} from '@angular/router';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
-import { throwError } from 'rxjs';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -41,7 +33,7 @@ export class TokenInterceptor implements HttpInterceptor {
               },
             });
           }
-          return next.handle(request).catch(err => this.handleError(err));
+          return next.handle(request).pipe(catchError(err => this.handleError(err)));
         }),
       );
 
@@ -72,7 +64,7 @@ export class TokenInterceptor implements HttpInterceptor {
       this.injector.get(Router).navigateByUrl('/auth/login');
     }
     this.loggerService.error(errorMsg);
-    return throwError( errorMsg );
+    return throwError(() => errorMsg);
 // https://stackoverflow.com/questions/45464852/rxjs-observable-throw-is-not-a-function-angular4
 
   }

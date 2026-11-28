@@ -15,7 +15,7 @@ import fr.espaceadh.adherents.service.AdherentService;
 import fr.espaceadh.lib.mail.GestionMail;
 import fr.espaceadh.lib.mail.dto.ListeMessagesResulteDto;
 import fr.espaceadh.lib.mail.dto.MessageResultDto;
-import io.swagger.annotations.ApiParam;
+
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,8 +25,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import javax.validation.Valid;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -43,18 +43,17 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2020-11-14T09:31:23.328Z[GMT]")
 @Controller
 public class AdherentApiController implements AdherentApi {
 
@@ -103,7 +102,7 @@ public class AdherentApiController implements AdherentApi {
      * @param body
      * @return 
      */
-    public ResponseEntity<Void> ajoutAdherent(@ApiParam(value = "Besoin de l'objet adhérent pour ajouter un adhérent" ,required=true )  @Valid @RequestBody Adherent body) {
+    public ResponseEntity<Void> ajoutAdherent(@Parameter(description = "Besoin de l'objet adhérent pour ajouter un adhérent" ,required=true )  @Valid @RequestBody Adherent body) {
         
         AdherentDto dto = this.translateModel(body);
         
@@ -265,7 +264,7 @@ public class AdherentApiController implements AdherentApi {
      * @param idadh
      * @return 
      */
-    public ResponseEntity<Void> deleteUser(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
+    public ResponseEntity<Void> deleteUser(@Parameter(description = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
@@ -275,7 +274,7 @@ public class AdherentApiController implements AdherentApi {
      * @param idadh
      * @return 
      */
-    public ResponseEntity<Adherent> getAdherent(@ApiParam(value = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {       
+    public ResponseEntity<Adherent> getAdherent(@Parameter(description = "id de la personne à modifier",required=true) @PathVariable("idadh") Long idadh) {
         
         AdherentDto dto = this.adherentService.recupererAdherent(idadh);
         
@@ -1061,14 +1060,7 @@ public class AdherentApiController implements AdherentApi {
      * @return 
      */
     private long getIdAdherentConnecte() {
-      Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-      
-        String username = null;
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
+      String username = SecurityContextHolder.getContext().getAuthentication().getName();
         
         if (username != null) {
             AdherentDto dto = this.adherentService.recupererAdherent(username);

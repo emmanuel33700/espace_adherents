@@ -1,12 +1,14 @@
+import {LoggerService} from '../../../@core/utils/logger.service';
 import {Component, OnInit} from '@angular/core';
 import {Adherent} from '../../../../api/generated/adherents/models/adherent';
 import {ListingAdherentService} from '../../../../api/generated/adherents/services/listing-adherent.service';
 import {environment} from '../../../../environments/environment';
 
 @Component({
-  selector: 'ngx-list',
-  templateUrl: 'liste.component.html',
-  styleUrls: ['liste.component.scss'],
+    selector: 'ngx-list',
+    templateUrl: 'liste.component.html',
+    styleUrls: ['liste.component.scss'],
+    standalone: false
 })
 export class ListeComponent implements OnInit {
 
@@ -15,6 +17,7 @@ export class ListeComponent implements OnInit {
   url_photo_profil: string = environment.url_photo_profil;
 
   constructor(
+    private loggerService: LoggerService,
     private listingAdherentService: ListingAdherentService,
   ) {}
 
@@ -25,13 +28,11 @@ export class ListeComponent implements OnInit {
       .subscribe(
         (data) => {
           this.adherents = data;
-          console.info(data);
         },
         (error) => {
-          console.error(error);
+          this.loggerService.error(error);
         },
         () => {
-          console.info('fini');
         });
   }
 

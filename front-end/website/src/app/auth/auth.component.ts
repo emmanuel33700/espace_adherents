@@ -4,10 +4,11 @@ import { NbThemeService } from '@nebular/theme';
 
 
 @Component({
-  selector: 'ngx-form-elements',
-  template: `
+    selector: 'ngx-form-elements',
+    template: `
     <router-outlet></router-outlet>
   `,
+    standalone: false
 })
 export class AuthComponent {
 

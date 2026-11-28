@@ -1,81 +1,41 @@
 package fr.espaceadh.adherents.config;
 
-import java.io.IOException;
-import javax.sql.DataSource;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.interfaces.RSAPublicKey;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.converter.RsaKeyConverters;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableResourceServer
-public class OAuth2ResourceServerConfigJwt extends ResourceServerConfigurerAdapter {
-
-    @Autowired
-    private Environment env;
-    
-    @Autowired
-    private CustomAccessTokenConverter customAccessTokenConverter;
-
-    @Override
-    public void configure(final HttpSecurity http) throws Exception {
-        // @formatter:off
-                http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                    .and()
-                    .authorizeRequests().anyRequest().permitAll();
-        // @formatter:on                
-    }
-
-    @Override
-    public void configure(final ResourceServerSecurityConfigurer config) {
-        config.tokenServices(tokenServices());
+public class OAuth2ResourceServerConfigJwt {
+    @Bean
+    public SecurityFilterChain apiSecurity(HttpSecurity http, CustomAccessTokenConverter converter) throws Exception {
+        return http.cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(requests -> requests.anyRequest().permitAll())
+                .oauth2ResourceServer(resource -> resource.jwt(jwt -> jwt.jwtAuthenticationConverter(converter)))
+                .build();
     }
 
     @Bean
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
+    public JwtDecoder jwtDecoder(Environment env) throws java.io.IOException {
+        Path key = Path.of(env.getRequiredProperty("key.public"));
+        if (!key.isAbsolute()) {
+            Path envFile = Path.of(env.getProperty("ENV_FILE", ".env")).toAbsolutePath();
+            key = envFile.getParent().resolve(key).normalize();
+        }
+        try (var input = Files.newInputStream(key)) {
+            RSAPublicKey publicKey = RsaKeyConverters.x509().convert(input);
+            return NimbusJwtDecoder.withPublicKey(publicKey).build();
+        }
     }
-
-    @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        final JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setAccessTokenConverter(customAccessTokenConverter);
-
-        //converter.setSigningKey("123");
-         final Resource resource = new ClassPathResource(env.getProperty("key.public"));
-         String publicKey = null;
-         try {
-         publicKey = IOUtils.toString(resource.getInputStream());
-         } catch (final IOException e) {
-         throw new RuntimeException(e);
-         }
-         converter.setVerifierKey(publicKey);
-        return converter;
-    }
-
-    @Bean
-    @Primary
-    public DefaultTokenServices tokenServices() {
-        final DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-        defaultTokenServices.setTokenStore(tokenStore());
-        return defaultTokenServices;
-    }
-    
-    
-
-
 }

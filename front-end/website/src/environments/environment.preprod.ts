@@ -5,11 +5,11 @@
  */
 export const environment = {
   production: true,
-  resource_adherents: 'https://apidev.jalle-astro.fr/resource-adherents',
-  resource_authorization: 'https://apidev.jalle-astro.fr/resource-authorization',
-  resource_utilitaire: 'https://apidev.jalle-astro.fr/resource-utilitaire',
+  resource_adherents: 'http://apidev.jalle-astro.fr/resource-adherents',
+  resource_authorization: 'http://apidev.jalle-astro.fr/resource-authorization',
+  resource_utilitaire: 'http://apidev.jalle-astro.fr/resource-utilitaire',
 
-  endpoint_authorisation_serveur: 'https://apidev.jalle-astro.fr/authorization-server/oauth/',
+  endpoint_authorisation_serveur: 'http://apidev.jalle-astro.fr/authorization-server/oauth/',
   as_clientId: 'espaceAdh',
   as_clientSecret: 'secret',
 

@@ -36,9 +36,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import fr.espaceadh.security.ClientCredentialsTokens;
+
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,11 +96,9 @@ public class AdherentEvenementsServiceImpl implements AdherentEvenementsService{
             //Récuparation de l'accessToken
             OAuth2AccessToken token = this.recupererToken();
             
-            LOGGER.info("TOKEN {}",token);
-            
             StringBuilder bearer = new StringBuilder();
             bearer.append("Bearer ");
-            bearer.append(token.toString());
+            bearer.append(token.getTokenValue());
             
 
             String urlString = env.getProperty("api.ress.authorization.url");
@@ -177,18 +175,7 @@ public class AdherentEvenementsServiceImpl implements AdherentEvenementsService{
     
     
     private OAuth2AccessToken recupererToken() {
-        ClientCredentialsResourceDetails resourceDetails = new ClientCredentialsResourceDetails();
-        resourceDetails.setClientSecret(env.getProperty("oauth2.ress-adh.clientsecret"));
-        resourceDetails.setClientId(env.getProperty("oauth2.ress-adh.clientid"));
-        resourceDetails.setAccessTokenUri(env.getProperty("oauth2.url"));
-       // resourceDetails.setScope("ress-autorization-admin");
-
-        OAuth2RestTemplate oAuthRestTemplate = new OAuth2RestTemplate(resourceDetails);
-
-        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
-        headers.setContentType( MediaType.APPLICATION_JSON );
-
-        return  oAuthRestTemplate.getAccessToken();
+        return ClientCredentialsTokens.obtain(env);
     }
 
     /**

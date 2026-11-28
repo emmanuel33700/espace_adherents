@@ -15,36 +15,30 @@ import { ResetRoutingModule } from './reset-routing.module';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {
   NbAuthModule,
 } from '@nebular/auth';
 
 
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    HttpClientModule,
-    NbAuthModule,
-    ThemeModule,
-    NbMenuModule,
-    NbLayoutModule,
-    NbInputModule,
-    NbCardModule,
-    NbButtonModule,
-    NbActionsModule,
-    NbUserModule,
-    NbCheckboxModule,
-    NbRadioModule,
-    NbDatepickerModule,
-    NbSelectModule,
-    NbIconModule,
-    ngFormsModule, ResetRoutingModule, NbAlertModule,
-  ],
-  declarations: [
-    ResetComponent,
-  ],
-})
+@NgModule({ declarations: [
+        ResetComponent,
+    ], imports: [CommonModule,
+        FormsModule,
+        NbAuthModule,
+        ThemeModule,
+        NbMenuModule,
+        NbLayoutModule,
+        NbInputModule,
+        NbCardModule,
+        NbButtonModule,
+        NbActionsModule,
+        NbUserModule,
+        NbCheckboxModule,
+        NbRadioModule,
+        NbDatepickerModule,
+        NbSelectModule,
+        NbIconModule,
+        ngFormsModule, ResetRoutingModule, NbAlertModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class ResetModule {
 }

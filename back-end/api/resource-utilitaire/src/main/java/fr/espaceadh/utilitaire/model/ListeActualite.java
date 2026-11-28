@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
  * ListeActualite
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2024-04-20T19:52:41.277412232Z[GMT]")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2024-04-20T19:52:41.277412232Z[GMT]")
 
 
 public class ListeActualite extends ArrayList<Actualitelecture>  {

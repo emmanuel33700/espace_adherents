@@ -9,9 +9,10 @@ import {DialogPhotoProfilComponent} from './dialog-photo-profil/dialog-photo-pro
 import {environment} from '../../../../environments/environment';
 
 @Component({
-  selector: 'ngx-form-layouts',
-  styleUrls: ['./modifier.component.scss'],
-  templateUrl: './modifier.component.html',
+    selector: 'ngx-form-layouts',
+    styleUrls: ['./modifier.component.scss'],
+    templateUrl: './modifier.component.html',
+    standalone: false
 })
 export class ModifierComponent implements OnInit {
   adherent: Adherent;
@@ -139,7 +140,6 @@ export class ModifierComponent implements OnInit {
     this.adherentService.updateUser({idadh: this.adherent.id, body: this.adherent})
       .subscribe(
         (data) => {
-          console.info(data);
         },
         (error) => {
           this.loggerService.error('Error lors de appel du api' + error);

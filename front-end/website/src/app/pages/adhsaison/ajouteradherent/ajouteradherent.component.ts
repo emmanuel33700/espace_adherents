@@ -7,9 +7,10 @@ import {LoggerService} from '../../../@core/utils/logger.service';
 import {DateService} from '../../../@core/utils';
 
 @Component({
-  selector: 'ngx-form-layouts',
-  styleUrls: ['./ajouteradherent.component.scss'],
-  templateUrl: './ajouteradherent.component.html',
+    selector: 'ngx-form-layouts',
+    styleUrls: ['./ajouteradherent.component.scss'],
+    templateUrl: './ajouteradherent.component.html',
+    standalone: false
 })
 export class AjouteradherentComponent {
   form: FormGroup;
